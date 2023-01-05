@@ -57,7 +57,7 @@ default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
 # Year
-years = plv_df.loc[plv_df['pitchername']==player,'year_played'].unique().sort_values(ascending=False)
+years = plv_df.loc[plv_df['pitchername']==player,'year_played'].sort_values(ascending=False).unique()
 year = st.radio('Choose a year:', years)
 
 pitch_list = list(plv_df
