@@ -117,7 +117,7 @@ if len(pitch_list) > 0:
       for axis in range(len(pitch_list)):
         axs[axis].set(ylim=(0,max_count))
         axs[axis].legend([pitch_list[axis],'Lg. Avg.'], 
-                         loc=(0,0.4), fontsize=14)
+                         edgecolor='#162B50', loc=(0,0.4), fontsize=14)
         axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(plv_df.loc[(plv_df['pitchername']==player) &
                                                                            (plv_df['year_played']==year) &
                                                                            (plv_df['pitchtype']==pitch_list[axis])].shape[0]),
