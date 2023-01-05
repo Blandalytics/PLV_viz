@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-st.title("PLV Distributions for a Pitcher's Pitches")
+st.title("PLV Distributions")
 
 # Load Data
 def load_data():
