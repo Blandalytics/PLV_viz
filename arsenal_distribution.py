@@ -6,8 +6,8 @@ import streamlit as st
 
 # Import data
 def get_data():
-    path = '2020-2022 PLV.csv'
-    return pd.read_csv(path, encoding='latin1')
+    path = 'viz_plv.parquet.gzip'
+    return pd.read_parquet(path, encoding='latin1')
 
 plv_data = get_data()
 
