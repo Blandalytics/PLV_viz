@@ -5,9 +5,13 @@ import pandas as pd
 import seaborn as sns
 
 st.title("PLV Distributions for a Pitcher's Pitches")
+
 # Load Data
-file_name = r'https://github.com/Blandalytics/PLV_viz/blob/main/2020-2022_PLV.parquet?raw=true'
-plv_df = pd.read_parquet(file_name).sort_values('pitch_id')
+def load_data():
+    file_name = r'https://github.com/Blandalytics/PLV_viz/blob/main/2020-2022_PLV.parquet?raw=true'
+    df = pd.read_parquet(file_name).sort_values('pitch_id')
+    return df
+df = load_data()
 
 ## Set Styling
 # Plot Style
@@ -47,12 +51,12 @@ marker_colors = {
 ## Selectors
 # Player
 players = plv_df['pitchername'].unique()
-player = st.sidebar.selectbox('Choose a player:', players)
+player = st.selectbox('Choose a player:', players)
 
 if player in players:
     # Player
     years = plv_df.loc[plv_df['pitchername']==player,'year_played'].unique()
-    year = st.sidebar.selectbox('Choose a year:', years)
+    year = st.selectbox('Choose a year:', years)
     
     if year in years:
         def arsenal_dist():
