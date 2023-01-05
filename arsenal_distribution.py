@@ -2,9 +2,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import streamlit as st
 
 # Import data
-plv_data = pd.read_csv('2020-2022 PLV.csv', encoding='latin1')
+def get_data():
+    path = '2020-2022 PLV.csv'
+    return pd.read_csv(path, encoding='latin1')
+
+plv_data = get_data()
+
+# Add selectors
+players = df['pitchername'].drop_duplicates()
+player = st.sidebar.selectbox('Choose a pitcher:', players)
+
+years = df['year_played'].drop_duplicates()
+year = st.sidebar.selectbox('Choose a pitcher:', years)
 
 # Plot Style
 pl_white = '#FEFEFE'
@@ -41,7 +53,7 @@ marker_colors = {
     'UN':'#999999', 
 }
 
-def arsenal_dist(player,year):
+def arsenal_dist():
   pitch_list = list(plv_data
                     .loc[(plv_data['year_played']==year) &
                         (plv_data['pitchername']==player)]
@@ -103,3 +115,7 @@ def arsenal_dist(player,year):
 
   fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
   sns.despine(left=True)
+  st.pyplot(fig)
+
+if __name__ == "__main__":
+    main()
