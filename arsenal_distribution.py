@@ -118,5 +118,5 @@ if player in players:
                            ha='center',va='bottom', fontsize=14)
 
           fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
-          sns.despine(left=True)
+          #sns.despine(left=True)
           st.pyplot(fig)
