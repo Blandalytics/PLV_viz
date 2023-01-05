@@ -59,7 +59,7 @@ if player in players:
     year = st.selectbox('Choose a year:', years)
     
     if year in years:
-        def arsenal_dist():
+        def arsenal_dist(player=player, year=year):
           pitch_list = list(plv_df
                             .loc[(plv_df['year_played']==year) &
                                 (plv_df['pitchername']==player)]
