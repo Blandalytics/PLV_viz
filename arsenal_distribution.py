@@ -11,7 +11,7 @@ def load_data():
     file_name = r'https://github.com/Blandalytics/PLV_viz/blob/main/2020-2022_PLV.parquet?raw=true'
     df = pd.read_parquet(file_name).sort_values('pitch_id')
     return df
-df = load_data()
+plv_df = load_data()
 
 ## Set Styling
 # Plot Style
