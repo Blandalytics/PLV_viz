@@ -72,7 +72,7 @@ pitch_list = list(plv_df
                 ['pitchtype']
                 )
 
-if len(pitch_list) > 0:
+if (len(pitch_list) > 0) & (year in years):
     def arsenal_dist():
       fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
       ax_num = 0
@@ -126,5 +126,6 @@ if len(pitch_list) > 0:
       fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
       sns.despine(left=True)
       st.pyplot(fig)
-
     arsenal_dist()
+else:
+    st.write('Not enough pitches thrown in {}'.format(year))
