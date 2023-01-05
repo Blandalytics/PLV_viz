@@ -124,5 +124,3 @@ def arsenal_dist():
   st.pyplot(fig)
 
 arsenal_dist()
-if __name__ == "__main__":
-    main()
