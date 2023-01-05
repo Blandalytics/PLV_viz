@@ -124,6 +124,3 @@ if player not in players:
           fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
           #sns.despine(left=True)
           st.pyplot(fig)
-        
-if __name__ == "__main__":
-    main()
