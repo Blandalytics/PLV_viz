@@ -5,9 +5,9 @@ import seaborn as sns
 import streamlit as st
 
 st.title("PLV Distributions for a Pitcher's Pitches")
-# Year (given player)
-years = [2020,2021,2022]
-year = st.sidebar.selectbox('Choose a year:', years)
+# Load Data
+file_name = r'https://github.com/Blandalytics/PLV_viz/blob/main/2020-2022_PLV.parquet?raw=true'
+plv_df = pd.read_parquet(file_name).sort_values('pitch_id')
 
 ## Set Styling
 # Plot Style
@@ -43,85 +43,80 @@ marker_colors = {
     'SC':'#999999', 
     'UN':'#999999', 
 }
-if year in years:
-    # Load Data
-    file_name = r'https://github.com/Blandalytics/PLV_viz/blob/main/2020-2022_PLV.parquet?raw=true'
-    plv_df = pd.read_parquet(file_name).sort_values('pitch_id')
-    
-    st.header('Head of DF')
-    st.write(plv_df.head(5))
 
+## Selectors
+# Player
+players = plv_df['pitchername'].unique()
+player = st.sidebar.selectbox('Choose a player:', players)
 
-    ## Add selectors
+if player in players:
     # Player
-    players = plv_df['pitchername'].drop_duplicates()
-    player = st.sidebar.selectbox('Choose a pitcher:', players)
+    years = plv_df.loc[plv_df['pitchername']==player,'year_played'].unique()
+    year = st.sidebar.selectbox('Choose a year:', years)
+    
+    if year in years:
+        def arsenal_dist():
+          pitch_list = list(plv_df
+                            .loc[(plv_df['year_played']==year) &
+                                (plv_df['pitchername']==player)]
+                            .groupby('pitchtype',as_index=False)
+                            ['pitch_id']
+                            .count()
+                            .dropna()
+                            .sort_values('pitch_id', ascending=False)
+                            .query('pitch_id > 50')
+                            ['pitchtype']
+                            )
 
+          fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
+          ax_num = 0
+          max_count = 0
+          for pitch in pitch_list:
+            chart_data = plv_df.loc[(plv_df['year_played']==year) &
+                                    (plv_df['pitchtype']==pitch)].copy()
+            chart_data['PLV'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
+            num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
 
-
-    def arsenal_dist():
-      pitch_list = list(plv_df
-                        .loc[(plv_df['year_played']==year) &
-                            (plv_df['pitchername']==player)]
-                        .groupby('pitchtype',as_index=False)
-                        ['pitch_id']
-                        .count()
-                        .dropna()
-                        .sort_values('pitch_id', ascending=False)
-                        .query('pitch_id > 50')
-                        ['pitchtype']
+            sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
+                        x='PLV',
+                        hue='pitchtype',
+                        palette=marker_colors,
+                        binwidth=0.5,
+                        binrange=(0,10),
+                        alpha=1,
+                        ax=axs[ax_num],
+                        legend=False
                         )
 
-      fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
-      ax_num = 0
-      max_count = 0
-      for pitch in pitch_list:
-        chart_data = plv_df.loc[(plv_df['year_played']==year) &
-                                (plv_df['pitchtype']==pitch)].copy()
-        chart_data['PLV'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
-        num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
+            axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player]['PLV'].mean(),
+                                color=marker_colors[pitch],
+                                linestyle='--',
+                                linewidth=2.5)
+            axs[ax_num].axvline(chart_data['PLV'].mean(), 
+                                color='w', 
+                                label='Lg. Avg.',
+                                alpha=0.5)
+            axs[ax_num].get_xaxis().set_visible(False)
+            axs[ax_num].get_yaxis().set_visible(False)
+            axs[ax_num].set(xlim=(0,10))
+            axs[ax_num].set_title(None)
+            if axs[ax_num].get_ylim()[1] > max_count:
+              max_count = axs[ax_num].get_ylim()[1]
+            ax_num += 1
+            if ax_num==len(pitch_list):
+              axs[ax_num-1].get_xaxis().set_visible(True)
+              axs[ax_num-1].set_xticks(range(0,11))
+              axs[ax_num-1].set(xlabel='')
 
-        sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
-                    x='PLV',
-                    hue='pitchtype',
-                    palette=marker_colors,
-                    binwidth=0.5,
-                    binrange=(0,10),
-                    alpha=1,
-                    ax=axs[ax_num],
-                    legend=False
-                    )
+          for axis in range(len(pitch_list)):
+            axs[axis].set(ylim=(0,max_count))
+            axs[axis].legend([pitch_list[axis],'Lg. Avg.'], 
+                               edgecolor='w', loc=(0,0.4), fontsize=14)
+            axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(plv_df.loc[(plv_df['pitchername']==player) &
+                                                                               (plv_df['year_played']==year) &
+                                                                               (plv_df['pitchtype']==pitch_list[axis])].shape[0]),
+                           ha='center',va='bottom', fontsize=14)
 
-        axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player]['PLV'].mean(),
-                            color=marker_colors[pitch],
-                            linestyle='--',
-                            linewidth=2.5)
-        axs[ax_num].axvline(chart_data['PLV'].mean(), 
-                            color='w', 
-                            label='Lg. Avg.',
-                            alpha=0.5)
-        axs[ax_num].get_xaxis().set_visible(False)
-        axs[ax_num].get_yaxis().set_visible(False)
-        axs[ax_num].set(xlim=(0,10))
-        axs[ax_num].set_title(None)
-        if axs[ax_num].get_ylim()[1] > max_count:
-          max_count = axs[ax_num].get_ylim()[1]
-        ax_num += 1
-        if ax_num==len(pitch_list):
-          axs[ax_num-1].get_xaxis().set_visible(True)
-          axs[ax_num-1].set_xticks(range(0,11))
-          axs[ax_num-1].set(xlabel='')
-
-      for axis in range(len(pitch_list)):
-        axs[axis].set(ylim=(0,max_count))
-        axs[axis].legend([pitch_list[axis],'Lg. Avg.'], 
-                           edgecolor='w', loc=(0,0.4), fontsize=14)
-        axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(plv_df.loc[(plv_df['pitchername']==player) &
-                                                                           (plv_df['year_played']==year) &
-                                                                           (plv_df['pitchtype']==pitch_list[axis])].shape[0]),
-                       ha='center',va='bottom', fontsize=14)
-
-      fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
-      sns.despine(left=True)
-      st.pyplot(fig)
-
+          fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
+          sns.despine(left=True)
+          st.pyplot(fig)
