@@ -53,12 +53,12 @@ marker_colors = {
 players = plv_df['pitchername'].unique()
 player = st.selectbox('Choose a player:', players)
 
-if player not in players:
+if player in players:
     # Player
     years = plv_df.loc[plv_df['pitchername']==player,'year_played'].unique()
     year = st.selectbox('Choose a year:', years)
     
-    if year not in years:
+    if year in years:
         def arsenal_dist():
           pitch_list = list(plv_df
                             .loc[(plv_df['year_played']==year) &
