@@ -53,7 +53,7 @@ marker_colors = {
 ## Selectors
 # Player
 players = list(plv_df['pitchername'].unique())
-default_ix = players.index('Sandy Alcantara)
+default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
 # Year
