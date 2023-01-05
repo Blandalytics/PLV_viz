@@ -46,7 +46,11 @@ marker_colors = {
 if year in years:
     # Load Data
     file_name = r'https://github.com/Blandalytics/PLV_viz/blob/main/2020-2022_PLV.parquet?raw=true'
-    plv_df = pd.read_parquet(file_name)
+    plv_df = pd.read_parquet(file_name).sort_values('pitch_id')
+    
+    st.header('Head of DF')
+    st.write(plv_df.head(5))
+
 
     ## Add selectors
     # Player
