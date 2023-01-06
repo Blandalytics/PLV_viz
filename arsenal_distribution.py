@@ -97,11 +97,11 @@ if pitches_thrown >= pitch_threshold:
         for pitch in pitch_list:
             chart_data = plv_df.loc[(plv_df['year_played']==year) &
                                     (plv_df['pitchtype']==pitch)].copy()
-            chart_data['PLV'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
+            chart_data['PLV_clip'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
             num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
 
             sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
-                        x='PLV',
+                        x='PLV_clip',
                         hue='pitchtype',
                         palette=marker_colors,
                         binwidth=0.5,
