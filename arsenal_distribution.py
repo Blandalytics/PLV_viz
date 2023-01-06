@@ -60,7 +60,12 @@ player = st.selectbox('Choose a player:', players, index=default_ix)
 years = plv_df.loc[plv_df['pitchername']==player,'year_played'].sort_values(ascending=False).unique()
 year = st.radio('Choose a year:', years)
 
-pitch_list = list(plv_df
+pitch_threshold = 100
+pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
+                            (plv_df['year_played']==year)]shape[0]
+
+if pitches_thrown >= pitch_threshold:
+    pitch_list = list(plv_df
                 .loc[(plv_df['year_played']==year) &
                     (plv_df['pitchername']==player)]
                 .groupby('pitchtype',as_index=False)
@@ -72,7 +77,6 @@ pitch_list = list(plv_df
                 ['pitchtype']
                 )
 
-if (len(pitch_list) > 0) & (year in years):
     def arsenal_dist():
       fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
       ax_num = 0
