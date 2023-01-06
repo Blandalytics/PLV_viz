@@ -139,7 +139,7 @@ if pitches_thrown >= pitch_threshold:
                               'Lg. Avg.'+': {:.3}'.format(plv_df.loc[(plv_df['year_played']==year) &
                                                                      (plv_df['pitchtype']==pitch_list[axis]),'PLV'].mean())], 
                              edgecolor=pl_background, loc=(0,0.4), fontsize=14)
-            axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(chart_data.loc[(chart_data['pitchername']==player)].shape[0]),
+            axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(num_pitches),
                            ha='center',va='bottom', fontsize=14)
 
         fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
