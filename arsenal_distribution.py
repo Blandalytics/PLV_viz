@@ -133,7 +133,7 @@ if pitches_thrown >= pitch_threshold:
 
         for axis in range(len(pitch_list)):
             axs[axis].set(ylim=(0,max_count*1.025))
-            axs[axis].legend([pitch_names[pitch_list[axis]]+' {:.3}'.format(plv_df.loc[(plv_df['pitchername']==player) &
+            axs[axis].legend([pitch_names[pitch_list[axis]]+' - {:.3}'.format(plv_df.loc[(plv_df['pitchername']==player) &
                                                                                        (plv_df['year_played']==year) &
                                                                                        (plv_df['pitchtype']==pitch_list[axis]),'PLV'].mean()),
                               'Lg. Avg.'], 
