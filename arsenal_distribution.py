@@ -144,7 +144,7 @@ if pitches_thrown >= pitch_threshold:
                            ha='center',va='bottom', fontsize=14)
 
         fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
-        sns.despine(left=True)
+        sns.despine(left=True, bottom=True)
         st.pyplot(fig)
     arsenal_dist()
 else:
