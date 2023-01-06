@@ -132,4 +132,4 @@ if pitches_thrown >= pitch_threshold:
         st.pyplot(fig)
     arsenal_dist()
 else:
-    st.write('Not enough pitches thrown in {}'.format(year))
+    st.write('Not enough pitches thrown in {} (<{})'.format(year,pitch_threshold))
