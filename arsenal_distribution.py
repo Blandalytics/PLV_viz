@@ -135,10 +135,15 @@ if pitches_thrown >= pitch_threshold:
             axs[axis].set(ylim=(0,max_count*1.025))
             axs[axis].legend([pitch_names[pitch_list[axis]],'Lg. Avg.'], 
                              edgecolor='#162B50', loc=(0,0.4), fontsize=14)
-            axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(plv_df.loc[(plv_df['pitchername']==player) &
+            axs[axis].text(9,max_count*0.325,'{:,}\nPitches'.format(plv_df.loc[(plv_df['pitchername']==player) &
                                                                                (plv_df['year_played']==year) &
                                                                                (plv_df['pitchtype']==pitch_list[axis])].shape[0]),
                            ha='center',va='bottom', fontsize=14)
+            axs[axis].text(9,max_count*0.325,'{}'.format(plv_df.loc[(plv_df['pitchername']==player) &
+                                                                               (plv_df['year_played']==year) &
+                                                                               (plv_df['pitchtype']==pitch_list[axis]),'PLV'].mean())
+                           color=marker_colors[pitch_list[axis]],ha='center',va='bottom', 
+                           fontsize=20)
 
         fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
         sns.despine(left=True)
