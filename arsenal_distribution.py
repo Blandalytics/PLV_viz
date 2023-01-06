@@ -82,41 +82,41 @@ if pitches_thrown >= pitch_threshold:
         ax_num = 0
         max_count = 0
         for pitch in pitch_list:
-        chart_data = plv_df.loc[(plv_df['year_played']==year) &
-                                (plv_df['pitchtype']==pitch)].copy()
-        chart_data['PLV'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
-        num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
+            chart_data = plv_df.loc[(plv_df['year_played']==year) &
+                                    (plv_df['pitchtype']==pitch)].copy()
+            chart_data['PLV'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
+            num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
 
-        sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
-                    x='PLV',
-                    hue='pitchtype',
-                    palette=marker_colors,
-                    binwidth=0.5,
-                    binrange=(0,10),
-                    alpha=1,
-                    ax=axs[ax_num],
-                    legend=False
-                    )
+            sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
+                        x='PLV',
+                        hue='pitchtype',
+                        palette=marker_colors,
+                        binwidth=0.5,
+                        binrange=(0,10),
+                        alpha=1,
+                        ax=axs[ax_num],
+                        legend=False
+                        )
 
-        axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player]['PLV'].mean(),
-                            color=marker_colors[pitch],
-                            linestyle='--',
-                            linewidth=2.5)
-        axs[ax_num].axvline(chart_data['PLV'].mean(), 
-                            color='w', 
-                            label='Lg. Avg.',
-                            alpha=0.5)
-        axs[ax_num].get_xaxis().set_visible(False)
-        axs[ax_num].get_yaxis().set_visible(False)
-        axs[ax_num].set(xlim=(0,10))
-        axs[ax_num].set_title(None)
-        if axs[ax_num].get_ylim()[1] > max_count:
-            max_count = axs[ax_num].get_ylim()[1]
-        ax_num += 1
-        if ax_num==len(pitch_list):
-            axs[ax_num-1].get_xaxis().set_visible(True)
-            axs[ax_num-1].set_xticks(range(0,11))
-            axs[ax_num-1].set(xlabel='')
+            axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player]['PLV'].mean(),
+                                color=marker_colors[pitch],
+                                linestyle='--',
+                                linewidth=2.5)
+            axs[ax_num].axvline(chart_data['PLV'].mean(), 
+                                color='w', 
+                                label='Lg. Avg.',
+                                alpha=0.5)
+            axs[ax_num].get_xaxis().set_visible(False)
+            axs[ax_num].get_yaxis().set_visible(False)
+            axs[ax_num].set(xlim=(0,10))
+            axs[ax_num].set_title(None)
+            if axs[ax_num].get_ylim()[1] > max_count:
+                max_count = axs[ax_num].get_ylim()[1]
+            ax_num += 1
+            if ax_num==len(pitch_list):
+                axs[ax_num-1].get_xaxis().set_visible(True)
+                axs[ax_num-1].set_xticks(range(0,11))
+                axs[ax_num-1].set(xlabel='')
 
         for axis in range(len(pitch_list)):
         axs[axis].set(ylim=(0,max_count*1.025))
