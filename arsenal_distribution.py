@@ -63,7 +63,7 @@ year = st.radio('Choose a year:', years)
 pitch_threshold = 100
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
                             (plv_df['year_played']==year)].shape[0]
-
+st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
 if pitches_thrown >= pitch_threshold:
     pitch_list = list(plv_df
                 .loc[(plv_df['year_played']==year) &
@@ -78,10 +78,10 @@ if pitches_thrown >= pitch_threshold:
                 )
 
     def arsenal_dist():
-      fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
-      ax_num = 0
-      max_count = 0
-      for pitch in pitch_list:
+        fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
+        ax_num = 0
+        max_count = 0
+        for pitch in pitch_list:
         chart_data = plv_df.loc[(plv_df['year_played']==year) &
                                 (plv_df['pitchtype']==pitch)].copy()
         chart_data['PLV'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
@@ -111,14 +111,14 @@ if pitches_thrown >= pitch_threshold:
         axs[ax_num].set(xlim=(0,10))
         axs[ax_num].set_title(None)
         if axs[ax_num].get_ylim()[1] > max_count:
-          max_count = axs[ax_num].get_ylim()[1]
+            max_count = axs[ax_num].get_ylim()[1]
         ax_num += 1
         if ax_num==len(pitch_list):
-          axs[ax_num-1].get_xaxis().set_visible(True)
-          axs[ax_num-1].set_xticks(range(0,11))
-          axs[ax_num-1].set(xlabel='')
+            axs[ax_num-1].get_xaxis().set_visible(True)
+            axs[ax_num-1].set_xticks(range(0,11))
+            axs[ax_num-1].set(xlabel='')
 
-      for axis in range(len(pitch_list)):
+        for axis in range(len(pitch_list)):
         axs[axis].set(ylim=(0,max_count*1.025))
         axs[axis].legend([pitch_list[axis],'Lg. Avg.'], 
                          edgecolor='#162B50', loc=(0,0.4), fontsize=14)
@@ -127,9 +127,9 @@ if pitches_thrown >= pitch_threshold:
                                                                            (plv_df['pitchtype']==pitch_list[axis])].shape[0]),
                        ha='center',va='bottom', fontsize=14)
 
-      fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
-      sns.despine(left=True)
-      st.pyplot(fig)
+        fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
+        sns.despine(left=True)
+        st.pyplot(fig)
     arsenal_dist()
 else:
     st.write('Not enough pitches thrown in {}'.format(year))
