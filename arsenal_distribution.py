@@ -22,7 +22,7 @@ pl_line_color = '#293a6b'
 
 sns.set_theme(
     style={
-        'axes.edgecolor': pl_line_color,
+        'axes.edgecolor': pl_background,
         'axes.facecolor': pl_background,
         'axes.labelcolor': pl_white,
         'xtick.color': pl_white,
@@ -137,7 +137,7 @@ if pitches_thrown >= pitch_threshold:
                                                                                        (plv_df['year_played']==year) &
                                                                                        (plv_df['pitchtype']==pitch_list[axis]),'PLV'].mean()),
                               'Lg. Avg.'], 
-                             edgecolor='#162B50', loc=(0,0.4), fontsize=14)
+                             edgecolor=pl_background, loc=(0,0.4), fontsize=14)
             axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(plv_df.loc[(plv_df['pitchername']==player) &
                                                                                (plv_df['year_played']==year) &
                                                                                (plv_df['pitchtype']==pitch_list[axis])].shape[0]),
