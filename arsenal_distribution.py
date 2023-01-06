@@ -62,7 +62,7 @@ year = st.radio('Choose a year:', years)
 
 pitch_threshold = 100
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
-                            (plv_df['year_played']==year)]shape[0]
+                            (plv_df['year_played']==year)].shape[0]
 
 if pitches_thrown >= pitch_threshold:
     pitch_list = list(plv_df
