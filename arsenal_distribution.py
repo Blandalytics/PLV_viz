@@ -60,7 +60,7 @@ player = st.selectbox('Choose a player:', players, index=default_ix)
 years = plv_df.loc[plv_df['pitchername']==player,'year_played'].sort_values(ascending=False).unique()
 year = st.radio('Choose a year:', years)
 
-pitch_threshold = 100
+pitch_threshold = 200
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
                             (plv_df['year_played']==year)].shape[0]
 st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
