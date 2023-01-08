@@ -101,7 +101,7 @@ rolling_threshold = {
     'Adjusted Power': 75
 }
 
-window_max = plv_df.dropna(subset=metric).groupby('battername')['pitch_id].count().max()
+window_max = plv_df.dropna(subset=metric).groupby('battername')['pitch_id'].count().max()
 
 # Rolling Window
 window = st.slider(f'Choose a {rolling_denom[metric]} threshold:', 50, window_max,
@@ -110,8 +110,7 @@ window = st.slider(f'Choose a {rolling_denom[metric]} threshold:', 50, window_ma
 def rolling_chart()
   rolling_df = (plv_df
                 .sort_values('pitch_id')
-                .loc[(plv_df['batter_name']==player) &
-                     plv_df[metric].notna(),
+                .loc[(plv_df['batter_name']==player),
                      ['battername',metric]]
                 .dropna()
                 .reset_index(drop=True)
