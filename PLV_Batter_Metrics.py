@@ -78,7 +78,6 @@ season_df = (plv_df
              .query('pitch_id >= 400')
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches Seen'})
-             .astype({'Pitches Seen':'string'})
              .sort_values('Hit Eff', ascending=False)
             )
 
