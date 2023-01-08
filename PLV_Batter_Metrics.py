@@ -13,7 +13,7 @@ pl_line_color = '#293a6b'
 
 sns.set_theme(
     style={
-        'axes.edgecolor': pl_background,
+        'axes.edgecolor': pl_white,
         'axes.facecolor': pl_background,
         'axes.labelcolor': pl_white,
         'xtick.color': pl_white,
@@ -36,7 +36,7 @@ st.write('''
 st.write("- Decision Value: The opportunity cost of a batter's swing decision, using the predicted outcomes for that pitch.")
 st.write("- Contact Ability: A batter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- Adjusted Power: Modelled ISO of each BBE, minus that pitch's expected ISO.")
-st.write("- Hitter Score: The wOBA added by the batter to each pitch (including swing/take decisions).")
+st.write("- Hitter Efficiency: The wOBA added by the batter to each pitch (including swing/take decisions), after accounting for picth quality.")
 
 ## Selectors
 # Year
@@ -51,7 +51,7 @@ stat_names = {
     'decision_value':'Dec Value',
     'contact_over_expected':'Contact',
     'adj_power':'Adj Power',
-    'batter_wOBA':'Hit Score'
+    'batter_wOBA':'Hit Eff'
 }
 
 # Load Data
@@ -72,17 +72,17 @@ season_df = (plv_df
                  'Dec Value':'mean',
                  'Contact':'mean',
                  'Adj Power':'mean',
-                 'Hit Score':'mean'
+                 'Hit Eff':'mean'
              })
              .query('pitch_id >= 400')
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches Seen'})
              .astype({'Pitches Seen':'string'})
-             .sort_values('Hit Score', ascending=False)
+             .sort_values('Hit Eff', ascending=False)
             )
 
 season_df['Swing Agg'] = season_df['Swing Agg'].mul(100).round(1).astype('string')+'%'
-for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Score']:
+for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
 
@@ -187,6 +187,6 @@ def rolling_chart():
                                                      window,
                                                      rolling_denom[metric]))
 
-    #sns.despine()
+    sns.despine()
     st.pyplot(fig)
 rolling_chart()
