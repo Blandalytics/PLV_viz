@@ -145,7 +145,7 @@ def rolling_chart():
                linestyle='--',
                alpha=0.5)
     ax.text(rolling_df.shape[0]*1.05,
-            pitch_data[metric].mean(),
+            plv_df[metric].mean(),
             'MLB Avg' if abs(rolling_df[metric].mean() - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color='w')
