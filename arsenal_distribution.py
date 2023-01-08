@@ -156,7 +156,7 @@ if pitches_thrown >= pitch_threshold:
                                                                                plv_df['b_hand'].isin(hand_map[handedness])].shape[0]),
                            ha='center',va='bottom', fontsize=14)
             
-        hand_text = '\n(vs {}ies)' if handedness!='All' else ''
+        hand_text = f'\n(vs {handedness}ies)' if handedness!='All' else ''
 
         fig.suptitle("{}'s {} PLV Distributions{}".format(player,year,hand_text),fontsize=16)
         sns.despine(left=True, bottom=True)
