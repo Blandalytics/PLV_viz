@@ -96,8 +96,8 @@ def center_align(s, props='text-align: center;'):
 
 st.dataframe(season_df
              .style
-             .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
              .applymap(center_align)
+             .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
             )
 
 ### Rolling Charts
