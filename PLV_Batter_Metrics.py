@@ -116,7 +116,7 @@ window_max = plv_df.dropna(subset=metric).groupby('hittername')['pitch_id'].coun
 window = st.slider(f'Choose a {rolling_denom[metric]} threshold:', 50, window_max,
                    value=rolling_threshold[metric])
 
-def rolling_chart()
+def rolling_chart():
     rolling_df = (plv_df
                   .sort_values('pitch_id')
                   .loc[(plv_df['hittername']==player),
