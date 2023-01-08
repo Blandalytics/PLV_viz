@@ -5,7 +5,7 @@ import pandas as pd
 import seaborn as sns
 
 ## Set Styling
-pd.set_option("display.precision", 1)
+#pd.set_option("display.precision", 1)
 # Plot Style
 pl_white = '#FEFEFE'
 pl_background = '#162B50'
@@ -98,6 +98,7 @@ st.dataframe(season_df
                                   subset=['SZ Judge','Dec Value','Contact',
                                           'Adj Power','Hit Eff']
                                  ) 
+             .format(precision=1)
             )
 
 ### Rolling Charts
