@@ -4,15 +4,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-st.title("PLV Distributions")
-
-# Load Data
-def load_data():
-    file_name = r'https://github.com/Blandalytics/PLV_viz/blob/main/2020-2022_PLV.parquet?raw=true'
-    df = pd.read_parquet(file_name).sort_values('pitch_id')
-    return df
-plv_df = load_data()
-
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
@@ -63,24 +54,47 @@ pitch_names = {
     'UN':'Unknown', 
 }
 
+st.title("PLV Distributions")
+
+# Year
+years = [2022,2021,2020]
+year = st.radio('Choose a year:', years)
+
+# Load Data
+def load_data():
+    file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/{year}_PLV_App_Data.parquet?raw=true'
+    df = pd.read_parquet(file_name).sort_values('pitch_id')
+    return df
+plv_df = load_data()
+
 ## Selectors
 # Player
 players = list(plv_df['pitchername'].unique())
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
-# Year
-years = plv_df.loc[plv_df['pitchername']==player,'year_played'].sort_values(ascending=False).unique()
-year = st.radio('Choose a year:', years)
+handedness = st.select_slider(
+    'Batter Handedness',
+    options=['Left', 'All', 'Right'],
+    value='All')
+
+hand_map = {
+    'Left':['L'],
+    'All':['L','R'],
+    'Right':['R']
+}
 
 pitch_threshold = 200
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
-                            (plv_df['year_played']==year)].shape[0]
+                            (plv_df['year_played']==year) &
+                            plv_df['b_hand'].str.contains(hand_map[handedness])].shape[0]
 st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
+
 if pitches_thrown >= pitch_threshold:
     pitch_list = list(plv_df
                 .loc[(plv_df['year_played']==year) &
-                    (plv_df['pitchername']==player)]
+                    (plv_df['pitchername']==player) &
+                     plv_df['b_hand'].str.contains(hand_map[handedness])]
                 .groupby('pitchtype',as_index=False)
                 ['pitch_id']
                 .count()
@@ -96,7 +110,8 @@ if pitches_thrown >= pitch_threshold:
         max_count = 0
         for pitch in pitch_list:
             chart_data = plv_df.loc[(plv_df['year_played']==year) &
-                                    (plv_df['pitchtype']==pitch)].copy()
+                                    (plv_df['pitchtype']==pitch) &
+                                    plv_df['b_hand'].str.contains(hand_map[handedness])].copy()
             chart_data['PLV_clip'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
             num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
 
@@ -135,13 +150,16 @@ if pitches_thrown >= pitch_threshold:
             axs[axis].set(ylim=(0,max_count*1.025))
             axs[axis].legend([pitch_names[pitch_list[axis]]+': {:.3}'.format(plv_df.loc[(plv_df['year_played']==year) &
                                                                                         (plv_df['pitchtype']==pitch_list[axis]) & 
-                                                                                        (plv_df['pitchername']==player),'PLV'].mean()),
+                                                                                        (plv_df['pitchername']==player) &
+                                                                                        plv_df['b_hand'].str.contains(hand_map[handedness]),'PLV'].mean()),
                               'Lg. Avg.'+': {:.3}'.format(plv_df.loc[(plv_df['year_played']==year) &
-                                                                     (plv_df['pitchtype']==pitch_list[axis]),'PLV'].mean())], 
+                                                                     (plv_df['pitchtype']==pitch_list[axis]) &
+                                                                     plv_df['b_hand'].str.contains(hand_map[handedness]),'PLV'].mean())], 
                              edgecolor=pl_background, loc=(0,0.4), fontsize=14)
             axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(plv_df.loc[(plv_df['year_played']==year) &
                                                                                (plv_df['pitchtype']==pitch_list[axis]) & 
-                                                                               (plv_df['pitchername']==player)].shape[0]),
+                                                                               (plv_df['pitchername']==player) &
+                                                                               plv_df['b_hand'].str.contains(hand_map[handedness])].shape[0]),
                            ha='center',va='bottom', fontsize=14)
 
         fig.suptitle("{}'s {} PLV Distributions".format(player,year),fontsize=16)
