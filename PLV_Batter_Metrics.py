@@ -5,6 +5,7 @@ import pandas as pd
 import seaborn as sns
 
 ## Set Styling
+pd.set_option("display.precision", 1)
 # Plot Style
 pl_white = '#FEFEFE'
 pl_background = '#162B50'
@@ -81,7 +82,7 @@ season_df = (plv_df
              .sort_values('Hit Eff', ascending=False)
             )
 
-season_df['Swing Agg'] = season_df['Swing Agg'].mul(1000).astype('int').div(10)
+season_df['Swing Agg'] = season_df['Swing Agg'].mul(100)
 for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
@@ -96,8 +97,7 @@ st.dataframe(season_df
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
                                   subset=['SZ Judge','Dec Value','Contact',
                                           'Adj Power','Hit Eff']
-                                 )
-             #.format('{:.1f}', subset=['Swing Agg'])  
+                                 ) 
             )
 
 ### Rolling Charts
