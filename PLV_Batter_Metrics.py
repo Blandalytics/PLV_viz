@@ -53,7 +53,7 @@ def load_season_data():
 
 plv_df = load_season_data()
 season_df = (plv_df
-             .groupby('hittername',as_index=False)
+             .groupby('hittername')
              [['pitch_id']+list(stat_names.values())]
              .agg({
                  'pitch_id':'count',
