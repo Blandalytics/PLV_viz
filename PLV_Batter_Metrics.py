@@ -150,16 +150,17 @@ window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:',
                          step=5, 
                          value=rolling_threshold[metric])
 
+rolling_df = (plv_df
+              .sort_values('pitch_id')
+              .loc[(plv_df['hittername']==player),
+                   ['hittername',metric]]
+              .dropna()
+              .reset_index(drop=True)
+              .reset_index()
+              .assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
+             )
+
 def rolling_chart():
-    rolling_df = (plv_df
-                  .sort_values('pitch_id')
-                  .loc[(plv_df['hittername']==player),
-                       ['hittername',metric]]
-                  .dropna()
-                  .reset_index(drop=True)
-                  .reset_index()
-                  .assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
-                 )
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(6,6))
     sns.lineplot(data=rolling_df,
@@ -204,4 +205,7 @@ def rolling_chart():
 
     sns.despine()
     st.pyplot(fig)
-rolling_chart()
+if window > rolling_df.shape[0]:
+    st.write(f'Not enough {rolling_denom[metric]}')
+else:
+    rolling_chart()
