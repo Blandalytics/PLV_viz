@@ -33,14 +33,45 @@ st.title("Batter Ability Metrics")
 # Year
 year = st.radio('Choose a year:', [2022,2021,2020])
 
-# Load Data
-def load_data():
-    file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/{year}_PLV_App_Data.parquet?raw=true'
-    df = pd.read_parquet(file_name)
-    return df
-plv_df = load_data()
+def z_score_scaler(series):
+    return (series - series.mean()) / series.std()
 
-st.dataframe(plv_df)
+stat_names = {
+    'strike_zone_judgement':'SZ Judgement',
+    'swing_agg':'Swing Aggression',
+    'contact_over_expected':'Contact Ability',
+    'decision_value':'Swing Decisions',
+    'adj_power':'Adjusted Power',
+    'batter_wOBA':'Value Added'
+}
+
+# Load Data
+def load_season_data():
+    file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/{year}_PLV_App_Data.parquet?raw=true'
+    df = pd.read_parquet(file_name).rename(columns=stat_names)
+    return df
+
+plv_df = load_season_data()
+season_df = (plv_df
+             .groupby('battername',as_index=False)
+             [['pitch_id']+stat_names.keys()]
+             .agg({
+              'pitch_id':'count',
+              'SZ Judgement':'mean',
+              'Swing Aggression':'mean',
+              'Contact Ability':'mean',
+              'Swing Decisions':'mean',
+              'pred_ISO':'mean',
+              'Adjusted Power':'mean',
+              'Value Added':'mean'
+             })
+             .rename(columns={'pitch_id':'Pitches Seen'})
+             .sort_values('Value Added', ascending=False)
+            )
+for stat in stat_names.keys():
+    season_df[stat] = z_score_scaler(season_df[stat])
+
+st.dataframe(season_df)
 
 st.title("Rolling Ability Charts")
 # Player
@@ -70,7 +101,7 @@ rolling_threshold = {
     'Adjusted Power': 75
 }
 
-window_max = plv_df[rolling_denom[metric]].max()
+window_max = plv_df.dropna(subset=metric).groupby('battername')['pitch_id].count().max()
 
 # Rolling Window
 window = st.slider(f'Choose a {rolling_denom[metric]} threshold:', 50, window_max,
@@ -80,9 +111,8 @@ def rolling_chart()
   rolling_df = (plv_df
                 .sort_values('pitch_id')
                 .loc[(plv_df['batter_name']==player) &
-                     (plv_df['game_year']==year) &
                      plv_df[metric].notna(),
-                     ['batter_name',metric]]
+                     ['battername',metric]]
                 .dropna()
                 .reset_index(drop=True)
                 .reset_index()
