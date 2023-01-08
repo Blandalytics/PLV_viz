@@ -54,7 +54,7 @@ def load_season_data():
 plv_df = load_season_data()
 season_df = (plv_df
              .groupby('battername',as_index=False)
-             [['pitch_id']+stat_names.keys()]
+             [['pitch_id']+stat_names.values()]
              .agg({
               'pitch_id':'count',
               'SZ Judgement':'mean',
