@@ -49,10 +49,11 @@ stat_names = {
 def load_season_data():
     file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data.parquet?raw=true'
     df = pd.read_parquet(file_name)
-    return df.rename(columns=stat_names)
+    return df
 
 plv_df = load_season_data()
 season_df = (plv_df
+             .rename(columns=stat_names)
              .groupby('hittername')
              [['pitch_id']+list(stat_names.values())]
              .agg({
@@ -82,6 +83,14 @@ def make_pretty(styler):
 st.dataframe(season_df.style.pipe(make_pretty))
 
 ### Rolling Charts
+stat_names = {
+    'swing_agg':'Swing Aggression',
+    'strike_zone_judgement':'Strikezone Judgement',
+    'decision_value':'Decision Value',
+    'contact_over_expected':'Contact Ability',
+    'adj_power':'Adjusted Power'
+}
+plv_df = plv_df.rename(columns=stat_names)
 st.title("Rolling Ability Charts")
 # Player
 players = list(plv_df['hittername'].unique())
@@ -89,25 +98,24 @@ default_player = players.index('Juan Soto')
 player = st.selectbox('Choose a player:', players, index=default_player)
 
 # Metric
-metrics = ['Swing Agg','SZ Judge','Sw Dec',
-           'Contact','Adj Power']
-default_stat = metrics.index('Sw Dec')
+metrics = list(stat_names.values())
+default_stat = metrics.index('Decision Value')
 metric = st.selectbox('Choose a metric:', metrics, index=default_stat)
 
 rolling_denom = {
-    'Swing Agg':'Pitches',
-    'SZ Judge':'Pitches',
-    'Sw Dec':'Pitches',
-    'Contact':'Swings',
-    'Adj Power': 'BBE'
+    'Swing Aggression':'Pitches',
+    'Strikezone Judgement':'Pitches',
+    'Decision Value':'Pitches',
+    'Contact Ability':'Swings',
+    'Adjusted Power': 'BBE'
 }
 
 rolling_threshold = {
-    'Swing Agg':400,
-    'SZ Judge':400,
-    'Sw Dec':400,
-    'Contact':200,
-    'Adj Power': 75
+    'Swing Aggression':400,
+    'Strikezone Judgement':400,
+    'Decision Value':400,
+    'Contact Ability':200,
+    'Adjusted Power': 75
 }
 
 window_max = int(plv_df.dropna(subset=metric).groupby('hittername')['pitch_id'].count().max())
@@ -116,7 +124,7 @@ window_max = int(plv_df.dropna(subset=metric).groupby('hittername')['pitch_id'].
 window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:', 
                          min_value=50, 
                          max_value=window_max,
-                         step=1, 
+                         step=5, 
                          value=rolling_threshold[metric])
 
 def rolling_chart():
@@ -136,7 +144,9 @@ def rolling_chart():
                  y='Rolling_Stat',
                  color=line_color)
 
-    ax.axhline(rolling_df[metric].mean(), color=line_color)
+    ax.axhline(rolling_df[metric].mean(), 
+               color=line_color,
+               linestyle='--')
     ax.text(rolling_df.shape[0]*1.05,
             rolling_df[metric].mean(),
             'Szn Avg',
@@ -156,7 +166,7 @@ def rolling_chart():
 
     min_value = 0.25 if metric=='Strikezone Judgement' else 0
 
-    ax.set(xlabel='Season '+rolling_denom[metric],
+    ax.set(xlabel=rolling_denom[metric],
            ylabel=metric,
            ylim=(min(min_value,rolling_df['Rolling_Stat'].min(),plv_df[metric].mean()) + ax.get_ylim()[0]/20,
                  max(0,rolling_df['Rolling_Stat'].max(),plv_df[metric].mean()) + ax.get_ylim()[1]/20),
