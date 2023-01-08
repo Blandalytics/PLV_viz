@@ -61,7 +61,6 @@ season_df = (plv_df
               'Swing Aggression':'mean',
               'Contact Ability':'mean',
               'Swing Decisions':'mean',
-              'pred_ISO':'mean',
               'Adjusted Power':'mean',
               'Value Added':'mean'
              })
