@@ -153,7 +153,8 @@ if pitches_thrown >= pitch_threshold:
             num_pitches = plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
                                      (plv_df['pitchername']==player) &
                                      plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
-            pitch_usage = num_pitches / plv_df.loc[plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
+            pitch_usage = num_pitches / plv_df.loc[(plv_df['pitchername']==player) &
+                                                   plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 100
             axs[axis].legend([pitch_names[pitch_list[axis]]+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
                                                                                         (plv_df['pitchername']==player) &
                                                                                         plv_df['b_hand'].isin(hand_map[handedness]),'PLV'].mean()),
