@@ -89,7 +89,7 @@ for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
 st.write('Metrics on a 20-80 scale')
 
 def color_scale(v, cmap=''):
-    return styler.
+    return styler.background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
 
 st.dataframe(season_df
              .applymap(color_scale(),subset=['SZ Judge',
