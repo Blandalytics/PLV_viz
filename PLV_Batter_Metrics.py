@@ -148,7 +148,6 @@ rolling_df = (plv_df
               .dropna()
               .reset_index(drop=True)
               .reset_index()
-              #.assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
              )
 
 # Rolling Window
