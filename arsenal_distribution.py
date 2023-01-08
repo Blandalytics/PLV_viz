@@ -116,9 +116,6 @@ if pitches_thrown >= pitch_threshold:
                                     plv_df['b_hand'].isin(hand_map[handedness])].copy()
             chart_data['PLV_clip'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
             num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
-            if num_pitches / plv_df.loc[(plv_df['pitchername']==player) &
-                                        plv_df['b_hand'].isin(hand_map[handedness])].shape[0] < 0.05:
-                continue
 
             sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
                         x='PLV_clip',
