@@ -206,6 +206,6 @@ def rolling_chart():
     sns.despine()
     st.pyplot(fig)
 if window > rolling_df.shape[0]:
-    st.write(f'Not enough {rolling_denom[metric]}')
+    st.write(f'Not enough {rolling_denom[metric]} ({rolling_df.shape[0]})')
 else:
     rolling_chart()
