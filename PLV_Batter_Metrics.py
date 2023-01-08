@@ -81,7 +81,7 @@ season_df = (plv_df
              .sort_values('Hit Eff', ascending=False)
             )
 
-season_df['Swing Agg'] = season_df['Swing Agg'].mul(100)
+season_df['Swing Agg'] = season_df['Swing Agg'].mul(100).astype('float')
 for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
