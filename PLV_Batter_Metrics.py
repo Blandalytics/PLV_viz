@@ -110,7 +110,7 @@ rolling_threshold = {
     'Adj Power': 75
 }
 
-window_max = plv_df.dropna(subset=metric).groupby('hittername')['pitch_id'].count().max()
+window_max = int(plv_df.dropna(subset=metric).groupby('hittername')['pitch_id'].count().max())
 
 # Rolling Window
 window = st.slider(f'Choose a {rolling_denom[metric]} threshold:', 50, window_max,
