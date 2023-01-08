@@ -153,8 +153,8 @@ if pitches_thrown >= pitch_threshold:
             num_pitches = plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
                                      (plv_df['pitchername']==player) &
                                      plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
-            pitch_usage = num_pitches / plv_df.loc[(plv_df['pitchername']==player) &
-                                                   plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 100
+            pitch_usage = round(num_pitches / plv_df.loc[(plv_df['pitchername']==player) &
+                                                         plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 100,1)
             axs[axis].legend([pitch_names[pitch_list[axis]]+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
                                                                                         (plv_df['pitchername']==player) &
                                                                                         plv_df['b_hand'].isin(hand_map[handedness]),'PLV'].mean()),
@@ -162,8 +162,8 @@ if pitches_thrown >= pitch_threshold:
                                                                      plv_df['b_hand'].isin(hand_map[handedness]) &
                                                                      plv_df['p_hand'].isin(pitcher_hand),'PLV'].mean())], 
                              edgecolor=pl_background, loc=(0,0.4), fontsize=14)
-            axs[axis].text(9,max_count*0.425,'{:,}\nPitches\n{:.1}%'.format(num_pitches,
-                                                                            pitch_usage),
+            axs[axis].text(9,max_count*0.425,'{:,}\nPitches\n{}%'.format(num_pitches,
+                                                                         pitch_usage),
                            ha='center',va='bottom', fontsize=14)
             
         hand_text = f'\n({pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB)' if handedness!='All' else ''
