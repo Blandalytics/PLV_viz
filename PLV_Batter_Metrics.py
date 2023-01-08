@@ -67,8 +67,8 @@ season_df = (plv_df
                  'pitch_id':'count',
                  'Swing Agg':'mean',
                  'SZ Judge':'mean',
-                 'Contact':'mean',
                  'Dec Value':'mean',
+                 'Contact':'mean',
                  'Adj Power':'mean',
                  'Value Added':'mean'
              })
