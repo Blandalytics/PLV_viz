@@ -91,7 +91,7 @@ def make_pretty(styler):
     styler.set_properties({'text-align': 'center'})
     return styler
 
-st.dataframe(season_df.style.pipe(make_pretty)
+st.dataframe(season_df.style.pipe(make_pretty))
 
 ### Rolling Charts
 stat_names = {
