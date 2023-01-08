@@ -64,9 +64,9 @@ season_df = (plv_df
                  'Adjusted Power':'mean',
                  'Value Added':'mean'
              })
-             .rename(columns={'pitch_id':'Pitches Seen'})
-             .astype({'Pitches Seen':'int'})
-             .sort_values('Value Added', ascending=False)
+#              .rename(columns={'pitch_id':'Pitches Seen'})
+#              .astype({'Pitches Seen':'int'})
+#              .sort_values('Value Added', ascending=False)
             )
 for stat in stat_names.keys():
     season_df[stat] = z_score_scaler(season_df[stat])
