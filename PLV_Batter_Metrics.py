@@ -187,7 +187,7 @@ def rolling_chart():
             color='w',
             alpha=0.75)
 
-    min_value = 0.25 if metric=='Strikezone Judgement' else 0
+    min_value = season_df['SZ Judge'].min() if metric=='Strikezone Judgement' else 0
 
     ax.set(xlabel=rolling_denom[metric],
            ylabel=metric,
