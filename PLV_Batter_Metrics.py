@@ -151,7 +151,8 @@ def rolling_chart():
             plv_df[metric].mean(),
             'MLB Avg' if abs(plv_df[metric].mean() - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
-            color='w')
+            color='w',
+            alpha=0.75)
 
     min_value = 0.25 if metric=='Strikezone Judgement' else 0
 
