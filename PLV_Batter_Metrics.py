@@ -30,7 +30,9 @@ line_color = sns.color_palette('vlag', n_colors=20)[0]
 
 st.title("Batter Ability Metrics")
 st.write('- Swing Aggression: How much more often a batter swings at pitches, given the swing likelihoods of the pitches they face.')
-st.write("- Strikezone Judgement: The 'correctness' of a batter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).")
+st.write('''
+- Strikezone Judgement: The "correctness" of a batter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
+''')
 st.write("- Decision Value: The opportunity cost of a batter's swing decision, using the predicted outcomes for that pitch.")
 st.write("- Contact Ability: A batter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- Adjusted Power: Modelled ISO of each BBE, minus that pitch's expected ISO.")
