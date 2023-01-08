@@ -38,7 +38,7 @@ st.write('''
 ''')
 st.write("- ***Decision Value***: The opportunity cost of a batter's swing decision, using the predicted outcomes for that pitch.")
 st.write("- ***Contact Ability***: A batter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
-st.write("- ***Adjusted Power***: Expected number of bases (aka SLG) above a pitch's expectation, for each BBE.")
+st.write("- ***Adjusted Power***: Modelled number of extra bases (aka ISO) above a pitch's expectation, for each BBE.")
 st.write("- ***Hitter Efficiency***: wOBA added by the batter to each pitch they see (including swing/take decisions), after accounting for pitch quality.")
 
 ## Selectors
