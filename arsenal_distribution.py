@@ -103,7 +103,7 @@ if pitches_thrown >= pitch_threshold:
                 .count()
                 .dropna()
                 .sort_values('pitch_id', ascending=False)
-                #.query('pitch_id > 50')
+                .query(f'pitch_id >= {plv_df.loc[(plv_df['pitchername']==player) & plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 0.05}')
                 ['pitchtype']
                 )
 
