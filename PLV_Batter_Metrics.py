@@ -32,14 +32,14 @@ sns.set_theme(
 line_color = sns.color_palette('vlag', n_colors=20)[0]
 
 st.title("Batter Ability Metrics")
-st.write('- **Swing Aggression**: How much more often a batter swings at pitches, given the swing likelihoods of the pitches they face.')
+st.write('- __**Swing Aggression**__: How much more often a batter swings at pitches, given the swing likelihoods of the pitches they face.')
 st.write('''
-- **Strikezone Judgement**: The "correctness" of a batter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
+- __**Strikezone Judgement**__: The "correctness" of a batter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
 ''')
-st.write("- **Decision Value**: The opportunity cost of a batter's swing decision, using the predicted outcomes for that pitch.")
-st.write("- **Contact Ability**: A batter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
-st.write("- **Adjusted Power**: Expected number of bases (aka SLG) above a pitch's expectation, for each BBE.")
-st.write("- **Hitter Efficiency**: wOBA added by the batter to each pitch they see (including swing/take decisions), after accounting for pitch quality.")
+st.write("- __**Decision Value**__: The opportunity cost of a batter's swing decision, using the predicted outcomes for that pitch.")
+st.write("- __**Contact Ability**__: A batter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
+st.write("- __**Adjusted Power**__: Expected number of bases (aka SLG) above a pitch's expectation, for each BBE.")
+st.write("- __**Hitter Efficiency**__: wOBA added by the batter to each pitch they see (including swing/take decisions), after accounting for pitch quality.")
 
 ## Selectors
 # Year
