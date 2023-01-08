@@ -65,7 +65,8 @@ season_df = (plv_df
                  'Value Added':'mean'
              })
              .query('pitch_id >= 400')
-             .rename(columns={'pitch_id':'Pitches Seen'})
+             .rename(columns={'hittername':'Name',
+                              'pitch_id':'Pitches Seen'})
              .astype({'Pitches Seen':'int'})
              .sort_values('Value Added', ascending=False)
             )
@@ -74,7 +75,7 @@ for stat in list(stat_names.values()):
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = season_df[stat].astype('int')
 
-st.dataframe(season_df)
+st.dataframe(season_df.style.set_table_styles([dict(selector="th",props=[('max-width', '50px')])]))
 
 # st.title("Rolling Ability Charts")
 # # Player
