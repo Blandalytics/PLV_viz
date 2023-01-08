@@ -86,17 +86,8 @@ for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Value Added']:
 
 st.write('Metrics on a 20-80 scale')
 
-# def make_pretty(styler):
-#     styler.background_gradient()
-#     styler.set_properties(**{'text-align': 'center'})
-#     return styler
-
-def center_align(s, props='text-align: left;'):
-     return props
-
 st.dataframe(season_df
              .style
-             .applymap(center_align)
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
             )
 
