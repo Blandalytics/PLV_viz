@@ -78,6 +78,11 @@ handedness = st.select_slider(
     options=['Left', 'All', 'Right'],
     value='All')
 
+if handedness=='All':
+    pitcher_hand = ['L','R']
+else:
+    pitcher_hand = list(plv_df.loc[(plv_df['pitchername']==player),'p_hand'].unique())
+
 hand_map = {
     'Left':['L'],
     'All':['L','R'],
@@ -123,11 +128,11 @@ if pitches_thrown >= pitch_threshold:
                         legend=False
                         )
 
-            axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player]['PLV'].mean(),
+            axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player,'PLV'].mean(),
                                 color=marker_colors[pitch],
                                 linestyle='--',
                                 linewidth=2.5)
-            axs[ax_num].axvline(chart_data['PLV'].mean(), 
+            axs[ax_num].axvline(chart_data.loc[chart_data['p_hand'].isin(pitcher_hand),'PLV'].mean(), 
                                 color='w', 
                                 label='Lg. Avg.',
                                 alpha=0.5)
@@ -149,14 +154,15 @@ if pitches_thrown >= pitch_threshold:
                                                                                         (plv_df['pitchername']==player) &
                                                                                         plv_df['b_hand'].isin(hand_map[handedness]),'PLV'].mean()),
                               'Lg. Avg.'+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) &
-                                                                     plv_df['b_hand'].isin(hand_map[handedness]),'PLV'].mean())], 
+                                                                     plv_df['b_hand'].isin(hand_map[handedness]) &
+                                                                     plv_df['p_hand'].isin(pitcher_hand),'PLV'].mean())], 
                              edgecolor=pl_background, loc=(0,0.4), fontsize=14)
             axs[axis].text(9,max_count*0.425,'{:,}\nPitches'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
                                                                                (plv_df['pitchername']==player) &
                                                                                plv_df['b_hand'].isin(hand_map[handedness])].shape[0]),
                            ha='center',va='bottom', fontsize=14)
             
-        hand_text = f'\n(vs {handedness}ies)' if handedness!='All' else ''
+        hand_text = f'\n({pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB)' if handedness!='All' else ''
 
         fig.suptitle("{}'s {} PLV Distributions{}".format(player,year,hand_text),fontsize=16)
         sns.despine(left=True, bottom=True)
