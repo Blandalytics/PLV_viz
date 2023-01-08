@@ -141,15 +141,6 @@ rolling_threshold = {
     'Adjusted Power': 75
 }
 
-window_max = int(plv_df.dropna(subset=metric).groupby('hittername')['pitch_id'].count().max()/2)
-
-# Rolling Window
-window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:', 
-                         min_value=50, 
-                         max_value=window_max,
-                         step=5, 
-                         value=rolling_threshold[metric])
-
 rolling_df = (plv_df
               .sort_values('pitch_id')
               .loc[(plv_df['hittername']==player),
@@ -157,8 +148,17 @@ rolling_df = (plv_df
               .dropna()
               .reset_index(drop=True)
               .reset_index()
-              .assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
+              #.assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
              )
+
+# Rolling Window
+window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:', 
+                         min_value=50, 
+                         max_value=int(rolling_df.shape[0]/2),
+                         step=5, 
+                         value=rolling_threshold[metric])
+
+rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window).mean()
 
 def rolling_chart():
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
