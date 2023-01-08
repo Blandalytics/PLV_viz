@@ -35,8 +35,8 @@ year = st.radio('Choose a year:', [2022,2021,2020])
 
 # Load Data
 def load_data():
-    file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/{year}_Batter_Scores.parquet?raw=true'
-    df = pd.read_parquet(file_name).sort_values('Weighted Ability',ascending=False)
+    file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/{year}_PLV_App_Data.parquet?raw=true'
+    df = pd.read_parquet(file_name)
     return df
 plv_df = load_data()
 
