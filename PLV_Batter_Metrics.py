@@ -114,7 +114,7 @@ window_max = int(plv_df.dropna(subset=metric).groupby('hittername')['pitch_id'].
 
 # Rolling Window
 window = st.slider(f'Choose a {rolling_denom[metric]} threshold:', 50, window_max,
-                   value=rolling_threshold[metric])
+                   step=5, value=rolling_threshold[metric])
 
 def rolling_chart():
     rolling_df = (plv_df
@@ -162,6 +162,6 @@ def rolling_chart():
                                                      window,
                                                      rolling_denom[metric]))
 
-    sns.despine()
+    #sns.despine()
     st.pyplot(fig)
 rolling_chart()
