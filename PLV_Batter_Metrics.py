@@ -71,7 +71,8 @@ season_df = (plv_df
             )
 
 for stat in list(stat_names.values()):
-    season_df[stat] = z_score_scaler(season_df[stat])
+    season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
+    season_df[stat] = season_df[stat].astype('int')
 
 st.dataframe(season_df)
 
