@@ -81,7 +81,7 @@ season_df = (plv_df
              .sort_values('Hit Eff', ascending=False)
             )
 
-season_df['Swing Agg'] = season_df['Swing Agg'].mul(100).round(1).astype('string')+'%'
+#season_df['Swing Agg'] = season_df['Swing Agg'].mul(100).round(1).astype('string')+'%'
 for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
@@ -89,15 +89,14 @@ for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
 st.write('Metrics on a 20-80 scale')
 
 def color_scale(v, cmap=''):
-    return styler.background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
+    return styler
 
 st.dataframe(season_df
-             .applymap(color_scale(),subset=['SZ Judge',
-                                             'Dec Value',
-                                             'Contact',
-                                             'Adj Power',
-                                             'Hit Eff']
-                      )
+             .style
+             .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
+                                  subset=['SZ Judge','Dec Value','Contact',
+                                          'Adj Power','Hit Eff']
+                                 )
             )
 
 ### Rolling Charts
