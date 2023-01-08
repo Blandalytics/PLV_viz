@@ -168,9 +168,9 @@ if pitches_thrown >= pitch_threshold:
                                                                           pitch_usage),
                            ha='center',va='bottom', fontsize=14)
             
-        hand_text = f'\n({pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB)' if handedness!='All' else ''
+        hand_text = f'{pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB, ' if handedness!='All' else ''
 
-        fig.suptitle("{}'s {} PLV Distributions (>5% of Pitches){}".format(player,year,hand_text),fontsize=16)
+        fig.suptitle("{}'s {} PLV Distributions\n({}>5% of Pitches)".format(player,year,hand_text),fontsize=16)
         sns.despine(left=True, bottom=True)
         st.pyplot(fig)
     arsenal_dist()
