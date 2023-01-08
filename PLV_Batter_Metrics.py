@@ -37,11 +37,11 @@ def z_score_scaler(series):
     return (series - series.mean()) / series.std()
 
 stat_names = {
-    'strike_zone_judgement':'SZ Judgement',
-    'swing_agg':'Swing Aggression',
-    'contact_over_expected':'Contact Ability',
-    'decision_value':'Swing Decisions',
-    'adj_power':'Adjusted Power',
+    'swing_agg':'Swing Agg',
+    'strike_zone_judgement':'SZ Judge',
+    'contact_over_expected':'Contact',
+    'decision_value':'Sw Dec',
+    'adj_power':'Adj Power',
     'batter_wOBA':'Value Added'
 }
 
