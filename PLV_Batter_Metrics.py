@@ -73,8 +73,9 @@ season_df = (plv_df
 
 for stat in list(stat_names.values()):
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
-    season_df[stat] = season_df[stat].astype('int')
+    season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
 
+st.write('Metrics on a 20-80 scale')
 st.dataframe(season_df.style.set_table_styles([dict(selector="th",props=[('max-width', '25px')])]))
 
 # st.title("Rolling Ability Charts")
