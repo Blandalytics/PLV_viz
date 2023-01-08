@@ -77,7 +77,7 @@ for stat in list(stat_names.values()):
 
 st.write('Metrics on a 20-80 scale')
 def make_pretty(styler):
-    styler.background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag_r")
+    styler.background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
     return styler
 st.dataframe(season_df.style.pipe(make_pretty))
 
