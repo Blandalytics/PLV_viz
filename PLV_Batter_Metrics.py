@@ -67,8 +67,9 @@ season_df = (plv_df
              .rename(columns={'pitch_id':'Pitches Seen'})
              .astype({'Pitches Seen':'int'})
              .sort_values('Value Added', ascending=False)
+             .query('Pitches Seen >= 400')
             )
-for stat in stat_names.keys():
+for stat in list(stat_names.values()):
     season_df[stat] = z_score_scaler(season_df[stat])
 
 st.dataframe(season_df)
