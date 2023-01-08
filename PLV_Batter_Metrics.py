@@ -56,15 +56,16 @@ season_df = (plv_df
              .groupby('battername',as_index=False)
              [['pitch_id']+stat_names.values()]
              .agg({
-              'pitch_id':'count',
-              'SZ Judgement':'mean',
-              'Swing Aggression':'mean',
-              'Contact Ability':'mean',
-              'Swing Decisions':'mean',
-              'Adjusted Power':'mean',
-              'Value Added':'mean'
+                 'pitch_id':'count',
+                 'SZ Judgement':'mean',
+                 'Swing Aggression':'mean',
+                 'Contact Ability':'mean',
+                 'Swing Decisions':'mean',
+                 'Adjusted Power':'mean',
+                 'Value Added':'mean'
              })
              .rename(columns={'pitch_id':'Pitches Seen'})
+             .astype({'Pitches Seen':'int'})
              .sort_values('Value Added', ascending=False)
             )
 for stat in stat_names.keys():
