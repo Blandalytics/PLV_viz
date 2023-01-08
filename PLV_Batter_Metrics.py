@@ -65,6 +65,7 @@ def load_season_data():
 
 plv_df = load_season_data()
 plv_df['swing_agg'] = plv_df['swing_agg'].mul(100).astype('float')
+plv_df['contact_over_expected'] = plv_df['contact_over_expected'].mul(100).astype('float')
 plv_df['strike_zone_judgement'] = plv_df['strike_zone_judgement'].mul(100).astype('float')
 
 season_df = (plv_df
@@ -198,7 +199,7 @@ def rolling_chart():
                                                      window,
                                                      rolling_denom[metric]))
     
-    if metric in ['Contact Ability','Strikezone Judgement']:
+    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
         ax.yaxis.set_major_formatter(ticker.PercentFormatter())
 
     sns.despine()
