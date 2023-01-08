@@ -48,8 +48,8 @@ stat_names = {
 # Load Data
 def load_season_data():
     file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/{year}_PLV_App_Data.parquet?raw=true'
-    df = pd.read_parquet(file_name).rename(columns=stat_names)
-    return df
+    df = pd.read_parquet(file_name)
+    return df.rename(columns=stat_names)
 
 plv_df = load_season_data()
 season_df = (plv_df
