@@ -162,8 +162,8 @@ if pitches_thrown >= pitch_threshold:
                                                                      plv_df['b_hand'].isin(hand_map[handedness]) &
                                                                      plv_df['p_hand'].isin(pitcher_hand),'PLV'].mean())], 
                              edgecolor=pl_background, loc=(0,0.4), fontsize=14)
-            axs[axis].text(9,max_count*0.425,'{:,} Pitches\n{}%'.format(num_pitches,
-                                                                        pitch_usage),
+            axs[axis].text(9,max_count*0.425,'{:,} Pitches\n({}%)'.format(num_pitches,
+                                                                          pitch_usage),
                            ha='center',va='bottom', fontsize=14)
             
         hand_text = f'\n({pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB)' if handedness!='All' else ''
