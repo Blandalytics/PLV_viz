@@ -91,10 +91,13 @@ st.write('Metrics on a 20-80 scale')
 #     styler.set_properties(**{'text-align': 'center'})
 #     return styler
 
+def center_align(s, props='text-align: center;'):
+    return props
+
 st.dataframe(season_df
              .style
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
-             .set_properties(**{'text-align': 'center'})
+             .applymap(center_align)
             )
 
 ### Rolling Charts
