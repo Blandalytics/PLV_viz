@@ -86,7 +86,6 @@ season_df = (plv_df
              .sort_values('Hit Eff', ascending=False)
             )
 
-#season_df = season_df['Swing Agg'].mul(100).astype('float')
 for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
@@ -160,7 +159,7 @@ def rolling_chart():
                   .reset_index()
                   .assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
                  )
-
+    rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(7,7))
     sns.lineplot(data=rolling_df,
                  x='index',
