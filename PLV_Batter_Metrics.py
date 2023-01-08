@@ -36,7 +36,7 @@ st.write('''
 st.write("- Decision Value: The opportunity cost of a batter's swing decision, using the predicted outcomes for that pitch.")
 st.write("- Contact Ability: A batter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- Adjusted Power: Modelled ISO of each BBE, minus that pitch's expected ISO.")
-st.write("- Value Added: The wOBA added by the batter to each pitch (including swing/take decisions).")
+st.write("- Hitter Score: The wOBA added by the batter to each pitch (including swing/take decisions).")
 
 ## Selectors
 # Year
@@ -51,7 +51,7 @@ stat_names = {
     'decision_value':'Dec Value',
     'contact_over_expected':'Contact',
     'adj_power':'Adj Power',
-    'batter_wOBA':'Value Added'
+    'batter_wOBA':'Hit Score'
 }
 
 # Load Data
@@ -72,17 +72,17 @@ season_df = (plv_df
                  'Dec Value':'mean',
                  'Contact':'mean',
                  'Adj Power':'mean',
-                 'Value Added':'mean'
+                 'Hit Score':'mean'
              })
              .query('pitch_id >= 400')
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches Seen'})
              .astype({'Pitches Seen':'string'})
-             .sort_values('Value Added', ascending=False)
+             .sort_values('Hit Score', ascending=False)
             )
 
 season_df['Swing Agg'] = season_df['Swing Agg'].mul(100).round(1).astype('string')+'%'
-for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Value Added']:
+for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Score']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
 
