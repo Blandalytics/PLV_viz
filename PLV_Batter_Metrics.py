@@ -48,7 +48,7 @@ year = st.radio('Choose a year:', [2022,2021,2020])
 def z_score_scaler(series):
     return (series - series.mean()) / series.std()
 
-stat_names = {
+season_names = {
     'swing_agg':'Swing Agg (%)',
     'strike_zone_judgement':'SZ Judge',
     'decision_value':'Dec Value',
@@ -69,9 +69,9 @@ plv_df['contact_over_expected'] = plv_df['contact_over_expected'].mul(100).astyp
 plv_df['strike_zone_judgement'] = plv_df['strike_zone_judgement'].mul(100).astype('float')
 
 season_df = (plv_df
-             .rename(columns=stat_names)
+             .rename(columns=season_names)
              .groupby('hittername')
-             [['pitch_id']+list(stat_names.values())]
+             [['pitch_id']+list(season_names.values())]
              .agg({
                  'pitch_id':'count',
                  'Swing Agg (%)':'mean',
