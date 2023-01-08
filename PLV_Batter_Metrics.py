@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import textwrap
 
 ## Set Styling
 # Plot Style
@@ -75,6 +76,7 @@ for stat in list(stat_names.values()):
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = season_df[stat].astype('int')
 
+season_df.columns = [textwrap.wrap(x, width=20) for x in season_df.columns]
 st.dataframe(season_df.style.set_table_styles([dict(selector="th",props=[('max-width', '25px')])]))
 
 # st.title("Rolling Ability Charts")
