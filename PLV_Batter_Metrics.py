@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from matplotlib import ticker
+
 ## Set Styling
 #pd.set_option("display.precision", 1)
 # Plot Style
@@ -193,6 +195,9 @@ def rolling_chart():
                                                      metric,
                                                      window,
                                                      rolling_denom[metric]))
+    
+    if metric in ['Contact Ability','Strikezone Judgement']:
+        ax.yaxis.set_major_formatter(ticker.PercentFormatter())
 
     sns.despine()
     st.pyplot(fig)
