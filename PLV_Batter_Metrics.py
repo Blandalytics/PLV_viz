@@ -94,11 +94,11 @@ def color_scale(v, cmap=''):
 
 st.dataframe(season_df
              .style
+             .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
                                   subset=['SZ Judge','Dec Value','Contact',
                                           'Adj Power','Hit Eff']
                                  ) 
-             .format(precision=1)
             )
 
 ### Rolling Charts
