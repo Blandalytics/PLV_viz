@@ -34,6 +34,8 @@ st.write("- Strikezone Judgement: The 'correctness' of a batter's swings and tak
 st.write("- Decision Value: The opportunity cost of a batter's swing decision, using the predicted outcomes for that pitch.")
 st.write("- Contact Ability: A batter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- Adjusted Power: Modelled xISO of each BBE, minus that pitch's expected ISO.")
+st.write("- Value Added: The wOBA added by the batter to each pitch (including swing/take decisions).")
+
 ## Selectors
 # Year
 year = st.radio('Choose a year:', [2022,2021,2020])
@@ -80,8 +82,6 @@ season_df = (plv_df
 for stat in list(stat_names.values()):
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
-
-st.write("- Value Added: The wOBA added by the batter to each pitch (including swing/take decisions).")
 
 st.write('Metrics on a 20-80 scale')
 def make_pretty(styler):
