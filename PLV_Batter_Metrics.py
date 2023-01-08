@@ -91,18 +91,12 @@ st.write('Metrics on a 20-80 scale')
 #     styler.set_properties(**{'text-align': 'center'})
 #     return styler
 
-# def center_align(s, props='text-align: center;'):
-#     return props
-
-st.markdown(
-    """<style>
-        .col_heading   {text-align: center !important}
-    </style>
-    """, unsafe_allow_html=True)
+ def center_align(s, props='text-align: left;'):
+     return props
 
 st.dataframe(season_df
              .style
-             #.applymap(center_align)
+             .applymap(center_align)
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
             )
 
