@@ -85,11 +85,13 @@ for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Value Added']:
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
 
 st.write('Metrics on a 20-80 scale')
+
 def make_pretty(styler):
     styler.background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
     styler.set_properties({'selector': 'td', 'props': 'text-align: center;'})
     return styler
-st.dataframe(season_df.style.pipe(make_pretty))
+
+st.dataframe(season_df.style.pipe(make_pretty).style.set_properties(**{'text-align': 'left'}))
 
 ### Rolling Charts
 stat_names = {
