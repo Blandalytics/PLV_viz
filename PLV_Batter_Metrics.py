@@ -74,7 +74,7 @@ season_df = (plv_df
              [['pitch_id']+list(stat_names.values())]
              .agg({
                  'pitch_id':'count',
-                 'Swing Agg':'mean',
+                 'Swing Agg (%)':'mean',
                  'SZ Judge':'mean',
                  'Dec Value':'mean',
                  'Contact':'mean',
@@ -83,7 +83,7 @@ season_df = (plv_df
              })
              .query('pitch_id >= 400')
              .rename(columns={'hittername':'Name',
-                              'pitch_id':'Pitches Seen'})
+                              'pitch_id':'Pitches'})
              .sort_values('Hit Eff', ascending=False)
             )
 
