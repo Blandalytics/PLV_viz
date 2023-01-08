@@ -98,6 +98,7 @@ st.dataframe(season_df
                                              'Adj Power',
                                              'Hit Eff']
                       )
+            )
 
 ### Rolling Charts
 stat_names = {
