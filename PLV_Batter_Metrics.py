@@ -81,86 +81,86 @@ def make_pretty(styler):
     return styler
 st.dataframe(season_df.style.pipe(make_pretty))
 
-# st.title("Rolling Ability Charts")
-# # Player
-# players = list(plv_df['hittername'].unique())
-# default_player = players.index('Juan Soto')
-# player = st.selectbox('Choose a player:', players, index=default_player)
+st.title("Rolling Ability Charts")
+# Player
+players = list(plv_df['hittername'].unique())
+default_player = players.index('Juan Soto')
+player = st.selectbox('Choose a player:', players, index=default_player)
 
-# # Metric
-# metrics = ['Swing Aggression','Strikezone Judgement','Decision Value',
-#            'Contact Ability','Adjusted Power']
-# default_stat = metrics.index('Decision Value')
-# metric = st.selectbox('Choose a metric:', metrics, index=default_stat)
+# Metric
+metrics = ['Swing Aggression','Strikezone Judgement','Decision Value',
+           'Contact Ability','Adjusted Power']
+default_stat = metrics.index('Decision Value')
+metric = st.selectbox('Choose a metric:', metrics, index=default_stat)
 
-# rolling_denom = {
-#     'Strikezone Judgement':'Pitches',
-#     'Swing Aggression':'Pitches',
-#     'Decision Value':'Pitches',
-#     'Contact Ability':'Swings',
-#     'Adjusted Power': 'BBE'
-# }
+rolling_denom = {
+    'Strikezone Judgement':'Pitches',
+    'Swing Aggression':'Pitches',
+    'Decision Value':'Pitches',
+    'Contact Ability':'Swings',
+    'Adjusted Power': 'BBE'
+}
 
-# rolling_threshold = {
-#     'Strikezone Judgement':400,
-#     'Swing Aggression':400,
-#     'Decision Value':400,
-#     'Contact Ability':200,
-#     'Adjusted Power': 75
-# }
+rolling_threshold = {
+    'Strikezone Judgement':400,
+    'Swing Aggression':400,
+    'Decision Value':400,
+    'Contact Ability':200,
+    'Adjusted Power': 75
+}
 
-# window_max = plv_df.dropna(subset=metric).groupby('battername')['pitch_id'].count().max()
+window_max = plv_df.dropna(subset=metric).groupby('battername')['pitch_id'].count().max()
 
-# # Rolling Window
-# window = st.slider(f'Choose a {rolling_denom[metric]} threshold:', 50, window_max,
-#                    value=rolling_threshold[metric])
+# Rolling Window
+window = st.slider(f'Choose a {rolling_denom[metric]} threshold:', 50, window_max,
+                   value=rolling_threshold[metric])
 
-# def rolling_chart()
-#   rolling_df = (plv_df
-#                 .sort_values('pitch_id')
-#                 .loc[(plv_df['batter_name']==player),
-#                      ['battername',metric]]
-#                 .dropna()
-#                 .reset_index(drop=True)
-#                 .reset_index()
-#                 .assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
-#                 )
+def rolling_chart()
+  rolling_df = (plv_df
+                .sort_values('pitch_id')
+                .loc[(plv_df['batter_name']==player),
+                     ['battername',metric]]
+                .dropna()
+                .reset_index(drop=True)
+                .reset_index()
+                .assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
+                )
 
-#   fig, ax = plt.subplots(figsize=(7,7))
-#   sns.lineplot(data=rolling_df,
-#                x='index',
-#                y='Rolling_Stat',
-#                color=line_color)
+  fig, ax = plt.subplots(figsize=(7,7))
+  sns.lineplot(data=rolling_df,
+               x='index',
+               y='Rolling_Stat',
+               color=line_color)
 
-#   ax.axhline(rolling_df[metric].mean(), color=line_color)
-#   ax.text(rolling_df.shape[0]*1.05,
-#           rolling_df[metric].mean(),
-#           'Szn Avg',
-#           va='center',
-#           color=sns.color_palette('vlag', n_colors=20)[3])
+  ax.axhline(rolling_df[metric].mean(), color=line_color)
+  ax.text(rolling_df.shape[0]*1.05,
+          rolling_df[metric].mean(),
+          'Szn Avg',
+          va='center',
+          color=sns.color_palette('vlag', n_colors=20)[3])
 
-#   ax.axhline(plv_df[metric].mean(),
-#              color='w',
-#              linestyle='--',
-#              alpha=0.5)
-#   ax.text(rolling_df.shape[0]*1.05,
-#           pitch_data[metric].mean(),
-#           'MLB Avg' if abs(rolling_df[metric].mean() - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
-#           va='center',
-#           color='w')
+  ax.axhline(plv_df[metric].mean(),
+             color='w',
+             linestyle='--',
+             alpha=0.5)
+  ax.text(rolling_df.shape[0]*1.05,
+          pitch_data[metric].mean(),
+          'MLB Avg' if abs(rolling_df[metric].mean() - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
+          va='center',
+          color='w')
 
-#   min_value = 0.25 if metric=='Strikezone Judgement' else 0
+  min_value = 0.25 if metric=='Strikezone Judgement' else 0
 
-#   ax.set(xlabel='Season '+rolling_denom[metric],
-#          ylabel=metric,
-#          ylim=(min(min_value,rolling_df['Rolling_Stat'].min(),plv_df[metric].mean()) + ax.get_ylim()[0]/20,
-#                max(0,rolling_df['Rolling_Stat'].max(),plv_df[metric].mean()) + ax.get_ylim()[1]/20),
-#          title="{}'s {} Rolling {} ({} {})".format(player,
-#                                                    year,
-#                                                    metric,
-#                                                    window,
-#                                                    rolling_denom[metric]))
+  ax.set(xlabel='Season '+rolling_denom[metric],
+         ylabel=metric,
+         ylim=(min(min_value,rolling_df['Rolling_Stat'].min(),plv_df[metric].mean()) + ax.get_ylim()[0]/20,
+               max(0,rolling_df['Rolling_Stat'].max(),plv_df[metric].mean()) + ax.get_ylim()[1]/20),
+         title="{}'s {} Rolling {} ({} {})".format(player,
+                                                   year,
+                                                   metric,
+                                                   window,
+                                                   rolling_denom[metric]))
 
-#   sns.despine()
-#   st.pyplot(fig)
-# rolling_chart()
+  sns.despine()
+  st.pyplot(fig)
+rolling_chart()
