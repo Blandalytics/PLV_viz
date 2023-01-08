@@ -103,7 +103,7 @@ if pitches_thrown >= pitch_threshold:
                 .count()
                 .dropna()
                 .sort_values('pitch_id', ascending=False)
-                .query('pitch_id > 50')
+                #.query('pitch_id > 50')
                 ['pitchtype']
                 )
 
