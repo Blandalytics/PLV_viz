@@ -161,7 +161,7 @@ def rolling_chart():
                   .assign(Rolling_Stat=lambda x: x[metric].rolling(window).mean())
                  )
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
-    fig, ax = plt.subplots(figsize=(7,7))
+    fig, ax = plt.subplots(figsize=(6,6))
     sns.lineplot(data=rolling_df,
                  x='index',
                  y='Rolling_Stat',
