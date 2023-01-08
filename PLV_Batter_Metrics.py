@@ -88,10 +88,16 @@ for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
 
 st.write('Metrics on a 20-80 scale')
 
+def color_scale(v, cmap=''):
+    return styler.
+
 st.dataframe(season_df
-             .style
-             .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
-            )
+             .applymap(color_scale(),subset=['SZ Judge',
+                                             'Dec Value',
+                                             'Contact',
+                                             'Adj Power',
+                                             'Hit Eff']
+                      )
 
 ### Rolling Charts
 stat_names = {
