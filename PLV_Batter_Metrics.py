@@ -64,6 +64,9 @@ def load_season_data():
     return df
 
 plv_df = load_season_data()
+plv_df['swing_agg'] = plv_df['swing_agg'].mul(100).astype('float')
+plv_df['strike_zone_judgement'] = plv_df['strike_zone_judgement'].mul(100).astype('float')
+
 season_df = (plv_df
              .rename(columns=stat_names)
              .groupby('hittername')
@@ -83,7 +86,7 @@ season_df = (plv_df
              .sort_values('Hit Eff', ascending=False)
             )
 
-season_df['Swing Agg'] = season_df['Swing Agg'].mul(100).astype('float')
+#season_df = season_df['Swing Agg'].mul(100).astype('float')
 for stat in ['SZ Judge','Contact','Dec Value','Adj Power','Hit Eff']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
