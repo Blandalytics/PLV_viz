@@ -61,7 +61,7 @@ season_df = (plv_df
                  'Swing Agg':'mean',
                  'SZ Judge':'mean',
                  'Contact':'mean',
-                 'Sw Dec':'mean',
+                 'Dec Value':'mean',
                  'Adj Power':'mean',
                  'Value Added':'mean'
              })
@@ -76,7 +76,6 @@ for stat in list(stat_names.values()):
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
 
-st.write('Metrics on a 20-80 scale')
 st.write('- Swing Aggression: How much more often a batter swings at pitches, given the swing likelihoods of the pitches they face.')
 st.write("- Strikezone Judgement: The 'correctness' of a batter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).")
 st.write("- Decision Value: The opportunity cost of a batter's swing decision, using the predicted outcomes for that pitch.")
@@ -84,6 +83,7 @@ st.write("- Contact Ability: A batter's ability to make contact (foul strike or 
 st.write("- Adjusted Power: Modelled xISO of each BBE, minus that pitch's expected ISO.")
 st.write("- Value Added: The wOBA added by the batter to each pitch (including swing/take decisions).")
 
+st.write('Metrics on a 20-80 scale')
 def make_pretty(styler):
     styler.background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag")
     return styler
