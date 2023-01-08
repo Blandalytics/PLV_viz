@@ -151,10 +151,12 @@ rolling_df = (plv_df
               .reset_index()
              )
 
+window_max = int(round(rolling_df.shape[0]/10)*5)
+
 # Rolling Window
 window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:', 
-                         min_value=40, 
-                         max_value=int(round(rolling_df.shape[0]/10)*5),
+                         min_value=50, 
+                         max_value=window_max,
                          step=5, 
                          value=rolling_threshold[metric])
 
