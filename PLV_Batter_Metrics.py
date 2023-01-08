@@ -91,7 +91,7 @@ st.write('Metrics on a 20-80 scale')
 #     styler.set_properties(**{'text-align': 'center'})
 #     return styler
 
- def center_align(s, props='text-align: left;'):
+def center_align(s, props='text-align: left;'):
      return props
 
 st.dataframe(season_df
