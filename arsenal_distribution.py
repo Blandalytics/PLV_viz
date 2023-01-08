@@ -95,6 +95,8 @@ pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
 st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
 
 if pitches_thrown >= pitch_threshold:
+    pitch_type_thresh = int(plv_df.loc[(plv_df['pitchername']==player) & 
+                                       plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 0.05)
     pitch_list = list(plv_df
                 .loc[(plv_df['pitchername']==player) &
                      plv_df['b_hand'].isin(hand_map[handedness])]
@@ -103,7 +105,7 @@ if pitches_thrown >= pitch_threshold:
                 .count()
                 .dropna()
                 .sort_values('pitch_id', ascending=False)
-                #.query(f'pitch_id >= {plv_df.loc[(plv_df['pitchername']==player) & plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 0.05}')
+                .query(f'pitch_id >= {pitch_type_thresh}')
                 ['pitchtype']
                 )
 
