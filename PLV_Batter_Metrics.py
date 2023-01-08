@@ -57,11 +57,11 @@ season_df = (plv_df
              [['pitch_id']+list(stat_names.values())]
              .agg({
                  'pitch_id':'count',
-                 'SZ Judgement':'mean',
-                 'Swing Aggression':'mean',
-                 'Contact Ability':'mean',
-                 'Swing Decisions':'mean',
-                 'Adjusted Power':'mean',
+                 'Swing Agg':'mean',
+                 'SZ Judge':'mean',
+                 'Contact':'mean',
+                 'Sw Dec':'mean',
+                 'Adj Power':'mean',
                  'Value Added':'mean'
              })
              .query('pitch_id >= 400')
