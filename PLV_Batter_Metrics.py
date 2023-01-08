@@ -97,7 +97,7 @@ st.dataframe(season_df
                                   subset=['SZ Judge','Dec Value','Contact',
                                           'Adj Power','Hit Eff']
                                  )
-             .format('{:.1f}%', subset=['Swing Agg'])  
+             #.format('{:.1f}%', subset=['Swing Agg'])  
             )
 
 ### Rolling Charts
