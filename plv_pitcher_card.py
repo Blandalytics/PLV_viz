@@ -92,7 +92,7 @@ sz_top = 3.5
 # norm = colors.TwoSlopeNorm(vmin=0, 
 #                            vcenter=5,
 #                            vmax=10)
-bounds = np.linspace(0, 10, 21)
+bounds = np.linspace(3.5, 6.5, 4)
 norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
 
 game_norm = colors.TwoSlopeNorm(vmin=4, 
@@ -165,7 +165,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   pitch_feats = 8
 
   # Divide card into tiles
-  grid = plt.GridSpec(grid_height, 7, wspace=0.1*scale_val, hspace=0.5*scale_val, width_ratios=[2.5,0.6,4.4,1.5,0.5,0.25,0.25],
+  grid = plt.GridSpec(grid_height, 6, wspace=0.1*scale_val, hspace=0.5*scale_val,
                       height_ratios=[1.5]+[7/pitch_feats]*(pitch_feats)+[1])
 
   # Title of card (name, etc)
@@ -312,9 +312,6 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                cax=cb_ax
               )
   cb_ax.tick_params(labelsize=round(10*scale_val))
-  cb_ax.yaxis.set_ticklabels([x/2 for x in range(0,21)])
-#   for label in cb_ax.yaxis.get_ticklabels()[1::2]:
-#       label.set_visible(False)
   
   # Chart ownership (PitcherList)
   pl_ax = plt.subplot(grid[0, :1])
