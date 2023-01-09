@@ -87,12 +87,12 @@ def load_data():
     return df
 plv_df = load_data()
 
+st.write(plv_df.columns.values)
+
 # Player
 players = list(plv_df['pitchername'].unique())
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
-
-st.write(plv_df.loc[plv_df['pitchername']==player,'p_x'].mean())
 
 pitch_list = list(plv_df
                 .loc[(plv_df['pitchername']==player)# &
