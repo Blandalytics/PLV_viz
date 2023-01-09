@@ -116,7 +116,7 @@ def x_ticks_format(ax,game_dates,scale_val):
     ax.tick_params(left=False, labelsize=round(10*scale_val))
     ax.xaxis.set_major_locator(mdates.AutoDateLocator(minticks=3, maxticks=8))
     ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(mdates.AutoDateLocator(minticks=3, maxticks=8),show_offset=False))
-    ax.xaxis.set_minor_locator(mdates.DayLocator())
+    #ax.xaxis.set_minor_locator(mdates.DayLocator())
 
 # Year
 years = [2022,2021,2020]
