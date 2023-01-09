@@ -291,10 +291,10 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   cb_ax = plt.subplot(grid[5:9, 5])
   sm = plt.cm.ScalarMappable(cmap='vlag', norm=norm)
   sm.set_array([])
-  fig.colorbar(sm,
-               cax=cb_ax
-               )
-  cb_ax.set_yticks(range(0,11))
+  cb = fig.colorbar(sm,
+                    ax=[cb_ax]
+                   )
+  cb.ax.set_yticks(range(0,11))
   cb_ax.tick_params(labelsize=round(10*scale_val))
   
   # Chart ownership (PitcherList)
