@@ -238,13 +238,16 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
   pitch_qual_i = 0
-  for qual in [4.5,5.5,10]:
+  qual_bins = [0,4.5,5.5,10]
+  qual_labels = ['BP','AP','QP']
+  graph_data['pitch_qual'] = pd.cut(graph_data['PLV_clip'],bins=qual_bins,labels=qual_labels)
+  for qual in qual_labels:
     # Plot of individual pitches
     pitch_plot_ax = plt.subplot(grid[4:, pitch_qual_i:pitch_qual_i+2])
     sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5) &
                                         (graph_data['p_z']>-0.5) &
                                         (graph_data['p_x']>=-2.75) &
-                                        (graph_data['PLV_clip']<=qual)], 
+                                        (graph_data['pitch_qual']==qual)], 
                     x='p_x', 
                     y='p_z', 
                     s=round(70*scale_val), 
@@ -306,14 +309,14 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   pl_ax.imshow(logo)
   pl_ax.axis('off')
 
-  # Viz Credit
-  credit_ax = plt.subplot(grid[9:, 5:])
-  credit_ax.text(-0.2,0.6,'Viz by\n@Blandalytics', ha='center', va='center', fontsize=round(8*scale_val),
-           bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
-  credit_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-  credit_ax.set_xticklabels([])
-  credit_ax.set_yticklabels([])
-  credit_ax.tick_params(left=False, bottom=False)
+#   # Viz Credit
+#   credit_ax = plt.subplot(grid[9:, 5:])
+#   credit_ax.text(-0.2,0.6,'Viz by\n@Blandalytics', ha='center', va='center', fontsize=round(8*scale_val),
+#            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
+#   credit_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
+#   credit_ax.set_xticklabels([])
+#   credit_ax.set_yticklabels([])
+#   credit_ax.tick_params(left=False, bottom=False)
 
   # Box the Pitchtype Charts
   fig.add_artist(Line2D([0.125, 0.302], [0.8, 0.8], linewidth=round(2*scale_val)))
