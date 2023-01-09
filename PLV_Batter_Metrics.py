@@ -31,7 +31,7 @@ sns.set_theme(
 
 line_color = sns.color_palette('vlag', n_colors=20)[0]
 
-st.title("Batter Ability Metrics")
+st.title("Hitter Ability Metrics")
 st.write('- ***Swing Aggression***: How much more often a batter swings at pitches, given the swing likelihoods of the pitches they face.')
 st.write('''
 - ***Strikezone Judgement***: The "correctness" of a batter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
@@ -119,7 +119,7 @@ st.title("Rolling Ability Charts")
 # Player
 players = list(plv_df['hittername'].unique())
 default_player = players.index('Juan Soto')
-player = st.selectbox('Choose a player:', players, index=default_player)
+player = st.selectbox('Choose a hitter:', players, index=default_player)
 
 # Metric
 metrics = list(stat_names.values())
