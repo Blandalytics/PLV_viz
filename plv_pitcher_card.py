@@ -89,9 +89,9 @@ norm = colors.TwoSlopeNorm(vmin=0,
                            vcenter=5,
                            vmax=10)
 
-game_norm = colors.TwoSlopeNorm(vmin=2, 
+game_norm = colors.TwoSlopeNorm(vmin=4, 
                                 vcenter=5,
-                                vmax=8)
+                                vmax=6)
 
 # Date Formatter
 def x_ticks_format(ax,game_dates,scale_val):
@@ -208,7 +208,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   # League Average line
   game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
   
-  game_ax.set(xlabel=None, ylabel=None, ylim=(0,10))
+  game_ax.set(xlabel=None, ylabel=None, ylim=(3,7))
   #x_ticks_format(game_ax,graph_data['game_played'],scale_val)
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
