@@ -198,6 +198,16 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   pitchtype_i = 2
   for pitch in pitch_list:
     pitch_dist_ax = plt.subplot(grid[pitchtype_i, 0])
+    pitch_dist_ax.text(0,0,"{}".format(pitch), 
+                  ha='center', va='center', 
+                  fontsize=round(18*scale_val),
+                  bbox=dict(facecolor='#162B50', 
+                            alpha=0.6, 
+                            edgecolor='#162B50'))
+    pitch_dist_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
+    pitch_dist_ax.set_xticklabels([])
+    pitch_dist_ax.set_yticklabels([])
+    pitch_dist_ax.tick_params(left=False, bottom=False)
     pitchtype_i += 1
 
   # Per game/appearance chart
