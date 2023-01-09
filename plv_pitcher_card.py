@@ -281,9 +281,9 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   plv_ax.set_yticklabels([])
   plv_ax.tick_params(left=False, bottom=False)
   
-  game_chart(plt.subplot(grid[2:, 1:4]))
+  game_chart(graph_data,plt.subplot(grid[2:, 1:4]))
   
-  pitch_qual_charts(y_start=4)
+  pitch_qual_charts(graph_data,y_start=4)
 
 #   # Add custom legend for markers
 #   legend_markers = [Line2D([],[],
