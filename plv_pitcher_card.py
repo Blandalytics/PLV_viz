@@ -186,8 +186,8 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
 
   graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
-  game_min = graph_data.groupby(['game_played','pitchername'],as_index=False)['PLV'].min()
-  game_max = graph_data.groupby(['game_played','pitchername'],as_index=False)['PLV'].max()
+  game_min = graph_data.groupby(['game_played','pitchername'],as_index=False)['PLV'].mean().min()
+  game_max = graph_data.groupby(['game_played','pitchername'],as_index=False)['PLV'].mean().max()
   
   # Subtle line to connect the dots
   sns.lineplot(data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
