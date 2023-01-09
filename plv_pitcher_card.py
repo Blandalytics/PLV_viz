@@ -180,7 +180,7 @@ def game_chart(graph_data, game_ax):
                   legend=False)
 
   # League Average line
-  game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.5)
+  game_ax.axhline(5, color='#FEFEFE', linewidth=2, linestyle='--', alpha=0.5)
   
   game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.1]),
                                               max([6,game_max+0.1])))
@@ -192,7 +192,7 @@ def game_chart(graph_data, game_ax):
 def pitch_qual_charts(graph_data,x_start=0, y_start=0,x_diff=2, y_diff=0):
   x_loc = x_start
   y_loc = y_start
-  qual_bins = [0,4.5,5.5,10]
+  qual_bins = [-20,4.5,5.5,20]
   qual_labels = ['BP','AP','QP']
   graph_data['pitch_qual'] = pd.cut(graph_data['PLV_clip'],bins=qual_bins,labels=qual_labels)
   for qual in qual_labels:
