@@ -180,7 +180,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   
   # Avg PLV
   plv_ax = plt.subplot(grid[1, 0])
-  plv_ax.text(-0.5,0,"Avg PLV\n{:.3}".format(graph_data['PLV'].mean()), 
+  plv_ax.text(0,0,"Avg PLV\n{:.3}".format(graph_data['PLV'].mean()), 
                 ha='center', va='center', 
                 fontsize=round(18*scale_val),
                 bbox=dict(facecolor='#162B50', 
