@@ -95,6 +95,7 @@ game_norm = colors.TwoSlopeNorm(vmin=4,
                                 vmax=6)
 
 logo = Image.open('https://github.com/Blandalytics/PLV_viz/blob/main/PL_Logo.png')
+st.image(logo)
 
 # Date Formatter
 def x_ticks_format(ax,game_dates,scale_val):
