@@ -189,15 +189,8 @@ def game_chart(graph_data, game_ax):
   game_ax.tick_params(left=False)
   game_ax.set_title('Avg PLV, per Game', fontsize=18)
   
-def pitch_qual_charts(graph_data,grid=grid,x_start=0, y_start=0,x_diff=2, y_diff=0):
-  x_loc = x_start
-  y_loc = y_start
-  qual_bins = [-20,4.5,5.5,20]
-  qual_labels = ['BP','AP','QP']
-  graph_data['pitch_qual'] = pd.cut(graph_data['PLV_clip'],bins=qual_bins,labels=qual_labels)
-  for qual in qual_labels:
+def pitch_qual_charts(graph_data,pitch_plot_ax):
     # Plot of individual pitches
-    pitch_plot_ax = plt.subplot(grid[y_loc:-1, x_loc:x_loc+x_diff])
     sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5) &
                                         (graph_data['p_z']>-0.5) &
                                         (graph_data['p_x']>=-2.75) &
@@ -230,8 +223,6 @@ def pitch_qual_charts(graph_data,grid=grid,x_start=0, y_start=0,x_diff=2, y_diff
 #              bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
 #     pitch_plot_ax.text(0.75,y_lim-0.7,"(From Pitcher's Perspective)", ha='center', va='top', fontsize=round(10*scale_val), alpha=0.7,
 #              bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
-    x_loc += x_diff
-    y_loc += y_diff
 
 def plv_card(pitch_threshold=200,scale_val=1.5):
   # Create df for only the pitcher's pitches
@@ -283,7 +274,17 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   
   game_chart(graph_data,plt.subplot(grid[2:, 1:4]))
   
-  pitch_qual_charts(graph_data,y_start=4)
+  x_loc = 0
+  y_loc = 4
+  qual_bins = [-20,4.5,5.5,20]
+  qual_labels = ['BP','AP','QP']
+  graph_data['pitch_qual'] = pd.cut(graph_data['PLV_clip'],bins=qual_bins,labels=qual_labels)
+
+  for qual in qual_labels:
+    pitch_plot_ax = plt.subplot(grid[y_loc:, x_loc:x_loc+2])
+    pitch_qual_charts(graph_data,pitch_plot_ax)
+    x_loc += 2
+    y_loc += 0
 
 #   # Add custom legend for markers
 #   legend_markers = [Line2D([],[],
