@@ -146,7 +146,7 @@ pitch_list = list(plv_df
                 ['pitchtype']
                 )
 
-def game_chart(graph_data, game_ax, days=60):
+def game_chart(graph_data, game_ax, days=30):
   # Per game/appearance chart
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
   
@@ -275,7 +275,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   plv_ax.set_yticklabels([])
   plv_ax.tick_params(left=False, bottom=False)
   
-  game_chart(graph_data,plt.subplot(grid[1:4, 2:]))
+  game_chart(graph_data,plt.subplot(grid[1:4, 4:]))
   
   x_loc = 0
   y_loc = 4
