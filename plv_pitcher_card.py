@@ -220,6 +220,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.25]),
                                               max([6,game_max+0.25])))
   #x_ticks_format(game_ax,graph_data['game_played'],scale_val)
+  game_ax.set_yticks(game_ax.get_yticks()[::2])
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
   # Plot of individual pitches
