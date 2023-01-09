@@ -29,7 +29,7 @@ sns.set_theme(
         'axes.facecolor': pl_background,
         'axes.labelcolor': pl_white,
         'xtick.color': pl_white,
-        'ytick.color': pl_white,
+        'ytick.color': pl_background,
         'figure.facecolor':pl_background,
         'grid.color': pl_background,
         'grid.linestyle': '-',
