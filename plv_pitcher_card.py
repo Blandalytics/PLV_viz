@@ -312,6 +312,8 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                cax=cb_ax
               )
   cb_ax.tick_params(labelsize=round(10*scale_val))
+  for label in cb_ax.yaxis.get_ticklabels()[1::2]:
+      label.set_visible(False)
   
   # Chart ownership (PitcherList)
   pl_ax = plt.subplot(grid[0, :1])
