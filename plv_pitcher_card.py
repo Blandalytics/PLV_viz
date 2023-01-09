@@ -275,7 +275,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
 #   plv_ax.set_yticklabels([])
 #   plv_ax.tick_params(left=False, bottom=False)
   
-  game_chart(graph_data,plt.subplot(grid[1:4, 3:]))
+  game_chart(graph_data,plt.subplot(grid[1:4, 2:-2]))
   
   x_loc = 0
   y_loc = 1
