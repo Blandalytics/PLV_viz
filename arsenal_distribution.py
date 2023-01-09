@@ -73,11 +73,13 @@ players = list(plv_df['pitchername'].unique())
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
+# Hitter Handedness
 handedness = st.select_slider(
-    'Batter Handedness',
+    'Hitter Handedness',
     options=['Left', 'All', 'Right'],
     value='All')
 
+# Pitcher Handedness
 if handedness=='All':
     pitcher_hand = ['L','R']
 else:
@@ -109,16 +111,21 @@ if pitches_thrown >= pitch_threshold:
                 ['pitchtype']
                 )
 
+## Chart function
     def arsenal_dist():
+        # Subplots based off of # of pitchtypes
         fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
         ax_num = 0
         max_count = 0
         for pitch in pitch_list:
+            # Data just for that pitch type
             chart_data = plv_df.loc[(plv_df['pitchtype']==pitch) &
                                     plv_df['b_hand'].isin(hand_map[handedness])].copy()
+            # Restrict to 0-10
             chart_data['PLV_clip'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
             num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
-
+            
+            # Plotting
             sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
                         x='PLV_clip',
                         hue='pitchtype',
@@ -129,15 +136,19 @@ if pitches_thrown >= pitch_threshold:
                         ax=axs[ax_num],
                         legend=False
                         )
-
+            # Season Avg Line
             axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player,'PLV'].mean(),
                                 color=marker_colors[pitch],
                                 linestyle='--',
                                 linewidth=2.5)
+            
+            # League Avg Line
             axs[ax_num].axvline(chart_data.loc[chart_data['p_hand'].isin(pitcher_hand),'PLV'].mean(), 
                                 color='w', 
                                 label='Lg. Avg.',
                                 alpha=0.5)
+            
+            # Format Axes Style
             axs[ax_num].get_xaxis().set_visible(False)
             axs[ax_num].get_yaxis().set_visible(False)
             axs[ax_num].set(xlim=(0,10))
@@ -150,13 +161,18 @@ if pitches_thrown >= pitch_threshold:
                 axs[ax_num-1].set_xticks(range(0,11))
                 axs[ax_num-1].set(xlabel='')
 
+        # Chart Styling & Add-Ons
         for axis in range(len(pitch_list)):
+            # Fix Y-Axis size to most thrown pitch, for all pitches
             axs[axis].set(ylim=(0,max_count*1.025))
+            
             num_pitches = plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
                                      (plv_df['pitchername']==player) &
                                      plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
             pitch_usage = round(num_pitches / plv_df.loc[(plv_df['pitchername']==player) &
                                                          plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 100,1)
+            
+            # Define the plot legend
             axs[axis].legend([pitch_names[pitch_list[axis]]+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
                                                                                         (plv_df['pitchername']==player) &
                                                                                         plv_df['b_hand'].isin(hand_map[handedness]),'PLV'].mean()),
@@ -164,10 +180,13 @@ if pitches_thrown >= pitch_threshold:
                                                                      plv_df['b_hand'].isin(hand_map[handedness]) &
                                                                      plv_df['p_hand'].isin(pitcher_hand),'PLV'].mean())], 
                              edgecolor=pl_background, loc=(0,0.4), fontsize=14)
+            
+            # Pitch Totals
             axs[axis].text(9,max_count*0.425,'{:,} Pitches\n({}%)'.format(num_pitches,
                                                                           pitch_usage),
                            ha='center',va='bottom', fontsize=14)
-            
+        
+        # Filler for Title
         hand_text = f'{pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB, ' if handedness!='All' else ''
 
         fig.suptitle("{}'s {} PLV Distributions\n({}>5% of Pitches)".format(player,year,hand_text),fontsize=16)
