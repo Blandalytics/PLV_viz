@@ -86,9 +86,9 @@ sz_bot = 1.5
 sz_top = 3.5
 
 # PLV Color Norm
- norm = colors.TwoSlopeNorm(vmin=0, 
-                            vcenter=5,
-                            vmax=10)
+norm = colors.TwoSlopeNorm(vmin=0, 
+                           vcenter=5,
+                           vmax=10)
 
 game_norm = colors.TwoSlopeNorm(vmin=4, 
                                 vcenter=5,
@@ -186,7 +186,9 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
 
   graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
-
+  game_min = graph_data.groupby(['game_played','pitchername'],as_index=False)['PLV'].min()
+  game_max = graph_data.groupby(['game_played','pitchername'],as_index=False)['PLV'].max()
+  
   # Subtle line to connect the dots
   sns.lineplot(data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
                x='game_played', 
@@ -215,7 +217,8 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   # League Average line
   game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
   
-  game_ax.set(xlabel=None, ylabel=None, ylim=(4,6))
+  game_ax.set(xlabel=None, ylabel=None, ylim=(min(4,game_min-0.25),
+                                              max(6,game_max+0.25))
   #x_ticks_format(game_ax,graph_data['game_played'],scale_val)
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
