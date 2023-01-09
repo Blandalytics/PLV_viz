@@ -86,9 +86,11 @@ sz_bot = 1.5
 sz_top = 3.5
 
 # PLV Color Norm
-norm = colors.TwoSlopeNorm(vmin=0, 
-                           vcenter=5,
-                           vmax=10)
+# norm = colors.TwoSlopeNorm(vmin=0, 
+#                            vcenter=5,
+#                            vmax=10)
+bounds = np.linspace(4.5, 6.5, 3)
+norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
 
 game_norm = colors.TwoSlopeNorm(vmin=4, 
                                 vcenter=5,
