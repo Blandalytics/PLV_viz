@@ -247,7 +247,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   # Add custom legend for markers
   legend_markers = [Line2D([],[],
                            color='#FEFEFE',
-                           label='\n'.join(wrap(x, 10)),
+                           label=x,
                            marker=marker_list[x],
                            markeredgecolor=pl_line_color,
                            markeredgewidth=round(scale_val),
