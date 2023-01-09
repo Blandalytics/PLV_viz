@@ -280,7 +280,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   graph_data['pitch_qual'] = pd.cut(graph_data['PLV_clip'],bins=qual_bins,labels=qual_labels)
 
   for qual in qual_labels:
-    pitch_plot_ax = plt.subplot(grid[y_loc:, x_loc:x_loc+2])
+    pitch_plot_ax = plt.subplot(grid[y_loc:8, x_loc:x_loc+2])
     pitch_qual_charts(graph_data,pitch_plot_ax,qual)
     x_loc += 2
     y_loc += 0
