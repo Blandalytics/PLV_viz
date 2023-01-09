@@ -196,6 +196,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
 
   # Arsenal Distributions
   pitch_dist_ax = plt.subplot(grid[2:, 0])
+  pitch_sub_ax = gridspec.GridSpecFromSubplotSpec(len(pitch_list), 1, subplot_spec=pitch_dist_ax, hspace=0.1)
 
   # Per game/appearance chart
   game_ax = plt.subplot(grid[1:4, 2:6])
