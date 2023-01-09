@@ -284,7 +284,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
 
   # Viz Credit
   credit_ax = plt.subplot(grid[9:, 5:])
-  credit_ax.text(-0.1,0.5,'Viz by\n@Blandalytics', ha='center', va='center', fontsize=round(8*scale_val),
+  credit_ax.text(-0.2,0.6,'Viz by\n@Blandalytics', ha='center', va='center', fontsize=round(8*scale_val),
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
   credit_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
   credit_ax.set_xticklabels([])
