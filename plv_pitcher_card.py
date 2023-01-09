@@ -210,7 +210,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                   hue='PLV', 
                   hue_norm=game_norm, 
                   palette='vlag', 
-                  alpha=1,
+                  alpha=0.75,
                   ax=game_ax,
                   legend=False)
 
