@@ -110,7 +110,7 @@ pitch_list = list(plv_df
 def plv_card(pitch_threshold=200,scale_val=1.5):
   # Create df for only the pitcher's pitches
   graph_data = plv_df.loc[plv_df['pitchername']==player].iloc[::-1].reset_index(drop=True)
-  graph_data['p_x'] = graph_data['p_x'].mul(-1)
+  graph_data['p_x'] = graph_data['p_x'].mul(-1) # To convert to pitcher's perspective
   graph_data['PLV_clip'] = np.clip(graph_data['PLV'], a_min=0, a_max=10)
 
   # Update the pitch count threshold if the pitcher has a low season pitch count
@@ -144,8 +144,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax = plt.subplot(grid[1:4, 2:6])
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
 
-  graph_data['game_played'] = pd.to_datetime(graph_data['game_played'])
-  graph_data['appearance'] = graph_data['game_played'].rank(method='dense')
+  graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
 
   # Subtle line to connect the dots
   sns.lineplot(
