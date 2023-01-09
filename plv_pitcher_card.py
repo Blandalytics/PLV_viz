@@ -153,8 +153,10 @@ def game_chart(graph_data, game_ax):
   game_min = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().min()
   game_max = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().max()
   
+  date_min = graph_data['game_played'].max()-datetime.timedelta(days=30)
+  
   # Subtle line to connect the dots
-  sns.lineplot(data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
+  sns.lineplot(data=graph_data.loc[graph_data['game_played']>=date_min].groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
                x='game_played', 
                y='PLV',
                style='pitchername',
@@ -186,7 +188,7 @@ def game_chart(graph_data, game_ax):
   x_ticks_format(game_ax,graph_data['game_played'],1.5)
   game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
   game_ax.tick_params(left=False)
-  game_ax.set_title('Avg PLV, per Game', fontsize=18)
+  game_ax.set_title('PLV per Game\n(Last 30 Days)', fontsize=18)
   
 def pitch_qual_charts(graph_data,pitch_plot_ax,qual):
     # Plot of individual pitches
