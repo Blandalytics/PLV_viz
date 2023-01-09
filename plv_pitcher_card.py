@@ -189,7 +189,7 @@ def game_chart(graph_data, game_ax):
   game_ax.tick_params(left=False)
   game_ax.set_title('Avg PLV, per Game', fontsize=18)
   
-def pitch_qual_charts(graph_data,pitch_plot_ax):
+def pitch_qual_charts(graph_data,pitch_plot_ax,qual=qual):
     # Plot of individual pitches
     sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5) &
                                         (graph_data['p_z']>-0.5) &
