@@ -217,8 +217,8 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   # League Average line
   game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
   
-  game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.25]),
-                                              max([6,game_max+0.25])))
+  game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.1]),
+                                              max([6,game_max+0.1])))
   #x_ticks_format(game_ax,graph_data['game_played'],scale_val)
   game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
