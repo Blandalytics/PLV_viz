@@ -203,7 +203,7 @@ def pitch_qual_charts(graph_data,pitch_plot_ax,qual):
                     hue_norm=norm,
                     markers=marker_list,
                     edgecolor='#293a6b',
-                    alpha=0.75,
+                    alpha=1,
                     ax=pitch_plot_ax,
                     legend=False
                     )
