@@ -277,7 +277,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   
   # Chart ownership (PitcherList)
   pl_ax = plt.subplot(grid[0, 3:])
-  pl_ax.imshow(Image.open('https://www.pitcherlist.com/wp-content/uploads/1600x900-Logo.jpg'))
+  pl_ax.imshow(Image.open('https://github.com/Blandalytics/PLV_viz/blob/main/PL_Logo.png?raw=true'))
   pl_ax.axis('off')
 
   # Credit for the inspiration
