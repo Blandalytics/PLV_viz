@@ -92,6 +92,8 @@ players = list(plv_df['pitchername'].unique())
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
+st.write(plv_df.loc[plv_df['pitchername']==player,'p_x'].mean())
+
 pitch_list = list(plv_df
                 .loc[(plv_df['pitchername']==player)# &
                      #plv_df['b_hand'].isin(hand_map[handedness])
