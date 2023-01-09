@@ -250,7 +250,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                       height_ratios=[1.5]+[7/pitch_feats]*(pitch_feats)+[1])
 
   # Title of card (name, etc)
-  title_ax = plt.subplot(grid[0, 2:-2])
+  title_ax = plt.subplot(grid[0, 2:])
   title_ax.text(0,0,"{}'s\n{} PLV Card".format(player,year), 
                 ha='center', va='center', 
                 fontsize=round(16*scale_val),
