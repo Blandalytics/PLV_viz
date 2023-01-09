@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import PIL
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
@@ -14,6 +15,7 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.patches import Arc
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
                                AutoMinorLocator, FuncFormatter)
+from PIL import Image
 
 ## Set Styling
 # Plot Style
@@ -275,13 +277,9 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   cb_ax.tick_params(labelsize=round(10*scale_val))
   
   # Chart ownership (PitcherList)
-  owner_ax = plt.subplot(grid[0, 3:])
-  owner_ax.text(0.5,0,'Created by Kyle Bland\n@blandalytics', ha='center', va='center',fontweight='normal', fontsize=round(12*scale_val),
-            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
-  owner_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-  owner_ax.set_xticklabels([])
-  owner_ax.set_yticklabels([])
-  owner_ax.tick_params(left=False, bottom=False)
+  pl_ax = plt.subplot(grid[0, 3:])
+  pl_ax.imshow(Image.open('https://www.pitcherlist.com/wp-content/uploads/1600x900-Logo.jpg'))
+  pl_ax.axis('off')
 
   # Credit for the inspiration
   credit_ax = plt.subplot(grid[9:, 5:])
