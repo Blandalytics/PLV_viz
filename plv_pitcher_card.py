@@ -189,7 +189,7 @@ def game_chart(graph_data, game_ax):
   game_ax.tick_params(left=False)
   game_ax.set_title('Avg PLV, per Game', fontsize=18)
   
-def pitch_qual_charts(graph_data,x_start=0, y_start=0,x_diff=2, y_diff=0):
+def pitch_qual_charts(graph_data,grid=grid,x_start=0, y_start=0,x_diff=2, y_diff=0):
   x_loc = x_start
   y_loc = y_start
   qual_bins = [-20,4.5,5.5,20]
