@@ -86,9 +86,9 @@ sz_bot = 1.5
 sz_top = 3.5
 
 # PLV Color Norm
-norm = colors.TwoSlopeNorm(vmin=0, 
+norm = colors.TwoSlopeNorm(vmin=1, 
                            vcenter=5,
-                           vmax=10)
+                           vmax=9)
 # bounds = np.linspace(3.5, 6.5, 4)
 # norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
 
@@ -294,6 +294,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   fig.colorbar(sm,
                cax=cb_ax
                )
+  cb_ax.set_yticks(range(0,11))
   cb_ax.tick_params(labelsize=round(10*scale_val))
   
   # Chart ownership (PitcherList)
