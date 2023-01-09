@@ -7,6 +7,7 @@ import matplotlib.font_manager as fm
 import matplotlib.dates as mdates
 import seaborn as sns
 
+from datetime import date, timedelta
 from matplotlib import colors
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
@@ -14,6 +15,7 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.patches import Arc
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
                                AutoMinorLocator, FuncFormatter)
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from PIL import Image
 
 ## Set Styling
@@ -232,7 +234,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   
   game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.1]),
                                               max([6,game_max+0.1])))
-  #x_ticks_format(game_ax,graph_data['game_played'],scale_val)
+  x_ticks_format(game_ax,graph_data['game_played'],scale_val)
   game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
   game_ax.tick_params(left=False)
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
