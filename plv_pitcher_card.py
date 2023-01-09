@@ -255,8 +255,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   
   # Plot of individual pitches
   pitch_plot_ax = plt.subplot(grid[4:, 1:5])
-  sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5)&
-                                      (graph_data['p_z']>0)&
+  sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5) &
                                       (graph_data['p_x']>=-2.75)], 
                   x='p_x', 
                   y='p_z', 
