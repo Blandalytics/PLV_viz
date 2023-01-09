@@ -94,6 +94,8 @@ game_norm = colors.TwoSlopeNorm(vmin=4,
                                 vcenter=5,
                                 vmax=6)
 
+logo = Image.open('https://github.com/Blandalytics/PLV_viz/blob/main/PL_Logo.png')
+
 # Date Formatter
 def x_ticks_format(ax,game_dates,scale_val):
   if len(game_dates.unique()) == 1:
@@ -277,7 +279,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   
   # Chart ownership (PitcherList)
   pl_ax = plt.subplot(grid[0, 3:])
-  pl_ax.imshow(Image.open('https://github.com/Blandalytics/PLV_viz/blob/main/PL_Logo.png'))
+  pl_ax.imshow(logo)
   pl_ax.axis('off')
 
   # Credit for the inspiration
