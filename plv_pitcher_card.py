@@ -153,7 +153,7 @@ def game_chart(graph_data, game_ax):
   game_min = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().min()
   game_max = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().max()
   
-  date_min = graph_data['game_played'].max()-datetime.timedelta(days=30)
+  date_min = graph_data['game_played'].max()-datetime.timedelta(days=60)
   
   # Subtle line to connect the dots
   sns.lineplot(data=graph_data.loc[graph_data['game_played']>=date_min].groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
