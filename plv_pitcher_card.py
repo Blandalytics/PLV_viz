@@ -167,7 +167,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
 
   # Title of card (name, etc)
   title_ax = plt.subplot(grid[0, 1:-1])
-  title_ax.text(0,0,"{}'s\n{} PLV Card\nAvg PLV: {:.3}".format(player,year,graph_data['PLV'].mean()), 
+  title_ax.text(0,0,"{}'s\n{} PLV Card".format(player,year), 
                 ha='center', va='center', 
                 fontsize=round(16*scale_val),
                 bbox=dict(facecolor='#162B50', 
@@ -180,7 +180,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   
   # Avg PLV
   plv_ax = plt.subplot(grid[0, -1])
-  plv_ax.text(0,0,"Avg PLV:\n{:.3}".format(graph_data['PLV'].mean()), 
+  plv_ax.text(-0.5,0,"Avg PLV:\n{:.3}".format(graph_data['PLV'].mean()), 
                 ha='center', va='center', 
                 fontsize=round(20*scale_val),
                 bbox=dict(facecolor='#162B50', 
