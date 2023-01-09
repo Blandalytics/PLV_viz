@@ -85,9 +85,9 @@ sz_bot = 1.5
 sz_top = 3.5
 
 # PLV Color Norm
-norm = colors.TwoSlopeNorm(vmin=0, 
+norm = colors.TwoSlopeNorm(vmin=2, 
                            vcenter=5,
-                           vmax=10)
+                           vmax=8)
 
 game_norm = colors.TwoSlopeNorm(vmin=4, 
                                 vcenter=5,
