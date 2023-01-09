@@ -160,7 +160,7 @@ def game_chart(graph_data, game_ax):
                y='PLV',
                style='pitchername',
                color='#FEFEFE',
-               linewidth=round(scale_val),
+               linewidth=2,
                alpha=0.1,
                ax=game_ax,
                legend=False
@@ -170,7 +170,7 @@ def game_chart(graph_data, game_ax):
   sns.scatterplot(data=graph_data.groupby('game_played',as_index=False)[['PLV','appearance']].mean(), 
                   x='game_played', 
                   y='PLV', 
-                  s=round(100*scale_val), 
+                  s=150, 
                   edgecolor=None, 
                   hue='PLV', 
                   hue_norm=game_norm, 
@@ -180,14 +180,14 @@ def game_chart(graph_data, game_ax):
                   legend=False)
 
   # League Average line
-  game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
+  game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.5)
   
   game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.1]),
                                               max([6,game_max+0.1])))
-  x_ticks_format(game_ax,graph_data['game_played'],scale_val)
+  x_ticks_format(game_ax,graph_data['game_played'],1.5)
   game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
   game_ax.tick_params(left=False)
-  game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
+  game_ax.set_title('Avg PLV, per Game', fontsize=18)
   
 def pitch_qual_charts(graph_data,x_start=0, y_start=0,x_diff=2, y_diff=0):
   x_loc = x_start
@@ -204,7 +204,7 @@ def pitch_qual_charts(graph_data,x_start=0, y_start=0,x_diff=2, y_diff=0):
                                         (graph_data['pitch_qual']==qual)], 
                     x='p_x', 
                     y='p_z', 
-                    s=round(70*scale_val), 
+                    s=100, 
                     style='pitchtype',
                     hue='PLV_clip',
                     palette='vlag',
@@ -217,10 +217,10 @@ def pitch_qual_charts(graph_data,x_start=0, y_start=0,x_diff=2, y_diff=0):
                     )
 
     # Strike zone outline
-    pitch_plot_ax.axvline(10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
-    pitch_plot_ax.axvline(-10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
-    pitch_plot_ax.axhline(sz_top, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
-    pitch_plot_ax.axhline(sz_bot, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
+    pitch_plot_ax.axvline(10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4)
+    pitch_plot_ax.axvline(-10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4)
+    pitch_plot_ax.axhline(sz_top, xmin=26/72, xmax=46/72, color='black', linewidth=4)
+    pitch_plot_ax.axhline(sz_bot, xmin=26/72, xmax=46/72, color='black', linewidth=4)
 
     pitch_plot_ax.set(xlabel=None, xlim=(-3,3), ylabel=None, ylim=(y_bot,y_lim))
     pitch_plot_ax.set_xticklabels([])
