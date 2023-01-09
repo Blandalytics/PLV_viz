@@ -88,7 +88,8 @@ sz_top = 3.5
 # PLV Color Norm
 norm = colors.TwoSlopeNorm(vmin=1, 
                            vcenter=5,
-                           vmax=9)
+                           vmax=9, 
+                           extend='both')
 # bounds = np.linspace(3.5, 6.5, 4)
 # norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
 
