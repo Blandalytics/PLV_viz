@@ -195,8 +195,10 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   plv_ax.tick_params(left=False, bottom=False)
 
   # Arsenal Distributions
-  pitch_dist_ax = plt.subplot(grid[2:, 0])
-  pitch_sub_grid = pitch_dist_ax.subgridspec(len(pitch_list), 1)
+  pitchtype_i = 2
+  for pitch in pitch_list:
+    pitch_dist_ax = plt.subplot(grid[pitchtype_i, 0])
+    pitchtype_i += 1
 
   # Per game/appearance chart
   game_ax = plt.subplot(grid[1:4, 2:6])
