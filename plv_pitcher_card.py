@@ -149,14 +149,16 @@ pitch_list = list(plv_df
 def game_chart(graph_data, game_ax):
   # Per game/appearance chart
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
+  
+  date_min = graph_data['game_played'].max()-datetime.timedelta(days=60)
+  
+  graph_data = graph_data.loc[graph_data['game_played']>=date_min]
 
   game_min = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().min()
   game_max = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().max()
   
-  date_min = graph_data['game_played'].max()-datetime.timedelta(days=60)
-  
   # Subtle line to connect the dots
-  sns.lineplot(data=graph_data.loc[graph_data['game_played']>=date_min].groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
+  sns.lineplot(data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
                x='game_played', 
                y='PLV',
                style='pitchername',
@@ -168,7 +170,7 @@ def game_chart(graph_data, game_ax):
               )
 
   # Dots
-  sns.scatterplot(data=graph_data.loc[graph_data['game_played']>=date_min].groupby('game_played',as_index=False)[['PLV','appearance']].mean(), 
+  sns.scatterplot(data=graph_data.groupby('game_played',as_index=False)[['PLV','appearance']].mean(), 
                   x='game_played', 
                   y='PLV', 
                   s=150, 
@@ -185,7 +187,7 @@ def game_chart(graph_data, game_ax):
   
   game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.1]),
                                               max([6,game_max+0.1])))
-  x_ticks_format(game_ax,graph_data.loc[graph_data['game_played']>=date_min,'game_played'],1.5)
+  x_ticks_format(game_ax,graph_data['game_played'],1.5)
   game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
   game_ax.tick_params(left=False)
   game_ax.set_title('PLV per Game\n(Last 30 Days)', fontsize=18)
