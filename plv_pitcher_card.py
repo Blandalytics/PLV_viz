@@ -262,7 +262,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                            linestyle='None') 
                     for x in pitch_list]
 
-  pitch_plot_ax.legend(loc=(0.01,0.01),
+  pitch_plot_ax.legend(loc=(0.01,0.05),
              handles=legend_markers,
              edgecolor='#162B50',
              framealpha=0.5, fontsize=round(12*scale_val)
