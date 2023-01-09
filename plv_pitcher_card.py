@@ -94,7 +94,7 @@ game_norm = colors.TwoSlopeNorm(vmin=4,
                                 vcenter=5,
                                 vmax=6)
 
-logo = Image.open('https://www.pitcherlist.com/wp-content/uploads/1600x900-Logo.jpg')
+logo = Image.open('PL_Logo.png')
 st.image(logo)
 
 # Date Formatter
