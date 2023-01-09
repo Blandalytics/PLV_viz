@@ -148,19 +148,16 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   st.write(graph_data['appearance'])
 
   # Subtle line to connect the dots
-  sns.lineplot(
-      data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].agg({
-          'PLV':'mean',
-          'appearance': 'mean'
-          }), 
-      x='game_played', 
-      y='PLV',
-      style='pitchername',
-      color='#FEFEFE',
-      linewidth=round(scale_val),
-      alpha=0.1,
-      ax=game_ax,
-      legend=False)
+  sns.lineplot(data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
+               x='game_played', 
+               y='PLV',
+               style='pitchername',
+               color='#FEFEFE',
+               linewidth=round(scale_val),
+               alpha=0.1,
+               ax=game_ax,
+               legend=False
+              )
 
   # Dots
   sns.scatterplot(
