@@ -275,7 +275,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
 #   plv_ax.set_yticklabels([])
 #   plv_ax.tick_params(left=False, bottom=False)
   
-  game_chart(graph_data,plt.subplot(grid[1:4, 4:]))
+  game_chart(graph_data,plt.subplot(grid[1:4, 3:]))
   
   x_loc = 0
   y_loc = 1
@@ -329,23 +329,23 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
 #   credit_ax.set_yticklabels([])
 #   credit_ax.tick_params(left=False, bottom=False)
 
-  # Box the Pitchtype Charts
-  fig.add_artist(Line2D([0.125, 0.302], [0.8, 0.8], linewidth=round(2*scale_val)))
-  fig.add_artist(Line2D([0.125, 0.125], [0.125, 0.8], linewidth=round(2*scale_val)))
-  fig.add_artist(Line2D([0.302, 0.302], [0.125, 0.8], linewidth=round(2*scale_val)))
-  fig.add_artist(Line2D([0.125, 0.302], [0.125, 0.125], linewidth=round(2*scale_val)))
+#   # Box the Pitchtype Charts
+#   fig.add_artist(Line2D([0.125, 0.302], [0.8, 0.8], linewidth=round(2*scale_val)))
+#   fig.add_artist(Line2D([0.125, 0.125], [0.125, 0.8], linewidth=round(2*scale_val)))
+#   fig.add_artist(Line2D([0.302, 0.302], [0.125, 0.8], linewidth=round(2*scale_val)))
+#   fig.add_artist(Line2D([0.125, 0.302], [0.125, 0.125], linewidth=round(2*scale_val)))
 
-  #Box the games
-  fig.add_artist(Line2D([0.32, 0.94], [0.8, 0.8], linewidth=round(2*scale_val))) # Top
-  fig.add_artist(Line2D([0.32, 0.32], [0.546, 0.8], linewidth=round(2*scale_val))) # Left
-  fig.add_artist(Line2D([0.94, 0.94], [0.546, 0.8], linewidth=round(2*scale_val))) # Right
-  fig.add_artist(Line2D([0.32, 0.94], [0.546, 0.546], linewidth=round(2*scale_val))) # Bottom
+#   #Box the games
+#   fig.add_artist(Line2D([0.32, 0.94], [0.8, 0.8], linewidth=round(2*scale_val))) # Top
+#   fig.add_artist(Line2D([0.32, 0.32], [0.546, 0.8], linewidth=round(2*scale_val))) # Left
+#   fig.add_artist(Line2D([0.94, 0.94], [0.546, 0.8], linewidth=round(2*scale_val))) # Right
+#   fig.add_artist(Line2D([0.32, 0.94], [0.546, 0.546], linewidth=round(2*scale_val))) # Bottom
 
-  #Box the pitch chart
-  fig.add_artist(Line2D([0.32, 0.94], [0.536, 0.536], linewidth=round(2*scale_val)))
-  fig.add_artist(Line2D([0.32, 0.32], [0.125, 0.536], linewidth=round(2*scale_val)))
-  fig.add_artist(Line2D([0.94, 0.94], [0.125, 0.536], linewidth=round(2*scale_val)))
-  fig.add_artist(Line2D([0.32, 0.94], [0.125, 0.125], linewidth=round(2*scale_val)))
+#   #Box the pitch chart
+#   fig.add_artist(Line2D([0.32, 0.94], [0.536, 0.536], linewidth=round(2*scale_val)))
+#   fig.add_artist(Line2D([0.32, 0.32], [0.125, 0.536], linewidth=round(2*scale_val)))
+#   fig.add_artist(Line2D([0.94, 0.94], [0.125, 0.536], linewidth=round(2*scale_val)))
+#   fig.add_artist(Line2D([0.32, 0.94], [0.125, 0.125], linewidth=round(2*scale_val)))
 
   sns.despine(left=True, bottom=True)
   st.pyplot(fig)
