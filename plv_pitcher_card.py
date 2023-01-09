@@ -76,6 +76,15 @@ y_bot = -1
 sz_bot = 1.5
 sz_top = 3.5
 
+# PLV Color Norm
+norm = colors.TwoSlopeNorm(vmin=0, 
+                           vcenter=5,
+                           vmax=10)
+
+game_norm = colors.TwoSlopeNorm(vmin=2, 
+                                vcenter=5,
+                                vmax=8)
+
 # Year
 years = [2022,2021,2020]
 year = st.radio('Choose a year:', years)
@@ -145,7 +154,6 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
 
   graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
-  st.write(graph_data['appearance'])
 
   # Subtle line to connect the dots
   sns.lineplot(data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
@@ -160,21 +168,17 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
               )
 
   # Dots
-  sns.scatterplot(
-      data=graph_data.groupby('game_played',as_index=False)[['PLV','appearance']].agg({
-          'PLV':'mean',
-          'appearance': 'mean'
-          }), 
-      x='game_played', 
-      y='PLV', 
-      s=round(100*scale_val), 
-      edgecolor=None, 
-      hue='PLV', 
-      hue_norm=game_norm, 
-      palette='vlag', 
-      alpha=1,
-      ax=game_ax,
-      legend=False)
+  sns.scatterplot(data=graph_data.groupby('game_played',as_index=False)[['PLV','appearance']].mean(), 
+                  x='game_played', 
+                  y='PLV', 
+                  s=round(100*scale_val), 
+                  edgecolor=None, 
+                  hue='PLV', 
+                  hue_norm=game_norm, 
+                  palette='vlag', 
+                  alpha=1,
+                  ax=game_ax,
+                  legend=False)
 
   # League Average line
   game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
