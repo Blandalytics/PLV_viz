@@ -95,7 +95,6 @@ game_norm = colors.TwoSlopeNorm(vmin=4,
                                 vmax=6)
 
 logo = Image.open('PL_Logo.png')
-st.image(logo)
 
 # Date Formatter
 def x_ticks_format(ax,game_dates,scale_val):
@@ -167,7 +166,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                       height_ratios=[1.5]+[7/pitch_feats]*(pitch_feats)+[1])
 
   # Title of card (name, etc)
-  title_ax = plt.subplot(grid[0, :3])
+  title_ax = plt.subplot(grid[0, 1:])
   title_ax.text(0,0,"{}'s {}\nPLV Card\nAvg PLV: {:.3}".format(player,year,graph_data['PLV'].mean()), 
                 ha='center', va='center', 
                 fontsize=round(16*scale_val),
@@ -279,7 +278,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   cb_ax.tick_params(labelsize=round(10*scale_val))
   
   # Chart ownership (PitcherList)
-  pl_ax = plt.subplot(grid[0, 3:])
+  pl_ax = plt.subplot(grid[0, :1])
   pl_ax.imshow(logo)
   pl_ax.axis('off')
 
