@@ -179,10 +179,10 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   title_ax.tick_params(left=False, bottom=False)
   
   # Avg PLV
-  plv_ax = plt.subplot(grid[0, -1])
-  plv_ax.text(-0.5,0,"Avg PLV:\n{:.3}".format(graph_data['PLV'].mean()), 
+  plv_ax = plt.subplot(grid[1, 0])
+  plv_ax.text(-0.5,0,"Avg PLV\n{:.3}".format(graph_data['PLV'].mean()), 
                 ha='center', va='center', 
-                fontsize=round(20*scale_val),
+                fontsize=round(18*scale_val),
                 bbox=dict(facecolor='#162B50', 
                           alpha=0.6, 
                           edgecolor='#162B50'))
@@ -192,7 +192,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   plv_ax.tick_params(left=False, bottom=False)
 
   # Arsenal Distributions
-  pitch_dist_ax = plt.subplot(grid[1:, 0])
+  pitch_dist_ax = plt.subplot(grid[2:, 0])
 
   # Per game/appearance chart
   game_ax = plt.subplot(grid[1:4, 2:6])
@@ -223,7 +223,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                   hue='PLV', 
                   hue_norm=game_norm, 
                   palette='vlag', 
-                  alpha=0.75,
+                  alpha=0.8,
                   ax=game_ax,
                   legend=False)
 
@@ -238,9 +238,9 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   
   # Plot of individual pitches
   pitch_plot_ax = plt.subplot(grid[4:, 1:5])
-  sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.4)&
-                                      (graph_data['p_z']>-2.8)&
-                                      (graph_data['p_x']<2.8)], 
+  sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5)&
+                                      (graph_data['p_z']>-2.75)&
+                                      (graph_data['p_x']>=-2.75)], 
                   x='p_x', 
                   y='p_z', 
                   s=round(70*scale_val), 
