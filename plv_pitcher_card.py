@@ -164,8 +164,12 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
 
   # Title of card (name, etc)
   title_ax = plt.subplot(grid[0, :3])
-  title_ax.text(0,0,"{}'s {}\nPLV Card\nAvg PLV: {}".format(player,year,round(graph_data['PLV'].mean(),2)), ha='center', va='center', fontsize=round(16*scale_val),
-           bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
+  title_ax.text(0,0,"{}'s {}\nPLV Card\nAvg PLV: {:.2}".format(player,year,graph_data['PLV'].mean()), 
+                ha='center', va='center', 
+                fontsize=round(16*scale_val),
+                bbox=dict(facecolor='#162B50', 
+                          alpha=0.6, 
+                          edgecolor='#162B50'))
   title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
   title_ax.set_xticklabels([])
   title_ax.set_yticklabels([])
@@ -208,7 +212,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   # League Average line
   game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
   
-  game_ax.set(xlabel=None, ylabel=None, ylim=(3,7))
+  game_ax.set(xlabel=None, ylabel=None, ylim=(4,6))
   #x_ticks_format(game_ax,graph_data['game_played'],scale_val)
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
