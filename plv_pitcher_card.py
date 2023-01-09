@@ -146,11 +146,11 @@ pitch_list = list(plv_df
                 ['pitchtype']
                 )
 
-def game_chart(graph_data, game_ax):
+def game_chart(graph_data, game_ax, days=60):
   # Per game/appearance chart
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
   
-  date_min = graph_data['game_played'].max()-datetime.timedelta(days=45)
+  date_min = graph_data['game_played'].max()-datetime.timedelta(days=days)
   
   graph_data = graph_data.loc[graph_data['game_played']>=date_min]
 
@@ -190,7 +190,7 @@ def game_chart(graph_data, game_ax):
   x_ticks_format(game_ax,graph_data['game_played'],1.5)
   game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
   game_ax.tick_params(left=False)
-  game_ax.set_title('PLV per Game\n(Last 30 Days)', fontsize=18)
+  game_ax.set_title(f'PLV per Game\n(Last {days} Days)', fontsize=18)
   
 def pitch_qual_charts(graph_data,pitch_plot_ax,qual):
     # Plot of individual pitches
