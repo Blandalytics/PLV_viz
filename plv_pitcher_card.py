@@ -253,7 +253,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                            markeredgewidth=round(scale_val),
                            markersize=round(10*scale_val),
                            linestyle='None') 
-                    for x in graph_data.sort_values('avg_velo',ascending=False)['pitch_name'].unique()]
+                    for x in pitch_list]
 
   pitch_plot_ax.legend(loc=(0.01,0.01),
              handles=legend_markers,
