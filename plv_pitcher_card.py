@@ -111,7 +111,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   # Create df for only the pitcher's pitches
   graph_data = plv_df.loc[plv_df['pitchername']==player].iloc[::-1].reset_index(drop=True)
   graph_data['p_x'] = graph_data['p_x'].mul(-1)
-  chart_data['PLV_clip'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
+  graph_data['PLV_clip'] = np.clip(graph_data['PLV'], a_min=0, a_max=10)
 
   # Update the pitch count threshold if the pitcher has a low season pitch count
   pitch_threshold = min(pitch_threshold,graph_data.shape[0])
