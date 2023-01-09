@@ -169,7 +169,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                       height_ratios=[1.5]+[7/pitch_feats]*(pitch_feats)+[1])
 
   # Title of card (name, etc)
-  title_ax = plt.subplot(grid[0, 1:-1])
+  title_ax = plt.subplot(grid[0, 2:-2])
   title_ax.text(0,0,"{}'s\n{} PLV Card".format(player,year), 
                 ha='center', va='center', 
                 fontsize=round(16*scale_val),
@@ -193,22 +193,6 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   plv_ax.set_xticklabels([])
   plv_ax.set_yticklabels([])
   plv_ax.tick_params(left=False, bottom=False)
-
-  # Arsenal Distributions
-  pitchtype_i = 2
-  for pitch in pitch_list:
-    pitch_dist_ax = plt.subplot(grid[pitchtype_i, 0])
-    pitch_dist_ax.text(0,0,"{}".format(pitch), 
-                  ha='center', va='center', 
-                  fontsize=round(18*scale_val),
-                  bbox=dict(facecolor='#162B50', 
-                            alpha=0.6, 
-                            edgecolor='#162B50'))
-    pitch_dist_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-    pitch_dist_ax.set_xticklabels([])
-    pitch_dist_ax.set_yticklabels([])
-    pitch_dist_ax.tick_params(left=False, bottom=False)
-    pitchtype_i += 1
 
   # Per game/appearance chart
   game_ax = plt.subplot(grid[1:4, 2:6])
@@ -253,68 +237,72 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax.tick_params(left=False)
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
-  # Plot of individual pitches
-  pitch_plot_ax = plt.subplot(grid[4:, 1:5])
-  sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5) &
-                                      (graph_data['p_z']>-0.5) &
-                                      (graph_data['p_x']>=-2.75)], 
-                  x='p_x', 
-                  y='p_z', 
-                  s=round(70*scale_val), 
-                  style='pitchtype',
-                  hue='PLV_clip',
-                  palette='vlag',
-                  hue_norm=norm,
-                  markers=marker_list,
-                  edgecolor='#293a6b',
-                  alpha=1,
-                  ax=pitch_plot_ax,
-                  legend=False
-                  )
+  pitch_qual_i = 0
+  for qual in [4.5,5.5,10]:
+    # Plot of individual pitches
+    pitch_plot_ax = plt.subplot(grid[4:, pitch_qual_i:pitch_qual_i+2])
+    sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5) &
+                                        (graph_data['p_z']>-0.5) &
+                                        (graph_data['p_x']>=-2.75) &
+                                        (graph_data['PLV_clip']<=qual)], 
+                    x='p_x', 
+                    y='p_z', 
+                    s=round(70*scale_val), 
+                    style='pitchtype',
+                    hue='PLV_clip',
+                    palette='vlag',
+                    hue_norm=norm,
+                    markers=marker_list,
+                    edgecolor='#293a6b',
+                    alpha=1,
+                    ax=pitch_plot_ax,
+                    legend=False
+                    )
 
-  # Strike zone outline
-  pitch_plot_ax.axvline(10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
-  pitch_plot_ax.axvline(-10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
-  pitch_plot_ax.axhline(sz_top, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
-  pitch_plot_ax.axhline(sz_bot, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
+    # Strike zone outline
+    pitch_plot_ax.axvline(10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
+    pitch_plot_ax.axvline(-10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
+    pitch_plot_ax.axhline(sz_top, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
+    pitch_plot_ax.axhline(sz_bot, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
 
-  pitch_plot_ax.set(xlabel=None, xlim=(-3,3), ylabel=None, ylim=(y_bot,y_lim))
-  pitch_plot_ax.set_xticklabels([])
-  pitch_plot_ax.set_yticklabels([])
-  pitch_plot_ax.tick_params(left=False, bottom=False)
-  pitch_plot_ax.text(0.75,y_lim-0.6,"PLV per Pitch", ha='center', va='bottom', fontsize=round(12*scale_val), 
-           bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
-  pitch_plot_ax.text(0.75,y_lim-0.7,"(From Pitcher's Perspective)", ha='center', va='top', fontsize=round(10*scale_val), alpha=0.7,
-           bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
+    pitch_plot_ax.set(xlabel=None, xlim=(-3,3), ylabel=None, ylim=(y_bot,y_lim))
+    pitch_plot_ax.set_xticklabels([])
+    pitch_plot_ax.set_yticklabels([])
+    pitch_plot_ax.tick_params(left=False, bottom=False)
+#     pitch_plot_ax.text(0.75,y_lim-0.6,"PLV per Pitch", ha='center', va='bottom', fontsize=round(12*scale_val), 
+#              bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
+#     pitch_plot_ax.text(0.75,y_lim-0.7,"(From Pitcher's Perspective)", ha='center', va='top', fontsize=round(10*scale_val), alpha=0.7,
+#              bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
+    pitch_qual_i += 2
 
-  # Add custom legend for markers
-  legend_markers = [Line2D([],[],
-                           color='#FEFEFE',
-                           label=x,
-                           marker=marker_list[x],
-                           markeredgecolor=pl_line_color,
-                           markeredgewidth=round(scale_val),
-                           markersize=round(10*scale_val),
-                           linestyle='None') 
-                    for x in pitch_list]
+#   # Add custom legend for markers
+#   legend_markers = [Line2D([],[],
+#                            color='#FEFEFE',
+#                            label=x,
+#                            marker=marker_list[x],
+#                            markeredgecolor=pl_line_color,
+#                            markeredgewidth=round(scale_val),
+#                            markersize=round(10*scale_val),
+#                            linestyle='None') 
+#                     for x in pitch_list]
 
-  pitch_plot_ax.legend(loc=(0.01,0.05),
-             handles=legend_markers,
-             edgecolor='#162B50',
-             framealpha=0.5, fontsize=round(12*scale_val)
-             )
+#   pitch_plot_ax.legend(loc=(0.01,0.05),
+#              handles=legend_markers,
+#              edgecolor='#162B50',
+#              framealpha=0.5, fontsize=round(12*scale_val)
+#              )
 
-  # Colorbar for pitch plot
-  cb_ax = plt.subplot(grid[5:9, 5])
-  sm = plt.cm.ScalarMappable(cmap='vlag', norm=norm)
-  sm.set_array([])
-  fig.colorbar(sm,
-               cax=cb_ax
-              )
-  cb_ax.tick_params(labelsize=round(10*scale_val))
+#   # Colorbar for pitch plot
+#   cb_ax = plt.subplot(grid[5:9, 5])
+#   sm = plt.cm.ScalarMappable(cmap='vlag', norm=norm)
+#   sm.set_array([])
+#   fig.colorbar(sm,
+#                cax=cb_ax
+#               )
+#   cb_ax.tick_params(labelsize=round(10*scale_val))
   
   # Chart ownership (PitcherList)
-  pl_ax = plt.subplot(grid[0, :1])
+  pl_ax = plt.subplot(grid[0, :2])
   pl_ax.imshow(logo)
   pl_ax.axis('off')
 
