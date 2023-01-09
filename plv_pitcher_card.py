@@ -267,7 +267,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                   hue_norm=norm,
                   markers=marker_list,
                   edgecolor='#293a6b',
-                  alpha=0.75,
+                  alpha=1,
                   ax=pitch_plot_ax,
                   legend=False
                   )
