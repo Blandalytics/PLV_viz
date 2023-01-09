@@ -150,7 +150,7 @@ def game_chart(graph_data, game_ax):
   # Per game/appearance chart
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
   
-  date_min = graph_data['game_played'].max()-datetime.timedelta(days=60)
+  date_min = graph_data['game_played'].max()-datetime.timedelta(days=45)
   
   graph_data = graph_data.loc[graph_data['game_played']>=date_min]
 
