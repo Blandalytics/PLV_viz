@@ -166,8 +166,8 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                       height_ratios=[1.5]+[7/pitch_feats]*(pitch_feats)+[1])
 
   # Title of card (name, etc)
-  title_ax = plt.subplot(grid[0, 1:])
-  title_ax.text(0,0,"{}'s {}\nPLV Card\nAvg PLV: {:.3}".format(player,year,graph_data['PLV'].mean()), 
+  title_ax = plt.subplot(grid[0, 1:-1])
+  title_ax.text(0,0,"{}'s\n{} PLV Card\nAvg PLV: {:.3}".format(player,year,graph_data['PLV'].mean()), 
                 ha='center', va='center', 
                 fontsize=round(16*scale_val),
                 bbox=dict(facecolor='#162B50', 
@@ -177,6 +177,19 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   title_ax.set_xticklabels([])
   title_ax.set_yticklabels([])
   title_ax.tick_params(left=False, bottom=False)
+  
+  # Avg PLV
+  plv_ax = plt.subplot(grid[0, -1])
+  plv_ax.text(0,0,"Avg PLV:\n{:.3}".format(graph_data['PLV'].mean()), 
+                ha='center', va='center', 
+                fontsize=round(20*scale_val),
+                bbox=dict(facecolor='#162B50', 
+                          alpha=0.6, 
+                          edgecolor='#162B50'))
+  plv_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
+  plv_ax.set_xticklabels([])
+  plv_ax.set_yticklabels([])
+  plv_ax.tick_params(left=False, bottom=False)
 
   # Arsenal Distributions
   pitch_dist_ax = plt.subplot(grid[1:, 0])
