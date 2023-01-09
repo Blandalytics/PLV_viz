@@ -145,6 +145,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
 
   graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
+  st.write(graph_data['appearance'])
 
   # Subtle line to connect the dots
   sns.lineplot(
