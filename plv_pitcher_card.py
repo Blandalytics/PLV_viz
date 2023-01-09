@@ -29,7 +29,7 @@ sns.set_theme(
         'axes.facecolor': pl_background,
         'axes.labelcolor': pl_white,
         'xtick.color': pl_white,
-        'ytick.color': pl_background,
+        'ytick.color': pl_white,
         'figure.facecolor':pl_background,
         'grid.color': pl_background,
         'grid.linestyle': '-',
@@ -234,6 +234,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                                               max([6,game_max+0.1])))
   #x_ticks_format(game_ax,graph_data['game_played'],scale_val)
   game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
+  title_ax.tick_params(left=False)
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
   # Plot of individual pitches
