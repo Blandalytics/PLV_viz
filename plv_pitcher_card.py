@@ -262,32 +262,32 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   title_ax.set_yticklabels([])
   title_ax.tick_params(left=False, bottom=False)
   
-  # Avg PLV
-  plv_ax = plt.subplot(grid[1, 0])
-  plv_ax.text(0,0,"Avg PLV\n{:.3}".format(graph_data['PLV'].mean()), 
-                ha='center', va='center', 
-                fontsize=round(18*scale_val),
-                bbox=dict(facecolor='#162B50', 
-                          alpha=0.6, 
-                          edgecolor='#162B50'))
-  plv_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-  plv_ax.set_xticklabels([])
-  plv_ax.set_yticklabels([])
-  plv_ax.tick_params(left=False, bottom=False)
+#   # Avg PLV
+#   plv_ax = plt.subplot(grid[1, 0])
+#   plv_ax.text(0,0,"Avg PLV\n{:.3}".format(graph_data['PLV'].mean()), 
+#                 ha='center', va='center', 
+#                 fontsize=round(18*scale_val),
+#                 bbox=dict(facecolor='#162B50', 
+#                           alpha=0.6, 
+#                           edgecolor='#162B50'))
+#   plv_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
+#   plv_ax.set_xticklabels([])
+#   plv_ax.set_yticklabels([])
+#   plv_ax.tick_params(left=False, bottom=False)
   
   game_chart(graph_data,plt.subplot(grid[1:4, 4:]))
   
   x_loc = 0
-  y_loc = 2
+  y_loc = 1
   qual_bins = [-20,4.5,5.5,20]
   qual_labels = ['BP','AP','QP']
   graph_data['pitch_qual'] = pd.cut(graph_data['PLV_clip'],bins=qual_bins,labels=qual_labels)
 
   for qual in qual_labels:
-    pitch_plot_ax = plt.subplot(grid[y_loc:y_loc+2, x_loc:x_loc+4])
+    pitch_plot_ax = plt.subplot(grid[y_loc:y_loc+3, x_loc:x_loc+4])
     pitch_qual_charts(graph_data,pitch_plot_ax,qual)
     x_loc += 0
-    y_loc += 2
+    y_loc += 3
 
 #   # Add custom legend for markers
 #   legend_markers = [Line2D([],[],
