@@ -222,7 +222,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   # Plot of individual pitches
   pitch_plot_ax = plt.subplot(grid[4:, 1:5])
   sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.25)&
-                                      (graph_data['p_x']>-2.8)].sort_values('PLV',ascending=False), 
+                                      (graph_data['p_x']>-2.8)].sort_values('PLV'), 
                   x='p_x', 
                   y='p_z', 
                   s=round(70*scale_val), 
@@ -232,6 +232,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
                   hue_norm=norm,
                   markers=marker_list,
                   edgecolor='#293a6b',
+                  alpha=0.8,
                   ax=pitch_plot_ax,
                   legend=False
                   )
