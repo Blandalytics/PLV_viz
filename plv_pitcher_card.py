@@ -147,11 +147,10 @@ pitch_list = list(plv_df
                 ['pitchtype']
                 )
 
-def game_chart(game_ax):
+def game_chart(graph_data, game_ax):
   # Per game/appearance chart
   game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
 
-  graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
   game_min = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().min()
   game_max = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().max()
   
@@ -190,7 +189,7 @@ def game_chart(game_ax):
   game_ax.tick_params(left=False)
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
-def pitch_qual_charts(x_start=0, y_start=0,x_diff=2, y_diff=0):
+def pitch_qual_charts(graph_data,x_start=0, y_start=0,x_diff=2, y_diff=0):
   x_loc = x_start
   y_loc = y_start
   qual_bins = [0,4.5,5.5,10]
@@ -239,6 +238,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   graph_data = plv_df.loc[plv_df['pitchername']==player].iloc[::-1].reset_index(drop=True)
   graph_data['p_x'] = graph_data['p_x'].mul(-1) # To convert to pitcher's perspective
   graph_data['PLV_clip'] = np.clip(graph_data['PLV'], a_min=0, a_max=10)
+  graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
 
   # Update the pitch count threshold if the pitcher has a low season pitch count
   pitch_threshold = min(pitch_threshold,graph_data.shape[0])
