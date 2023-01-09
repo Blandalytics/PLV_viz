@@ -7,6 +7,14 @@ import matplotlib.font_manager as fm
 import matplotlib.dates as mdates
 import seaborn as sns
 
+from matplotlib import colors
+from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
+from matplotlib.gridspec import GridSpec
+from matplotlib.patches import Arc
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator, FuncFormatter)
+
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
