@@ -106,7 +106,6 @@ def x_ticks_format(ax,game_dates,scale_val):
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%-d'))
   else:
     ax.tick_params(left=False, labelsize=round(10*scale_val))
-#    ax.set_xlim(game_dates.min().replace(day=1))
     ax.xaxis.set_major_locator(mdates.AutoDateLocator(minticks=3, maxticks=8))
     ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(mdates.AutoDateLocator(minticks=3, maxticks=8),show_offset=False))
     ax.xaxis.set_minor_locator(mdates.DayLocator())
@@ -210,7 +209,7 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
   
   game_ax.set(xlabel=None, ylabel=None, ylim=(0,10))
-  x_ticks_format(game_ax,graph_data['game_played'],scale_val)
+  #x_ticks_format(game_ax,graph_data['game_played'],scale_val)
   game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
   
   # Plot of individual pitches
