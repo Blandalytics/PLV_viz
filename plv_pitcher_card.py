@@ -147,6 +147,93 @@ pitch_list = list(plv_df
                 ['pitchtype']
                 )
 
+def game_chart(game_ax):
+  # Per game/appearance chart
+  game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
+
+  graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
+  game_min = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().min()
+  game_max = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().max()
+  
+  # Subtle line to connect the dots
+  sns.lineplot(data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
+               x='game_played', 
+               y='PLV',
+               style='pitchername',
+               color='#FEFEFE',
+               linewidth=round(scale_val),
+               alpha=0.1,
+               ax=game_ax,
+               legend=False
+              )
+
+  # Dots
+  sns.scatterplot(data=graph_data.groupby('game_played',as_index=False)[['PLV','appearance']].mean(), 
+                  x='game_played', 
+                  y='PLV', 
+                  s=round(100*scale_val), 
+                  edgecolor=None, 
+                  hue='PLV', 
+                  hue_norm=game_norm, 
+                  palette='vlag', 
+                  alpha=0.8,
+                  ax=game_ax,
+                  legend=False)
+
+  # League Average line
+  game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
+  
+  game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.1]),
+                                              max([6,game_max+0.1])))
+  x_ticks_format(game_ax,graph_data['game_played'],scale_val)
+  game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
+  game_ax.tick_params(left=False)
+  game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
+  
+def pitch_qual_charts(x_start=0, y_start=0,x_diff=2, y_diff=0):
+  x_loc = x_start
+  y_loc = y_start
+  qual_bins = [0,4.5,5.5,10]
+  qual_labels = ['BP','AP','QP']
+  graph_data['pitch_qual'] = pd.cut(graph_data['PLV_clip'],bins=qual_bins,labels=qual_labels)
+  for qual in qual_labels:
+    # Plot of individual pitches
+    pitch_plot_ax = plt.subplot(grid[y_loc:-1, x_loc:x_loc+x_diff])
+    sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5) &
+                                        (graph_data['p_z']>-0.5) &
+                                        (graph_data['p_x']>=-2.75) &
+                                        (graph_data['pitch_qual']==qual)], 
+                    x='p_x', 
+                    y='p_z', 
+                    s=round(70*scale_val), 
+                    style='pitchtype',
+                    hue='PLV_clip',
+                    palette='vlag',
+                    hue_norm=norm,
+                    markers=marker_list,
+                    edgecolor='#293a6b',
+                    alpha=0.75,
+                    ax=pitch_plot_ax,
+                    legend=False
+                    )
+
+    # Strike zone outline
+    pitch_plot_ax.axvline(10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
+    pitch_plot_ax.axvline(-10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
+    pitch_plot_ax.axhline(sz_top, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
+    pitch_plot_ax.axhline(sz_bot, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
+
+    pitch_plot_ax.set(xlabel=None, xlim=(-3,3), ylabel=None, ylim=(y_bot,y_lim))
+    pitch_plot_ax.set_xticklabels([])
+    pitch_plot_ax.set_yticklabels([])
+    pitch_plot_ax.tick_params(left=False, bottom=False)
+#     pitch_plot_ax.text(0.75,y_lim-0.6,"PLV per Pitch", ha='center', va='bottom', fontsize=round(12*scale_val), 
+#              bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
+#     pitch_plot_ax.text(0.75,y_lim-0.7,"(From Pitcher's Perspective)", ha='center', va='top', fontsize=round(10*scale_val), alpha=0.7,
+#              bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
+    x_loc += x_diff
+    y_loc += y_diff
+
 def plv_card(pitch_threshold=200,scale_val=1.5):
   # Create df for only the pitcher's pitches
   graph_data = plv_df.loc[plv_df['pitchername']==player].iloc[::-1].reset_index(drop=True)
@@ -193,90 +280,10 @@ def plv_card(pitch_threshold=200,scale_val=1.5):
   plv_ax.set_xticklabels([])
   plv_ax.set_yticklabels([])
   plv_ax.tick_params(left=False, bottom=False)
-
-  # Per game/appearance chart
-  game_ax = plt.subplot(grid[1:4, 2:6])
-  game_ax.grid(visible=True, which='major', axis='y', color='#FEFEFE', alpha=0.1)
-
-  graph_data['appearance'] = graph_data['mlb_game_id'].rank(method='dense')
-  game_min = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().min()
-  game_max = graph_data.groupby(['game_played','pitchername'])['PLV'].mean().max()
   
-  # Subtle line to connect the dots
-  sns.lineplot(data=graph_data.groupby(['game_played','pitchername'],as_index=False)[['PLV','appearance']].mean(), 
-               x='game_played', 
-               y='PLV',
-               style='pitchername',
-               color='#FEFEFE',
-               linewidth=round(scale_val),
-               alpha=0.1,
-               ax=game_ax,
-               legend=False
-              )
-
-  # Dots
-  sns.scatterplot(data=graph_data.groupby('game_played',as_index=False)[['PLV','appearance']].mean(), 
-                  x='game_played', 
-                  y='PLV', 
-                  s=round(100*scale_val), 
-                  edgecolor=None, 
-                  hue='PLV', 
-                  hue_norm=game_norm, 
-                  palette='vlag', 
-                  alpha=0.8,
-                  ax=game_ax,
-                  legend=False)
-
-  # League Average line
-  game_ax.axhline(5, color='#FEFEFE', linewidth=round(scale_val), linestyle='--', alpha=0.75)
+  game_chart(plt.subplot(grid[2:, 1:4]))
   
-  game_ax.set(xlabel=None, ylabel=None, ylim=(min([4,game_min-0.1]),
-                                              max([6,game_max+0.1])))
-  x_ticks_format(game_ax,graph_data['game_played'],scale_val)
-  game_ax.set_yticks([int(x*2)/2 for x in game_ax.get_yticks()])
-  game_ax.tick_params(left=False)
-  game_ax.set_title('Avg PLV, per Game', fontsize=round(12*scale_val))
-  
-  pitch_qual_i = 0
-  qual_bins = [0,4.5,5.5,10]
-  qual_labels = ['BP','AP','QP']
-  graph_data['pitch_qual'] = pd.cut(graph_data['PLV_clip'],bins=qual_bins,labels=qual_labels)
-  for qual in qual_labels:
-    # Plot of individual pitches
-    pitch_plot_ax = plt.subplot(grid[4:, pitch_qual_i:pitch_qual_i+2])
-    sns.scatterplot(data=graph_data.loc[(graph_data['p_z']<=y_lim-0.5) &
-                                        (graph_data['p_z']>-0.5) &
-                                        (graph_data['p_x']>=-2.75) &
-                                        (graph_data['pitch_qual']==qual)], 
-                    x='p_x', 
-                    y='p_z', 
-                    s=round(70*scale_val), 
-                    style='pitchtype',
-                    hue='PLV_clip',
-                    palette='vlag',
-                    hue_norm=norm,
-                    markers=marker_list,
-                    edgecolor='#293a6b',
-                    alpha=0.75,
-                    ax=pitch_plot_ax,
-                    legend=False
-                    )
-
-    # Strike zone outline
-    pitch_plot_ax.axvline(10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
-    pitch_plot_ax.axvline(-10/12, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='black', linewidth=4*scale_val)
-    pitch_plot_ax.axhline(sz_top, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
-    pitch_plot_ax.axhline(sz_bot, xmin=26/72, xmax=46/72, color='black', linewidth=4*scale_val)
-
-    pitch_plot_ax.set(xlabel=None, xlim=(-3,3), ylabel=None, ylim=(y_bot,y_lim))
-    pitch_plot_ax.set_xticklabels([])
-    pitch_plot_ax.set_yticklabels([])
-    pitch_plot_ax.tick_params(left=False, bottom=False)
-#     pitch_plot_ax.text(0.75,y_lim-0.6,"PLV per Pitch", ha='center', va='bottom', fontsize=round(12*scale_val), 
-#              bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
-#     pitch_plot_ax.text(0.75,y_lim-0.7,"(From Pitcher's Perspective)", ha='center', va='top', fontsize=round(10*scale_val), alpha=0.7,
-#              bbox=dict(facecolor='#162B50', alpha=0.75, edgecolor='#162B50'))
-    pitch_qual_i += 2
+  pitch_qual_charts(y_start=4)
 
 #   # Add custom legend for markers
 #   legend_markers = [Line2D([],[],
