@@ -69,7 +69,7 @@ def load_season_data(year):
         
     return df
 
-plv_df = load_season_data()
+plv_df = load_season_data(year)
 
 season_df = (plv_df
              .rename(columns=season_names)
