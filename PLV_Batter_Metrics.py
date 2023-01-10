@@ -59,16 +59,17 @@ season_names = {
 
 # Load Data
 @st.cache
-def load_season_data():
+def load_season_data(year):
     file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data.parquet?raw=true'
-    df = pd.read_parquet(file_name)
+    df = pd.read_parquet(file_name)[['hittername','pitch_id','swing_agg','strike_zone_judgement',
+                                     'decision_value','contact_over_expected','adj_power','batter_wOBA']]
+    
+    for stat in ['swing_agg','strike_zone_judgement','contact_over_expected']:
+        df[stat] = df[stat].mul(100).astype('float')
+        
     return df
 
 plv_df = load_season_data()
-
-plv_df['swing_agg'] = plv_df['swing_agg'].mul(100).astype('float')
-plv_df['contact_over_expected'] = plv_df['contact_over_expected'].mul(100).astype('float')
-plv_df['strike_zone_judgement'] = plv_df['strike_zone_judgement'].mul(100).astype('float')
 
 season_df = (plv_df
              .rename(columns=season_names)
