@@ -60,6 +60,7 @@ st.title("PLV Distributions")
 years = [2022,2021,2020]
 year = st.radio('Choose a year:', years)
 
+@st.cache
 # Load Data
 def load_data():
     file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data.parquet?raw=true'
