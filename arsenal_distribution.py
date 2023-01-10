@@ -64,7 +64,8 @@ year = st.radio('Choose a year:', years)
 # Load Data
 def load_data(year):
     file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data.parquet?raw=true'
-    df = pd.read_parquet(file_name).sort_values('pitch_id')
+    df = pd.read_parquet(file_name).sort_values('pitch_id')[['pitchername','pitch_id','p_hand','b_hand',
+                                                             'pitchtype','PLV']]
     return df
 plv_df = load_data(year)
 
