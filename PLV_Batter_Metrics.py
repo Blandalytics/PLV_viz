@@ -206,7 +206,7 @@ def rolling_chart():
                                                      rolling_denom[metric]))
     
     if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
-        ax.yaxis.set_major_formatter(ticker.PercentFormatter(1.0))
+        ax.yaxis.set_major_formatter(ticker.PercentFormatter(100.0))
 
     sns.despine()
     st.pyplot(fig)
