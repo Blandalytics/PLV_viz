@@ -71,7 +71,7 @@ plv_df = load_data(year)
 
 ## Selectors
 # Player
-players = list(plv_df['pitchername'].unique())
+players = list(plv_df.groupby('pitchername', as_index=False)['PLV'].mean().sort_values('PLV', ascending=False)['pitchername'])
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
