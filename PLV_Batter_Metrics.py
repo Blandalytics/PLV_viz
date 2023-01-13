@@ -147,7 +147,7 @@ rolling_threshold = {
     'Decision Value':400,
     'Contact Ability':200,
     'Power': 75,
-    'Hitter Efficiency':400
+    'Hitter Efficiency':800
 }
 
 rolling_df = (plv_df
