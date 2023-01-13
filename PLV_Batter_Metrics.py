@@ -187,12 +187,12 @@ def rolling_chart():
             va='center',
             color=sns.color_palette('vlag', n_colors=20)[3])
 
-    ax.axhline(0 if metric in ['Swing Aggression','Contact Ability','Hitter Efficiency'] else plv_df[metric].mean(),
+    ax.axhline(0 if metric in ['Swing Aggression','Contact Ability'] else plv_df[metric].mean(),
                color='w',
                linestyle='--',
                alpha=0.5)
     ax.text(rolling_df.shape[0]*1.05,
-            0 if metric in ['Swing Aggression','Contact Ability','Hitter Efficiency'] else plv_df[metric].mean(),
+            0 if metric in ['Swing Aggression','Contact Ability'] else plv_df[metric].mean(),
             'MLB Avg' if abs(plv_df[metric].mean() - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color='w',
