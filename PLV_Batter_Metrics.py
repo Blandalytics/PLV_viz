@@ -39,7 +39,7 @@ st.write('''
 st.write("- ***Decision Value***: Modeled value of a hitter's decision to swing or take, minus the modeled value of the other option.")
 st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- ***Power***: Modeled number of extra bases (aka ISO) above a pitch's expectation, for each BBE.")
-st.write("- ***Hitter Efficiency***: wOBA added by the hitter to each pitch they see (including swing/take decisions), after accounting for pitch quality.")
+st.write("- ***Hitter Perfromance (HP)***: wOBA added by the hitter to each pitch they see (including swing/take decisions), after accounting for pitch quality.")
 
 ## Selectors
 # Year
@@ -54,7 +54,7 @@ season_names = {
     'decision_value':'Dec Value',
     'contact_over_expected':'Contact',
     'adj_power':'Power',
-    'batter_wOBA':'Hit Eff'
+    'batter_wOBA':'HP'
 }
 
 # Load Data
@@ -82,7 +82,7 @@ season_df = (plv_df
                  'Dec Value':'mean',
                  'Contact':'mean',
                  'Power':'mean',
-                 'Hit Eff':'mean'
+                 'HP':'mean'
              })
              .query('pitch_id >= 400')
              .rename(columns={'hittername':'Name',
@@ -90,7 +90,7 @@ season_df = (plv_df
              .sort_values('Hit Eff', ascending=False)
             )
 
-for stat in ['SZ Judge','Contact','Dec Value','Power','Hit Eff']:
+for stat in ['SZ Judge','Contact','Dec Value','Power','HP']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
 
@@ -104,7 +104,7 @@ st.dataframe(season_df
              .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
                                   subset=['SZ Judge','Dec Value','Contact',
-                                          'Power','Hit Eff']
+                                          'Power','HP']
                                  ) 
             )
 
@@ -115,15 +115,15 @@ stat_names = {
     'decision_value':'Decision Value',
     'contact_over_expected':'Contact Ability',
     'adj_power':'Power',
-    'batter_wOBA':'Hitter Efficiency'
+    'batter_wOBA':'Hitter Performance'
 }
 plv_df = plv_df.rename(columns=stat_names)
 st.title("Rolling Ability Charts")
 
 # Player
-players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Efficiency']].agg({
+players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
     'pitch_id':'count',
-    'Hitter Efficiency':'mean'}).query('pitch_id >=400').sort_values('Hitter Efficiency', ascending=False)['hittername'])
+    'Hitter Performance':'mean'}).query('pitch_id >=400').sort_values('Hitter Performance', ascending=False)['hittername'])
 default_player = players.index('Juan Soto')
 player = st.selectbox('Choose a hitter:', players, index=default_player)
 
@@ -138,7 +138,7 @@ rolling_denom = {
     'Decision Value':'Pitches',
     'Contact Ability':'Swings',
     'Power': 'BBE',
-    'Hitter Efficiency':'Pitches'
+    'Hitter Performance':'Pitches'
 }
 
 rolling_threshold = {
@@ -147,7 +147,7 @@ rolling_threshold = {
     'Decision Value':400,
     'Contact Ability':200,
     'Power': 75,
-    'Hitter Efficiency':800
+    'Hitter Performance':800
 }
 
 rolling_df = (plv_df
