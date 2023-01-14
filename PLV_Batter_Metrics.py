@@ -39,7 +39,7 @@ st.write('''
 st.write("- ***Decision Value***: Modeled value of a hitter's decision to swing or take, minus the modeled value of the alternative.")
 st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- ***Power***: Modeled number of extra bases (aka ISO) above a pitch's expectation, for each BBE.")
-st.write("- ***Hitter Perfromance (HP)***: wOBA added by the hitter to each pitch they see (including swing/take decisions), after accounting for pitch quality.")
+st.write("- ***Hitter Performance (HP)***: wOBA added by the hitter to each pitch they see (including swing/take decisions), after accounting for pitch quality.")
 
 ## Selectors
 # Year
