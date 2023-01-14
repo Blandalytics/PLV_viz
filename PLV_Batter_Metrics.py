@@ -71,8 +71,6 @@ def load_season_data(year):
 
 plv_df = load_season_data(year)
 
-st.write(plv_df.columns.values)
-
 season_df = (plv_df
              .rename(columns=season_names)
              .groupby('hittername')
@@ -89,7 +87,7 @@ season_df = (plv_df
              .query('pitch_id >= 400')
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches'})
-             .sort_values('Hit Eff', ascending=False)
+             .sort_values('HP', ascending=False)
             )
 
 for stat in ['SZ Judge','Contact','Dec Value','Power','HP']:
