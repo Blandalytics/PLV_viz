@@ -71,6 +71,8 @@ def load_season_data(year):
 
 plv_df = load_season_data(year)
 
+st.write(plv_df.columns.values)
+
 season_df = (plv_df
              .rename(columns=season_names)
              .groupby('hittername')
