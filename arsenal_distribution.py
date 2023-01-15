@@ -182,10 +182,10 @@ max_val = pla_df[format_cols].max().max()
 st.dataframe(pla_df
              .style
              .highlight_null(props="color: transparent;")
-             .format(precision=2, thousands=',', na_rep=pla_df['PLA'].mean())
-             .background_gradient(axis=None, vmin=0, vmax=max_val, 
-                                  cmap="vlag_r", subset=format_cols
-                                 )
+             .format(precision=2, thousands=',')
+#              .background_gradient(axis=None, vmin=0, vmax=max_val, 
+#                                   cmap="vlag_r", subset=format_cols
+#                                  )
             )
 
 st.title("PLV Distributions")
