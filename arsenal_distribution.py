@@ -153,7 +153,7 @@ def pla_data(dataframe, year):
     return df
 
 # Season data
-pla_df = pla_data(plv_df.copy(), year)
+pla_df = pla_data(load_data(year), year)
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
