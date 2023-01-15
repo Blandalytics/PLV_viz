@@ -163,7 +163,7 @@ min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
 
 def pitchtype_header(x):
-    return [f'background-color: {marker_colors[x]}']*x.shape[0]
+    return [f'background-color: {marker_colors[x]}']#*x.shape[0]
 
 st.dataframe(pla_df
              .fillna(max_val+0.01)
