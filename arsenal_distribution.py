@@ -159,7 +159,6 @@ pla_df = pla_data(plv_df, year)
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
-min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
 
 def pitchtype_color(s):
@@ -170,9 +169,7 @@ st.dataframe(pla_df
              .fillna(max_val+0.01)
              .style
              .format(precision=2, thousands=',')
-             .background_gradient(axis=None, #vmin=0, vmax=max_val, 
-                                  cmap="vlag_r", subset=format_cols
-                                 )
+             .background_gradient(axis=0, cmap="vlag_r", subset=format_cols)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==max_val+0.01 else '')
              .applymap_index(pitchtype_color, axis='columns') 
             )
