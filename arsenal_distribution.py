@@ -77,8 +77,6 @@ st.title("Season PLA")
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
-group_cols = ['pitchername','pitchtype','pitcher_mlb_id']
-
 # Load Data
 def pla_data(dataframe, group_cols, year, handedness):
     dataframe['pitch_runs'] = dataframe['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
@@ -93,7 +91,7 @@ def pla_data(dataframe, group_cols, year, handedness):
     
     # Total Runs by season
     season_df = (dataframe
-          .groupby(group_cols)
+          .groupby(['pitchername','pitchtype','pitcher_mlb_id'])
           [['pitch_id','pitch_runs']]
           .agg({
               'pitch_id':'count',
