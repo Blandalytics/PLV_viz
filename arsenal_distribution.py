@@ -77,8 +77,8 @@ def load_data(year):
 plv_df = load_data(year)
 
 st.title("Season PLA")
-st.write('ERA estimator using the quality of pitches thrown')
-
+st.write('- PLA: ERA estimator using the run value of pitches thrown')
+st.write('- Pitchtype PLA: Uses total run value of a given pitch type and an IP proxy for that pitchtype (pitch usage % * Total IP)')
 @st.cache
 # Load Data
 def pla_data(dataframe, year):
@@ -162,6 +162,9 @@ format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
 
+def pitchtype_header(x):
+    return [f'background-color: {marker_colors[x]}']*x.shape[0]
+
 st.dataframe(pla_df
              .fillna(max_val+0.01)
              .style
@@ -169,6 +172,7 @@ st.dataframe(pla_df
              .background_gradient(axis=None, #vmin=0, vmax=max_val, 
                                   cmap="vlag_r", subset=format_cols
                                  )
+             .apply(pitchtype_header, axis=0)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==max_val+0.01 else '')
             )
 
