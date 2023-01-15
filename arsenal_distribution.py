@@ -172,14 +172,12 @@ def pla_data(dataframe, group_cols, year, handedness):
     return df
 
 # Season data
-pla_df = pla_data(plv_df,group_cols, year, handedness)
+pla_df = pla_data(plv_df.copy(),group_cols, year, handedness)
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
 min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
-
-pla_df = pla_df
 
 st.dataframe(pla_df
              .fillna(max_val+0.01)
