@@ -166,6 +166,7 @@ def pla_data(dataframe, group_cols, year, handedness):
           .rename(columns={'pitchername':'Pitcher',
                            'season_pitches':'# Pitches'})
           .drop(columns=['pitcher_mlb_id','KN','SC'])
+          .fillna(np.nan)
           .set_index('Pitcher')
          )
     return df
