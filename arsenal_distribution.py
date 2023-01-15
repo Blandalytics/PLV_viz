@@ -77,7 +77,7 @@ plv_df = load_data(year)
 # Player
 players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
     'pitch_id':'count',
-    'PLV':'mean'}).query('pitch_id >=300').sort_values('PLV', ascending=False)['pitchername'])
+    'PLV':'mean'}).query('pitch_id >=400').sort_values('PLV', ascending=False)['pitchername'])
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
@@ -105,7 +105,6 @@ seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/m
 
 group_cols = ['pitchername','pitchtype','pitcher_mlb_id'] if handedness=='All' else ['pitchername','pitcher_mlb_id','b_hand','pitchtype']
 
-@st.cache
 # Load Data
 def pla_data(dataframe, group_cols, year, handedness):
     dataframe['pitch_runs'] = dataframe['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
