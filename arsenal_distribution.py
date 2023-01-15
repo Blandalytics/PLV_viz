@@ -163,7 +163,7 @@ min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
 
 def pitchtype_color(s):
-    return np.where(s.isin(marker_colors.keys()), f"background-color: {marker_colors[s]};", "")
+    return np.where(s in marker_colors.keys(), f"background-color: {marker_colors[s]};", "")
 
 st.dataframe(pla_df
              .fillna(max_val+0.01)
