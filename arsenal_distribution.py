@@ -168,6 +168,7 @@ def pla_data(dataframe, group_cols, year, handedness):
           .drop(columns=['pitcher_mlb_id','KN','SC'])
           .fillna(np.nan)
           .set_index('Pitcher')
+          #[['PLA','CH','CU','FC','FF','FS','SI','SI']]
          )
     return df
 
@@ -182,13 +183,13 @@ max_val = pla_df[format_cols].max().max()
 pla_df = pla_df
 
 st.dataframe(pla_df
-             .fillna(max_val+1)
+             #.fillna(max_val+1)
              .style
              .format(precision=2, thousands=',')
-             .background_gradient(axis=None, vmin=0, vmax=max_val, 
-                                  cmap="vlag_r", subset=format_cols
-                                 )
-             #.applymap(lambda x: 'color: transparent; background-color: transparent' if x==(max_val+1) else '')
+#              .background_gradient(axis=None, vmin=0, vmax=max_val, 
+#                                   cmap="vlag_r", subset=format_cols
+#                                  )
+             .applymap(lambda x: 'color: transparent; background-color: transparent' if pd.isnull(x) else '')
             )
 
 st.title("PLV Distributions")
