@@ -164,12 +164,12 @@ max_val = pla_df[format_cols].max().max()
 
 st.dataframe(pla_df
              .fillna(max_val+0.01)
+             .apply_index(lambda s: np.where(s.isin(marker_colors.keys()),f'color:{marker_colors[s]};','color:white;'), axis=1)
              .style
              .format(precision=2, thousands=',')
              .background_gradient(axis=None, #vmin=0, vmax=max_val, 
                                   cmap="vlag_r", subset=format_cols
                                  )
-             #.apply_index(lambda s: np.where(s.isin(marker_colors.keys()),f'color:{marker_colors[s]};','color:white;'), axis=1)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==max_val+0.01 else '')
             )
 
