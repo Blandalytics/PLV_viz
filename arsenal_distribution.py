@@ -73,6 +73,14 @@ def load_data(year):
     return df
 plv_df = load_data(year)
 
+## Selectors
+# Player
+players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
+    'pitch_id':'count',
+    'PLV':'mean'}).query('pitch_id >=300').sort_values('PLV', ascending=False)['pitchername'])
+default_ix = players.index('Sandy Alcantara')
+player = st.selectbox('Choose a player:', players, index=default_ix)
+
 # Hitter Handedness
 handedness = st.select_slider(
     'Hitter Handedness',
@@ -195,14 +203,6 @@ st.dataframe(pla_df
             )
 
 st.title("PLV Distributions")
-
-## Selectors
-# Player
-players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
-    'pitch_id':'count',
-    'PLV':'mean'}).query('pitch_id >=300').sort_values('PLV', ascending=False)['pitchername'])
-default_ix = players.index('Sandy Alcantara')
-player = st.selectbox('Choose a player:', players, index=default_ix)
 
 pitch_threshold = 200
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
