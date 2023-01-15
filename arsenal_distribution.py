@@ -77,8 +77,8 @@ def load_data(year):
 plv_df = load_data(year)
 
 st.title("Season PLA")
-st.write('- PLA: ERA estimator using the run value of pitches thrown')
-st.write('- Pitchtype PLA: Uses total run value of a given pitch type and an IP proxy for that pitchtype (pitch usage % * Total IP)')
+st.write('- PLA: ERA estimator using the total predicted run value of pitches thrown and IP')
+st.write('- Pitchtype PLA: Uses total predicted run value of a pitch type and an IP proxy for that pitchtype (pitch usage % * Total IP)')
 @st.cache
 # Load Data
 def pla_data(dataframe, year):
