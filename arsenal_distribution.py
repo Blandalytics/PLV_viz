@@ -95,7 +95,7 @@ hand_map = {
     'Right':['R']
 }
 
-seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV/blob/main/plv_seasonal_constants.csv?raw=true').set_index('year')
+seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
 plv_df['pitch_runs'] = plv_df['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
 
