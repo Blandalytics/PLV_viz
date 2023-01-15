@@ -186,7 +186,7 @@ st.dataframe(pla_df
              .background_gradient(axis=None, vmin=0, vmax=max_val, 
                                   cmap="vlag_r", subset=format_cols
                                  )
-             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==(max_val+1) else '')
+             #.applymap(lambda x: 'color: transparent; background-color: transparent' if x==(max_val+1) else '')
             )
 
 st.title("PLV Distributions")
