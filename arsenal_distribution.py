@@ -54,28 +54,28 @@ pitch_names = {
     'UN':'Unknown', 
 }
 
-st.title("PLV Distributions")
-
 # Year
 years = [2022,2021,2020]
 year = st.radio('Choose a year:', years)
+
+st.title("Season PLA")
 
 @st.cache
 # Load Data
 def load_data(year):
     file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data.parquet?raw=true'
-    df = pd.read_parquet(file_name).sort_values('pitch_id')[['pitchername','pitch_id','p_hand','b_hand',
-                                                             'pitchtype','PLV']]
+    df = (pd.read_parquet(file_name)
+          .sort_values('pitch_id')
+          [['pitchername','pitcher_mlb_id','pitch_id',
+            'p_hand','b_hand','pitchtype','PLV']]
+          .astype({'pitch_id':'int',
+                   'pitcher_mlb_id':'int'})
+          .query('pitchtype not in ["KN","SC"]')
+         )
     return df
 plv_df = load_data(year)
 
-## Selectors
-# Player
-players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
-    'pitch_id':'count',
-    'PLV':'mean'}).query('pitch_id >=300').sort_values('PLV', ascending=False)['pitchername'])
-default_ix = players.index('Sandy Alcantara')
-player = st.selectbox('Choose a player:', players, index=default_ix)
+id_df = pd.read_csv('https://github.com/chadwickbureau/register/blob/master/data/people.csv?raw=true')[['key_mlbam','key_fangraphs']].dropna().astype('int')
 
 # Hitter Handedness
 handedness = st.select_slider(
@@ -94,6 +94,95 @@ hand_map = {
     'All':['L','R'],
     'Right':['R']
 }
+
+seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV/blob/main/plv_seasonal_constants.csv?raw=true').set_index('year')
+
+plv_df['pitch_runs'] = plv_df['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
+
+group_cols = ['pitchername','pitchtype','pitcher_mlb_id'] if handedness=='All' else ['pitchername','pitcher_mlb_id','b_hand','pitchtype']
+
+@st.cache
+# Load Data
+def pla_data(dataframe, group_cols, year):
+    min_pitches = 400
+    workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
+        'playerid':'int'
+    })
+    # Total Runs by season
+    season_df = (plv_df
+          .groupby(group_cols)
+          [['pitch_id','pitch_runs']]
+          .agg({
+              'pitch_id':'count',
+              'pitch_runs':'sum'
+          })
+          .sort_values('pitch_runs', ascending=False)
+          .query(f'pitch_id >{min_pitches/20}') # 20 keeps out negative PLA values
+          .reset_index()
+         )
+    # Add Fangraph IDs
+    season_df = season_df.merge(id_df, how='left', left_on='pitcher_mlb_id',right_on='key_mlbam')
+    
+    # Get IP from Fangraphs data
+    season_df['IP'] = season_df['key_fangraphs'].map(workload_df[['playerid','IP']].set_index('playerid').to_dict()['IP'])
+    
+    # Trim season_df
+    season_df = (season_df
+          .dropna(subset='IP')
+          .drop(columns=['key_mlbam','key_fangraphs'])
+          .rename(columns={
+              'IP':'season_IP',
+          })
+         )
+
+    # Clean IP to actual fractions
+    season_df['season_IP'] = season_df['season_IP'].astype('int') + season_df['season_IP'].astype('str').str[-1].astype('int')/3
+
+    # Total pitch count & fractional IP per pitchtype
+    season_df['season_pitches'] = season_df['pitch_id'].groupby(season_df['pitcher_mlb_id']).transform('sum')
+    season_df['pitchtype_IP'] = season_df['pitch_id'].div(season_df['season_pitches']).mul(season_df['season_IP'])
+
+    # Calculate PLA, in general, and per-pitchtype
+    season_df['PLA'] = season_df['pitch_runs'].groupby(season_df['pitcher_mlb_id']).transform('sum').mul(9).div(season_df['season_IP']).astype('float')
+    season_df['pitchtype_pla'] = season_df['pitch_runs'].mul(9).div(season_df['pitchtype_IP'])
+
+    season_df = season_df.sort_values('PLA')
+    
+    # Pivot a dataframe of per-pitchtype PLAs
+    pitchtype_df = season_df.pivot_table(index=['pitcher_mlb_id'], 
+                                         columns='pitchtype', 
+                                         values='pitchtype_pla',
+                                         aggfunc='sum'
+                                        ).round(2).replace({0:None})
+    
+    # Merge season-long PLA with pitchtype PLAs
+    df = (season_df
+          .drop_duplicates('pitcher_mlb_id')
+          [['pitcher_mlb_id','pitchername','season_pitches','PLA']]
+          .merge(pitchtype_df, how='inner',left_on='pitcher_mlb_id',right_index=True)
+          .query(f'season_pitches >= {min_pitches}')
+          .rename(columns={'pitchername':'Pitcher',
+                           'season_pitches':'# Pitches'})
+          .drop(columns=['pitcher_mlb_id','KN','SC'])
+          .set_index('Pitcher')
+          .round(2)
+         )
+    return df
+
+# Season data
+pla_df = pla_data(plv_df,group_cols, year)
+
+st.dataframe(pla_df)
+
+st.title("PLV Distributions")
+
+## Selectors
+# Player
+players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
+    'pitch_id':'count',
+    'PLV':'mean'}).query('pitch_id >=300').sort_values('PLV', ascending=False)['pitchername'])
+default_ix = players.index('Sandy Alcantara')
+player = st.selectbox('Choose a player:', players, index=default_ix)
 
 pitch_threshold = 200
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
