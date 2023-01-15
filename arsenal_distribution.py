@@ -177,12 +177,13 @@ format_cols = ['PLA','CH','CU','FC','FF','FS','SI','SI']
 
 max_val = pla_df[format_cols].max().max()
 
-st.dataframe(pla_df.style
-             .format(precision=2, thousands=',')
-             #.na_rep('')
-             .background_gradient(axis=None, vmin=0, vmax=max_val, cmap="vlag_r",
-                                  subset=format_cols
-                                 ) 
+st.dataframe(pla_df
+#              .style
+#              .format(precision=2, thousands=',')
+#              #.na_rep('')
+#              .background_gradient(axis=None, vmin=0, vmax=max_val, 
+#                                   cmap="vlag_r", subset=format_cols
+#                                  )
             )
 
 st.title("PLV Distributions")
