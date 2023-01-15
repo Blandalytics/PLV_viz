@@ -58,6 +58,8 @@ pitch_names = {
 years = [2022,2021,2020]
 year = st.radio('Choose a year:', years)
 
+seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
+
 @st.cache
 # Load Data
 def load_data(year):
@@ -70,18 +72,15 @@ def load_data(year):
                    'pitcher_mlb_id':'int'})
           .query(f'pitchtype not in {["KN","SC"]}')
          )
+    df['pitch_runs'] = df['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
     return df
 plv_df = load_data(year)
 
 st.title("Season PLA")
 
-seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
-
 @st.cache
 # Load Data
 def pla_data(dataframe, year):
-    dataframe['pitch_runs'] = dataframe['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
-    
     min_pitches = 400
     
     workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
@@ -150,11 +149,12 @@ def pla_data(dataframe, year):
           .fillna(np.nan)
           .set_index('Pitcher')
           [['# Pitches','PLA','FF','SI','SL','CH','CU','FC','FS']]
+          .copy()
          )
     return df
 
 # Season data
-pla_df = pla_data(plv_df.copy(), year)
+pla_df = pla_data(plv_df, year)
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
