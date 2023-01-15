@@ -95,12 +95,12 @@ hand_map = {
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
-plv_df['pitch_runs'] = plv_df['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
-
 group_cols = ['pitchername','pitchtype','pitcher_mlb_id'] if handedness=='All' else ['pitchername','pitcher_mlb_id','b_hand','pitchtype']
 
 # Load Data
 def pla_data(dataframe, group_cols, year, handedness):
+    dataframe['pitch_runs'] = dataframe['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
+    
     min_pitches = 400
     
     workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
