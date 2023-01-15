@@ -170,7 +170,7 @@ def pla_data(dataframe, group_cols, year, handedness):
           .drop(columns=['pitcher_mlb_id','KN','SC'])
           .fillna(np.nan)
           .set_index('Pitcher')
-          [['# Pitches','PLA','CH','CU','FC','FF','FS','SI','SI']]
+          [['# Pitches','PLA','FF','SI','SL','CH','CU','FC','FS']]
          )
     return df
 
