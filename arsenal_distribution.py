@@ -99,6 +99,8 @@ plv_df['pitch_runs'] = plv_df['PLV'].mul(seasonal_constants.loc[year]['run_plv_c
 
 group_cols = ['pitchername','pitchtype','pitcher_mlb_id'] if handedness=='All' else ['pitchername','pitcher_mlb_id','b_hand','pitchtype']
 
+st.write(plv_df['pitchtype'].value_counts())
+
 @st.cache
 # Load Data
 def pla_data(dataframe, group_cols, year, handedness):
@@ -183,13 +185,13 @@ max_val = pla_df[format_cols].max().max()
 pla_df = pla_df
 
 st.dataframe(pla_df
-             .fillna(max_val+1)
+             #.fillna(max_val+1)
              .style
              .format(precision=2, thousands=',')
 #              .background_gradient(axis=None, vmin=0, vmax=max_val, 
 #                                   cmap="vlag_r", subset=format_cols
 #                                  )
-             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==max_val+1 else '')
+             .applymap(lambda x: 'color: transparent; background-color: transparent' if pd.isnull(x) else '')
             )
 
 st.title("PLV Distributions")
