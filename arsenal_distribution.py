@@ -129,8 +129,9 @@ def pla_data(dataframe, group_cols, year, handedness):
     # Add Fangraph IDs
     season_df = season_df.merge(id_df, how='left', left_on='pitcher_mlb_id',right_on='key_mlbam')
     
-    # Get IP from Fangraphs data
+    # Get IP & pitches from Fangraphs data
     season_df['IP'] = season_df['key_fangraphs'].map(workload_df[['playerid','IP']].set_index('playerid').to_dict()['IP'])
+    season_df['season_pitches'] = season_df['key_fangraphs'].map(workload_df[['playerid','Pitches']].set_index('playerid').to_dict()['Pitches'])
     
     # Trim season_df
     season_df = (season_df
@@ -145,7 +146,6 @@ def pla_data(dataframe, group_cols, year, handedness):
     season_df['season_IP'] = season_df['season_IP'].astype('int') + season_df['season_IP'].astype('str').str[-1].astype('int')/3
 
     # Total pitch count & fractional IP per pitchtype
-    season_df['season_pitches'] = season_df['pitch_id'].groupby(season_df['pitcher_mlb_id']).transform('sum')
     season_df['pitchtype_IP'] = season_df['pitch_id'].div(season_df['season_pitches']).mul(season_df['season_IP'])
 
     # Calculate PLA, in general, and per-pitchtype
