@@ -110,7 +110,7 @@ def pla_data(dataframe, group_cols, year, handedness):
     id_df = pd.read_csv('https://github.com/chadwickbureau/register/blob/master/data/people.csv?raw=true')[['key_mlbam','key_fangraphs']].dropna().astype('int')
     
     # Total Runs by season
-    season_df = (plv_df
+    season_df = (dataframe
           .groupby(group_cols)
           [['pitch_id','pitch_runs']]
           .agg({
