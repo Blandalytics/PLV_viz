@@ -58,8 +58,6 @@ pitch_names = {
 years = [2022,2021,2020]
 year = st.radio('Choose a year:', years)
 
-st.title("Season PLA")
-
 @st.cache
 # Load Data
 def load_data(year):
@@ -93,10 +91,13 @@ hand_map = {
     'Right':['R']
 }
 
+st.title("Season PLA")
+
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
 group_cols = ['pitchername','pitchtype','pitcher_mlb_id'] if handedness=='All' else ['pitchername','pitcher_mlb_id','b_hand','pitchtype']
 
+@st.cache
 # Load Data
 def pla_data(dataframe, group_cols, year, handedness):
     dataframe['pitch_runs'] = dataframe['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
