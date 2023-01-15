@@ -174,7 +174,7 @@ def pla_data(dataframe, group_cols, year, handedness):
 # Season data
 pla_df = pla_data(plv_df,group_cols, year, handedness)
 
-format_cols = ['PLA','CH','CU','FC','FF','FS','SI']
+format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
 min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
@@ -188,7 +188,7 @@ st.dataframe(pla_df
              .background_gradient(axis=None, vmin=0, vmax=max_val, 
                                   cmap="vlag_r", subset=format_cols
                                  )
-             #.applymap(lambda x: 'color: transparent; background-color: transparent' if pd.isnull(x) else '')
+             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==max_val+1 else '')
             )
 
 st.title("PLV Distributions")
