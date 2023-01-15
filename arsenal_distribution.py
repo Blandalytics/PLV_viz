@@ -122,6 +122,10 @@ def pla_data(dataframe, group_cols, year, handedness):
           .query(f'pitch_id >{min_pitches/20}') # 20 keeps out negative PLA values
           .reset_index()
          )
+    
+    if handedness!='All':
+        season_df = season_df.loc[season_df['b_hand']==hand_map[handedness][0]
+    
     # Add Fangraph IDs
     season_df = season_df.merge(id_df, how='left', left_on='pitcher_mlb_id',right_on='key_mlbam')
     
