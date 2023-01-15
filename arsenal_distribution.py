@@ -164,6 +164,7 @@ fill_val = pla_df[format_cols].max().max()+0.01
 def pitchtype_color(s):
     return f"background-color: {marker_colors[s]}" if s in list(marker_colors.keys()) else None
 
+st.write('At least 20 pitches thrown. Table is sortable.')
 st.dataframe(pla_df
              .fillna(fill_val)
              .style
