@@ -172,7 +172,7 @@ st.dataframe(pla_df
              .background_gradient(axis=None, #vmin=0, vmax=max_val, 
                                   cmap="vlag_r", subset=format_cols
                                  )
-             .apply(pitchtype_header, axis=0)
+             #.apply(pitchtype_header, axis=0)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==max_val+0.01 else '')
             )
 
