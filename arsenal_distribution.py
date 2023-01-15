@@ -153,7 +153,7 @@ def pla_data(dataframe, group_cols, year):
                                          columns='pitchtype', 
                                          values='pitchtype_pla',
                                          aggfunc='sum'
-                                        ).round(2).replace({0:None})
+                                        )..replace({0:None})
     
     # Merge season-long PLA with pitchtype PLAs
     df = (season_df
@@ -165,7 +165,6 @@ def pla_data(dataframe, group_cols, year):
                            'season_pitches':'# Pitches'})
           .drop(columns=['pitcher_mlb_id','KN','SC'])
           .set_index('Pitcher')
-          .round(2)
          )
     return df
 
