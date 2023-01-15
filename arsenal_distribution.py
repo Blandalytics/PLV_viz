@@ -163,7 +163,7 @@ min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
 
 def pitchtype_color(s):
-    return f"background-color: {marker_colors[s]};" if s in list(marker_colors.keys()) else ''
+    return f"background-color: {marker_colors[s]}" if s in list(marker_colors.keys()) else ''
 
 st.dataframe(pla_df
              .fillna(max_val+0.01)
@@ -173,7 +173,7 @@ st.dataframe(pla_df
                                   cmap="vlag_r", subset=format_cols
                                  )
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==max_val+0.01 else '')
-             .apply_index(pitchtype_color, axis=1) 
+             #.apply_index(pitchtype_color, axis=1) 
             )
 
 st.title("PLV Distributions")
