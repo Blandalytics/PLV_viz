@@ -173,7 +173,7 @@ st.dataframe(pla_df
                                   cmap="vlag_r", subset=format_cols
                                  )
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==max_val+0.01 else '')
-             #.apply_index(pitchtype_color, axis=1) 
+             .applymap_index(pitchtype_color, axis=1) 
             )
 
 st.title("PLV Distributions")
