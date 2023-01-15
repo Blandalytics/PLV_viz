@@ -75,8 +75,6 @@ def load_data(year):
     return df
 plv_df = load_data(year)
 
-id_df = pd.read_csv('https://github.com/chadwickbureau/register/blob/master/data/people.csv?raw=true')[['key_mlbam','key_fangraphs']].dropna().astype('int')
-
 # Hitter Handedness
 handedness = st.select_slider(
     'Hitter Handedness',
@@ -103,11 +101,15 @@ group_cols = ['pitchername','pitchtype','pitcher_mlb_id'] if handedness=='All' e
 
 @st.cache
 # Load Data
-def pla_data(dataframe, group_cols, year):
+def pla_data(dataframe, group_cols, year, handedness):
     min_pitches = 400
+    
     workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
         'playerid':'int'
     })
+    
+    id_df = pd.read_csv('https://github.com/chadwickbureau/register/blob/master/data/people.csv?raw=true')[['key_mlbam','key_fangraphs']].dropna().astype('int')
+    
     # Total Runs by season
     season_df = (plv_df
           .groupby(group_cols)
@@ -169,7 +171,7 @@ def pla_data(dataframe, group_cols, year):
     return df
 
 # Season data
-pla_df = pla_data(plv_df,group_cols, year)
+pla_df = pla_data(plv_df,group_cols, year, handedness)
 
 format_cols = ['PLA','CH','CU','FC','FF','FS','SI','SI']
 
