@@ -184,7 +184,7 @@ st.dataframe(pla_df
              .highlight_null(props="color: transparent;")
              .format(precision=2, thousands=',')
              .background_gradient(axis=None, vmin=0, vmax=max_val, 
-                                  cmap="vlag_r", subset=~pd.isnull(pla_df)
+                                  cmap="vlag_r", subset=format_cols
                                  )
             )
 
