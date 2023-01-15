@@ -182,11 +182,11 @@ max_val = pla_df[format_cols].max().max()
 st.dataframe(pla_df
              .fillna(max_val+1)
              .style
-             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==(max_val+1) else '')
              .format(precision=2, thousands=',')
              .background_gradient(axis=None, vmin=0, vmax=max_val, 
                                   cmap="vlag_r", subset=format_cols
                                  )
+             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==(max_val+1) else '')
             )
 
 st.title("PLV Distributions")
