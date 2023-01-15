@@ -179,9 +179,10 @@ format_cols = ['PLA','CH','CU','FC','FF','FS','SI','SI']
 min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
 
-#pla_df = pla_df.fillna(max_val+1)
+pla_df = pla_df
 
 st.dataframe(pla_df
+             .fillna(max_val+1)
              .style
              .format(precision=2, thousands=',')
 #              .background_gradient(axis=None, vmin=0, vmax=max_val+1, 
