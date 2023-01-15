@@ -78,7 +78,7 @@ st.title("Season PLA")
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
 # Load Data
-def pla_data(dataframe, group_cols, year, handedness):
+def pla_data(dataframe, group_cols, year):
     dataframe['pitch_runs'] = dataframe['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
     
     min_pitches = 400
@@ -153,7 +153,7 @@ def pla_data(dataframe, group_cols, year, handedness):
     return df
 
 # Season data
-pla_df = pla_data(plv_df.copy(),group_cols, year, handedness)
+pla_df = pla_data(plv_df,group_cols, year)
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
