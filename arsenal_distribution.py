@@ -70,7 +70,7 @@ def load_data(year):
             'p_hand','b_hand','pitchtype','PLV']]
           .astype({'pitch_id':'int',
                    'pitcher_mlb_id':'int'})
-          .query('pitchtype not in ["KN","SC"]')
+          .query(f'pitchtype not in {['KN','SC']}')
          )
     return df
 plv_df = load_data(year)
