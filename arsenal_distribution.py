@@ -77,6 +77,7 @@ def load_data(year):
 plv_df = load_data(year)
 
 st.title("Season PLA")
+st.write('ERA estimator using the quality of pitches thrown')
 
 @st.cache
 # Load Data
