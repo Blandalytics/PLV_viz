@@ -174,7 +174,7 @@ def pla_data(dataframe, group_cols, year, handedness):
 # Season data
 pla_df = pla_data(plv_df,group_cols, year, handedness)
 
-format_cols = ['PLA','CH','CU','FC','FF','FS','SI','SI']
+format_cols = ['PLA','CH','CU','FC','FF','FS','SI']
 
 min_val = pla_df[format_cols].min().min()
 max_val = pla_df[format_cols].max().max()
