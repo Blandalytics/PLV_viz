@@ -173,7 +173,7 @@ pla_df = pla_data(plv_df,group_cols, year)
 
 format_cols = ['PLA','CH','CU','FC','FF','FS','SI','SI']
 
-max_val = pla_data[format_cols].max().max()
+max_val = pla_df[format_cols].max().max()
 
 st.dataframe(pla_df.style
              .format(precision=2, thousands=',')
