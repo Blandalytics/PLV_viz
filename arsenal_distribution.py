@@ -73,39 +73,11 @@ def load_data(year):
     return df
 plv_df = load_data(year)
 
-## Selectors
-# Player
-players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
-    'pitch_id':'count',
-    'PLV':'mean'}).query('pitch_id >=400').sort_values('PLV', ascending=False)['pitchername'])
-default_ix = players.index('Sandy Alcantara')
-player = st.selectbox('Choose a player:', players, index=default_ix)
-
-# Hitter Handedness
-handedness = st.select_slider(
-    'Hitter Handedness',
-    options=['Left', 'All', 'Right'],
-    value='All')
-
-# Pitcher Handedness
-if handedness=='All':
-    pitcher_hand = ['L','R']
-else:
-    pitcher_hand = list(plv_df.loc[(plv_df['pitchername']==player),'p_hand'].unique())
-
-hand_map = {
-    'Left':['L'],
-    'All':['L','R'],
-    'Right':['R']
-}
-
 st.title("Season PLA")
-if handedness!='All':
-    st.write(f'{pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB')
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
-group_cols = ['pitchername','pitchtype','pitcher_mlb_id'] if handedness=='All' else ['pitchername','pitcher_mlb_id','b_hand','pitchtype']
+group_cols = ['pitchername','pitchtype','pitcher_mlb_id']
 
 # Load Data
 def pla_data(dataframe, group_cols, year, handedness):
@@ -131,9 +103,6 @@ def pla_data(dataframe, group_cols, year, handedness):
           .query(f'pitch_id >{min_pitches/20}') # 20 keeps out negative PLA values
           .reset_index()
          )
-    
-    if handedness!='All':
-        season_df = season_df.loc[season_df['b_hand'].isin(hand_map[handedness])]
     
     # Add Fangraph IDs
     season_df = season_df.merge(id_df, how='left', left_on='pitcher_mlb_id',right_on='key_mlbam')
@@ -204,6 +173,33 @@ st.dataframe(pla_df
             )
 
 st.title("PLV Distributions")
+
+
+## Selectors
+# Player
+players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
+    'pitch_id':'count',
+    'PLV':'mean'}).query('pitch_id >=300').sort_values('PLV', ascending=False)['pitchername'])
+default_ix = players.index('Sandy Alcantara')
+player = st.selectbox('Choose a player:', players, index=default_ix)
+
+# Hitter Handedness
+handedness = st.select_slider(
+    'Hitter Handedness',
+    options=['Left', 'All', 'Right'],
+    value='All')
+
+# Pitcher Handedness
+if handedness=='All':
+    pitcher_hand = ['L','R']
+else:
+    pitcher_hand = list(plv_df.loc[(plv_df['pitchername']==player),'p_hand'].unique())
+
+hand_map = {
+    'Left':['L'],
+    'All':['L','R'],
+    'Right':['R']
+}
 
 pitch_threshold = 200
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
