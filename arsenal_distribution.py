@@ -101,7 +101,7 @@ hand_map = {
 
 st.title("Season PLA")
 if handedness!='All':
-    st.write(f'{pitcher_hand}HP vs {hand_map[handedness][0]}HB')
+    st.write(f'{pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB')
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
