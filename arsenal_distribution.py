@@ -159,17 +159,17 @@ pla_df = pla_data(plv_df, year)
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
-fill_val = pla_df[format_cols].max().max()
+fill_val = pla_df['PLA'].mean()
 
 def pitchtype_color(s):
     return f"background-color: {marker_colors[s]}" if s in list(marker_colors.keys()) else None
 
 st.dataframe(pla_df
-             .fillna(fill_val+0.01)
+             .fillna(fill_val)
              .style
-             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val+0.01 else '')
              .format(precision=2, thousands=',')
              .background_gradient(axis=0, cmap="vlag_r", subset=format_cols)
+             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
