@@ -99,7 +99,6 @@ plv_df['pitch_runs'] = plv_df['PLV'].mul(seasonal_constants.loc[year]['run_plv_c
 
 group_cols = ['pitchername','pitchtype','pitcher_mlb_id'] if handedness=='All' else ['pitchername','pitcher_mlb_id','b_hand','pitchtype']
 
-@st.cache
 # Load Data
 def pla_data(dataframe, group_cols, year, handedness):
     min_pitches = 400
