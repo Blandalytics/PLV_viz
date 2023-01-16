@@ -128,6 +128,7 @@ def pla_data(dataframe, year):
     # Calculate PLA, in general, and per-pitchtype
     season_df['PLA'] = season_df['pitch_runs'].groupby(season_df['pitcher_mlb_id']).transform('sum').mul(9).div(season_df['season_IP']).astype('float')
     season_df['pitchtype_pla'] = season_df['pitch_runs'].mul(9).div(season_df['pitchtype_IP'])
+    season_df['pitchtype_pla'] = season_df['pitch_runs'].mul(100)
 
     season_df = season_df.sort_values('PLA')
     
