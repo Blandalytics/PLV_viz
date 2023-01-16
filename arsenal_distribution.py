@@ -170,7 +170,7 @@ st.dataframe(pla_df
              .fillna(fill_val)
              .style
              .format(precision=2, thousands=',')
-             .background_gradient(axis=0, vmin=pla_df['PLA'].min(), vmax=pla_df['PLA'].max(),
+             .background_gradient(axis=0, #vmin=pla_df['PLA'].min(), vmax=pla_df['PLA'].max(),
                                   cmap="vlag_r", subset=format_cols)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
