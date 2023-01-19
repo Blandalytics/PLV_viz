@@ -210,8 +210,7 @@ pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
 st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
 
 if pitches_thrown >= pitch_threshold:
-    pitch_type_thresh = int(plv_df.loc[(plv_df['pitchername']==player) & 
-                                       plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 0.05)
+    pitch_type_thresh = 20
     pitch_list = list(plv_df
                 .loc[(plv_df['pitchername']==player) &
                      plv_df['b_hand'].isin(hand_map[handedness])]
@@ -302,7 +301,7 @@ if pitches_thrown >= pitch_threshold:
         # Filler for Title
         hand_text = f'{pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB, ' if handedness!='All' else ''
 
-        fig.suptitle("{}'s {} PLV Distributions\n({}>5% of Pitches)".format(player,year,hand_text),fontsize=16)
+        fig.suptitle("{}'s {} PLV Distributions\n({}>=20 Pitches Thrown)".format(player,year,hand_text),fontsize=16)
         sns.despine(left=True, bottom=True)
         st.pyplot(fig)
     arsenal_dist()
