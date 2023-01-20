@@ -332,6 +332,7 @@ st.dataframe(plv_df
                  'Bad Pitch':'mean',
                  'pitch_id':'count'
              })
+             .query('pitch_id >=300')
              .assign(QP_BP=lambda x: x['Quality Pitch'] - x['Bad Pitch'])
              .rename(columns={
                  'Quality Pitch':'QP%',
