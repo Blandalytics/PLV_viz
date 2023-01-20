@@ -343,6 +343,7 @@ st.dataframe(plv_df
              })
              [['# Pitches','QP%','AP%','BP%','QP-BP%']]
              .mul([1,100,100,100,100])
+             .sort_values('QP-BP%', ascending=False)
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
