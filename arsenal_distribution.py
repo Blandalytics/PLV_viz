@@ -338,7 +338,7 @@ st.dataframe(plv_df
                  'Bad Pitch':'BP',
                  'pitch_id':'# Pitches'
              })
-             .assign(QP-BP=lambda: x['QP'] - x['BP'])
+             .assign(QP-BP=lambda x: x['QP'] - x['BP'])
              .mul(100)
              .style
              .format(precision=1, thousands=',')
