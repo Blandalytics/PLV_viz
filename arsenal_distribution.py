@@ -73,6 +73,17 @@ def load_data(year):
           .query(f'pitchtype not in {["KN","SC"]}')
          )
     df['pitch_runs'] = df['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
+    
+    df['pitch_quality'] = 'Average'
+    df.loc[df['PLV']>=5.5,'pitch_quality'] = 'Quality'
+    df.loc[df['PLV']<4.5,'pitch_quality'] = 'Bad'
+
+    for qual in df['pitch_quality'].unique():
+      df[qual+' Pitch'] = 0
+      df.loc[df['pitch_quality']==qual,qual+' Pitch'] = 1
+
+    df['QP-BP'] = df['Quality Pitch'].sub(df['Bad Pitch'])
+    
     return df
 plv_df = load_data(year)
 
@@ -307,3 +318,30 @@ if pitches_thrown >= pitch_threshold:
     arsenal_dist()
 else:
     st.write('Not enough pitches thrown in {} (<{})'.format(year,pitch_threshold))
+    
+st.title("General Pitch Quality")
+st.write('- ***Quality Pitch (QP)***: Pitch with a PLV >= 5.5')
+st.write('- ***Average Pitch (AP)***: Pitch with 4.5 < PLV < 5.5')
+st.write('- ***Bad Pitch (BP)***: Pitch with a PLV <= 4.5')
+st.dataframe(plv_df
+             .groupby('pitchername')
+             [['Quality Pitch','Average Pitch','Bad Pitch','pitch_id']]
+             .agg({
+                 'Quality Pitch':'mean',
+                 'Average Pitch':'mean',
+                 'Bad Pitch':'mean',
+                 'pitch_id':'count'
+             })
+             .rename(columns={
+                 'Quality Pitch':'QP',
+                 'Average Pitch':'AP',
+                 'Bad Pitch':'BP',
+                 'pitch_id':'# Pitches'
+             })
+             .assign(QP-BP=lambda: x['QP'] - x['BP'])
+             .mul(100)
+             .style
+             .format(precision=1, thousands=',')
+             .background_gradient(axis=0, cmap="vlag", subset=['QP','QP-BP'])
+             .background_gradient(axis=0, cmap="vlag_r", subset=['BP'])
+            )
