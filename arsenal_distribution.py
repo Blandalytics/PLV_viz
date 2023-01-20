@@ -332,16 +332,18 @@ st.dataframe(plv_df
                  'Bad Pitch':'mean',
                  'pitch_id':'count'
              })
+             .assign(QP_BP=lambda x: x['Quality Pitch'] - x['Bad Pitch'])
              .rename(columns={
-                 'Quality Pitch':'QP',
-                 'Average Pitch':'AP',
-                 'Bad Pitch':'BP',
+                 'Quality Pitch':'QP%',
+                 'Average Pitch':'AP%',
+                 'Bad Pitch':'BP%',
+                 'QP_BP':'QP-BP%',
                  'pitch_id':'# Pitches'
              })
-             .assign(QP-BP=lambda x: x['QP'] - x['BP'])
              .mul(100)
+             [['# Pitches','QP%','AP%','BP%','QP-BP%']]
              .style
              .format(precision=1, thousands=',')
-             .background_gradient(axis=0, cmap="vlag", subset=['QP','QP-BP'])
-             .background_gradient(axis=0, cmap="vlag_r", subset=['BP'])
+             .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
+             .background_gradient(axis=0, cmap="vlag_r", subset=['BP%'])
             )
