@@ -341,8 +341,8 @@ st.dataframe(plv_df
                  'QP_BP':'QP-BP%',
                  'pitch_id':'# Pitches'
              })
-             .mul([1,100,100,100,100])
              [['# Pitches','QP%','AP%','BP%','QP-BP%']]
+             .mul([1,100,100,100,100])
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
