@@ -288,7 +288,7 @@ if pitches_thrown >= pitch_threshold:
             axs[axis].legend([pitch_names[pitch_list[axis]]+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
                                                                                         (plv_df['pitchername']==player) &
                                                                                         plv_df['b_hand'].isin(hand_map[handedness]),'PLV'].mean()),
-                              'Lg. Avg.'+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) &
+                              'Lg. Avg'+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) &
                                                                      plv_df['b_hand'].isin(hand_map[handedness]) &
                                                                      plv_df['p_hand'].isin(pitcher_hand),'PLV'].mean())], 
                              framealpha=0, edgecolor=pl_background, loc=(0,0.4), fontsize=14)
