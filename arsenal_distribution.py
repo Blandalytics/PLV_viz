@@ -323,7 +323,7 @@ st.title("General Pitch Quality")
 st.write('- ***Quality Pitch (QP%)***: Pitch with a PLV >= 5.5')
 st.write('- ***Average Pitch (AP%)***: Pitch with 4.5 < PLV < 5.5')
 st.write('- ***Bad Pitch (BP%)***: Pitch with a PLV <= 4.5')
-st.write('- ***QP-BP%***: Difference between QP and BP. Avg is ~7%')
+st.write('- ***QP-BP%***: Difference between QP and BP. Avg is 7%')
 st.dataframe(plv_df
              .groupby('pitchername')
              [['Quality Pitch','Average Pitch','Bad Pitch','pitch_id']]
