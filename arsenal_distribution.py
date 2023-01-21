@@ -324,6 +324,14 @@ st.write('- ***Quality Pitch (QP%)***: Pitch with a PLV >= 5.5')
 st.write('- ***Average Pitch (AP%)***: Pitch with 4.5 < PLV < 5.5')
 st.write('- ***Bad Pitch (BP%)***: Pitch with a PLV <= 4.5')
 st.write('- ***QP-BP%***: Difference between QP and BP. Avg is 7%')
+
+# Rolling Window
+pitch_min = st.number_input(f'Min # of Pitches:', 
+                            min_value=200, 
+                            max_value=plv_df.groupby('pitchername')['pitch_id'].count().max().round(-2)-200,
+                            step=50, 
+                            value=500)
+
 st.dataframe(plv_df
              .groupby('pitchername')
              [['Quality Pitch','Average Pitch','Bad Pitch','pitch_id']]
@@ -333,7 +341,7 @@ st.dataframe(plv_df
                  'Bad Pitch':'mean',
                  'pitch_id':'count'
              })
-             .query('pitch_id >=1000')
+             .query(f'pitch_id >={pitch_min}')
              .assign(QP_BP=lambda x: x['Quality Pitch'] - x['Bad Pitch'])
              .rename(columns={
                  'Quality Pitch':'QP%',
