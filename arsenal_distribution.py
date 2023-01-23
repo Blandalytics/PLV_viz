@@ -92,15 +92,17 @@ st.write('- ***Pitch Level Average (PLA)***: ERA estimator using IP and the tota
 st.write('- ***Pitchtype PLA***: Uses total predicted run values for that pitch type and an IP proxy for that pitch type (pitch usage % * Total IP).')
 
 # Num Pitches threshold
-pitch_min_1 = st.number_input(f'Min # of Pitches:', 
-                            min_value=200, 
-                            max_value=1000,
-                            step=50, 
-                            value=500)
+# pitch_min_1 = st.number_input(f'Min # of Pitches:', 
+#                             min_value=200, 
+#                             max_value=1000,
+#                             step=50, 
+#                             value=500)
 
 @st.cache
 # Load Data
-def pla_data(dataframe, year, min_pitches=pitch_min_1):
+def pla_data(dataframe, year):
+    min_pitches = 400
+    
     workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
         'playerid':'int'
     })
