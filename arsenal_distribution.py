@@ -60,6 +60,7 @@ year = st.radio('Choose a year:', years)
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
+
 @st.cache
 # Load Data
 def load_data(year):
@@ -92,8 +93,8 @@ st.write('- ***Pitch Level Average (PLA)***: ERA estimator using IP and the tota
 st.write('- ***Pitchtype PLA***: Uses total predicted run values for that pitch type and an IP proxy for that pitch type (pitch usage % * Total IP).')
 
 # Num Pitches threshold
-# pitch_min_1 = st.number_input(f'Min # of Pitches:', 
-#                             min_value=200, 
+# pitch_min_1 = st.number_input(f'Min # of Pitches:',
+#                               min_value=200, 
 #                             max_value=1000,
 #                             step=50, 
 #                             value=500)
@@ -107,7 +108,11 @@ def pla_data(dataframe, year):
         'playerid':'int'
     })
     
-    id_df = pd.read_csv('https://github.com/chadwickbureau/register/blob/master/data/people.csv?raw=true')[['key_mlbam','key_fangraphs']].dropna().astype('int')
+    id_df = pd.DataFrame()
+    for chunk in range(0,10):
+        chunk_df = pd.read_csv(f'https://github.com/chadwickbureau/register/blob/master/data/people-{chunk}.csv?raw=true')
+        id_df = pd.concat([id_df,chunk_df])
+    id_df = id_df[['key_mlbam','key_fangraphs']].dropna().astype('int') 
     
     # Total Runs by season
     season_df = (dataframe
