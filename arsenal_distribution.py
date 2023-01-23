@@ -91,7 +91,7 @@ plv_df = load_data(year)
 @st.cache()
 def get_ids():
     id_df = pd.DataFrame()
-    for chunk in range(0,10):
+    for chunk in list(range(0,10))+['a','b','c','d','e','f']:
         chunk_df = pd.read_csv(f'https://github.com/chadwickbureau/register/blob/master/data/people-{chunk}.csv?raw=true')
         id_df = pd.concat([id_df,chunk_df])
     return id_df[['key_mlbam','key_fangraphs']].dropna().astype('int') 
