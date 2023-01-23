@@ -98,8 +98,11 @@ pitch_min_1 = st.number_input(f'Min # of Pitches:',
                             step=50, 
                             value=500)
 
+@st.cache
 # Load Data
-def pla_data(dataframe, year, min_pitches=pitch_min_1):    
+def pla_data(dataframe, year):
+    min_pitches=400
+    
     workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
         'playerid':'int'
     })
