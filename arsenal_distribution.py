@@ -94,7 +94,7 @@ st.write('- ***Pitchtype PLA***: Uses total predicted run values for that pitch 
 # Num Pitches threshold
 pitch_min_1 = st.number_input(f'Min # of Pitches:', 
                             min_value=200, 
-                            max_value=plv_df.groupby('pitchername')['pitch_id'].count().max().round(-2)-200,
+                            max_value=1000,
                             step=50, 
                             value=500)
 
