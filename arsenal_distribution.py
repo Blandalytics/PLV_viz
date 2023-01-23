@@ -116,7 +116,7 @@ def pla_data(dataframe, year, min_pitches=pitch_min_1):
               'pitch_runs':'sum'
           })
           .sort_values('pitch_runs', ascending=False)
-          .query(f'pitch_id >{min_pitches/20}') # 20 keeps out negative PLA values
+          .query(f'pitch_id >=20') # 20 keeps out negative PLA values
           .reset_index()
          )
     
