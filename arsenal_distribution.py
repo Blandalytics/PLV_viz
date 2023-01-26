@@ -97,8 +97,8 @@ def get_ids():
     return id_df[['key_mlbam','key_fangraphs']].dropna().astype('int') 
 
 st.title("Season PLA")
-st.write('- ***Pitch Level Average (PLA)***: ERA estimator using IP and the total predicted run value of pitches thrown')
-st.write('- ***Pitchtype PLA***: Uses total predicted run values for that pitch type and an IP proxy for that pitch type (pitch usage % * Total IP).')
+st.write('- ***Pitch Level Average (PLA)***: Value of all pitches, on an ERA scale (using IP and the total predicted run value of pitches thrown)')
+st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA-scale), using total predicted run values and an IP proxy for that pitch type (pitch usage % * Total IP).')
 
 # Num Pitches threshold
 pitch_min_1 = st.number_input(f'Min # of Pitches:',
