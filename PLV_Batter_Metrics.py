@@ -159,7 +159,7 @@ rolling_df = (plv_df
               .reset_index()
              )
 
-stat = list(stat_names.keys())[list(stat_names.values()).index(metric)]
+stat = season_names[list(stat_names.keys())[list(stat_names.values()).index(metric)]]
 
 chart_max = season_df[stat].max()
 chart_min = season_df[stat].min()
