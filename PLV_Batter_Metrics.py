@@ -243,31 +243,33 @@ def rolling_chart():
                color=sns.color_palette('vlag', n_colors=100)[0],
                alpha=0.6)
     
-    ax.text(rolling_df.shape[0]*1.05,
+    line_text_loc = (rolling_df['index'].max() - window) * 1.05 + window
+    
+    ax.text(line_text_loc,
             chart_90,
             '90th %' if abs(chart_90 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color=sns.color_palette('vlag', n_colors=100)[99],
             alpha=1)
-    ax.text(rolling_df.shape[0]*1.05,
+    ax.text(line_text_loc,
             chart_75,
             '75th %' if abs(chart_75 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color=sns.color_palette('vlag', n_colors=100)[74],
             alpha=1)
-    ax.text(rolling_df.shape[0]*1.05,
+    ax.text(line_text_loc,
             0 if metric in ['Swing Aggression','Contact Ability'] else chart_mean,
             'MLB Avg' if abs(chart_mean - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color='w',
             alpha=0.75)
-    ax.text(rolling_df.shape[0]*1.05,
+    ax.text(line_text_loc,
             chart_25,
             '25th %' if abs(chart_25 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color=sns.color_palette('vlag', n_colors=100)[24],
             alpha=1)
-    ax.text(rolling_df.shape[0]*1.05,
+    ax.text(line_text_loc,
             chart_10,
             '10th %' if abs(chart_10 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
