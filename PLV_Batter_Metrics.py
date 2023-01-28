@@ -214,11 +214,13 @@ def rolling_chart():
                  y='Rolling_Stat',
                  color='w'
                    )
+    
+    line_text_loc = (rolling_df['index'].max() - window) * 1.05 + window
 
     ax.axhline(rolling_df[metric].mean(), 
                color='w',
                linestyle='--')
-    ax.text(rolling_df.shape[0]*1.05,
+    ax.text(line_text_loc,
             rolling_df[metric].mean(),
             'Szn Avg',
             va='center',
@@ -242,8 +244,6 @@ def rolling_chart():
     ax.axhline(chart_10,
                color=sns.color_palette('vlag', n_colors=100)[0],
                alpha=0.6)
-    
-    line_text_loc = (rolling_df['index'].max() - window) * 1.05 + window
     
     ax.text(line_text_loc,
             chart_90,
