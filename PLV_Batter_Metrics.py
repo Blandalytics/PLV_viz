@@ -231,7 +231,7 @@ def rolling_chart():
             color='w',
             alpha=0.75)
     ax.text(rolling_df.shape[0]*1.05,
-            0 if metric in chart_mean,
+            0 if metric in ['Swing Aggression','Contact Ability'] else chart_mean,
             'MLB Avg' if abs(chart_mean - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color='w',
