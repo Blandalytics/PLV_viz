@@ -150,8 +150,7 @@ rolling_threshold = {
     'Hitter Performance':800
 }
 
-stat = season_names[list(stat_names.keys())[list(stat_names.values()).index(metric)]]
-chart_thresh_list = plv_df.groupby('hittername')[stat].mean()
+chart_thresh_list = plv_df.groupby('hittername')[metric].mean()
 chart_max = chart_thresh_list.max()
 chart_min = chart_thresh_list.min()
 chart_mean = chart_thresh_list.mean()
