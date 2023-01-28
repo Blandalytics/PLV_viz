@@ -29,7 +29,7 @@ sns.set_theme(
      }
     )
 
-line_color = sns.color_palette('vlag', n_colors=20)[0]
+line_color = sns.color_palette('vlag', n_colors=100)[0]
 
 st.title("Hitter Ability Metrics")
 st.write('- ***Swing Aggression***: How much more often a hitter swings at pitches, given the swing likelihoods of the pitches they face.')
@@ -221,11 +221,11 @@ def rolling_chart():
 
     # Threshold Lines
     ax.axhline(chart_90,
-               color='w',
+               color=sns.color_palette('vlag', n_colors=100)[99],
 #                linestyle='--',
                alpha=0.5)
     ax.axhline(chart_75,
-               color='w',
+               color=sns.color_palette('vlag', n_colors=100)[74],
                linestyle='--',
                alpha=0.5)
     ax.axhline(0 if metric in ['Swing Aggression','Contact Ability'] else chart_mean,
@@ -233,11 +233,11 @@ def rolling_chart():
                linestyle='--',
                alpha=0.5)
     ax.axhline(chart_25,
-               color='w',
+               color=sns.color_palette('vlag', n_colors=100)[24],
                linestyle='--',
                alpha=0.5)
     ax.axhline(chart_10,
-               color='w',
+               color=sns.color_palette('vlag', n_colors=100)[9],
 #                linestyle='--',
                alpha=0.5)
     
@@ -245,13 +245,13 @@ def rolling_chart():
             chart_90,
             '90th %' if abs(chart_90 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
-            color='w',
+            color=sns.color_palette('vlag', n_colors=100)[99],
             alpha=0.75)
     ax.text(rolling_df.shape[0]*1.05,
             chart_75,
             '75th %' if abs(chart_75 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
-            color='w',
+            color=sns.color_palette('vlag', n_colors=100)[74],
             alpha=0.75)
     ax.text(rolling_df.shape[0]*1.05,
             0 if metric in ['Swing Aggression','Contact Ability'] else chart_mean,
@@ -263,13 +263,13 @@ def rolling_chart():
             chart_25,
             '25th %' if abs(chart_25 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
-            color='w',
+            color=sns.color_palette('vlag', n_colors=100)[24],
             alpha=0.75)
     ax.text(rolling_df.shape[0]*1.05,
             chart_10,
             '10th %' if abs(chart_10 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
-            color='w',
+            color=sns.color_palette('vlag', n_colors=100)[9],
             alpha=0.75)
 
     ax.set(xlabel=rolling_denom[metric],
