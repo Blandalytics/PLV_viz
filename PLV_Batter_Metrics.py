@@ -1,14 +1,13 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from matplotlib import colors
 import numpy as np
 import pandas as pd
 import seaborn as sns
 
 from matplotlib import ticker
+from matplotlib import colors
 
 ## Set Styling
-#pd.set_option("display.precision", 1)
 # Plot Style
 pl_white = '#FEFEFE'
 pl_background = '#162B50'
@@ -204,12 +203,12 @@ def rolling_chart():
                     edgecolor=None,
                     legend=False
                    )
-    sns.lineplot(data=rolling_df,
-                  x='index',
-                  y='Rolling_Stat',
-                  color='w',
-                  alpha=0.25
-                   )
+#     sns.lineplot(data=rolling_df,
+#                   x='index',
+#                   y='Rolling_Stat',
+#                   color='w',
+#                   alpha=0.25
+#                    )
 
     ax.axhline(rolling_df[metric].mean(), 
                color=line_color,
