@@ -152,22 +152,23 @@ rolling_threshold = {
 
 rolling_df = (plv_df
               .sort_values('pitch_id')
-              .loc[(plv_df['hittername']==player),
-                   ['hittername',metric]]
+              ['hittername',metric]]
               .dropna()
               .reset_index(drop=True)
               .reset_index()
              )
 
 stat = season_names[list(stat_names.keys())[list(stat_names.values()).index(metric)]]
+chart_thresh_list = season_df.groupby('hittername')[stat].mean()
+chart_max = chart_thresh_list.max()
+chart_min = chart_thresh_list.min()
+chart_mean = chart_thresh_list.mean()
+chart_90 = chart_thresh_list.quantile(0.9)
+chart_75 = chart_thresh_list.quantile(0.75)
+chart_25 = chart_thresh_list.quantile(0.25)
+chart_10 = chart_thresh_list.quantile(0.1)
 
-chart_max = season_df[stat].max()
-chart_min = season_df[stat].min()
-chart_mean = season_df[stat].mean()
-chart_90 = season_df[stat].quantile(0.9)
-chart_75 = season_df[stat].quantile(0.75)
-chart_25 = season_df[stat].quantile(0.25)
-chart_10 = season_df[stat].quantile(0.1)
+rolling_df = rolling_df.loc[(plv_df['hittername']==player)]
 
 window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
 
@@ -252,7 +253,8 @@ def rolling_chart():
 
     ax.set(xlabel=rolling_denom[metric],
            ylabel=metric,
-           ylim=(chart_min, chart_max),
+           ylim=(min(chart_min,rolling_df.min()), 
+                 max(chart_max,rolling_df.max())),
            title="{}'s {} Rolling {} ({} {})".format(player,
                                                      year,
                                                      metric,
