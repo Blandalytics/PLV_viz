@@ -204,10 +204,12 @@ def rolling_chart():
 #                     legend=False
 #                    )
     sns.lineplot(data=rolling_df,
-                  x='index',
-                  y='Rolling_Stat',
-                  color='w',
-                  alpha=1
+                 x='index',
+                 y='Rolling_Stat',
+                  #color='w',
+                 hue='Rolling_Stat',
+                 hue_norm=color_norm,
+                 alpha=0.8
                    )
 
     ax.axhline(rolling_df[metric].mean(), 
