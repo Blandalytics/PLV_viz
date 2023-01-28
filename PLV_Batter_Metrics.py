@@ -160,7 +160,7 @@ chart_thresh_list = (plv_df
                      .query(f'pitch_id >= {rolling_threshold[metric]}')
                     )
 
-chart_mean = chart_thresh_list[metric].mean()
+chart_mean = plv_df[metric].mean()
 chart_90 = chart_thresh_list[metric].quantile(0.9)
 chart_75 = chart_thresh_list[metric].quantile(0.75)
 chart_25 = chart_thresh_list[metric].quantile(0.25)
