@@ -207,8 +207,9 @@ def rolling_chart():
                  x='index',
                  y='Rolling_Stat',
                   #color='w',
-                 style='Rolling_Stat',
+                 hue='Rolling_Stat',
                  hue_norm=color_norm,
+                 palette='vlag',
                  alpha=0.8
                    )
 
