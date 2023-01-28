@@ -253,8 +253,8 @@ def rolling_chart():
 
     ax.set(xlabel=rolling_denom[metric],
            ylabel=metric,
-           ylim=(min(chart_min,rolling_df.min()), 
-                 max(chart_max,rolling_df.max())),
+           ylim=(min(chart_min,rolling_df[stat].min()), 
+                 max(chart_max,rolling_df[stat].max())),
            title="{}'s {} Rolling {} ({} {})".format(player,
                                                      year,
                                                      metric,
