@@ -122,6 +122,16 @@ stat_names = {
     'adj_power':'Power',
     'batter_wOBA':'Hitter Performance'
 }
+
+stat_values = {
+    'swing_agg':'Swing Frequency, Above Expected',
+    'strike_zone_judgement':'Ball/Strike Correctness',
+    'decision_value':'Runs Added, per 100 Pitches',
+    'contact_over_expected':'Contact Frequency, Above Expected',
+    'adj_power':'Expected Extra Bases Added, per BBE',
+    'batter_wOBA':'wOBA Added, per Pitch'
+}
+
 plv_df = plv_df.rename(columns=stat_names)
 st.title("Rolling Ability Charts")
 
@@ -198,16 +208,6 @@ color_norm = colors.TwoSlopeNorm(vmin=chart_10,
 def rolling_chart():
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(6,6))
-#     sns.scatterplot(data=rolling_df,
-#                     x='index',
-#                     y='Rolling_Stat',
-#                     hue='Rolling_Stat',
-#                     palette='vlag',
-#                     size=1,
-#                     hue_norm=color_norm,
-#                     edgecolor=None,
-#                     legend=False
-#                    )
     sns.lineplot(data=rolling_df,
                  x='index',
                  y='Rolling_Stat',
@@ -277,7 +277,7 @@ def rolling_chart():
     chart_max = max(chart_90,rolling_df['Rolling_Stat'].max())
 
     ax.set(xlabel=rolling_denom[metric],
-           ylabel=metric,
+           ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
            ylim=(chart_min-(chart_max - chart_min)/25, 
                  chart_max+(chart_max - chart_min)/25),
            title="{}'s {} Rolling {} ({} {})".format(player,
