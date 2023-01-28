@@ -258,17 +258,17 @@ def rolling_chart():
 
     ax.set(xlabel=rolling_denom[metric],
            ylabel=metric,
-           ylim=(min(chart_25,rolling_df[metric].min()), 
-                 max(chart_75,rolling_df[metric].max())),
+           ylim=(min(chart_10,rolling_df[metric].min()), 
+                 max(chart_90,rolling_df[metric].max())),
            title="{}'s {} Rolling {} ({} {})".format(player,
                                                      year,
                                                      metric,
                                                      window,
                                                      rolling_denom[metric]))
     
-    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
-        #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
-        ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
+#     if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
+#         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
+#         ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
 
     sns.despine()
     st.pyplot(fig)
