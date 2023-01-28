@@ -152,7 +152,7 @@ rolling_threshold = {
 
 rolling_df = (plv_df
               .sort_values('pitch_id')
-              ['hittername',metric]]
+              [['hittername',metric]]
               .dropna()
               .reset_index(drop=True)
               .reset_index()
