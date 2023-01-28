@@ -200,7 +200,7 @@ def rolling_chart():
                     hue='Rolling_Stat',
                     palette='vlag',
                     hue_norm=color_norm,
-                    edge_color=None,
+                    edgecolor=None,
                     legend=False
                    )
 
