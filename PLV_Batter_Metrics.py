@@ -36,10 +36,12 @@ st.write('- ***Swing Aggression***: How much more often a hitter swings at pitch
 st.write('''
 - ***Strikezone Judgement***: The "correctness" of a hitter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
 ''')
-st.write("- ***Decision Value***: Modeled value of a hitter's decision to swing or take, minus the modeled value of the alternative.")
+st.write("- ***Decision Value***: Modeled value of a hitter's decision to swing or take, minus the modeled value of the alternative. In runs per 100 pitches.")
 st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- ***Power***: Modeled number of extra bases (xISO on contact) above a pitch's expectation, for each BBE.")
 st.write("- ***Hitter Performance (HP)***: wOBA added by the hitter to each pitch they see (including swing/take decisions), after accounting for pitch quality.")
+
+seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
 ## Selectors
 # Year
@@ -66,7 +68,10 @@ def load_season_data(year):
     
     for stat in ['swing_agg','strike_zone_judgement','contact_over_expected']:
         df[stat] = df[stat].mul(100).astype('float')
-        
+    
+    # Convert to runs added
+    df['decision_value'] = df['decision_value'].div(seasonal_constants.loc[year]['run_constant']).mul(100)
+    
     return df
 
 plv_df = load_season_data(year)
