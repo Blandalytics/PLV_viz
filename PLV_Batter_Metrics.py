@@ -152,21 +152,20 @@ rolling_threshold = {
 
 rolling_df = (plv_df
               .sort_values('pitch_id')
-              [['hittername',metric]]
+              .loc[(plv_df['hittername']==player),
+                   ['hittername',metric]]
               .dropna()
               .reset_index(drop=True)
               .reset_index()
              )
 
-chart_max = rolling_df[metric].max()
-chart_min = rolling_df[metric].min()
-chart_mean = rolling_df[metric].mean()
-chart_90 = rolling_df[metric].quantile(0.9)
-chart_75 = rolling_df[metric].quantile(0.75)
-chart_25 = rolling_df[metric].quantile(0.25)
-chart_10 = rolling_df[metric].quantile(0.1)
-
-rolling_df = rolling_df.loc[(plv_df['hittername']==player)].copy()
+chart_max = season_df[metric].max()
+chart_min = season_df[metric].min()
+chart_mean = season_df[metric].mean()
+chart_90 = season_df[metric].quantile(0.9)
+chart_75 = season_df[metric].quantile(0.75)
+chart_25 = season_df[metric].quantile(0.25)
+chart_10 = season_df[metric].quantile(0.1)
 
 window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
 
