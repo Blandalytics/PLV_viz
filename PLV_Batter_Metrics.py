@@ -152,12 +152,21 @@ rolling_threshold = {
 
 rolling_df = (plv_df
               .sort_values('pitch_id')
-              .loc[(plv_df['hittername']==player),
-                   ['hittername',metric]]
+              [['hittername',metric]]
               .dropna()
               .reset_index(drop=True)
               .reset_index()
              )
+
+chart_max = rolling_df[metric].max()
+chart_min = rolling_df[metric].min()
+chart_mean = rolling_df[metric].mean()
+chart_90 = rolling_df[metric].quantile(0.9)
+chart_75 = rolling_df[metric].quantile(0.75)
+chart_25 = rolling_df[metric].quantile(0.25)
+chart_10 = rolling_df[metric].quantile(0.1)
+
+rolling_df = rolling_df.loc[(plv_df['hittername']==player)].copy()
 
 window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
 
@@ -187,23 +196,62 @@ def rolling_chart():
             va='center',
             color=sns.color_palette('vlag', n_colors=20)[3])
 
-    ax.axhline(0 if metric in ['Swing Aggression','Contact Ability'] else plv_df[metric].mean(),
+    # Threshold Lines
+    ax.axhline(chart_90,
+               color='w',
+#                linestyle='--',
+               alpha=0.5)
+    ax.axhline(chart_75,
                color='w',
                linestyle='--',
                alpha=0.5)
+    ax.axhline(0 if metric in ['Swing Aggression','Contact Ability'] else chart_mean,
+               color='w',
+               linestyle='--',
+               alpha=0.5)
+    ax.axhline(chart_25,
+               color='w',
+               linestyle='--',
+               alpha=0.5)
+    ax.axhline(chart_10,
+               color='w',
+#                linestyle='--',
+               alpha=0.5)
+    
     ax.text(rolling_df.shape[0]*1.05,
-            0 if metric in ['Swing Aggression','Contact Ability'] else plv_df[metric].mean(),
-            'MLB Avg' if abs(plv_df[metric].mean() - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
+            chart_90,
+            '90th %' if abs(chart_90 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
+            va='center',
+            color='w',
+            alpha=0.75)
+    ax.text(rolling_df.shape[0]*1.05,
+            chart_75,
+            '75th %' if abs(chart_75 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
+            va='center',
+            color='w',
+            alpha=0.75)
+    ax.text(rolling_df.shape[0]*1.05,
+            0 if metric in chart_mean,
+            'MLB Avg' if abs(chart_mean - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
+            va='center',
+            color='w',
+            alpha=0.75)
+    ax.text(rolling_df.shape[0]*1.05,
+            chart_25,
+            '25th %' if abs(chart_25 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
+            va='center',
+            color='w',
+            alpha=0.75)
+    ax.text(rolling_df.shape[0]*1.05,
+            chart_10,
+            '10th %' if abs(chart_10 - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color='w',
             alpha=0.75)
 
-    min_value = 50 if metric=='Strikezone Judgement' else 0
-
     ax.set(xlabel=rolling_denom[metric],
            ylabel=metric,
-           ylim=(min(min_value,rolling_df['Rolling_Stat'].min(),plv_df[metric].mean()) + ax.get_ylim()[0]/20 * (-1 if ax.get_ylim()[0] >= 0 else 1),
-                 max(0,rolling_df['Rolling_Stat'].max(),plv_df[metric].mean()) + ax.get_ylim()[1]/10),
+           ylim=(chart_min, chart_max),
            title="{}'s {} Rolling {} ({} {})".format(player,
                                                      year,
                                                      metric,
