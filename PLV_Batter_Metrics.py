@@ -211,13 +211,13 @@ def rolling_chart():
                    )
 
     ax.axhline(rolling_df[metric].mean(), 
-               color=line_color,
+               color='w',
                linestyle='--')
     ax.text(rolling_df.shape[0]*1.05,
             rolling_df[metric].mean(),
             'Szn Avg',
             va='center',
-            color=sns.color_palette('vlag', n_colors=20)[3])
+            color='w')
 
     # Threshold Lines
     ax.axhline(chart_90,
