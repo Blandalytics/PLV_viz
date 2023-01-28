@@ -150,13 +150,8 @@ rolling_threshold = {
     'Hitter Performance':800
 }
 
-rolling_df = (plv_df
-              .sort_values('pitch_id')
-              [['hittername',metric]]
-             )
-
 stat = season_names[list(stat_names.keys())[list(stat_names.values()).index(metric)]]
-chart_thresh_list = rolling_df.groupby('hittername')[stat].mean()
+chart_thresh_list = plv_df.groupby('hittername')[stat].mean()
 chart_max = chart_thresh_list.max()
 chart_min = chart_thresh_list.min()
 chart_mean = chart_thresh_list.mean()
@@ -165,8 +160,10 @@ chart_75 = chart_thresh_list.quantile(0.75)
 chart_25 = chart_thresh_list.quantile(0.25)
 chart_10 = chart_thresh_list.quantile(0.1)
 
-rolling_df = (rolling_df
-              .loc[(plv_df['hittername']==player)]
+rolling_df = (plv_df
+              .sort_values('pitch_id')
+              .loc[(plv_df['hittername']==player),
+                   ['hittername',metric]]
               .dropna()
               .reset_index(drop=True)
               .reset_index()
