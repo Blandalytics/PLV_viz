@@ -153,9 +153,6 @@ rolling_threshold = {
 rolling_df = (plv_df
               .sort_values('pitch_id')
               [['hittername',metric]]
-              .dropna()
-              .reset_index(drop=True)
-              .reset_index()
              )
 
 stat = season_names[list(stat_names.keys())[list(stat_names.values()).index(metric)]]
@@ -168,7 +165,12 @@ chart_75 = chart_thresh_list.quantile(0.75)
 chart_25 = chart_thresh_list.quantile(0.25)
 chart_10 = chart_thresh_list.quantile(0.1)
 
-rolling_df = rolling_df.loc[(plv_df['hittername']==player)]
+rolling_df = (rolling_df
+              .loc[(plv_df['hittername']==player)]
+              .dropna()
+              .reset_index(drop=True)
+              .reset_index()
+             )
 
 window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
 
