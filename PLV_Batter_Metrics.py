@@ -222,7 +222,6 @@ def rolling_chart():
     # Threshold Lines
     ax.axhline(chart_90,
                color=sns.color_palette('vlag', n_colors=100)[99],
-#                linestyle='--',
                alpha=0.6)
     ax.axhline(chart_75,
                color=sns.color_palette('vlag', n_colors=100)[79],
@@ -230,7 +229,6 @@ def rolling_chart():
                alpha=0.5)
     ax.axhline(0 if metric in ['Swing Aggression','Contact Ability'] else chart_mean,
                color='w',
-               linestyle='--',
                alpha=0.5)
     ax.axhline(chart_25,
                color=sns.color_palette('vlag', n_colors=100)[19],
@@ -238,7 +236,6 @@ def rolling_chart():
                alpha=0.5)
     ax.axhline(chart_10,
                color=sns.color_palette('vlag', n_colors=100)[0],
-#                linestyle='--',
                alpha=0.6)
     
     ax.text(rolling_df.shape[0]*1.05,
