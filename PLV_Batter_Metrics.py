@@ -159,13 +159,15 @@ rolling_df = (plv_df
               .reset_index()
              )
 
-chart_max = season_df[metric].max()
-chart_min = season_df[metric].min()
-chart_mean = season_df[metric].mean()
-chart_90 = season_df[metric].quantile(0.9)
-chart_75 = season_df[metric].quantile(0.75)
-chart_25 = season_df[metric].quantile(0.25)
-chart_10 = season_df[metric].quantile(0.1)
+stat = list(metrics.keys())[list(metrics.values()).index(metric)])
+
+chart_max = season_df[stat].max()
+chart_min = season_df[stat].min()
+chart_mean = season_df[stat].mean()
+chart_90 = season_df[stat].quantile(0.9)
+chart_75 = season_df[stat].quantile(0.75)
+chart_25 = season_df[stat].quantile(0.25)
+chart_10 = season_df[stat].quantile(0.1)
 
 window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
 
