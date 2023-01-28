@@ -130,7 +130,7 @@ stat_values = {
     'decision_value':'Runs Added, per 100 Pitches',
     'contact_over_expected':'Contact Frequency, Above Expected',
     'adj_power':'Expected Extra Bases Added, per BBE',
-    'batter_wOBA':'wOBA Added, per Pitch'
+    'batter_wOBA':'Runs Added, per 100 Pitches'
 }
 
 plv_df = plv_df.rename(columns=stat_names)
