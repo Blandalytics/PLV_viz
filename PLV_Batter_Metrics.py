@@ -199,7 +199,9 @@ def rolling_chart():
                     y='Rolling_Stat',
                     hue='Rolling_Stat',
                     palette='vlag',
-                    hue_norm=color_norm
+                    hue_norm=color_norm,
+                    edge_color=None,
+                    legend=False
                    )
 
     ax.axhline(rolling_df[metric].mean(), 
@@ -274,9 +276,9 @@ def rolling_chart():
                                                      window,
                                                      rolling_denom[metric]))
     
-#     if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
-#         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
-#         ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
+    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
+        #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
+        ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
 
     sns.despine()
     st.pyplot(fig)
