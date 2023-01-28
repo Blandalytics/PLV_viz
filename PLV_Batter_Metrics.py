@@ -186,13 +186,20 @@ window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:',
 
 rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window).mean()
 
+color_norm = colors.TwoSlopeNorm(vmin=chart_10, 
+                                 vcenter=chart_mean,
+                                 vmax=chart_90)
+
 def rolling_chart():
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(6,6))
-    sns.lineplot(data=rolling_df,
-                 x='index',
-                 y='Rolling_Stat',
-                 color=line_color)
+    sns.scatterplot(data=rolling_df,
+                    x='index',
+                    y='Rolling_Stat',
+                    hue='Rolling_Stat',
+                    palette='vlag',
+                    hue_norm=color_norm
+                   )
 
     ax.axhline(rolling_df[metric].mean(), 
                color=line_color,
