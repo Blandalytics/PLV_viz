@@ -156,7 +156,7 @@ rolling_df = (plv_df
              )
 
 stat = season_names[list(stat_names.keys())[list(stat_names.values()).index(metric)]]
-chart_thresh_list = season_df.groupby('hittername')[stat].mean()
+chart_thresh_list = rolling_df.groupby('hittername')[stat].mean()
 chart_max = chart_thresh_list.max()
 chart_min = chart_thresh_list.min()
 chart_mean = chart_thresh_list.mean()
