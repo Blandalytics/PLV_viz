@@ -271,11 +271,14 @@ def rolling_chart():
             va='center',
             color=sns.color_palette('vlag', n_colors=100)[9],
             alpha=1)
+    
+    chart_min = min(chart_10,rolling_df['Rolling_Stat'].min())
+    chart_max = max(chart_90,rolling_df['Rolling_Stat'].max())
 
     ax.set(xlabel=rolling_denom[metric],
            ylabel=metric,
-           ylim=(min(chart_10,rolling_df['Rolling_Stat'].min()), 
-                 max(chart_90,rolling_df['Rolling_Stat'].max())),
+           ylim=(chart_min-(chart_max - chart_min)/25, 
+                 chart_max+(chart_max - chart_min)/25),
            title="{}'s {} Rolling {} ({} {})".format(player,
                                                      year,
                                                      metric,
