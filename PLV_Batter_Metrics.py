@@ -194,12 +194,6 @@ color_norm = colors.TwoSlopeNorm(vmin=chart_10,
 def rolling_chart():
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(6,6))
-    sns.lineplot(data=rolling_df,
-                  x='index',
-                  y='Rolling_Stat',
-                  color='w',
-                  alpha=0.25
-                   )
     sns.scatterplot(data=rolling_df,
                     x='index',
                     y='Rolling_Stat',
@@ -209,6 +203,12 @@ def rolling_chart():
                     hue_norm=color_norm,
                     edgecolor=None,
                     legend=False
+                   )
+    sns.lineplot(data=rolling_df,
+                  x='index',
+                  y='Rolling_Stat',
+                  color='w',
+                  alpha=0.25
                    )
 
     ax.axhline(rolling_df[metric].mean(), 
