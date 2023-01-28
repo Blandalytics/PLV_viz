@@ -150,14 +150,22 @@ rolling_threshold = {
     'Hitter Performance':800
 }
 
-chart_thresh_list = plv_df.groupby('hittername')[metric].mean()
-chart_max = chart_thresh_list.max()
-chart_min = chart_thresh_list.min()
-chart_mean = chart_thresh_list.mean()
-chart_90 = chart_thresh_list.quantile(0.9)
-chart_75 = chart_thresh_list.quantile(0.75)
-chart_25 = chart_thresh_list.quantile(0.25)
-chart_10 = chart_thresh_list.quantile(0.1)
+chart_thresh_list = (plv_df
+                     .groupby('hittername')
+                     [['pitch_id',metric]]
+                     .agg({
+                         'pitch_id':'count',
+                         metric:'mean'
+                     })
+                     .query(f'pitch_id >= {rolling_threshold[metric]}')
+                    )
+chart_max = chart_thresh_list[metric].max()
+chart_min = chart_thresh_list[metric].min()
+chart_mean = chart_thresh_list[metric].mean()
+chart_90 = chart_thresh_list[metric].quantile(0.9)
+chart_75 = chart_thresh_list[metric].quantile(0.75)
+chart_25 = chart_thresh_list[metric].quantile(0.25)
+chart_10 = chart_thresh_list[metric].quantile(0.1)
 
 rolling_df = (plv_df
               .sort_values('pitch_id')
