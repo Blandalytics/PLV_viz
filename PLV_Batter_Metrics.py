@@ -159,8 +159,7 @@ chart_thresh_list = (plv_df
                      })
                      .query(f'pitch_id >= {rolling_threshold[metric]}')
                     )
-chart_max = chart_thresh_list[metric].quantile(0.99)
-chart_min = chart_thresh_list[metric].quantile(0.01)
+
 chart_mean = chart_thresh_list[metric].mean()
 chart_90 = chart_thresh_list[metric].quantile(0.9)
 chart_75 = chart_thresh_list[metric].quantile(0.75)
@@ -259,8 +258,8 @@ def rolling_chart():
 
     ax.set(xlabel=rolling_denom[metric],
            ylabel=metric,
-           ylim=(min(chart_min,rolling_df[metric].min()), 
-                 max(chart_max,rolling_df[metric].max())),
+           ylim=(min(chart_10,rolling_df[metric].min()), 
+                 max(chart_90,rolling_df[metric].max())),
            title="{}'s {} Rolling {} ({} {})".format(player,
                                                      year,
                                                      metric,
