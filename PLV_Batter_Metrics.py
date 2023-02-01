@@ -175,13 +175,13 @@ rolling_threshold = {
 
 
 container = st.container()
-count_select = st.radio('', 
-                        ['All Counts','Hitter Counts','Pitcher Counts','Even','2-Strike','3-Ball'],
+count_select = st.radio('Count Group', 
+                        ['All','Hitter Friendly','Pitcher Friendly','Even','2-Strike','3-Ball','Custom'],
                         index=0,
                         horizontal=True
                        )
  
-if count_select=='All Counts':
+if count_select=='All':
     selected_options = container.multiselect('Select the count(s):',
     ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
     ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
@@ -330,11 +330,12 @@ def rolling_chart():
            ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
            ylim=(chart_min-(chart_max - chart_min)/25, 
                  chart_max+(chart_max - chart_min)/25),
-           title="{}'s {} Rolling {} ({} {})".format(player,
-                                                     year,
-                                                     metric,
-                                                     window,
-                                                     rolling_denom[metric]))
+           title="{}'s {} Rolling {} ({} {}){}".format(player,
+                                                       year,
+                                                       metric,
+                                                       window,
+                                                       rolling_denom[metric],
+                                                       '' if count_select=='All' else f'\n(in {count_select} Counts)'))
     
     if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
