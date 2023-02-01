@@ -173,13 +173,12 @@ rolling_threshold = {
     'Hitter Performance':800
 }
 
-
-container = st.container()
 count_select = st.radio('Count Group', 
                         ['All','Hitter-Friendly','Pitcher-Friendly','Even','2-Strike','3-Ball','Custom'],
                         index=0,
                         horizontal=True
                        )
+container = st.container()
  
 if count_select=='All':
     selected_options = container.multiselect('Select the count(s):',
@@ -335,7 +334,7 @@ def rolling_chart():
                                                        metric,
                                                        window,
                                                        rolling_denom[metric],
-                                                       '' if count_select=='All' else f'\n(in {count_select} Counts)'))
+                                                       '' if count_select in ['All','Custom'] else f'\n(in {count_select} Counts)'))
     
     if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
