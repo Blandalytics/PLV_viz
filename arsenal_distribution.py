@@ -60,7 +60,6 @@ year = st.radio('Choose a year:', years)
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
-
 @st.cache
 # Load Data
 def load_data(year):
@@ -107,7 +106,7 @@ st.title("Season PLA")
 st.write('- ***Pitch Level Average (PLA)***: Value of all pitches (ERA scale), using IP and the total predicted run value of pitches thrown.')
 st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA-scale), using total predicted run values and an IP proxy for that pitch type (pitch usage % * Total IP).')
 
-pitch_threshold = 100
+pitch_threshold = 200
 
 # Num Pitches threshold
 pitch_min_1 = st.number_input(f'Min # of Pitches:',
@@ -203,12 +202,12 @@ def pitchtype_color(s):
 st.write('At least 20 pitches thrown, per pitch type. Table is sortable.')
 st.dataframe(pla_df
              .astype({'# Pitches': 'int'})
-#              .fillna(fill_val)
+             .fillna(fill_val)
              .style
              .format(precision=2, thousands=',')
              .background_gradient(axis=0, vmin=2, vmax=6,
                                   cmap="vlag_r", subset=format_cols)
-#              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
+             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
