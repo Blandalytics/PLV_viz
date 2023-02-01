@@ -193,7 +193,7 @@ elif count_select=='2-Strike':
 elif count_select=='3-Ball':
     selected_options = ['3-0','3-1','3-2']
 else:
-    selected_options =  st.multiselect('Select the count(s):',
+    selected_options = st.multiselect('Select the count(s):',
                                        ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
                                        ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
     
@@ -269,7 +269,7 @@ def rolling_chart():
                color=sns.color_palette('vlag', n_colors=100)[79],
                linestyle='--',
                alpha=0.5)
-    ax.axhline(0 if metric in ['Swing Aggression','Contact Ability'] else chart_mean,
+    ax.axhline(0 if (metric in ['Swing Aggression','Contact Ability']) and (count_select=='All') else chart_mean,
                color='w',
                alpha=0.5)
     ax.axhline(chart_25,
@@ -293,7 +293,7 @@ def rolling_chart():
             color=sns.color_palette('vlag', n_colors=100)[74],
             alpha=1)
     ax.text(line_text_loc,
-            0 if metric in ['Swing Aggression','Contact Ability'] else chart_mean,
+            0 if (metric in ['Swing Aggression','Contact Ability']) and (count_select=='All') else chart_mean,
             'MLB Avg' if abs(chart_mean - rolling_df[metric].mean()) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25 else '',
             va='center',
             color='w',
