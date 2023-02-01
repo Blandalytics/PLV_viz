@@ -180,7 +180,7 @@ def pla_data(dataframe, year,min_pitches=pitch_min_1):
           .query(f'season_pitches >= {min_pitches}')
           .rename(columns={'pitchername':'Pitcher',
                            'season_pitches':'# Pitches'})
-          .drop(columns=['pitcher_mlb_id','KN','SC'])
+          .drop(columns=['pitcher_mlb_id'])
           .fillna(np.nan)
           .set_index('Pitcher')
           [['# Pitches','PLA','FF','SI','SL','CH','CU','FC','FS']]
