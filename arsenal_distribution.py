@@ -216,7 +216,7 @@ st.title("PLV Distributions")
 # Player
 players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
     'pitch_id':'count',
-    'PLV':'mean'}).query('pitch_id >=300').sort_values('PLV', ascending=False)['pitchername'])
+    'PLV':'mean'}).query('pitch_id >=200').sort_values('PLV', ascending=False)['pitchername'])
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
