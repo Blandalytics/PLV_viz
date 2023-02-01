@@ -194,7 +194,7 @@ rolling_df = (plv_df
 container = st.container()
 count_select = st.radio('', 
                         ['Custom','All Counts','Hitter Counts','Pitcher Counts','Even','2-Strike','3-Ball'],
-                        key='All Counts',
+                        index=1,
                         horizontal=True
                        )
  
