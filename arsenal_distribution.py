@@ -205,7 +205,7 @@ st.dataframe(pla_df
              .astype({'# Pitches': 'int'})
              .fillna(fill_val)
              .style
-             .format(precision=2, thousands=',')
+             .format(precision=2)
              .background_gradient(axis=0, vmin=2, vmax=6,
                                   cmap="vlag_r", subset=format_cols)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
