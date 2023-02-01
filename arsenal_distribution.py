@@ -214,9 +214,17 @@ st.title("PLV Distributions")
 
 ## Selectors
 # Player
-players = list(plv_df.groupby('pitchername', as_index=False)[['pitch_id','PLV']].agg({
-    'pitch_id':'count',
-    'PLV':'mean'}).query('pitch_id >=200').sort_values('PLV', ascending=False)['pitchername'])
+players = list(plv_df
+               .groupby('pitchername', as_index=False)
+               [['pitch_id','PLV']]
+               .agg({
+                   'pitch_id':'count',
+                   'PLV':'mean'
+               })
+               .query(f'pitch_id >={pitch_threshold}')
+               .sort_values('PLV', ascending=False)
+               ['pitchername']
+              )
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
@@ -238,7 +246,7 @@ hand_map = {
     'Right':['R']
 }
 
-pitch_threshold = 200
+pitch_threshold = 100
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
                             plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
 st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
@@ -350,7 +358,7 @@ st.write('- ***QP-BP%***: Difference between QP and BP. Avg is 7%')
 
 # Num Pitches threshold
 pitch_min_2 = st.number_input(f'Min # of Pitches:', 
-                            min_value=200, 
+                            min_value=pitch_threshold, 
                             max_value=plv_df.groupby('pitchername')['pitch_id'].count().max().round(-2)-200,
                             step=50, 
                             value=500)
