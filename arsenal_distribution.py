@@ -107,9 +107,11 @@ st.title("Season PLA")
 st.write('- ***Pitch Level Average (PLA)***: Value of all pitches (ERA scale), using IP and the total predicted run value of pitches thrown.')
 st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA-scale), using total predicted run values and an IP proxy for that pitch type (pitch usage % * Total IP).')
 
+pitch_threshold = 100
+
 # Num Pitches threshold
 pitch_min_1 = st.number_input(f'Min # of Pitches:',
-                              min_value=200, 
+                              min_value=pitch_threshold, 
                               max_value=1000,
                               step=50, 
                               value=500)
@@ -246,7 +248,6 @@ hand_map = {
     'Right':['R']
 }
 
-pitch_threshold = 100
 pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
                             plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
 st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
