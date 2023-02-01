@@ -238,14 +238,14 @@ rolling_df = (plv_df
               .reset_index()
              )
 
-window_max = max(updated_threshold,int(round(rolling_df.shape[0]/10)*5))
+window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
 
 # Rolling Window
 window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:', 
                          min_value=50, 
                          max_value=window_max,
                          step=5, 
-                         value=updated_threshold)
+                         value=rolling_threshold[metric])
 
 rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window).mean()
 
