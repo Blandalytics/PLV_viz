@@ -185,11 +185,11 @@ if count_select=='All':
     selected_options = container.multiselect('Select the count(s):',
     ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
     ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
-elif count_select=='Hitter Counts':
+elif count_select=='Hitter Friendly':
     selected_options = container.multiselect('Select the count(s):',
     ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
     ['1-0', '2-0', '3-0', '2-1', '3-1'])
-elif count_select=='Pitcher Counts':
+elif count_select=='Pitcher Friendly':
     selected_options = container.multiselect('Select the count(s):',
     ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
     ['0-1','0-2','1-2'])
