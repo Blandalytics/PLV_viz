@@ -204,7 +204,7 @@ st.write('At least 20 pitches thrown, per pitch type. Table is sortable.')
 st.dataframe(pla_df
              .astype({'# Pitches': 'int'})
              .fillna(fill_val)
-#              .style
+             .style
 #              .format(precision=2, thousands=',')
 #              .background_gradient(axis=0, vmin=2, vmax=6,
 #                                   cmap="vlag_r", subset=format_cols)
