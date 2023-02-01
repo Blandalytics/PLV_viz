@@ -64,15 +64,21 @@ seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/m
 @st.cache
 # Load Data
 def load_data(year):
-    file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data.parquet?raw=true'
-    df = (pd.read_parquet(file_name)
-          .sort_values('pitch_id')
-          [['pitchername','pitcher_mlb_id','pitch_id',
-            'p_hand','b_hand','pitchtype','PLV']]
-          .astype({'pitch_id':'int',
-                   'pitcher_mlb_id':'int'})
-          .query(f'pitchtype not in {["KN","SC"]}')
-         )
+    df = pd.DataFrame()
+    for chunk in [1,2,3]:
+        file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{chunk}.parquet?raw=true'
+        df = pd.concat([df,
+                        (pd.read_parquet(file_name)
+                         .sort_values('pitch_id')
+                         [['pitchername','pitcher_mlb_id','pitch_id',
+                           'p_hand','b_hand','pitchtype','PLV']]
+                         .astype({'pitch_id':'int',
+                                  'pitcher_mlb_id':'int'})
+                         .query(f'pitchtype not in {["KN","SC"]}')
+                        )
+                       ])
+    
+    df = df.reset_index(drop=True)
     df['pitch_runs'] = df['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
     
     df['pitch_quality'] = 'Average'
