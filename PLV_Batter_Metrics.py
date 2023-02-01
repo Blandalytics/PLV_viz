@@ -191,11 +191,6 @@ rolling_df = (plv_df
               .reset_index()
              )
 
-count_select = st.multiselect(
-    'Select the count(s):',
-    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
-    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
-
 container = st.container()
 count_select = st.radio('', 
                         ['Custom','All Counts','Hitter Counts','Pitcher Counts','Even','2-Strike','3-Ball'],
