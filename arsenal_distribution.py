@@ -69,7 +69,7 @@ def load_data(year):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{chunk}.parquet?raw=true'
         df = pd.concat([df,
                         pd.read_parquet(file_name)
-                       ])    
+                       ])
     df = (df
           .sort_values('pitch_id')
           [['pitchername','pitcher_mlb_id','pitch_id',
