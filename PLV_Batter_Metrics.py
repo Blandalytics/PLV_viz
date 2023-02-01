@@ -191,6 +191,11 @@ rolling_df = (plv_df
               .reset_index()
              )
 
+count_select = st.multiselect(
+    'Select the count(s):',
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
+
 window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
 
 # Rolling Window
