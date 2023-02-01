@@ -62,16 +62,23 @@ season_names = {
 # Load Data
 @st.cache
 def load_season_data(year):
-    file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data.parquet?raw=true'
-    df = pd.read_parquet(file_name)[['hittername','pitch_id','swing_agg','strike_zone_judgement',
-                                     'decision_value','contact_over_expected','adj_power','batter_wOBA']]
+    df = pd.DataFrame()
+    for chunk in [1,2,3]:
+        file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{chunk}.parquet?raw=true'
+        df = pd.concat([df,
+                        pd.read_parquet(file_name)[['hittername','pitch_id','balls','strikes','swing_agg','strike_zone_judgement',
+                                                    'decision_value','contact_over_expected','adj_power','batter_wOBA']]
+                       ])
     
+    df = df.reset_index(drop=True)
     for stat in ['swing_agg','strike_zone_judgement','contact_over_expected']:
         df[stat] = df[stat].mul(100).astype('float')
     
     # Convert to runs added
     df['decision_value'] = df['decision_value'].div(seasonal_constants.loc[year]['run_constant']).mul(100)
     df['batter_wOBA'] = df['batter_wOBA'].div(seasonal_constants.loc[year]['run_constant']).mul(100)
+    
+    df['count'] = df['balls'].astype('str')+'-'+df['strikes'].astype('str')
     
     return df
 
@@ -166,30 +173,6 @@ rolling_threshold = {
     'Hitter Performance':800
 }
 
-chart_thresh_list = (plv_df
-                     .groupby('hittername')
-                     [['pitch_id',metric]]
-                     .agg({
-                         'pitch_id':'count',
-                         metric:'mean'
-                     })
-                     .query(f'pitch_id >= {rolling_threshold[metric]}')
-                    )
-
-chart_mean = plv_df[metric].mean()
-chart_90 = chart_thresh_list[metric].quantile(0.9)
-chart_75 = chart_thresh_list[metric].quantile(0.75)
-chart_25 = chart_thresh_list[metric].quantile(0.25)
-chart_10 = chart_thresh_list[metric].quantile(0.1)
-
-rolling_df = (plv_df
-              .sort_values('pitch_id')
-              .loc[(plv_df['hittername']==player),
-                   ['hittername',metric]]
-              .dropna()
-              .reset_index(drop=True)
-              .reset_index()
-             )
 
 container = st.container()
 count_select = st.radio('', 
@@ -225,15 +208,44 @@ elif count_select=='3-Ball':
 else:
     selected_options =  container.multiselect("Select the count(s):",
         ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
+    
+updated_threshold = max(50,int(round(rolling_threshold[metric]*len(selected_options)/12*5)/5))
 
-window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
+chart_thresh_list = (plv_df
+                     .loc[plv_df['count'].isin(selected_options)]
+                     .groupby('hittername')
+                     [['pitch_id',metric]]
+                     .agg({
+                         'pitch_id':'count',
+                         metric:'mean'
+                     })
+                     .query(f'pitch_id >= {updated_threshold}')
+                    )
+
+chart_mean = plv_df[metric].mean()
+chart_90 = chart_thresh_list[metric].quantile(0.9)
+chart_75 = chart_thresh_list[metric].quantile(0.75)
+chart_25 = chart_thresh_list[metric].quantile(0.25)
+chart_10 = chart_thresh_list[metric].quantile(0.1)
+
+rolling_df = (plv_df
+              .sort_values('pitch_id')
+              .loc[(plv_df['hittername']==player) &
+                   plv_df['count'].isin(selected_options),
+                   ['hittername',metric]]
+              .dropna()
+              .reset_index(drop=True)
+              .reset_index()
+             )
+
+window_max = max(updated_threshold,int(round(rolling_df.shape[0]/10)*5))
 
 # Rolling Window
 window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:', 
                          min_value=50, 
                          max_value=window_max,
                          step=5, 
-                         value=rolling_threshold[metric])
+                         value=updated_threshold)
 
 rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window).mean()
 
