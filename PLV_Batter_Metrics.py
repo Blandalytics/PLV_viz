@@ -193,8 +193,9 @@ elif count_select=='2-Strike':
 elif count_select=='3-Ball':
     selected_options = ['3-0','3-1','3-2']
 else:
-    selected_options =  st.multiselect("Select the count(s):",
-        ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
+    selected_options =  st.multiselect('Select the count(s):',
+                                       ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+                                       ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
     
 updated_threshold = max(50,int(round(rolling_threshold[metric]*len(selected_options)/12/5)*5))
 
