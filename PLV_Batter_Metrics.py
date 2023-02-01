@@ -318,12 +318,10 @@ def rolling_chart():
            ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
            ylim=(chart_min-(chart_max - chart_min)/25, 
                  chart_max+(chart_max - chart_min)/25),
-           title="{}'s {} Rolling {} ({} {}){}".format(player,
-                                                       year,
-                                                       metric,
-                                                       window,
-                                                       rolling_denom[metric],
-                                                       '' if count_select in ['All','Custom'] else f'\n(in {count_select} Counts)'))
+           title="{}'s {} Rolling {}{}".format(player,
+                                               year,
+                                               metric,
+                                               f' ({window} {rolling_denom[metric]})' if count_select in ['All','Custom'] else f'\n({window} {rolling_denom[metric]}; in {count_select} Counts)'))
     
     if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
