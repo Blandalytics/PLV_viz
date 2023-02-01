@@ -196,6 +196,41 @@ count_select = st.multiselect(
     ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
     ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
 
+container = st.container()
+count_select = st.radio('', 
+                        ['Custom','All Counts','Hitter Counts','Pitcher Counts','Even','2-Strike','3-Ball'],
+                        key='All Counts',
+                        horizontal=True
+                       )
+ 
+if count_select=='All Counts':
+    selected_options = container.multiselect('Select the count(s):',
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
+elif count_select=='Hitter Counts':
+    selected_options = container.multiselect('Select the count(s):',
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+    ['1-0', '2-0', '3-0', '2-1', '3-1'])
+elif count_select=='Pitcher Counts':
+    selected_options = container.multiselect('Select the count(s):',
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+    ['0-1','0-2','1-2'])
+elif count_select=='Even':
+    selected_options = container.multiselect('Select the count(s):',
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+    ['0-0','1-1','2-2'])
+elif count_select=='2-Strike':
+    selected_options = container.multiselect('Select the count(s):',
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+    ['0-2','1-2','2-2','3-2'])
+elif count_select=='3-Ball':
+    selected_options = container.multiselect('Select the count(s):',
+    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+    ['3-0','3-1','3-2'])
+else:
+    selected_options =  container.multiselect("Select the count(s):",
+        ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
+
 window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*5))
 
 # Rolling Window
