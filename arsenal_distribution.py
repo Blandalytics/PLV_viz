@@ -203,12 +203,12 @@ def pitchtype_color(s):
 st.write('At least 20 pitches thrown, per pitch type. Table is sortable.')
 st.dataframe(pla_df
              .astype({'# Pitches': 'int'})
-             .fillna(fill_val)
+#              .fillna(fill_val)
              .style
              .format(precision=2, thousands=',')
              .background_gradient(axis=0, vmin=2, vmax=6,
                                   cmap="vlag_r", subset=format_cols)
-             .applymap(lambda x: 'color: transparent; background-color: transparent' if x>pla_df[format_cols].max().max() else '')
+#              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
