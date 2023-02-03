@@ -14,6 +14,8 @@ pl_background = '#162B50'
 pl_text = '#72a3f7'
 pl_line_color = '#293a6b'
 
+test = 'test'
+
 sns.set_theme(
     style={
         'axes.edgecolor': pl_white,
