@@ -14,8 +14,6 @@ pl_background = '#162B50'
 pl_text = '#72a3f7'
 pl_line_color = '#293a6b'
 
-test = 'test'
-
 sns.set_theme(
     style={
         'axes.edgecolor': pl_white,
@@ -110,9 +108,6 @@ for stat in ['SZ Judge','Contact','Dec Value','Power','HP']:
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
 
 st.write('Metrics on a 20-80 scale. Table is sortable.')
-
-def color_scale(v, cmap=''):
-    return styler
 
 st.dataframe(season_df
              .style
