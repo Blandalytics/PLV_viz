@@ -67,12 +67,11 @@ def load_data(year):
     for chunk in [1,2,3]:
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{chunk}.parquet?raw=true'
         df = pd.concat([df,
-                        pd.read_parquet(file_name)
+                        pd.read_parquet(file_name)[['pitchername','pitcher_mlb_id','pitch_id',
+                                                    'p_hand','b_hand','pitchtype','PLV']]
                        ])
     df = (df
           .sort_values('pitch_id')
-          [['pitchername','pitcher_mlb_id','pitch_id',
-            'p_hand','b_hand','pitchtype','PLV']]
           .astype({'pitch_id':'int',
                    'pitcher_mlb_id':'int'})
           .query(f'pitchtype not in {["KN","SC"]}')
