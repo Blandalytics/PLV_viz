@@ -5,7 +5,6 @@ import pandas as pd
 import seaborn as sns
 import scipy as sp
 
-from matplotlib import colors
 from scipy import stats
 
 ## Set Styling
@@ -392,14 +391,13 @@ st.dataframe(plv_df
              .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
              .background_gradient(axis=0, cmap="vlag_r", subset=['BP%'])
             )
-
    
 st.title('Season Pitch Quality') 
 def plv_kde(df,name,num_pitches,ax,pitchtype=''):
     pitch_thresh = 500 if pitchtype=='' else 125
     pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
 
-    df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype]
+    df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
     val = df.loc[df['pitchername']==name,'PLV'].mean()
     df = df.query(f'pitch_id >= {pitch_thresh}').copy()
     val_percentile = stats.percentileofscore(df['PLV'], val) / 100
@@ -506,7 +504,7 @@ def plv_card(pitcher,year):
                                 ascending=False)
                     ['pitchtype'])
 
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure(figsize=(8,8))
 
     # Parameters to divide card
     grid_height = len(pitch_list)+4
@@ -514,7 +512,7 @@ def plv_card(pitcher,year):
 
     # Divide card into tiles
     grid = plt.GridSpec(grid_height, 3, wspace=0, hspace=0.2, width_ratios=[1,3,1],
-                      height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
+                        height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
     title_ax = plt.subplot(grid[0, :])
     title_ax.text(0,0,"{}'s {} Pitch Quality".format(pitcher,year), ha='center', va='center', fontsize=28,
