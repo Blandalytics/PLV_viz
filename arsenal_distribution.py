@@ -214,6 +214,8 @@ st.dataframe(pla_df
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
+st.title("PLV Distributions")
+
 ## Selectors
 # Player
 players = list(plv_df
@@ -229,8 +231,6 @@ players = list(plv_df
               )
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
-
-st.title("PLV Distributions")
 
 # Hitter Handedness
 handedness = st.select_slider(
