@@ -236,7 +236,7 @@ def plv_kde(df,name,num_pitches,ax,pitchtype=''):
 
     df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype]
     val = df.loc[df['pitchername']==name,'PLV'].mean()
-    df = df.query(f'pitch_id >= {pitch_thresh}').copy()
+    df = df.query(f'pitch_id >= {pitch_thresh}')
     val_percentile = stats.percentileofscore(df['PLV'], val) / 100
 
     sns.kdeplot(df['PLV'], ax=ax, color='w', legend=False, cut=0)
@@ -397,12 +397,14 @@ def plv_card(pitcher):
 
     plv_dist_ax = plt.subplot(grid[2, 1])
     plv_kde((plv_df
-             .groupby('pitchername', as_index=False)
-             [['pitch_id','PLV']].agg({
+             .groupby('pitchername', 
+                      as_index=False)
+             [['pitch_id','PLV']]
+             .agg({
                  'pitch_id':'count',
                  'PLV':'mean'
              })
-            ),
+            ).copy(),
             pitcher,
             len(pitch_list),
             plv_dist_ax)
@@ -416,7 +418,7 @@ def plv_card(pitcher):
                      'pitch_id':'count',
                      'PLV':'mean'
                  })
-                ), 
+                ).copy(), 
                 pitcher, 
                 len(pitch_list), 
                 pitch_ax, 
