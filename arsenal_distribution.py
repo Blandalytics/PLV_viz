@@ -404,8 +404,8 @@ def plv_kde(df,name,num_pitches,ax,pitchtype=''):
     df = df.query(f'pitch_id >= {pitch_thresh}').copy()
     val_percentile = stats.percentileofscore(df['PLV'], val) / 100
 
-    sns.kdeplot(df['PLV'], ax=ax, color='w', #legend=False, 
-                cut=0)
+    sns.kdeplot(x=df['PLV'], ax=ax, color='w', 
+                legend=False, cut=0)
 
     x = ax.lines[-1].get_xdata()
     y = ax.lines[-1].get_ydata()
