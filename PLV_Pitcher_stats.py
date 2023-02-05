@@ -71,8 +71,7 @@ def load_data(year):
     for chunk in [1,2,3]:
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{chunk}.parquet?raw=true'
         df = pd.concat([df,
-                        pd.read_parquet(file_name)[['pitchername','pitcher_mlb_id','pitch_id',
-                                                    'p_hand','b_hand','pitchtype','PLV']]
+                        pd.read_parquet(file_name)
                        ])
     df = (df
           .sort_values('pitch_id')
@@ -81,8 +80,8 @@ def load_data(year):
           .query(f'pitchtype not in {["KN","SC"]}')
           .reset_index(drop=True)
          )
-    
     df['pitch_runs'] = df['PLV'].mul(seasonal_constants.loc[year]['run_plv_coef']).add(seasonal_constants.loc[year]['run_plv_constant'])
+    df['season'] = year
     
     df['pitch_quality'] = 'Average'
     df.loc[df['PLV']>=5.5,'pitch_quality'] = 'Quality'
@@ -95,9 +94,10 @@ def load_data(year):
     df['QP-BP'] = df['Quality Pitch'].sub(df['Bad Pitch'])
     
     return df
+
 plv_df = load_data(year)
 
-pitch_threshold = 400
+pitch_threshold = 300
 
 ## Selectors
 # Player
@@ -199,30 +199,21 @@ def pla_data(dataframe, year,min_pitches=pitch_threshold):
 # Season data
 pla_df = pla_data(plv_df, year)
 
-@st.cache()
-def get_ids():
-    id_df = pd.DataFrame()
-    for chunk in list(range(0,10))+['a','b','c','d','e','f']:
-        chunk_df = pd.read_csv(f'https://github.com/chadwickbureau/register/blob/master/data/people-{chunk}.csv?raw=true')
-        id_df = pd.concat([id_df,chunk_df])
-    return id_df[['key_mlbam','key_fangraphs']].dropna().astype('int') 
-
 st.title('Season Pitch Quality') 
 
-def plv_kde(df,name,num_pitches,kde_ax,pitchtype=''):
+def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
     pitch_thresh = 500 if pitchtype=='' else 125
     pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
 
-    df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
-    val = df.loc[df['pitchername']==name,'PLV'].mean()
+    df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype]
+    val = df.loc[df['pitchername']==name,stat].mean()
     df = df.query(f'pitch_id >= {pitch_thresh}').copy()
-    val_percentile = stats.percentileofscore(df['PLV'], val) / 100
+    val_percentile = stats.percentileofscore(df[stat], val) / 100
 
-    sns.kdeplot(x=df['PLV'], ax=kde_ax, color='w', 
-                legend=False, cut=0)
+    sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=0)
 
-    x = kde_ax.lines[-1].get_xdata()
-    y = kde_ax.lines[-1].get_ydata()
+    x = ax.lines[-1].get_xdata()
+    y = ax.lines[-1].get_ydata()
 
     quantiles = [1, 0.95, 0.9, 0.75, 0.5, 0.25, 0.1, 0.05, 0]
     quant_colors = [x for x in sns.color_palette('vlag_r',n_colors=701)[::100]]
@@ -231,16 +222,16 @@ def plv_kde(df,name,num_pitches,kde_ax,pitchtype=''):
 
     for quant in range(8):
         color = quant_colors[quant]
-        thresh = 10 if quant==0 else df['PLV'].quantile(quantiles[quant])
-        kde_ax.fill_between(x, 0, y, 
+        thresh = 10 if quant==0 else df[stat].quantile(quantiles[quant])
+        ax.fill_between(x, 0, y, 
                         where=x < thresh, 
                         color=quant_colors[quant], 
                         alpha=1)
-    kde_ax.vlines(df['PLV'].quantile(0.5), 
+    ax.vlines(df[stat].quantile(0.5), 
             0, 
-            np.interp(df['PLV'].quantile(0.5), x, y), 
+            np.interp(df[stat].quantile(0.5), x, y), 
             linestyle='-', color='w', alpha=1, linewidth=2)
-    kde_ax.axvline(val, 
+    ax.axvline(val, 
              ymax=0.9,
              linestyle='--', 
              color='w', 
@@ -250,8 +241,8 @@ def plv_kde(df,name,num_pitches,kde_ax,pitchtype=''):
                alpha=1, 
                edgecolor=val_color,
                linewidth=2)
-    y_max = kde_ax.get_ylim()[1]
-    kde_ax.text(val+0.01,
+    y_max = ax.get_ylim()[1]
+    ax.text(val+0.01,
           y_max*1.1,
           '{:.2f}'.format(val),
           ha='center',
@@ -260,19 +251,18 @@ def plv_kde(df,name,num_pitches,kde_ax,pitchtype=''):
           fontsize=16,
           fontweight='bold', 
           bbox=props)
-    kde_ax.set(xlim=(3.6,6.4),
+    ax.set(xlim=(3.6,6.4),
          ylim=(0,y_max*1.2),
          xlabel=None,
          ylabel=None,
          )
-    kde_ax.set_xticklabels([])
-    kde_ax.set_yticklabels([])
-    kde_ax.tick_params(left=False, bottom=False)
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.tick_params(left=False, bottom=False
+                 )
     sns.despine(left=True,bottom=True)
 
 def percent_bar(ax):
-    ax.set_yticks([])
-
     quantiles = [1, 0.95, 0.9, 0.75, 0.5, 0.25, 0.1, 0.05, 0]
     quant_colors = [x for x in sns.color_palette('vlag',n_colors=701)[::100]]
 
@@ -304,14 +294,15 @@ def percent_bar(ax):
              linewidth=2)
     ax.set(xlim=(0,1.025))
     ax.set_xticklabels([])
+    ax.set_yticks([])
     ax.tick_params(bottom=False)
     sns.despine()
 
 def plv_card():
-    pla_dict = pla_df.loc[[player]][['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
+    pla_dict = pla_df.loc[[pitcher]][['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
     pitch_list = list(plv_df
-                    .loc[(plv_df['pitchername']==player)]
+                    .loc[(plv_df['pitchername']==pitcher)]
                     .groupby('pitchtype',as_index=False)
                     ['pitch_id']
                     .count()
@@ -320,7 +311,7 @@ def plv_card():
                                 ascending=False)
                     ['pitchtype'])
 
-    fig = plt.figure(figsize=(8,8))
+    fig = plt.figure(figsize=(10,10))
 
     # Parameters to divide card
     grid_height = len(pitch_list)+4
@@ -328,10 +319,10 @@ def plv_card():
 
     # Divide card into tiles
     grid = plt.GridSpec(grid_height, 3, wspace=0, hspace=0.2, width_ratios=[1,3,1],
-                        height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
+                      height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
     title_ax = plt.subplot(grid[0, :])
-    title_ax.text(0,0,"{}'s {} Pitch Quality".format(player,year), ha='center', va='center', fontsize=28,
+    title_ax.text(0,0,"{}'s {} Pitch Quality".format(pitcher,year), ha='center', va='center', fontsize=28,
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
     title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
     title_ax.set_xticklabels([])
@@ -355,15 +346,15 @@ def plv_card():
     pla_desc_ax.tick_params(left=False, bottom=False)
 
     ax_num = 2
-    total_pitches = plv_df.loc[(plv_df['pitchername']==player)].shape[0]
+    total_pitches = plv_df.loc[(plv_df['pitchername']==pitcher)].shape[0]
     for pitch in ['All']+pitch_list:
         type_ax = plt.subplot(grid[ax_num, 0])
         type_ax.text(0.25,-0.1, f'{pitch}', ha='center', va='bottom', 
                      fontsize=24, fontweight='bold',
                      color='w' if pitch=='All' else marker_colors[pitch])
         if pitch!='All':
-            usage = plv_df.loc[(plv_df['pitchername']==player) &
-                               (plv_df['pitchtype']==pitch)].shape[0] / total_pitches * 100
+            usage = plv_df.loc[(plv_df['pitchername']==pitcher) &
+                             (plv_df['pitchtype']==pitch)].shape[0] / total_pitches * 100
             type_ax.text(0.25,-0.1,'({:.0f}%)'.format(usage), ha='center', va='top', fontsize=12)
         else:
             type_ax.text(0.25,-0.1,'(Usage%)', ha='center', va='top', fontsize=12)
@@ -383,7 +374,7 @@ def plv_card():
              })
              .reset_index()
             ),
-            player,
+            pitcher,
             len(pitch_list),
             plv_dist_ax)
     ax_num = 3
@@ -398,7 +389,7 @@ def plv_card():
                  })
                  .reset_index()
                 ), 
-                player, 
+                pitcher, 
                 len(pitch_list), 
                 pitch_ax, 
                 pitchtype=pitch)
