@@ -449,8 +449,8 @@ def plv_kde(df,name,num_pitches,ax,pitchtype=''):
          xlabel=None,
          ylabel=None,
          )
-    ax.set_xticklabels([])
-    ax.set_yticklabels([])
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
     ax.tick_params(left=False, bottom=False
                  )
     sns.despine(left=True,bottom=True)
@@ -488,7 +488,7 @@ def percent_bar(ax):
              color='w', 
              linewidth=2)
     ax.set(xlim=(0,1.025))
-    ax.set_xticklabels([])
+    ax.get_xaxis().set_visible(False)
     ax.tick_params(bottom=False)
     sns.despine()
 
@@ -520,24 +520,24 @@ def plv_card(pitcher):
     title_ax.text(0,0,"{}'s {} Pitch Quality".format(pitcher,year), ha='center', va='center', fontsize=28,
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
     title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-    title_ax.set_xticklabels([])
-    title_ax.set_yticklabels([])
+    title_ax.get_xaxis().set_visible(False)
+    title_ax.get_yaxis().set_visible(False)
     title_ax.tick_params(left=False, bottom=False)
 
     plv_desc_ax = plt.subplot(grid[1, 1])
     plv_desc_ax.text(0,-0.1,"PLV", ha='center', va='bottom', fontsize=24,
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
     plv_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-    plv_desc_ax.set_xticklabels([])
-    plv_desc_ax.set_yticklabels([])
+    plv_desc_ax.get_xaxis().set_visible(False)
+    plv_desc_ax.get_yaxis().set_visible(False)
     plv_desc_ax.tick_params(left=False, bottom=False)
 
     pla_desc_ax = plt.subplot(grid[1, 2])
     pla_desc_ax.text(-0.25,-0.1,"PLA", ha='center', va='bottom', fontsize=24)
     pla_desc_ax.text(-0.25,-0.15,"(xRuns per 9IP*)", ha='center', va='top', fontsize=12)
     pla_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-    pla_desc_ax.set_xticklabels([])
-    pla_desc_ax.set_yticklabels([])
+    pla_desc_ax.get_xaxis().set_visible(False)
+    pla_desc_ax.get_yaxis().set_visible(False)
     pla_desc_ax.tick_params(left=False, bottom=False)
 
     ax_num = 2
@@ -554,8 +554,8 @@ def plv_card(pitcher):
         else:
             type_ax.text(0.25,-0.1,'(Usage%)', ha='center', va='top', fontsize=12)
         type_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-        type_ax.set_xticklabels([])
-        type_ax.set_yticklabels([])
+        type_ax.get_xaxis().set_visible(False)
+        type_ax.get_yaxis().set_visible(False)
         type_ax.tick_params(left=False, bottom=False)
         ax_num+=1
 
@@ -596,16 +596,16 @@ def plv_card(pitcher):
         pla_ax = plt.subplot(grid[ax_num, 2])
         pla_ax.text(-0.25,0,'{:.2f}'.format(pla_dict[pitch][0]), ha='center', va='center', fontsize=24)
         pla_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-        pla_ax.set_xticklabels([])
-        pla_ax.set_yticklabels([])
+        pla_ax.get_xaxis().set_visible(False)
+        pla_ax.get_yaxis().set_visible(False)
         pla_ax.tick_params(left=False, bottom=False)
         ax_num+=1
   
     league_ax = plt.subplot(grid[-1, 0])
     league_ax.text(0.8,0,"League\nPercentile:", ha='right', va='center', fontsize=14)
     league_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-    league_ax.set_xticklabels([])
-    league_ax.set_yticklabels([])
+    league_ax.get_xaxis().set_visible(False)
+    league_ax.get_yaxis().set_visible(False)
     league_ax.tick_params(left=False, bottom=False)
 
     percent_bar_ax = plt.subplot(grid[-1, 1])
@@ -614,7 +614,7 @@ def plv_card(pitcher):
     disclaimer_ax = plt.subplot(grid[-1, 2])
     disclaimer_ax.text(-0.25,0,"*IP based on \nUsage %", ha='center', va='center', fontsize=10)
     disclaimer_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
-    disclaimer_ax.set_xticklabels([])
-    disclaimer_ax.set_yticklabels([])
+    disclaimer_ax.get_xaxis().set_visible(False)
+    disclaimer_ax.get_yaxis().set_visible(False)
     disclaimer_ax.tick_params(left=False, bottom=False)
 plv_card(player)
