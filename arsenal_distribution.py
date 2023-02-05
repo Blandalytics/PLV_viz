@@ -399,12 +399,12 @@ def plv_kde(df,name,num_pitches,ax,pitchtype=''):
     pitch_thresh = 500 if pitchtype=='' else 125
     pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
 
-    df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
+    df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype]
     val = df.loc[df['pitchername']==name,'PLV'].mean()
     df = df.query(f'pitch_id >= {pitch_thresh}').copy()
     val_percentile = stats.percentileofscore(df['PLV'], val) / 100
 
-    sns.kdeplot(df['PLV'], ax=ax, color='w', cut=0)
+    sns.kdeplot(df['PLV'], ax=ax, color='w', legend=False, cut=0)
 
     x = ax.lines[-1].get_xdata()
     y = ax.lines[-1].get_ydata()
@@ -493,7 +493,7 @@ def percent_bar(ax):
     ax.tick_params(bottom=False)
     sns.despine()
 
-def plv_card(pitcher):
+def plv_card(pitcher,year):
     pla_dict = pla_df.loc[[pitcher]][['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
     pitch_list = list(plv_df
@@ -561,8 +561,7 @@ def plv_card(pitcher):
 
     plv_dist_ax = plt.subplot(grid[2, 1])
     plv_kde((plv_df
-             .groupby('pitchername', 
-                      as_index=False)
+             .groupby('pitchername')
              [['pitch_id','PLV']]
              .agg({
                  'pitch_id':'count',
@@ -617,4 +616,6 @@ def plv_card(pitcher):
     disclaimer_ax.set_xticklabels([])
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
-plv_card(player)
+
+    sns.despine()
+plv_card(player, year)
