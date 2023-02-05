@@ -395,7 +395,7 @@ st.dataframe(plv_df
   
 st.title('Season Pitch Quality') 
 
-def plv_kde(df,name,num_pitches,ax,pitchtype=''):
+def plv_kde(df,name,num_pitches,kde_ax,pitchtype=''):
     pitch_thresh = 500 if pitchtype=='' else 125
     pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
 
@@ -404,11 +404,11 @@ def plv_kde(df,name,num_pitches,ax,pitchtype=''):
     df = df.query(f'pitch_id >= {pitch_thresh}').copy()
     val_percentile = stats.percentileofscore(df['PLV'], val) / 100
 
-    sns.kdeplot(x=df['PLV'], ax=ax, color='w', 
+    sns.kdeplot(x=df['PLV'], ax=kde_ax, color='w', 
                 legend=False, cut=0)
 
-    x = ax.lines[-1].get_xdata()
-    y = ax.lines[-1].get_ydata()
+    x = kde_ax.lines[-1].get_xdata()
+    y = kde_ax.lines[-1].get_ydata()
 
     quantiles = [1, 0.95, 0.9, 0.75, 0.5, 0.25, 0.1, 0.05, 0]
     quant_colors = [x for x in sns.color_palette('vlag_r',n_colors=701)[::100]]
@@ -418,15 +418,15 @@ def plv_kde(df,name,num_pitches,ax,pitchtype=''):
     for quant in range(8):
         color = quant_colors[quant]
         thresh = 10 if quant==0 else df['PLV'].quantile(quantiles[quant])
-        ax.fill_between(x, 0, y, 
+        kde_ax.fill_between(x, 0, y, 
                         where=x < thresh, 
                         color=quant_colors[quant], 
                         alpha=1)
-    ax.vlines(df['PLV'].quantile(0.5), 
+    kde_ax.vlines(df['PLV'].quantile(0.5), 
             0, 
             np.interp(df['PLV'].quantile(0.5), x, y), 
             linestyle='-', color='w', alpha=1, linewidth=2)
-    ax.axvline(val, 
+    kde_ax.axvline(val, 
              ymax=0.9,
              linestyle='--', 
              color='w', 
@@ -436,8 +436,8 @@ def plv_kde(df,name,num_pitches,ax,pitchtype=''):
                alpha=1, 
                edgecolor=val_color,
                linewidth=2)
-    y_max = ax.get_ylim()[1]
-    ax.text(val+0.01,
+    y_max = kde_ax.get_ylim()[1]
+    kde_ax.text(val+0.01,
           y_max*1.1,
           '{:.2f}'.format(val),
           ha='center',
@@ -446,15 +446,14 @@ def plv_kde(df,name,num_pitches,ax,pitchtype=''):
           fontsize=16,
           fontweight='bold', 
           bbox=props)
-    ax.set(xlim=(3.6,6.4),
+    kde_ax.set(xlim=(3.6,6.4),
          ylim=(0,y_max*1.2),
          xlabel=None,
          ylabel=None,
          )
-    ax.set_xticklabels([])
-    ax.set_yticklabels([])
-    ax.tick_params(left=False, bottom=False
-                 )
+    kde_ax.set_xticklabels([])
+    kde_ax.set_yticklabels([])
+    kde_ax.tick_params(left=False, bottom=False)
     sns.despine(left=True,bottom=True)
 
 def percent_bar(ax):
