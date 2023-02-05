@@ -214,6 +214,8 @@ st.dataframe(pla_df
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
+st.title('Season Pitch Quality') 
+
 ## Selectors
 # Player
 players = list(plv_df
@@ -230,170 +232,6 @@ players = list(plv_df
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
-st.title("PLV Distributions")
-
-# Hitter Handedness
-handedness = st.select_slider(
-    'Hitter Handedness',
-    options=['Left', 'All', 'Right'],
-    value='All')
-
-# Pitcher Handedness
-if handedness=='All':
-    pitcher_hand = ['L','R']
-else:
-    pitcher_hand = list(plv_df.loc[(plv_df['pitchername']==player),'p_hand'].unique())
-
-hand_map = {
-    'Left':['L'],
-    'All':['L','R'],
-    'Right':['R']
-}
-
-pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
-                            plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
-st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
-
-if pitches_thrown >= pitch_threshold:
-    pitch_type_thresh = 20
-    pitch_list = list(plv_df
-                .loc[(plv_df['pitchername']==player) &
-                     plv_df['b_hand'].isin(hand_map[handedness])]
-                .groupby('pitchtype',as_index=False)
-                ['pitch_id']
-                .count()
-                .dropna()
-                .sort_values('pitch_id', ascending=False)
-                .query(f'pitch_id >= {pitch_type_thresh}')
-                ['pitchtype']
-                )
-
-## Chart function
-    def arsenal_dist():
-        # Subplots based off of # of pitchtypes
-        fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
-        ax_num = 0
-        max_count = 0
-        for pitch in pitch_list:
-            # Data just for that pitch type
-            chart_data = plv_df.loc[(plv_df['pitchtype']==pitch) &
-                                    plv_df['b_hand'].isin(hand_map[handedness])].copy()
-            # Restrict to 0-10
-            chart_data['PLV_clip'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
-            num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
-            
-            # Plotting
-            sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
-                        x='PLV_clip',
-                        hue='pitchtype',
-                        palette=marker_colors,
-                        binwidth=0.5,
-                        binrange=(0,10),
-                        alpha=1,
-                        ax=axs[ax_num],
-                        legend=False
-                        )
-            # Season Avg Line
-            axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player,'PLV'].mean(),
-                                color=marker_colors[pitch],
-                                linestyle='--',
-                                linewidth=2.5)
-            
-            # League Avg Line
-            axs[ax_num].axvline(chart_data.loc[chart_data['p_hand'].isin(pitcher_hand),'PLV'].mean(), 
-                                color='w', 
-                                label='Lg. Avg.',
-                                alpha=0.5)
-            
-            # Format Axes Style
-            axs[ax_num].get_xaxis().set_visible(False)
-            axs[ax_num].get_yaxis().set_visible(False)
-            axs[ax_num].set(xlim=(0,10))
-            axs[ax_num].set_title(None)
-            if axs[ax_num].get_ylim()[1] > max_count:
-                max_count = axs[ax_num].get_ylim()[1]
-            ax_num += 1
-            if ax_num==len(pitch_list):
-                axs[ax_num-1].get_xaxis().set_visible(True)
-                axs[ax_num-1].set_xticks(range(0,11))
-                axs[ax_num-1].set(xlabel='')
-
-        # Chart Styling & Add-Ons
-        for axis in range(len(pitch_list)):
-            # Fix Y-Axis size to most thrown pitch, for all pitches
-            axs[axis].set(ylim=(0,max_count*1.025))
-            
-            num_pitches = plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
-                                     (plv_df['pitchername']==player) &
-                                     plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
-            pitch_usage = round(num_pitches / plv_df.loc[(plv_df['pitchername']==player) &
-                                                         plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 100,1)
-            
-            # Define the plot legend
-            axs[axis].legend([pitch_names[pitch_list[axis]]+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
-                                                                                        (plv_df['pitchername']==player) &
-                                                                                        plv_df['b_hand'].isin(hand_map[handedness]),'PLV'].mean()),
-                              'Lg. Avg'+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) &
-                                                                     plv_df['b_hand'].isin(hand_map[handedness]) &
-                                                                     plv_df['p_hand'].isin(pitcher_hand),'PLV'].mean())], 
-                             framealpha=0, edgecolor=pl_background, loc=(0,0.4), fontsize=14)
-            
-            # Pitch Totals
-            axs[axis].text(9,max_count*0.425,'{:,} Pitches\n({}%)'.format(num_pitches,
-                                                                          pitch_usage),
-                           ha='center',va='bottom', fontsize=14)
-        
-        # Filler for Title
-        hand_text = f'{pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB, ' if handedness!='All' else ''
-
-        fig.suptitle("{}'s {} PLV Distributions\n({}>=20 Pitches Thrown)".format(player,year,hand_text),fontsize=16)
-        sns.despine(left=True, bottom=True)
-        st.pyplot(fig)
-    arsenal_dist()
-else:
-    st.write('Not enough pitches thrown in {} (<{})'.format(year,pitch_threshold))
-    
-st.title("General Pitch Quality")
-st.write('- ***Quality Pitch (QP%)***: Pitch with a PLV >= 5.5')
-st.write('- ***Average Pitch (AP%)***: Pitch with 4.5 < PLV < 5.5')
-st.write('- ***Bad Pitch (BP%)***: Pitch with a PLV <= 4.5')
-st.write('- ***QP-BP%***: Difference between QP and BP. Avg is 7%')
-
-# Num Pitches threshold
-pitch_min_2 = st.number_input(f'Min # of Pitches:', 
-                            min_value=pitch_threshold, 
-                            max_value=plv_df.groupby('pitchername')['pitch_id'].count().max().round(-2)-200,
-                            step=50, 
-                            value=500)
-
-st.dataframe(plv_df
-             .groupby('pitchername')
-             [['Quality Pitch','Average Pitch','Bad Pitch','pitch_id']]
-             .agg({
-                 'Quality Pitch':'mean',
-                 'Average Pitch':'mean',
-                 'Bad Pitch':'mean',
-                 'pitch_id':'count'
-             })
-             .query(f'pitch_id >={pitch_min_2}')
-             .assign(QP_BP=lambda x: x['Quality Pitch'] - x['Bad Pitch'])
-             .rename(columns={
-                 'Quality Pitch':'QP%',
-                 'Average Pitch':'AP%',
-                 'Bad Pitch':'BP%',
-                 'QP_BP':'QP-BP%',
-                 'pitch_id':'# Pitches'
-             })
-             [['# Pitches','QP%','AP%','BP%','QP-BP%']]
-             .mul([1,100,100,100,100])
-             .sort_values('QP-BP%', ascending=False)
-             .style
-             .format(precision=1, thousands=',')
-             .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
-             .background_gradient(axis=0, cmap="vlag_r", subset=['BP%'])
-            )
-   
-st.title('Season Pitch Quality') 
 def plv_kde(df,name,num_pitches,ax,pitchtype=''):
     pitch_thresh = 500 if pitchtype=='' else 125
     pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
@@ -618,3 +456,167 @@ def plv_card(pitcher,year):
 
     sns.despine()
 plv_card(player, year)
+
+st.title("PLV Distributions")
+
+# Hitter Handedness
+handedness = st.select_slider(
+    'Hitter Handedness',
+    options=['Left', 'All', 'Right'],
+    value='All')
+
+# Pitcher Handedness
+if handedness=='All':
+    pitcher_hand = ['L','R']
+else:
+    pitcher_hand = list(plv_df.loc[(plv_df['pitchername']==player),'p_hand'].unique())
+
+hand_map = {
+    'Left':['L'],
+    'All':['L','R'],
+    'Right':['R']
+}
+
+pitches_thrown = plv_df.loc[(plv_df['pitchername']==player) &
+                            plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
+st.write('Pitches Thrown: {:,}'.format(pitches_thrown))
+
+if pitches_thrown >= pitch_threshold:
+    pitch_type_thresh = 20
+    pitch_list = list(plv_df
+                .loc[(plv_df['pitchername']==player) &
+                     plv_df['b_hand'].isin(hand_map[handedness])]
+                .groupby('pitchtype',as_index=False)
+                ['pitch_id']
+                .count()
+                .dropna()
+                .sort_values('pitch_id', ascending=False)
+                .query(f'pitch_id >= {pitch_type_thresh}')
+                ['pitchtype']
+                )
+
+## Chart function
+    def arsenal_dist():
+        # Subplots based off of # of pitchtypes
+        fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
+        ax_num = 0
+        max_count = 0
+        for pitch in pitch_list:
+            # Data just for that pitch type
+            chart_data = plv_df.loc[(plv_df['pitchtype']==pitch) &
+                                    plv_df['b_hand'].isin(hand_map[handedness])].copy()
+            # Restrict to 0-10
+            chart_data['PLV_clip'] = np.clip(chart_data['PLV'], a_min=0, a_max=10)
+            num_pitches = chart_data.loc[chart_data['pitchername']==player].shape[0]
+            
+            # Plotting
+            sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
+                        x='PLV_clip',
+                        hue='pitchtype',
+                        palette=marker_colors,
+                        binwidth=0.5,
+                        binrange=(0,10),
+                        alpha=1,
+                        ax=axs[ax_num],
+                        legend=False
+                        )
+            # Season Avg Line
+            axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player,'PLV'].mean(),
+                                color=marker_colors[pitch],
+                                linestyle='--',
+                                linewidth=2.5)
+            
+            # League Avg Line
+            axs[ax_num].axvline(chart_data.loc[chart_data['p_hand'].isin(pitcher_hand),'PLV'].mean(), 
+                                color='w', 
+                                label='Lg. Avg.',
+                                alpha=0.5)
+            
+            # Format Axes Style
+            axs[ax_num].get_xaxis().set_visible(False)
+            axs[ax_num].get_yaxis().set_visible(False)
+            axs[ax_num].set(xlim=(0,10))
+            axs[ax_num].set_title(None)
+            if axs[ax_num].get_ylim()[1] > max_count:
+                max_count = axs[ax_num].get_ylim()[1]
+            ax_num += 1
+            if ax_num==len(pitch_list):
+                axs[ax_num-1].get_xaxis().set_visible(True)
+                axs[ax_num-1].set_xticks(range(0,11))
+                axs[ax_num-1].set(xlabel='')
+
+        # Chart Styling & Add-Ons
+        for axis in range(len(pitch_list)):
+            # Fix Y-Axis size to most thrown pitch, for all pitches
+            axs[axis].set(ylim=(0,max_count*1.025))
+            
+            num_pitches = plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
+                                     (plv_df['pitchername']==player) &
+                                     plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
+            pitch_usage = round(num_pitches / plv_df.loc[(plv_df['pitchername']==player) &
+                                                         plv_df['b_hand'].isin(hand_map[handedness])].shape[0] * 100,1)
+            
+            # Define the plot legend
+            axs[axis].legend([pitch_names[pitch_list[axis]]+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) & 
+                                                                                        (plv_df['pitchername']==player) &
+                                                                                        plv_df['b_hand'].isin(hand_map[handedness]),'PLV'].mean()),
+                              'Lg. Avg'+': {:.3}'.format(plv_df.loc[(plv_df['pitchtype']==pitch_list[axis]) &
+                                                                     plv_df['b_hand'].isin(hand_map[handedness]) &
+                                                                     plv_df['p_hand'].isin(pitcher_hand),'PLV'].mean())], 
+                             framealpha=0, edgecolor=pl_background, loc=(0,0.4), fontsize=14)
+            
+            # Pitch Totals
+            axs[axis].text(9,max_count*0.425,'{:,} Pitches\n({}%)'.format(num_pitches,
+                                                                          pitch_usage),
+                           ha='center',va='bottom', fontsize=14)
+        
+        # Filler for Title
+        hand_text = f'{pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB, ' if handedness!='All' else ''
+
+        fig.suptitle("{}'s {} PLV Distributions\n({}>=20 Pitches Thrown)".format(player,year,hand_text),fontsize=16)
+        sns.despine(left=True, bottom=True)
+        st.pyplot(fig)
+    arsenal_dist()
+else:
+    st.write('Not enough pitches thrown in {} (<{})'.format(year,pitch_threshold))
+    
+st.title("General Pitch Quality")
+st.write('- ***Quality Pitch (QP%)***: Pitch with a PLV >= 5.5')
+st.write('- ***Average Pitch (AP%)***: Pitch with 4.5 < PLV < 5.5')
+st.write('- ***Bad Pitch (BP%)***: Pitch with a PLV <= 4.5')
+st.write('- ***QP-BP%***: Difference between QP and BP. Avg is 7%')
+
+# Num Pitches threshold
+pitch_min_2 = st.number_input(f'Min # of Pitches:', 
+                            min_value=pitch_threshold, 
+                            max_value=plv_df.groupby('pitchername')['pitch_id'].count().max().round(-2)-200,
+                            step=50, 
+                            value=500)
+
+st.dataframe(plv_df
+             .groupby('pitchername')
+             [['Quality Pitch','Average Pitch','Bad Pitch','pitch_id']]
+             .agg({
+                 'Quality Pitch':'mean',
+                 'Average Pitch':'mean',
+                 'Bad Pitch':'mean',
+                 'pitch_id':'count'
+             })
+             .query(f'pitch_id >={pitch_min_2}')
+             .assign(QP_BP=lambda x: x['Quality Pitch'] - x['Bad Pitch'])
+             .rename(columns={
+                 'Quality Pitch':'QP%',
+                 'Average Pitch':'AP%',
+                 'Bad Pitch':'BP%',
+                 'QP_BP':'QP-BP%',
+                 'pitch_id':'# Pitches'
+             })
+             [['# Pitches','QP%','AP%','BP%','QP-BP%']]
+             .mul([1,100,100,100,100])
+             .sort_values('QP-BP%', ascending=False)
+             .style
+             .format(precision=1, thousands=',')
+             .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
+             .background_gradient(axis=0, cmap="vlag_r", subset=['BP%'])
+            )
+  
