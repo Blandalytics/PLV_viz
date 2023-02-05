@@ -298,7 +298,7 @@ def percent_bar(ax):
     ax.tick_params(bottom=False)
     sns.despine()
 
-def plv_card():
+def plv_card(pla_df,plv_df):
     pla_dict = pla_df.loc[[pitcher]][['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
     pitch_list = list(plv_df
@@ -423,4 +423,4 @@ def plv_card():
     disclaimer_ax.tick_params(left=False, bottom=False)
 
     sns.despine()
-plv_card()
+plv_card(pla_df,plv_df)
