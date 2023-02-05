@@ -205,12 +205,12 @@ def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
     pitch_thresh = 500 if pitchtype=='' else 125
     pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
 
-    df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype]
-    val = df.loc[df['pitchername']==name,stat].mean()
-    df = df.query(f'pitch_id >= {pitch_thresh}').copy()
-    val_percentile = stats.percentileofscore(df[stat], val) / 100
+    kde_df = df.copy() if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
+    val = kde_df.loc[kde_df['pitchername']==name,stat].mean()
+    kde_df = kde_df.query(f'pitch_id >= {pitch_thresh}').copy()
+    val_percentile = stats.percentileofscore(kde_df[stat], val) / 100
 
-    sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=0)
+    sns.kdeplot(kde_df[stat], ax=ax, color='w', legend=False, cut=0)
 
     x = ax.lines[-1].get_xdata()
     y = ax.lines[-1].get_ydata()
@@ -227,9 +227,9 @@ def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
                         where=x < thresh, 
                         color=quant_colors[quant], 
                         alpha=1)
-    ax.vlines(df[stat].quantile(0.5), 
+    ax.vlines(kde_df[stat].quantile(0.5), 
             0, 
-            np.interp(df[stat].quantile(0.5), x, y), 
+            np.interp(kde_df[stat].quantile(0.5), x, y), 
             linestyle='-', color='w', alpha=1, linewidth=2)
     ax.axvline(val, 
              ymax=0.9,
