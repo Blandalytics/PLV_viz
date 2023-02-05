@@ -536,7 +536,7 @@ if pitches_thrown >= pitch_threshold:
             axs[ax_num].get_xaxis().set_visible(False)
             axs[ax_num].get_yaxis().set_visible(False)
             axs[ax_num].set(xlim=(0,10))
-            axs[ax_num].set_title(None)
+            axs[ax_num].set_title('')
             if axs[ax_num].get_ylim()[1] > max_count:
                 max_count = axs[ax_num].get_ylim()[1]
             ax_num += 1
