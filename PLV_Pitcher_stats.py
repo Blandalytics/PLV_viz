@@ -312,7 +312,7 @@ def plv_card(pla_df,plv_df):
                                 ascending=False)
                     ['pitchtype'])
 
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure(figsize=(8,8))
 
     # Parameters to divide card
     grid_height = len(pitch_list)+4
@@ -424,4 +424,5 @@ def plv_card(pla_df,plv_df):
     disclaimer_ax.tick_params(left=False, bottom=False)
 
     sns.despine()
+    
 plv_card(pla_df,plv_df)
