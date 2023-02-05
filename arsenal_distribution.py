@@ -94,7 +94,6 @@ def load_data(year):
     return df
 plv_df = load_data(year)
 
-@st.cache()
 def get_ids():
     id_df = pd.DataFrame()
     for chunk in list(range(0,10))+['a','b','c','d','e','f']:
@@ -102,7 +101,6 @@ def get_ids():
         id_df = pd.concat([id_df,chunk_df])
     return id_df[['key_mlbam','key_fangraphs']].dropna().astype('int') 
 
-id_df = get_ids()
 
 st.title("Season PLA")
 st.write('- ***Pitch Level Average (PLA)***: Value of all pitches (ERA scale), using IP and the total predicted run value of pitches thrown.')
@@ -123,6 +121,8 @@ def pla_data(dataframe, year,min_pitches=pitch_min_1):
     workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
         'playerid':'int'
     })
+    
+    id_df = get_ids()
     
     # Total Runs by season
     season_df = (dataframe
