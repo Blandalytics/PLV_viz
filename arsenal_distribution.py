@@ -213,7 +213,6 @@ st.dataframe(pla_df
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
-st.title('Season Pitch Quality')
 ## Selectors
 # Player
 players = list(plv_df
@@ -412,7 +411,8 @@ def plv_card(pitcher):
     for pitch in pitch_list:
         pitch_ax = plt.subplot(grid[ax_num, 1])
         plv_kde((plv_df
-                 .groupby(['pitchername','pitchtype'], as_index=False)
+                 .groupby(['pitchername','pitchtype'], 
+                          as_index=False)
                  [['pitch_id','PLV']]
                  .agg({
                      'pitch_id':'count',
@@ -451,8 +451,6 @@ def plv_card(pitcher):
     disclaimer_ax.set_xticklabels([])
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
-    
-plv_card(player)
 
 st.title("PLV Distributions")
 
@@ -616,3 +614,7 @@ st.dataframe(plv_df
              .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
              .background_gradient(axis=0, cmap="vlag_r", subset=['BP%'])
             )
+
+   
+st.title('Season Pitch Quality') 
+plv_card(player)
