@@ -300,10 +300,10 @@ def percent_bar(ax):
 
 def plv_card(pla_df,plv_df):
     pla_df = pla_df.reset_index().copy()
-    pla_dict = pla_df.loc[pla_df['Pitcher']==pitcher,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
+    pla_dict = pla_df.loc[pla_df['Pitcher']==player,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
     pitch_list = list(plv_df
-                    .loc[(plv_df['pitchername']==pitcher)]
+                    .loc[(plv_df['pitchername']==player)]
                     .groupby('pitchtype',as_index=False)
                     ['pitch_id']
                     .count()
@@ -323,7 +323,7 @@ def plv_card(pla_df,plv_df):
                       height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
     title_ax = plt.subplot(grid[0, :])
-    title_ax.text(0,0,"{}'s {} Pitch Quality".format(pitcher,year), ha='center', va='center', fontsize=28,
+    title_ax.text(0,0,"{}'s {} Pitch Quality".format(player,year), ha='center', va='center', fontsize=28,
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
     title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
     title_ax.set_xticklabels([])
@@ -347,15 +347,15 @@ def plv_card(pla_df,plv_df):
     pla_desc_ax.tick_params(left=False, bottom=False)
 
     ax_num = 2
-    total_pitches = plv_df.loc[(plv_df['pitchername']==pitcher)].shape[0]
+    total_pitches = plv_df.loc[(plv_df['pitchername']==player)].shape[0]
     for pitch in ['All']+pitch_list:
         type_ax = plt.subplot(grid[ax_num, 0])
         type_ax.text(0.25,-0.1, f'{pitch}', ha='center', va='bottom', 
                      fontsize=24, fontweight='bold',
                      color='w' if pitch=='All' else marker_colors[pitch])
         if pitch!='All':
-            usage = plv_df.loc[(plv_df['pitchername']==pitcher) &
-                             (plv_df['pitchtype']==pitch)].shape[0] / total_pitches * 100
+            usage = plv_df.loc[(plv_df['pitchername']==player) &
+                               (plv_df['pitchtype']==pitch)].shape[0] / total_pitches * 100
             type_ax.text(0.25,-0.1,'({:.0f}%)'.format(usage), ha='center', va='top', fontsize=12)
         else:
             type_ax.text(0.25,-0.1,'(Usage%)', ha='center', va='top', fontsize=12)
@@ -375,7 +375,7 @@ def plv_card(pla_df,plv_df):
              })
              .reset_index()
             ),
-            pitcher,
+            player,
             len(pitch_list),
             plv_dist_ax)
     ax_num = 3
@@ -390,7 +390,7 @@ def plv_card(pla_df,plv_df):
                  })
                  .reset_index()
                 ), 
-                pitcher, 
+                player, 
                 len(pitch_list), 
                 pitch_ax, 
                 pitchtype=pitch)
