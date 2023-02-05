@@ -326,7 +326,8 @@ def percent_bar(ax):
     sns.despine()
 
 def plv_card(pitcher):
-    pla_dict = pla_df.loc[pla_df['Pitcher']==pitcher,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
+    pla_data = pla_df.reset_index()
+    pla_dict = pla_data.loc[pla_data['Pitcher']==pitcher,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
     pitch_list = list(plv_df
                     .loc[(plv_df['pitchername']==pitcher)]
