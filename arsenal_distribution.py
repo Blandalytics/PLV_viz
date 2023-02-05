@@ -568,7 +568,8 @@ def plv_card(pitcher):
                  'pitch_id':'count',
                  'PLV':'mean'
              })
-            ).copy(),
+             .reset_index()
+            ),
             pitcher,
             len(pitch_list),
             plv_dist_ax)
@@ -576,14 +577,14 @@ def plv_card(pitcher):
     for pitch in pitch_list:
         pitch_ax = plt.subplot(grid[ax_num, 1])
         plv_kde((plv_df
-                 .groupby(['pitchername','pitchtype'], 
-                          as_index=False)
+                 .groupby(['pitchername','pitchtype'])
                  [['pitch_id','PLV']]
                  .agg({
                      'pitch_id':'count',
                      'PLV':'mean'
                  })
-                ).copy(), 
+                 .reset_index()
+                ), 
                 pitcher, 
                 len(pitch_list), 
                 pitch_ax, 
