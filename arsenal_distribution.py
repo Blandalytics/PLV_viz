@@ -8,8 +8,6 @@ import scipy as sp
 
 from scipy import stats
 
-print(mpl.__version__)
-
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
