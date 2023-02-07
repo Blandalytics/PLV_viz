@@ -4,9 +4,11 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from matplotlib.offsetbox import (OffsetImage, AnnotationBbox)
 from matplotlib import ticker
 from matplotlib import colors
+
+logo="https://raw.githubusercontent.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png"
+st.image(logo, width=350)
 
 ## Set Styling
 # Plot Style
