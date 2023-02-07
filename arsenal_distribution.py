@@ -101,7 +101,6 @@ def get_ids():
         id_df = pd.concat([id_df,chunk_df])
     return id_df[['key_mlbam','key_fangraphs']].dropna().astype('int') 
 
-
 st.title("Season PLA")
 st.write('- ***Pitch Level Average (PLA)***: Value of all pitches (ERA scale), using IP and the total predicted run value of pitches thrown.')
 st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA-scale), using total predicted run values and an IP proxy for that pitch type (pitch usage % * Total IP).')
