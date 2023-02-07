@@ -122,7 +122,7 @@ def get_ids():
         id_df = pd.concat([id_df,chunk_df])
     return id_df[['key_mlbam','key_fangraphs']].dropna().astype('int') 
 
-@st.cache
+#@st.cache
 # Load Data
 def pla_data(dataframe, year,min_pitches=pitch_threshold):
     workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
