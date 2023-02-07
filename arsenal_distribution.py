@@ -114,83 +114,9 @@ pitch_min_1 = st.number_input(f'Min # of Pitches:',
                               step=50, 
                               value=500)
 
-# @st.cache
-# # Load Data
-# def pla_data(dataframe, year,min_pitches=pitch_min_1):
-#     workload_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1noptWdwZ_CHZAU04nqNCUG5QXxfxTY9RT9y11f1NbAM/export?format=csv&gid=0').query(f'Season == {year}').astype({
-#         'playerid':'int'
-#     })
-    
-#     id_df = get_ids()
-    
-#     # Total Runs by season
-#     season_df = (dataframe
-#           .groupby(['pitchername','pitchtype','pitcher_mlb_id'])
-#           [['pitch_id','pitch_runs']]
-#           .agg({
-#               'pitch_id':'count',
-#               'pitch_runs':'sum'
-#           })
-#           .sort_values('pitch_runs', ascending=False)
-#           .query(f'pitch_id >=20') # 20 keeps out negative PLA values
-#           .reset_index()
-#          )
-    
-#     # Add Fangraph IDs
-#     season_df = season_df.merge(id_df, how='left', left_on='pitcher_mlb_id',right_on='key_mlbam')
-    
-#     # Get IP & pitches from Fangraphs data
-#     season_df['IP'] = season_df['key_fangraphs'].map(workload_df[['playerid','IP']].set_index('playerid').to_dict()['IP'])
-#     season_df['season_pitches'] = season_df['key_fangraphs'].map(workload_df[['playerid','Pitches']].set_index('playerid').to_dict()['Pitches'])
-    
-#     # Trim season_df
-#     season_df = (season_df
-#           .dropna(subset=['IP'])
-#           .drop(columns=['key_mlbam','key_fangraphs'])
-#           .rename(columns={
-#               'IP':'season_IP',
-#           })
-#          )
-
-#     # Clean IP to actual fractions
-#     season_df['season_IP'] = season_df['season_IP'].astype('int') + season_df['season_IP'].astype('str').str[-1].astype('int')/3
-
-#     # Total pitch count & fractional IP per pitchtype
-#     season_df['pitchtype_IP'] = season_df['pitch_id'].div(season_df['season_pitches']).mul(season_df['season_IP'])
-
-#     # Calculate PLA, in general, and per-pitchtype
-#     season_df['PLA'] = season_df['pitch_runs'].groupby(season_df['pitcher_mlb_id']).transform('sum').mul(9).div(season_df['season_IP']).astype('float')
-#     season_df['pitchtype_pla'] = season_df['pitch_runs'].mul(9).div(season_df['pitchtype_IP']) # ERA Scale
-#     #season_df['pitchtype_pla'] = season_df['pitch_runs'].mul(100).div(season_df['pitch_id']) # Runs/100
-
-#     season_df = season_df.sort_values('PLA')
-    
-#     # Pivot a dataframe of per-pitchtype PLAs
-#     pitchtype_df = season_df.pivot_table(index=['pitcher_mlb_id'], 
-#                                          columns='pitchtype', 
-#                                          values='pitchtype_pla',
-#                                          aggfunc='sum'
-#                                         ).replace({0:None})
-    
-#     # Merge season-long PLA with pitchtype PLAs
-#     df = (season_df
-#           .drop_duplicates('pitcher_mlb_id')
-#           [['pitcher_mlb_id','pitchername','season_pitches','PLA']]
-#           .merge(pitchtype_df, how='inner',left_on='pitcher_mlb_id',right_index=True)
-#           .query(f'season_pitches >= {min_pitches}')
-#           .rename(columns={'pitchername':'Pitcher',
-#                            'season_pitches':'# Pitches'})
-#           .drop(columns=['pitcher_mlb_id'])
-#           .fillna(np.nan)
-#           .set_index('Pitcher')
-#           [['# Pitches','PLA','FF','SI','SL','CH','CU','FC','FS']]
-#           .copy()
-#          )
-#     return df
-
 # Season data
 pla_df = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/PLA_{year}.csv?raw=true', encoding='latin1')
-pla_df = pla_df.loc[pla_df['# Pitches'] >= pitch_min_1].copy()
+pla_df = pla_df.loc[pla_df['# Pitches'] >= pitch_min_1].set_index('Pitcher').copy()
 # pla_df = pla_df.rename(columns={'# Pitches':'Num_Pitches'}).query(f'Num_Pitches >= {pitch_min_1}')
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
