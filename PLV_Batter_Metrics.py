@@ -324,11 +324,11 @@ def rolling_chart():
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
         ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
         
-#     # Add PL logo
-#     im = plt.imread('https://raw.githubusercontent.com/Blandalytics/PLV_viz/main/data/PL-text-wht.png')
-#     pl_ax = fig.add_axes([0.8,0.001,0.2,0.1], anchor='SE', zorder=1)
-#     pl_ax.imshow(im)
-#     pl_ax.axis('off')
+    # Add PL logo
+    im = plt.imread('/PLV_viz/main/data/PL-text-wht.png')
+    pl_ax = fig.add_axes([0.8,0.001,0.2,0.1], anchor='SE', zorder=1)
+    pl_ax.imshow(im)
+    pl_ax.axis('off')
 
     sns.despine()
     st.pyplot(fig)
