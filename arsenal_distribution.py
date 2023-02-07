@@ -57,9 +57,9 @@ pitch_names = {
     'UN':'Unknown', 
 }
 
-image = Image.open('https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true')
+# image = Image.open('https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true')
 
-st.image(image)
+# st.image(image)
 
 # Year
 years = [2022,2021,2020]
