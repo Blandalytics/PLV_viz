@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from PIL import Image
+
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
@@ -54,6 +56,10 @@ pitch_names = {
     'SC':'Screwball', 
     'UN':'Unknown', 
 }
+
+image = Image.open('https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true')
+
+st.image(image)
 
 # Year
 years = [2022,2021,2020]
