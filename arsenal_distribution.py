@@ -189,7 +189,8 @@ pitch_min_1 = st.number_input(f'Min # of Pitches:',
 #     return df
 
 # Season data
-pla_df = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/PLA_{year}.csv?raw=true', encoding='latin1').rename(columns={'# Pitches':'Num_Pitches'}).query(f'Num_Pitches >= {pitch_min_1}')
+pla_df = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/PLA_{year}.csv?raw=true', encoding='latin1')
+# pla_df = pla_df.rename(columns={'# Pitches':'Num_Pitches'}).query(f'Num_Pitches >= {pitch_min_1}')
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
