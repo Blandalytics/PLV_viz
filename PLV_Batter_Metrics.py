@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from matplotlib.offsetbox import (OffsetImage, AnnotationBbox)
 from matplotlib import ticker
 from matplotlib import colors
 
@@ -324,11 +325,19 @@ def rolling_chart():
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
         ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
         
-#     # Add PL logo
-#     im = plt.imread('PL-text-wht.png')
-#     pl_ax = fig.add_axes([0.8,0.001,0.2,0.1], anchor='SE', zorder=1)
-#     pl_ax.imshow(im)
-#     pl_ax.axis('off')
+    # Add PL logo
+    file = 'https://raw.githubusercontent.com/Blandalytics/PLV_viz/main/data/PL-text-wht.png'
+    logo = image.imread(file)
+    #The OffsetBox is a simple container artist.
+    #The child artists are meant to be drawn at a relative position to its #parent.
+    imagebox = OffsetImage(logo#, zoom = 0.15
+                          )
+    #Annotation box for solar pv logo
+    #Container for the imagebox referring to a specific position *xy*.
+    ab = AnnotationBbox(imagebox, 
+                        (ax.get_xlim()[0], ax.get_ylim()[1] - (ax.get_ylim()[1] - ax.get_ylim()[0])*0.9), 
+                        frameon = False)
+    ax.add_artist(ab)
 
     sns.despine()
     st.pyplot(fig)
