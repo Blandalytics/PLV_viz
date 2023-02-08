@@ -352,5 +352,6 @@ def plv_card():
     disclaimer_ax.tick_params(left=False, bottom=False)
 
     sns.despine()
+    st.pyplot(fig)
     
 plv_card()
