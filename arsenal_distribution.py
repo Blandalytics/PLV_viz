@@ -164,9 +164,11 @@ players = list(plv_df
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
-chart = 'Individual'
+# Chart Select
+charts = ['Compared to League','Pitch Distribution']
+chart = st.radio('Choose a chart type:', charts)
 
-if chart=='Individual':
+if chart=='Pitch Distribution':
     # Hitter Handedness
     handedness = st.select_slider(
         'Hitter Handedness',
