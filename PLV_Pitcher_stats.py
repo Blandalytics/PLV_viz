@@ -328,7 +328,7 @@ def plv_card():
     for pitch in ['PLA']+pitch_list:
         pla_ax = plt.subplot(grid[ax_num, 2])
         pla_ax.text(-0.25,0,'{:.2f}'.format(pla_dict[pitch][0]), ha='center', va='center', fontsize=20,
-                   fontweight='bold)
+                   fontweight='bold')
         pla_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
         pla_ax.set_xticklabels([])
         pla_ax.set_yticklabels([])
