@@ -289,7 +289,7 @@ if pitches_thrown >= pitch_threshold:
         st.pyplot(fig)
     arsenal_dist()
 
-        st.title('Season Pitch Quality') 
+    st.title('Season Pitch Quality') 
 
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 125
