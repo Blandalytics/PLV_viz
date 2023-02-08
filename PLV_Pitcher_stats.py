@@ -268,7 +268,7 @@ def plv_card():
 
     pla_desc_ax = plt.subplot(grid[1, 2])
     pla_desc_ax.text(-0.25,-0.1,"PLA", ha='center', va='bottom', fontsize=18)
-    pla_desc_ax.text(-0.25,-0.15,"(xRuns per 9IP*)", ha='center', va='top', fontsize=12)
+    pla_desc_ax.text(-0.25,-0.15,"(xRuns per 9IP*)", ha='center', va='top', fontsize=10)
     pla_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
     pla_desc_ax.set_xticklabels([])
     pla_desc_ax.set_yticklabels([])
@@ -284,7 +284,7 @@ def plv_card():
         if pitch!='All':
             usage = plv_df.loc[(plv_df['pitchername']==player) &
                                (plv_df['pitchtype']==pitch)].shape[0] / total_pitches * 100
-            type_ax.text(0.25,-0.1,'({:.0f}%)'.format(usage), ha='center', va='top', fontsize=12)
+            type_ax.text(0.25,-0.1,'({:.0f}%)'.format(usage), ha='center', va='top', fontsize=10)
         else:
             type_ax.text(0.25,-0.1,'(Usage%)', ha='center', va='top', fontsize=12)
         type_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
@@ -327,8 +327,8 @@ def plv_card():
     ax_num = 2
     for pitch in ['PLA']+pitch_list:
         pla_ax = plt.subplot(grid[ax_num, 2])
-        pla_ax.text(-0.25,0,'{:.2f}'.format(pla_dict[pitch][0]), ha='center', va='center', fontsize=20,
-                   fontweight='bold')
+        pla_ax.text(-0.25,0,'{:.2f}'.format(pla_dict[pitch][0]), ha='center', va='center', 
+                    fontsize=20)
         pla_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
         pla_ax.set_xticklabels([])
         pla_ax.set_yticklabels([])
