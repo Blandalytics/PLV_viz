@@ -136,7 +136,7 @@ def pitchtype_color(s):
 
 st.write('At least 20 pitches thrown, per pitch type. Table is sortable.')
 st.dataframe(pla_df
-             .astype({'# Pitches': 'int'})
+             .astype({'Num_Pitches': 'int'})
              .fillna(fill_val)
              .style
              .format(precision=2, thousands=',')
