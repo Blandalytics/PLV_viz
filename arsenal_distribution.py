@@ -113,10 +113,10 @@ st.title("Season PLA")
 st.write('- ***Pitch Level Average (PLA)***: Value of all pitches (ERA scale), using IP and the total predicted run value of pitches thrown.')
 st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA-scale), using total predicted run values and an IP proxy for that pitch type (pitch usage % * Total IP).')
 
-pitch_threshold = 300
+# pitch_threshold = 400
 
 # Num Pitches threshold
-pitch_min_1 = st.number_input(f'Min # of Pitches:',
+pitch_threshold = st.number_input(f'Min # of Pitches:',
                               min_value=pitch_threshold, 
                               max_value=2000,
                               step=50, 
@@ -124,7 +124,7 @@ pitch_min_1 = st.number_input(f'Min # of Pitches:',
 
 # Season data
 pla_df = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/PLA_{year}.csv?raw=true', encoding='latin1')
-pla_df = pla_df.loc[pla_df['# Pitches'] >= pitch_min_1].set_index('Pitcher').copy()
+pla_df = pla_df.loc[pla_df['# Pitches'] >= pitch_threshold].set_index('Pitcher').copy()
 # pla_df = pla_df.rename(columns={'# Pitches':'Num_Pitches'}).query(f'Num_Pitches >= {pitch_min_1}')
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
