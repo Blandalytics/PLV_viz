@@ -240,7 +240,7 @@ def plv_card():
                                 ascending=False)
                     ['pitchtype'])
 
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure(figsize=(8,8))
 
     # Parameters to divide card
     grid_height = len(pitch_list)+4
