@@ -391,7 +391,7 @@ else:
         sns.despine()
 
     def plv_card():
-        pla_dict = pla_df.loc[pla_df['Pitcher']==player,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
+        pla_dict = pla_df.loc[[player]][['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
         pitch_list = list(plv_df
                         .loc[(plv_df['pitchername']==player)]
