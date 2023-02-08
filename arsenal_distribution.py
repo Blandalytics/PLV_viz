@@ -166,7 +166,9 @@ player = st.selectbox('Choose a player:', players, index=default_ix)
 
 # Chart Select
 charts = ['Compared to League','Pitch Distribution']
-chart = st.radio('Choose a chart type:', charts)
+chart = st.radio('Choose a chart type:', 
+                 charts,
+                 horizontal=True)
 
 if chart=='Pitch Distribution':
     # Hitter Handedness
