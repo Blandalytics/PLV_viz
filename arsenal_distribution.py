@@ -146,6 +146,8 @@ st.dataframe(pla_df
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
+
+st.title("Pitcher PLV Chart")
 ## Selectors
 # Player
 players = list(plv_df
@@ -162,16 +164,14 @@ players = list(plv_df
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
-# Hitter Handedness
-handedness = st.select_slider(
-    'Hitter Handedness',
-    options=['Left', 'All', 'Right'],
-    value='All')
-
 chart = 'Individual'
 
 if chart=='Individual':
-    st.title("PLV Distributions")
+    # Hitter Handedness
+    handedness = st.select_slider(
+        'Hitter Handedness',
+        options=['Left', 'All', 'Right'],
+        value='All')
     # Pitcher Handedness
     if handedness=='All':
         pitcher_hand = ['L','R']
@@ -291,8 +291,6 @@ if chart=='Individual':
     else:
         st.write('Not enough pitches thrown in {} (<{})'.format(year,pitch_threshold))
 else:
-    st.title('Season Pitch Quality') 
-
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 125
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
