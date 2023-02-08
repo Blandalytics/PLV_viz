@@ -251,7 +251,7 @@ def plv_card():
                       height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
     title_ax = plt.subplot(grid[0, :])
-    title_ax.text(0,0,"{}\n{} Pitch Quality".format(player,year), ha='center', va='center', fontsize=28,
+    title_ax.text(0,0,"{}\n{} Pitch Quality".format(player,year), ha='center', va='center', fontsize=24,
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
     title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
     title_ax.set_xticklabels([])
@@ -259,7 +259,7 @@ def plv_card():
     title_ax.tick_params(left=False, bottom=False)
 
     plv_desc_ax = plt.subplot(grid[1, 1])
-    plv_desc_ax.text(0,-0.1,"PLV", ha='center', va='bottom', fontsize=24,
+    plv_desc_ax.text(0,-0.1,"PLV", ha='center', va='bottom', fontsize=18,
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
     plv_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
     plv_desc_ax.set_xticklabels([])
@@ -267,7 +267,7 @@ def plv_card():
     plv_desc_ax.tick_params(left=False, bottom=False)
 
     pla_desc_ax = plt.subplot(grid[1, 2])
-    pla_desc_ax.text(-0.25,-0.1,"PLA", ha='center', va='bottom', fontsize=24)
+    pla_desc_ax.text(-0.25,-0.1,"PLA", ha='center', va='bottom', fontsize=18)
     pla_desc_ax.text(-0.25,-0.15,"(xRuns per 9IP*)", ha='center', va='top', fontsize=12)
     pla_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
     pla_desc_ax.set_xticklabels([])
