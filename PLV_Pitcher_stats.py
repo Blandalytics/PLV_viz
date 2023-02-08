@@ -209,7 +209,7 @@ def percent_bar(ax):
               0,
               '{:.0f}%'.format(quantiles[::-1][idx]*100),
               color='k',
-              fontsize=12,
+              fontsize=10,
               fontweight=500,
               ha='center',
               bbox=props
