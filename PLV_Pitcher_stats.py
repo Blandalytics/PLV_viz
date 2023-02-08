@@ -279,7 +279,7 @@ def plv_card():
     for pitch in ['All']+pitch_list:
         type_ax = plt.subplot(grid[ax_num, 0])
         type_ax.text(0.25,-0.1, f'{pitch}', ha='center', va='bottom', 
-                     fontsize=24, fontweight='bold',
+                     fontsize=20, fontweight='bold',
                      color='w' if pitch=='All' else marker_colors[pitch])
         if pitch!='All':
             usage = plv_df.loc[(plv_df['pitchername']==player) &
@@ -327,7 +327,8 @@ def plv_card():
     ax_num = 2
     for pitch in ['PLA']+pitch_list:
         pla_ax = plt.subplot(grid[ax_num, 2])
-        pla_ax.text(-0.25,0,'{:.2f}'.format(pla_dict[pitch][0]), ha='center', va='center', fontsize=24)
+        pla_ax.text(-0.25,0,'{:.2f}'.format(pla_dict[pitch][0]), ha='center', va='center', fontsize=20,
+                   fontweight='bold)
         pla_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
         pla_ax.set_xticklabels([])
         pla_ax.set_yticklabels([])
