@@ -62,7 +62,7 @@ pitch_names = {
     'UN':'Unknown', 
 }
 
-logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png'
+logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 
 # response = requests.get(logo_loc)
 # img = Image.open(BytesIO(response.content))
