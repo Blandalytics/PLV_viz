@@ -1,10 +1,12 @@
 import streamlit as st
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import scipy as sp
+
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 
 from scipy import stats
 
@@ -359,7 +361,8 @@ def plv_card():
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
     
-    img = mpl.image.imread(logo_loc)
+    img = mpimg.imread(logo_loc)
+    
     newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
     newax.imshow(img)
     newax.axis('off')
