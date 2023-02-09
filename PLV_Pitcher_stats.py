@@ -6,6 +6,10 @@ import pandas as pd
 import seaborn as sns
 import scipy as sp
 
+from PIL import Image
+import requests
+from io import BytesIO
+
 from scipy import stats
 
 ## Set Styling
@@ -57,6 +61,13 @@ pitch_names = {
     'SC':'Screwball', 
     'UN':'Unknown', 
 }
+
+logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png'
+
+response = requests.get(logo_loc)
+img = Image.open(BytesIO(response.content))
+
+st.image(img)
 
 # Year
 years = [2022,2021,2020]
