@@ -218,7 +218,7 @@ hand_map = {
 
 chart_thresh_list = (plv_df
                      .loc[plv_df['count'].isin(selected_options) &
-                          plv_df['p_hand'].isin(hand_map[handedness]]
+                          plv_df['p_hand'].isin(hand_map[handedness])]
                      .groupby('hittername')
                      [['pitch_id',metric]]
                      .agg({
@@ -237,7 +237,7 @@ chart_10 = chart_thresh_list[metric].quantile(0.1)
 rolling_df = (plv_df
               .sort_values('pitch_id')
               .loc[(plv_df['hittername']==player) &
-                   plv_df['p_hand'].isin(hand_map[handedness] &
+                   plv_df['p_hand'].isin(hand_map[handedness]) &
                    plv_df['count'].isin(selected_options),
                    ['hittername',metric]]
               .dropna()
