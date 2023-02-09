@@ -346,6 +346,7 @@ def rolling_chart():
                                                                       '' if (handedness=='All') else f'; vs {hand_map[handedness][0]}HP'
                                                                      )
                                                 )
+          )
     
     if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
