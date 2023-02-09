@@ -363,8 +363,9 @@ def plv_card():
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
     
+    img = plt.imread(logo_loc)
     newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
-    newax.imshow(logo_loc)
+    newax.imshow(img)
     newax.axis('off')
 
     sns.despine()
