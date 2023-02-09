@@ -209,7 +209,7 @@ handedness = st.select_slider(
 if handedness=='All':
     hitter_hand = ['L','R']
 else:
-    hitter_hand = list(plv_df.loc[(plv_df['hittername']==player),'b_hand'].unique())
+    hitter_hand = list(plv_df.loc[(plv_df['hittername']==player),'b_hand'].unique())[0]
 
 hand_map = {
     'Left':['L'],
@@ -219,6 +219,7 @@ hand_map = {
 
 chart_thresh_list = (plv_df
                      .loc[plv_df['count'].isin(selected_options) &
+                          plv_df['b_hand'].isin(hitter_hand) &
                           plv_df['p_hand'].isin(hand_map[handedness])]
                      .groupby('hittername')
                      [['pitch_id',metric]]
@@ -333,7 +334,7 @@ def rolling_chart():
     
     chart_min = min(chart_10,rolling_df['Rolling_Stat'].min())
     chart_max = max(chart_90,rolling_df['Rolling_Stat'].max())
-
+    
     ax.set(xlabel=rolling_denom[metric],
            ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
            ylim=(chart_min-(chart_max - chart_min)/25, 
@@ -344,7 +345,7 @@ def rolling_chart():
                                                  '({} {}{}{})'.format(window,
                                                                       rolling_denom[metric],
                                                                       '' if (count_select in ['All','Custom']) else f'; in {count_select} Counts',
-                                                                      '' if (handedness=='All') else f'; vs {hand_map[handedness][0]}HP'
+                                                                      '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                                                      )
                                                 )
           )
