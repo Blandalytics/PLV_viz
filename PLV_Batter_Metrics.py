@@ -199,8 +199,26 @@ else:
     
 updated_threshold = max(50,int(round(rolling_threshold[metric]*len(selected_options)/12/5)*5))
 
+# Hitter Handedness
+handedness = st.select_slider(
+    'Pitcher Handedness',
+    options=['Left', 'All', 'Right'],
+    value='All')
+# Pitcher Handedness
+if handedness=='All':
+    hitter_hand = ['L','R']
+else:
+    hitter_hand = list(plv_df.loc[(plv_df['hittername']==player),'b_hand'].unique())
+
+hand_map = {
+    'Left':['L'],
+    'All':['L','R'],
+    'Right':['R']
+}
+
 chart_thresh_list = (plv_df
-                     .loc[plv_df['count'].isin(selected_options)]
+                     .loc[plv_df['count'].isin(selected_options) &
+                          plv_df['p_hand'].isin(hand_map[handedness]]
                      .groupby('hittername')
                      [['pitch_id',metric]]
                      .agg({
@@ -219,6 +237,7 @@ chart_10 = chart_thresh_list[metric].quantile(0.1)
 rolling_df = (plv_df
               .sort_values('pitch_id')
               .loc[(plv_df['hittername']==player) &
+                   plv_df['p_hand'].isin(hand_map[handedness] &
                    plv_df['count'].isin(selected_options),
                    ['hittername',metric]]
               .dropna()
@@ -318,10 +337,15 @@ def rolling_chart():
            ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
            ylim=(chart_min-(chart_max - chart_min)/25, 
                  chart_max+(chart_max - chart_min)/25),
-           title="{}'s {} Rolling {}{}".format(player,
-                                               year,
-                                               metric,
-                                               f' ({window} {rolling_denom[metric]})' if count_select in ['All','Custom'] else f'\n({window} {rolling_denom[metric]}; in {count_select} Counts)'))
+           title="{}'s {} Rolling {}\n{}".format(player,
+                                                 year,
+                                                 metric,
+                                                 '({} {}{}{})'.format(window,
+                                                                      rolling_denom[metric],
+                                                                      '' if (count_select in ['All','Custom']) else f'; in {count_select} Counts',
+                                                                      '' if (handedness=='All') else f'; vs {hand_map[handedness][0]}HP'
+                                                                     )
+                                                )
     
     if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
