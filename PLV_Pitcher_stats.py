@@ -6,10 +6,6 @@ import pandas as pd
 import seaborn as sns
 import scipy as sp
 
-from PIL import Image
-import requests
-from io import BytesIO
-
 from scipy import stats
 
 ## Set Styling
@@ -363,7 +359,7 @@ def plv_card():
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
     
-    img = plt.imread(logo_loc)
+    img = mpl.image.imread(logo_loc)
     newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
     newax.imshow(img)
     newax.axis('off')
