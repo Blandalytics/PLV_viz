@@ -69,8 +69,9 @@ def load_season_data(year):
     for chunk in [1,2,3]:
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{chunk}.parquet?raw=true'
         df = pd.concat([df,
-                        pd.read_parquet(file_name)[['hittername','pitch_id','balls','strikes','swing_agg','strike_zone_judgement',
-                                                    'decision_value','contact_over_expected','adj_power','batter_wOBA']]
+                        pd.read_parquet(file_name)[['hittername','p_hand','b_hand','pitch_id','balls','strikes','swing_agg',
+                                                    'strike_zone_judgement','decision_value','contact_over_expected',
+                                                    'adj_power','batter_wOBA']]
                        ])
     
     df = df.reset_index(drop=True)
