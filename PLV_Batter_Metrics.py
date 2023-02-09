@@ -209,7 +209,7 @@ handedness = st.select_slider(
 if handedness=='All':
     hitter_hand = ['L','R']
 else:
-    hitter_hand = list(plv_df.loc[(plv_df['hittername']==player),'b_hand'].unique())[0]
+    hitter_hand = list(plv_df.loc[(plv_df['hittername']==player),'b_hand'].unique())
 
 hand_map = {
     'Left':['L'],
