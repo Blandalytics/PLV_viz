@@ -64,10 +64,10 @@ pitch_names = {
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png'
 
-response = requests.get(logo_loc)
-img = Image.open(BytesIO(response.content))
+# response = requests.get(logo_loc)
+# img = Image.open(BytesIO(response.content))
 
-st.image(img)
+st.image(logo_loc)
 
 # Year
 years = [2022,2021,2020]
