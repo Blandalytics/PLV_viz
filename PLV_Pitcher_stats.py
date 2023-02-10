@@ -6,9 +6,8 @@ import seaborn as sns
 import scipy as sp
 import urllib
 
-import matplotlib.image as Image
-import requests
-from io import BytesIO
+# import matplotlib.image as Image
+# import requests
 from PIL import Image
 
 import matplotlib.pyplot as plt
