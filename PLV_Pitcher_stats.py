@@ -359,7 +359,7 @@ def plv_card():
     disclaimer_ax.tick_params(left=False, bottom=False)
 
 #     # Add PL logo
-    pl_ax = plt.subplot(grid[0, -2]:)
+    pl_ax = plt.subplot(grid[0, -2:])
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
