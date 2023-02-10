@@ -558,14 +558,13 @@ st.dataframe(plv_df
              .query(f'pitch_id >={pitch_min_2}')
              .assign(QP_BP=lambda x: x['Quality Pitch'] - x['Bad Pitch'])
              .rename(columns={
-                 'pitchername':'Pitcher',
                  'Quality Pitch':'QP%',
                  'Average Pitch':'AP%',
                  'Bad Pitch':'BP%',
                  'QP_BP':'QP-BP%',
                  'pitch_id':'# Pitches'
              })
-             [['Pitcher','# Pitches','QP%','AP%','BP%','QP-BP%']]
+             [['# Pitches','QP%','AP%','BP%','QP-BP%']]
              .mul([1,100,100,100,100])
              .sort_values('QP-BP%', ascending=False)
              .reset_index()
