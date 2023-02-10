@@ -570,6 +570,7 @@ class_df = (plv_df
              [['# Pitches','QP%','AP%','BP%','QP-BP%']]
              .mul([1,100,100,100,100])
              .sort_values('QP-BP%', ascending=False)
+            .reset_index()
             .copy()
            )
 
