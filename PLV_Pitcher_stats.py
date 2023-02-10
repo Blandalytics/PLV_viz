@@ -5,6 +5,10 @@ import pandas as pd
 import seaborn as sns
 import scipy as sp
 
+from PIL import Image
+import requests
+from io import BytesIO
+
 import matplotlib.pyplot as plt
 
 from scipy import stats
@@ -60,10 +64,6 @@ pitch_names = {
 }
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-
-# response = requests.get(logo_loc)
-# img = Image.open(BytesIO(response.content))
-
 st.image(logo_loc)
 
 # Year
@@ -359,10 +359,6 @@ def plv_card():
     disclaimer_ax.set_xticklabels([])
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
-    
-    from PIL import Image
-    import requests
-    from io import BytesIO
 
     response = requests.get(logo_loc)
     img = np.array(PIL.Image.open(BytesIO(response.content)))
