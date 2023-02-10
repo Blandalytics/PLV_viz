@@ -14,7 +14,7 @@ from scipy import stats
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
-st.image(logo, width=100)
+st.image(logo, width=400)
 
 ## Set Styling
 # Plot Style
@@ -362,7 +362,8 @@ def rolling_chart():
                                                                       '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                                                      )
                                                 ),
-                 x=0.33,fontsize=16
+                 x=0.4,
+                 fontsize=14
                 )
     sns.despine()
     st.pyplot(fig)
