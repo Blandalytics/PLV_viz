@@ -367,22 +367,6 @@ def plv_card():
 #     newax.imshow(img)
 #     newax.axis('off')
 
-    def add_bg_from_url():
-        st.markdown(
-             f"""
-             <style>
-             .stApp {{
-                 background-image: url({logo_loc});
-                 background-attachment: fixed;
-                 background-size: cover
-             }}
-             </style>
-             """,
-             unsafe_allow_html=True
-         )
-
-    add_bg_from_url()
-
     sns.despine()
     st.pyplot(fig)
     
