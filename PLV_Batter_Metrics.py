@@ -115,6 +115,7 @@ for stat in ['SZ Judge','Contact','Dec Value','Power','HP']:
 st.write('Metrics on a 20-80 scale. Table is sortable.')
 
 st.dataframe(season_df
+             .reset_index(drop=True)
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
