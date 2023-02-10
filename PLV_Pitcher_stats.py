@@ -1,17 +1,13 @@
 import streamlit as st
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import scipy as sp
 import urllib
 
-# import matplotlib.image as Image
-# import requests
 from PIL import Image
-
-import matplotlib.pyplot as plt
-
 from scipy import stats
 
 ## Set Styling
@@ -65,8 +61,8 @@ pitch_names = {
 }
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-img = Image.open(urllib.request.urlopen(logo_loc))
-st.image(logo_loc)
+logo = Image.open(urllib.request.urlopen(logo_loc))
+st.image(logo)
 
 # Year
 years = [2022,2021,2020]
@@ -364,7 +360,7 @@ def plv_card():
 
 #     # Add PL logo
     pl_ax = fig.add_axes([0.8,0.8,0.2,0.1], anchor='NE', zorder=0)
-    pl_ax.imshow(img)
+    pl_ax.imshow(logo)
     pl_ax.axis('off')
 
     sns.despine()
