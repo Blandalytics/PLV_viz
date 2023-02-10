@@ -64,7 +64,8 @@ pitch_names = {
 }
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-st.image(logo_loc)
+img = plt.imread(logo_loc)
+st.image(img)
 
 # Year
 years = [2022,2021,2020]
