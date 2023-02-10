@@ -65,7 +65,7 @@ pitch_names = {
 }
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-img = Image.open(urllib.request.urlopen(logo_loc)))
+img = Image.open(urllib.request.urlopen(logo_loc))
 st.write(img)
 st.image(logo_loc)
 
