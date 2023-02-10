@@ -353,10 +353,10 @@ def rolling_chart():
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
         ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
     
-    fig.suptitle("{}'s {} Rolling {}\n{}".format(player,
+    fig.suptitle("{}'s {} {}\n{}".format(player,
                                                  year,
                                                  metric,
-                                                 '({} {}{}{})'.format(window,
+                                                 '(Rolling {} {}{}{})'.format(window,
                                                                       rolling_denom[metric],
                                                                       '' if (count_select in ['All','Custom']) else f'; in {count_select} Counts',
                                                                       '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
