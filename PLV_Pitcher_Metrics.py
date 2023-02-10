@@ -546,8 +546,11 @@ pitch_min_2 = st.number_input(f'Min # of Pitches:',
                             step=50, 
                             value=500)
 
-st.dataframe(plv_df
-             .groupby('pitchername')
+class_df = (plv_df
+             .rename(columns={
+                 'pitchername':'Pitcher'
+             })
+             .groupby('Pitcher')
              [['Quality Pitch','Average Pitch','Bad Pitch','pitch_id']]
              .agg({
                  'Quality Pitch':'mean',
@@ -567,11 +570,10 @@ st.dataframe(plv_df
              [['# Pitches','QP%','AP%','BP%','QP-BP%']]
              .mul([1,100,100,100,100])
              .sort_values('QP-BP%', ascending=False)
-             .reset_index()
-             .rename(columns={
-                 'pitchername':'Pitcher'
-             })
-             .set_index('Pitcher')
+            .copy()
+           )
+
+st.dataframe(class_df
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
