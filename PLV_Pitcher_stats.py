@@ -360,12 +360,28 @@ def plv_card():
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
 
-    response = requests.get(logo_loc)
-    img = np.array(Image.open(BytesIO(response.content)))
+#     response = requests.get(logo_loc)
+#     img = np.array(Image.open(BytesIO(response.content)))
     
-    newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
-    newax.imshow(img)
-    newax.axis('off')
+#     newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
+#     newax.imshow(img)
+#     newax.axis('off')
+
+    def add_bg_from_url():
+        st.markdown(
+             f"""
+             <style>
+             .stApp {{
+                 background-image: url({logo_loc});
+                 background-attachment: fixed;
+                 background-size: cover
+             }}
+             </style>
+             """,
+             unsafe_allow_html=True
+         )
+
+    add_bg_from_url()
 
     sns.despine()
     st.pyplot(fig)
