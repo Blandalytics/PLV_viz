@@ -4,10 +4,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import scipy as sp
-import PIL
 
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 
 from scipy import stats
 
@@ -362,8 +360,12 @@ def plv_card():
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
     
-#     import urllib2
-    img = np.array(PIL.Image.open(logo_loc))
+    from PIL import Image
+    import requests
+    from io import BytesIO
+
+    response = requests.get(logo_loc)
+    img = np.array(PIL.Image.open(BytesIO(response.content)))
     
     newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
     newax.imshow(img)
