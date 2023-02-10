@@ -365,6 +365,12 @@ def rolling_chart():
                  x=0.4,
                  fontsize=14
                 )
+    
+    # Add PL logo
+    pl_ax = fig.add_axes([0.75,0.8,0.2,0.2], anchor='NE', zorder=1)
+    pl_ax.imshow(logo)
+    pl_ax.axis('off')
+    
     sns.despine()
     st.pyplot(fig)
 if window > rolling_df.shape[0]:
