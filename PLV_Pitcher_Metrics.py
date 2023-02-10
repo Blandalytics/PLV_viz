@@ -291,7 +291,7 @@ if chart=='Pitch Distribution':
 
             fig.suptitle("{}'s {} PLV Distributions\n({}>=20 Pitches Thrown)".format(player,year,hand_text),x=0.33,fontsize=16)
             # Add PL logo
-            pl_ax = fig.add_axes([0.675,0.7,0.2,0.2], anchor='NE', zorder=1)
+            pl_ax = fig.add_axes([0.75,0.8,0.2,0.2], anchor='NE', zorder=1)
             pl_ax.imshow(logo)
             pl_ax.axis('off')
             
