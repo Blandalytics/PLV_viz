@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import scipy as sp
+import PIL
 
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -361,7 +362,8 @@ def plv_card():
     disclaimer_ax.set_yticklabels([])
     disclaimer_ax.tick_params(left=False, bottom=False)
     
-    img = mpimg.imread(logo_loc)
+#     import urllib2
+    img = np.array(PIL.Image.open(logo_loc))
     
     newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
     newax.imshow(img)
