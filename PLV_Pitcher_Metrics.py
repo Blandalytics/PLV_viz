@@ -289,7 +289,12 @@ if chart=='Pitch Distribution':
             # Filler for Title
             hand_text = f'{pitcher_hand[0]}HP vs {hand_map[handedness][0]}HB, ' if handedness!='All' else ''
 
-            fig.suptitle("{}'s {} PLV Distributions\n({}>=20 Pitches Thrown)".format(player,year,hand_text),fontsize=16)
+            fig.suptitle("{}'s {} PLV Distributions\n({}>=20 Pitches Thrown)".format(player,year,hand_text),x=0.33,fontsize=16)
+            # Add PL logo
+            pl_ax = fig.add_axes([0.675,0.7,0.2,0.2], anchor='NE', zorder=1)
+            pl_ax.imshow(logo)
+            pl_ax.axis('off')
+            
             sns.despine(left=True, bottom=True)
             st.pyplot(fig)
         arsenal_dist()
