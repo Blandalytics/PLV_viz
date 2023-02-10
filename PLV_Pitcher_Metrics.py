@@ -416,7 +416,7 @@ else:
         grid = plt.GridSpec(grid_height, 3, wspace=0, hspace=0.2, width_ratios=[1,3,1],
                           height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
-        title_ax = plt.subplot(grid[0, :])
+        title_ax = plt.subplot(grid[0, :-1])
         title_ax.text(0,0,"{}\n{} Pitch Quality".format(player,year), ha='center', va='center', fontsize=20,
                bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
         title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
