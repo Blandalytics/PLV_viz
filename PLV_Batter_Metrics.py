@@ -362,7 +362,6 @@ def rolling_chart():
                                                                       '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                                                      )
                                                 ),
-                 x=0.4,
                  fontsize=14
                 )
     
