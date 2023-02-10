@@ -422,7 +422,7 @@ else:
                           height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
         title_ax = plt.subplot(grid[0, :-1])
-        title_ax.text(-0.5,0,"{}\n{} Pitch Quality".format(player,year), ha='center', va='center', fontsize=20,
+        title_ax.text(-0.25,0,"{}\n{} Pitch Quality".format(player,year), ha='center', va='center', fontsize=20,
                bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
         title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
         title_ax.set_xticklabels([])
