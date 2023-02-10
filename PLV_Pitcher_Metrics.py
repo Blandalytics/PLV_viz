@@ -3,13 +3,12 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import scipy as sp
 import seaborn as sns
+import scipy as sp
+import urllib
 
+from PIL import Image
 from scipy import stats
-
-logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-st.image(logo_loc)
 
 ## Set Styling
 # Plot Style
@@ -61,9 +60,9 @@ pitch_names = {
     'UN':'Unknown', 
 }
 
-# image = Image.open('https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true')
-
-# st.image(image)
+logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+logo = Image.open(urllib.request.urlopen(logo_loc))
+st.image(logo)
 
 # Year
 years = [2022,2021,2020]
@@ -518,6 +517,11 @@ else:
         disclaimer_ax.set_xticklabels([])
         disclaimer_ax.set_yticklabels([])
         disclaimer_ax.tick_params(left=False, bottom=False)
+        
+        # Add PL logo
+        pl_ax = fig.add_axes([0.675,0.7,0.2,0.2], anchor='NE', zorder=1)
+        pl_ax.imshow(logo)
+        pl_ax.axis('off')
 
         sns.despine()
         st.pyplot(fig)
