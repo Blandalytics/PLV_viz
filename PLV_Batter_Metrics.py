@@ -102,6 +102,7 @@ season_df = (plv_df
                  'HP':'mean'
              })
              .query('pitch_id >= 400')
+             .reset_index()
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches'})
              .sort_values('HP', ascending=False)
@@ -114,6 +115,7 @@ for stat in ['SZ Judge','Contact','Dec Value','Power','HP']:
 st.write('Metrics on a 20-80 scale. Table is sortable.')
 
 st.dataframe(season_df
+             .set_index('Name')
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
