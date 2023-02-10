@@ -365,7 +365,7 @@ def plv_card():
 
 #     # Add PL logo
     pl_ax = fig.add_axes([0.8,0.8,0.2,0.1], anchor='NE', zorder=0)
-    pl_ax.imshow(im)
+    pl_ax.imshow(img)
     pl_ax.axis('off')
 
     sns.despine()
