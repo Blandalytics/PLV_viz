@@ -7,8 +7,8 @@ import seaborn as sns
 from matplotlib import ticker
 from matplotlib import colors
 
-# logo="https://raw.githubusercontent.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png"
-# st.image(logo, width=100)
+logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+st.image(logo_loc)
 
 ## Set Styling
 # Plot Style
