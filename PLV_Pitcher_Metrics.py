@@ -125,8 +125,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
 
 # Season data
 pla_df = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/PLA_{year}.csv?raw=true', encoding='latin1')
-pla_df = pla_df.loc[pla_df['Num_Pitches'] >= pitch_threshold].set_index('Pitcher').copy()
-# pla_df = pla_df.rename(columns={'# Pitches':'Num_Pitches'}).query(f'Num_Pitches >= {pitch_min_1}')
+pla_df = pla_df.loc[pla_df['Num_Pitches'] >= pitch_threshold].copy()
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
