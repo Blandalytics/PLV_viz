@@ -5,7 +5,7 @@ import pandas as pd
 import seaborn as sns
 import scipy as sp
 
-from PIL import Image
+import matplotlib.image as Image
 import requests
 from io import BytesIO
 
@@ -361,7 +361,7 @@ def plv_card():
     disclaimer_ax.tick_params(left=False, bottom=False)
 
     response = requests.get(logo_loc)
-    img = np.array(PIL.Image.open(BytesIO(response.content)))
+    img = np.array(Image.open(BytesIO(response.content)))
     
     newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
     newax.imshow(img)
