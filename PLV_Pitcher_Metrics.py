@@ -571,6 +571,7 @@ st.dataframe(plv_df
              .rename(columns={
                  'pitchername':'Pitcher'
              })
+             .set_index('Pitcher')
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
