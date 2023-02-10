@@ -65,7 +65,8 @@ pitch_names = {
 }
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-# img = plt.imread(logo_loc, format='png')
+img = PIL.Image.imread(logo_loc)
+st.wrtite(img)
 st.image(logo_loc)
 
 # Year
