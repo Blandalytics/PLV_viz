@@ -9,6 +9,9 @@ import seaborn as sns
 from scipy import stats
 from PIL import Image
 
+logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+st.image(logo_loc)
+
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
