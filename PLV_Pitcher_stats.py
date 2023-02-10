@@ -359,7 +359,7 @@ def plv_card():
     disclaimer_ax.tick_params(left=False, bottom=False)
 
 #     # Add PL logo
-    pl_ax = fig.add_axes([0.65,0.7,0.2,0.2], anchor='NE', zorder=1)
+    pl_ax = fig.add_axes([0.675,0.7,0.2,0.2], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
