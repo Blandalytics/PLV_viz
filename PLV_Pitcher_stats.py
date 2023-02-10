@@ -253,10 +253,10 @@ def plv_card():
     pitch_feats = len(pitch_list)+1
 
     # Divide card into tiles
-    grid = plt.GridSpec(grid_height, 3, wspace=0, hspace=0.2, width_ratios=[1,3,1],
+    grid = plt.GridSpec(grid_height, 4, wspace=0, hspace=0.2, width_ratios=[1,2,1,1],
                       height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
-    title_ax = plt.subplot(grid[0, :-1])
+    title_ax = plt.subplot(grid[0, :-2])
     title_ax.text(0,0,"{}\n{} Pitch Quality".format(player,year), ha='center', va='center', fontsize=24,
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
     title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
@@ -264,7 +264,7 @@ def plv_card():
     title_ax.set_yticklabels([])
     title_ax.tick_params(left=False, bottom=False)
 
-    plv_desc_ax = plt.subplot(grid[1, 1])
+    plv_desc_ax = plt.subplot(grid[1, 1:3])
     plv_desc_ax.text(0,0,"PLV", ha='center', va='center', fontsize=18,
            bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
     plv_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
@@ -272,7 +272,7 @@ def plv_card():
     plv_desc_ax.set_yticklabels([])
     plv_desc_ax.tick_params(left=False, bottom=False)
 
-    pla_desc_ax = plt.subplot(grid[1, 2])
+    pla_desc_ax = plt.subplot(grid[1, 3])
     pla_desc_ax.text(-0.25,-0.1,"PLA", ha='center', va='bottom', fontsize=18)
     pla_desc_ax.text(-0.25,-0.15,"(xRuns per 9IP*)", ha='center', va='top', fontsize=10)
     pla_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
@@ -299,7 +299,7 @@ def plv_card():
         type_ax.tick_params(left=False, bottom=False)
         ax_num+=1
 
-    plv_dist_ax = plt.subplot(grid[2, 1])
+    plv_dist_ax = plt.subplot(grid[2, 1:3])
     plv_kde((plv_df
              .groupby('pitchername')
              [['pitch_id','PLV']]
@@ -314,7 +314,7 @@ def plv_card():
             plv_dist_ax)
     ax_num = 3
     for pitch in pitch_list:
-        pitch_ax = plt.subplot(grid[ax_num, 1])
+        pitch_ax = plt.subplot(grid[ax_num, 1:3])
         plv_kde((plv_df
                  .groupby(['pitchername','pitchtype'])
                  [['pitch_id','PLV']]
@@ -332,7 +332,7 @@ def plv_card():
 
     ax_num = 2
     for pitch in ['PLA']+pitch_list:
-        pla_ax = plt.subplot(grid[ax_num, 2])
+        pla_ax = plt.subplot(grid[ax_num, 3])
         pla_ax.text(-0.25,0,'{:.2f}'.format(pla_dict[pitch][0]), ha='center', va='center', 
                     fontsize=20)
         pla_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
@@ -348,10 +348,10 @@ def plv_card():
     league_ax.set_yticklabels([])
     league_ax.tick_params(left=False, bottom=False)
 
-    percent_bar_ax = plt.subplot(grid[-1, 1])
+    percent_bar_ax = plt.subplot(grid[-1, 1:3])
     percent_bar(percent_bar_ax)
 
-    disclaimer_ax = plt.subplot(grid[-1, 2])
+    disclaimer_ax = plt.subplot(grid[-1, 3])
     disclaimer_ax.text(-0.25,0,"*IP based on \nUsage %", ha='center', va='center', fontsize=10)
     disclaimer_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
     disclaimer_ax.set_xticklabels([])
@@ -359,7 +359,7 @@ def plv_card():
     disclaimer_ax.tick_params(left=False, bottom=False)
 
 #     # Add PL logo
-    pl_ax = plt.subplot(grid[0, -1])
+    pl_ax = plt.subplot(grid[0, -2]:)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
