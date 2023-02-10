@@ -67,7 +67,6 @@ pitch_names = {
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 img = Image.open(urllib.request.urlopen(logo_loc))
-st.write(img)
 st.image(logo_loc)
 
 # Year
@@ -365,10 +364,9 @@ def plv_card():
     disclaimer_ax.tick_params(left=False, bottom=False)
 
 #     # Add PL logo
-#     img = plt.imread(logo_loc)
-#     pl_ax = fig.add_axes([0.8,0.001,0.2,0.1], anchor='SE', zorder=0)
-#     pl_ax.imshow(im)
-#     pl_ax.axis('off')
+    pl_ax = fig.add_axes([0.8,0.8,0.2,0.1], anchor='NE', zorder=0)
+    pl_ax.imshow(im)
+    pl_ax.axis('off')
 
     sns.despine()
     st.pyplot(fig)
