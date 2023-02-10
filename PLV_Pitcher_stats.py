@@ -8,6 +8,7 @@ import scipy as sp
 import matplotlib.image as Image
 import requests
 from io import BytesIO
+from PIL import Image
 
 import matplotlib.pyplot as plt
 
@@ -64,7 +65,7 @@ pitch_names = {
 }
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-img = plt.imread(logo_loc, format='png')
+# img = plt.imread(logo_loc, format='png')
 st.image(logo_loc)
 
 # Year
