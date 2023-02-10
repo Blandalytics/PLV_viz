@@ -366,7 +366,7 @@ def rolling_chart():
                 )
     
     # Add PL logo
-    pl_ax = fig.add_axes([0.8,0,0.2,0.2], anchor='SE', zorder=1)
+    pl_ax = fig.add_axes([0.8,-0.01,0.2,0.2], anchor='SE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
     
