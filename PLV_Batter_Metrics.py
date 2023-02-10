@@ -1,14 +1,20 @@
 import streamlit as st
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import scipy as sp
+import urllib
 
 from matplotlib import ticker
 from matplotlib import colors
+from PIL import Image
+from scipy import stats
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-st.image(logo_loc)
+logo = Image.open(urllib.request.urlopen(logo_loc))
+st.image(logo, width=100)
 
 ## Set Styling
 # Plot Style
@@ -340,8 +346,14 @@ def rolling_chart():
     ax.set(xlabel=rolling_denom[metric],
            ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
            ylim=(chart_min-(chart_max - chart_min)/25, 
-                 chart_max+(chart_max - chart_min)/25),
-           title="{}'s {} Rolling {}\n{}".format(player,
+                 chart_max+(chart_max - chart_min)/25)           
+          )
+    
+    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
+        #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
+        ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
+    
+    fig.suptitle("{}'s {} Rolling {}\n{}".format(player,
                                                  year,
                                                  metric,
                                                  '({} {}{}{})'.format(window,
@@ -349,13 +361,9 @@ def rolling_chart():
                                                                       '' if (count_select in ['All','Custom']) else f'; in {count_select} Counts',
                                                                       '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                                                      )
-                                                )
-          )
-    
-    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
-        #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
-        ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
-        
+                                                ),
+                 x=0.33,fontsize=16
+                )
     sns.despine()
     st.pyplot(fig)
 if window > rolling_df.shape[0]:
