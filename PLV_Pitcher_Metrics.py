@@ -565,8 +565,8 @@ else:
 #         ax.legend(handles=handles, labels=labels)
 
         fig.suptitle(f"{player}'s\nPitch Movement Profile",x=0.4,
-                     #y=0.925, 
-                     fontsize=16)
+                     y=0.95, 
+                     fontsize=18)
         
         # Add PL logo
         pl_ax = fig.add_axes([0.75,0.8,0.2,0.2], anchor='NE', zorder=1)
