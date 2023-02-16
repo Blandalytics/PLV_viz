@@ -545,6 +545,7 @@ else:
                           .query('pitch_id >= 20')
                           ['pitchtype']
                          )
+        print(pitch_list)
         fig, ax = plt.subplots(figsize=(8,8))
         sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
                                         plv_df['pitchtype'].isin(pitch_list)],
