@@ -564,7 +564,14 @@ else:
 #         handles, labels = ax.get_legend_handles_labels()
 #         ax.legend(handles=handles, labels=labels)
 
-        fig.suptitle(f"{player}'s Pitch Movement Profile",y=0.925, fontsize=16)
+        fig.suptitle(f"{player}'s\nPitch Movement Profile",x=0.4,
+                     #y=0.925, 
+                     fontsize=16)
+        
+        # Add PL logo
+        pl_ax = fig.add_axes([0.75,0.8,0.2,0.2], anchor='NE', zorder=1)
+        pl_ax.imshow(logo)
+        pl_ax.axis('off')
         
         sns.despine()
         st.pyplot(fig)
