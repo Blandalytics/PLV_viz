@@ -556,7 +556,7 @@ else:
                         y='IVB',
                         hue='pitchtype',
                         palette=marker_colors,
-                        size=30,
+                        s=30,
                         legend=False)
         
         sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
