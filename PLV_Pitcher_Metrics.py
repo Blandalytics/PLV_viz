@@ -78,7 +78,8 @@ def load_data(year):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{chunk}.parquet?raw=true'
         df = pd.concat([df,
                         pd.read_parquet(file_name)[['pitchername','pitcher_mlb_id','pitch_id',
-                                                    'p_hand','b_hand','pitchtype','PLV']]
+                                                    'p_hand','b_hand','pitchtype','PLV',
+                                                    'IHB','IVB]]
                        ])
     df = (df
           .sort_values('pitch_id')
@@ -535,18 +536,16 @@ elif chart=='Pitch Quality':
 else:
     def movement_chart():
         pitch_list = list(plv_df
-                          .loc[plv_df['pitchername']==player]
-                          .groupby('pitchtype')
-                          ['pitch_id']
-                          .count()
-                          .dropna()
-                          .reset_index()
-                          .sort_values('pitch_id', ascending=False)
-                          .query('pitch_id >= 20')
-                          ['pitchtype']
-                         )
-        print(pitch_list)
+                        .loc[(plv_df['pitchername']==player)]
+                        .groupby('pitchtype',as_index=False)
+                        ['pitch_id']
+                        .count()
+                        .query('pitch_id >=20')
+                        .sort_values('pitch_id',
+                                     ascending=False)
+                        ['pitchtype'])
         fig, ax = plt.subplots(figsize=(8,8))
+        
         sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
                                         plv_df['pitchtype'].isin(pitch_list)],
                         x='IHB',
