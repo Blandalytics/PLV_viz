@@ -535,7 +535,7 @@ elif chart=='Pitch Quality':
 else:
     def movement_chart():
         pitch_list = list(plv_df
-                          .loc[(plv_df['pitchername']==player))]
+                          .loc[plv_df['pitchername']==player]
                           .groupby('pitchtype',as_index=False)
                           ['pitch_id']
                           .count()
