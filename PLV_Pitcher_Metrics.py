@@ -166,7 +166,9 @@ default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
 # Chart Select
-charts = ['Pitch Quality','Pitch Distribution','Pitch Movement']
+charts = ['Pitch Quality','Pitch Distribution',
+          #'Pitch Movement'
+         ]
 chart = st.radio('Choose a chart type:', 
                  charts,
                  horizontal=True)
