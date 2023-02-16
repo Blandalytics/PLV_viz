@@ -70,8 +70,8 @@ year = st.radio('Choose a year:', years)
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
-@st.cache_data
 # Load Data
+@st.cache_data
 def load_data(year):
     df = pd.DataFrame()
     for chunk in [1,2,3]:
