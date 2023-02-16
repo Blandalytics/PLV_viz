@@ -557,8 +557,8 @@ else:
                         hue='pitchtype',
                         palette=marker_colors)
 
-        ax.axhline(0, color='w', linestyle='--', linewidth=1)
-        ax.axvline(0, color='w', linestyle='--', linewidth=1)
+        ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
+        ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
         
         sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
                                         plv_df['pitchtype'].isin(pitch_list)].groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
