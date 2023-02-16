@@ -565,7 +565,11 @@ else:
                ylabel='Induced Vertical Break (in)')
         
         handles, labels = ax.get_legend_handles_labels()
-        ax.legend(handles=handles, labels=labels)
+        pitchtype_order = []
+        for x in pitch_list:
+            pitchtype_order.append(labels.index(x))
+
+        ax.legend([handles[idx] for idx in pitchtype_order],[labels[idx] for idx in pitchtype_order])
 
         fig.suptitle(f"{player}'s\nPitch Movement Profile",x=0.4,
                      y=0.95, 
