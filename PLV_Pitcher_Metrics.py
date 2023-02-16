@@ -536,14 +536,15 @@ elif chart=='Pitch Quality':
 else:
     def movement_chart():
         pitch_list = list(plv_df
-                        .loc[(plv_df['pitchername']==player)]
-                        .groupby('pitchtype',as_index=False)
-                        ['pitch_id']
-                        .count()
-                        .query('pitch_id >=20')
-                        .sort_values('pitch_id',
-                                     ascending=False)
-                        ['pitchtype'])
+                          .loc[(plv_df['pitchername']==player)]
+                          .groupby('pitchtype',as_index=False)
+                          ['pitch_id']
+                          .count()
+                          .dropna()
+                          .query('pitch_id >=20')
+                          .sort_values('pitch_id',
+                                       ascending=False)
+                          ['pitchtype'])
         fig, ax = plt.subplots(figsize=(8,8))
         
         sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
