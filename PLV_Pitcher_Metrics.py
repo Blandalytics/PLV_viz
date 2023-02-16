@@ -548,7 +548,7 @@ else:
         fig, ax = plt.subplots(figsize=(8,8))
         
         sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
-                                        plv_df['pitchtype'].isin(pitch_list)],
+                                        plv_df['pitchtype'].isin(pitch_list)].copy(),
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
