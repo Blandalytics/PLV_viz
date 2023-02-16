@@ -541,7 +541,7 @@ else:
                           .count()
                           .dropna()
                           .sort_values('pitch_id', ascending=False)
-                          .query(f'pitch_id >= {pitch_type_thresh}')
+                          .query('pitch_id >= 20')
                           ['pitchtype']
                          )
         fig, ax = plt.subplots(figsize=(8,8))
