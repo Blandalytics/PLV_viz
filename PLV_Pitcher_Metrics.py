@@ -568,7 +568,9 @@ else:
                         palette=marker_colors,
                         s=100,
                         legend=False,
-                        edgecolor='k')
+                        linewidth=2,
+#                         edgecolor='k'
+                       )
         
         ax.set(xlim=(-27,27),
                ylim=(-27,27),
