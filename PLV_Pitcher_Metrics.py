@@ -556,6 +556,9 @@ else:
                         y='IVB',
                         hue='pitchtype',
                         palette=marker_colors)
+
+        ax.axhline(0, color='w', linestyle='--', linewidth=2)
+        ax.axvline(0, color='w', linestyle='--', linewidth=2)
         
         sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
                                         plv_df['pitchtype'].isin(pitch_list)].groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
@@ -564,10 +567,9 @@ else:
                         hue='pitchtype',
                         palette=marker_colors,
                         s=100,
-                        legend=False)
-
-        ax.axhline(0, color='w', linestyle='--', linewidth=2)
-        ax.axvline(0, color='w', linestyle='--', linewidth=2)
+                        legend=False,
+                        edgecolor='k')
+        
         ax.set(xlim=(-27,27),
                ylim=(-27,27),
                xlabel='Induced Horizontal Break (in)',
