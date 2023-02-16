@@ -62,7 +62,7 @@ pitch_names = {
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
-st.image(logo, width=400)
+st.image(logo, width=200)
 
 # Year
 years = [2022,2021,2020]
@@ -147,7 +147,7 @@ st.dataframe(pla_df
             )
 
 
-st.title("Pitcher PLV Chart")
+st.title("Pitcher Charts")
 ## Selectors
 # Player
 players = list(plv_df
@@ -165,7 +165,7 @@ default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
 # Chart Select
-charts = ['Compared to League','Pitch Distribution']
+charts = ['Pitch Quality','Pitch Distribution','Pitch Movement']
 chart = st.radio('Choose a chart type:', 
                  charts,
                  horizontal=True)
@@ -299,7 +299,7 @@ if chart=='Pitch Distribution':
         arsenal_dist()
     else:
         st.write('Not enough pitches thrown in {} (<{})'.format(year,pitch_threshold))
-else:
+elif chart=='Pitch Quality':
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 125
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
@@ -531,6 +531,43 @@ else:
         st.pyplot(fig)
 
     plv_card()
+    
+else:
+    def movement_chart():
+        pitch_list = list(plv_df
+                          .loc[(plv_df['pitchername']==player))]
+                          .groupby('pitchtype',as_index=False)
+                          ['pitch_id']
+                          .count()
+                          .dropna()
+                          .sort_values('pitch_id', ascending=False)
+                          .query(f'pitch_id >= {pitch_type_thresh}')
+                          ['pitchtype']
+                         )
+        fig, ax = plt.subplots(figsize=(8,8))
+        sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
+                                        plv_df['pitchtype'].isin(pitch_list)],
+                        x='IHB',
+                        y='IVB',
+                        hue='pitchtype',
+                        palette=marker_colors)
+
+        ax.axhline(0, color='w', linestyle='--', linewidth=2)
+        ax.axvline(0, color='w', linestyle='--', linewidth=2)
+        ax.set(xlim=(-27,27),
+               ylim=(-27,27),
+               xlabel='Induced Horizontal Break (in)',
+               ylabel='Induced Vertical Break (in)')
+        
+        handles, labels = ax.get_legend_handles_labels()
+        ax.legend(handles=handles, labels=labels)
+
+        fig.suptitle(f"{player}'s Pitch Movement Profile",y=0.925, fontsize=16)
+        
+        sns.despine()
+        st.pyplot(fig)
+        
+    movement_chart()
     
 st.title("General Pitch Quality")
 st.write('- ***Quality Pitch (QP%)***: Pitch with a PLV >= 5.5')
