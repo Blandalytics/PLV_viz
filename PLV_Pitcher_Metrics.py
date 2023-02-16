@@ -555,7 +555,8 @@ else:
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
-                        palette=marker_colors)
+                        palette=marker_colors,
+                        alpha=0.9)
 
         ax.axhline(0, color='w', linestyle='--', linewidth=2)
         ax.axvline(0, color='w', linestyle='--', linewidth=2)
