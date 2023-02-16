@@ -79,7 +79,8 @@ def load_data(year):
         df = pd.concat([df,
                         pd.read_parquet(file_name)[['pitchername','pitcher_mlb_id','pitch_id',
                                                     'p_hand','b_hand','pitchtype','PLV',
-                                                    'IHB','IVB']]
+#                                                     'IHB','IVB'
+                                                   ]]
                        ])
     df = (df
           .sort_values('pitch_id')
