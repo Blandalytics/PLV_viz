@@ -536,10 +536,11 @@ else:
     def movement_chart():
         pitch_list = list(plv_df
                           .loc[plv_df['pitchername']==player]
-                          .groupby('pitchtype',as_index=False)
+                          .groupby('pitchtype')
                           ['pitch_id']
                           .count()
                           .dropna()
+                          .reset_index()
                           .sort_values('pitch_id', ascending=False)
                           .query('pitch_id >= 20')
                           ['pitchtype']
@@ -559,8 +560,8 @@ else:
                xlabel='Induced Horizontal Break (in)',
                ylabel='Induced Vertical Break (in)')
         
-#         handles, labels = ax.get_legend_handles_labels()
-#         ax.legend(handles=handles, labels=labels)
+        handles, labels = ax.get_legend_handles_labels()
+        ax.legend(handles=handles, labels=labels)
 
         fig.suptitle(f"{player}'s Pitch Movement Profile",y=0.925, fontsize=16)
         
