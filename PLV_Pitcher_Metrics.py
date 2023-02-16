@@ -561,8 +561,8 @@ else:
                xlabel='Induced Horizontal Break (in)',
                ylabel='Induced Vertical Break (in)')
         
-        handles, labels = ax.get_legend_handles_labels()
-        ax.legend(handles=handles, labels=labels)
+#         handles, labels = ax.get_legend_handles_labels()
+#         ax.legend(handles=handles, labels=labels)
 
         fig.suptitle(f"{player}'s Pitch Movement Profile",y=0.925, fontsize=16)
         
