@@ -46,6 +46,26 @@ marker_colors = {
     'UN':'#999999', 
 }
 
+cb_colors = {
+    'FF':'#0080ff', 
+    'SI':'#e69c00',
+    'FS':'#000000',  
+    'FC':'#56b3e8', 
+    'SL':'#d65c00', 
+    'CU':'#009e74',
+    'CH':'#cc78a8', 
+    'KN':'#999999',
+    'SC':'#999999', 
+    'UN':'#999999', 
+}
+
+palettes = ['Pitcher List','Color Blind-Friendly']
+palette = st.radio('Choose a palette:', 
+                 palettes,
+                 horizontal=True)
+
+color_palette = marker_colors if cb_colors=='Color Blind-Friendly' else marker_colors
+
 # Pitch Names
 pitch_names = {
     'FF':'Four-Seamer', 
@@ -232,7 +252,7 @@ if chart=='Pitch Distribution':
                 sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
                             x='PLV_clip',
                             hue='pitchtype',
-                            palette=marker_colors,
+                            palette=color_palette,
                             binwidth=0.5,
                             binrange=(0,10),
                             alpha=1,
@@ -241,7 +261,7 @@ if chart=='Pitch Distribution':
                             )
                 # Season Avg Line
                 axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player,'PLV'].mean(),
-                                    color=marker_colors[pitch],
+                                    color=color_palette[pitch],
                                     linestyle='--',
                                     linewidth=2.5)
 
@@ -454,7 +474,7 @@ elif chart=='Pitch Quality':
             type_ax = plt.subplot(grid[ax_num, 0])
             type_ax.text(0.25,-0.1, f'{pitch}', ha='center', va='bottom', 
                          fontsize=20, fontweight='bold',
-                         color='w' if pitch=='All' else marker_colors[pitch])
+                         color='w' if pitch=='All' else color_palette[pitch])
             if pitch!='All':
                 usage = plv_df.loc[(plv_df['pitchername']==player) &
                                    (plv_df['pitchtype']==pitch)].shape[0] / total_pitches * 100
@@ -555,7 +575,7 @@ else:
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
-                        palette=marker_colors)
+                        palette=color_palette)
 
         ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
         ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
@@ -565,7 +585,7 @@ else:
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
-                        palette=marker_colors,
+                        palette=color_palette,
                         s=150,
                         legend=False,
                         linewidth=2,
