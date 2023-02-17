@@ -169,7 +169,7 @@ palette = st.radio('Choose a palette:',
                  palettes,
                  horizontal=True)
 
-color_palette = marker_colors if cb_colors=='Color Blind-Friendly' else marker_colors
+color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
 
 ## Selectors
 # Player
