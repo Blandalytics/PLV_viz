@@ -59,13 +59,6 @@ cb_colors = {
     'UN':'#999999', 
 }
 
-palettes = ['Pitcher List','Color Blind-Friendly']
-palette = st.radio('Choose a palette:', 
-                 palettes,
-                 horizontal=True)
-
-color_palette = marker_colors if cb_colors=='Color Blind-Friendly' else marker_colors
-
 # Pitch Names
 pitch_names = {
     'FF':'Four-Seamer', 
@@ -170,6 +163,14 @@ st.dataframe(pla_df
 
 
 st.title("Pitcher Charts")
+
+palettes = ['Pitcher List','Color Blind-Friendly']
+palette = st.radio('Choose a palette:', 
+                 palettes,
+                 horizontal=True)
+
+color_palette = marker_colors if cb_colors=='Color Blind-Friendly' else marker_colors
+
 ## Selectors
 # Player
 players = list(plv_df
