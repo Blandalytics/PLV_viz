@@ -59,6 +59,14 @@ cb_colors = {
     'UN':'#999999', 
 }
 
+palettes = ['Pitcher List','Color Blind-Friendly']
+palette = st.radio('Choose a palette:', 
+                 palettes,
+                 horizontal=True)
+
+color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
+diverging_palette = 'PuOr' if palette=='Color Blind-Friendly' else 'vlag
+
 # Pitch Names
 pitch_names = {
     'FF':'Four-Seamer', 
@@ -156,20 +164,13 @@ st.dataframe(pla_df
              .style
              .format(precision=2, thousands=',')
              .background_gradient(axis=0, vmin=2, vmax=6,
-                                  cmap="vlag_r", subset=format_cols)
+                                  cmap=f"{diverging_palette}_r", subset=format_cols)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
 
 st.title("Pitcher Charts")
-
-palettes = ['Pitcher List','Color Blind-Friendly']
-palette = st.radio('Choose a palette:', 
-                 palettes,
-                 horizontal=True)
-
-color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
 
 ## Selectors
 # Player
@@ -663,7 +664,7 @@ class_df = (plv_df
 st.dataframe(class_df
              .style
              .format(precision=1, thousands=',')
-             .background_gradient(axis=0, cmap="vlag", subset=['QP%','QP-BP%'])
-             .background_gradient(axis=0, cmap="vlag_r", subset=['BP%'])
+             .background_gradient(axis=0, cmap=f"{diverging_palette}", subset=['QP%','QP-BP%'])
+             .background_gradient(axis=0, cmap=f"{diverging_palette}_r", subset=['BP%'])
             )
  
