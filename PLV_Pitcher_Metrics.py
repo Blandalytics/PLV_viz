@@ -566,7 +566,7 @@ else:
                         y='IVB',
                         hue='pitchtype',
                         palette=marker_colors,
-                        s=100,
+                        s=150,
                         legend=False,
                         linewidth=2,
 #                         edgecolor='k'
