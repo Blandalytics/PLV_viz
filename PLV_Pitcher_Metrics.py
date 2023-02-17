@@ -59,14 +59,6 @@ cb_colors = {
     'UN':'#999999', 
 }
 
-palettes = ['Pitcher List','Color Blind-Friendly']
-palette = st.radio('Choose a palette:', 
-                 palettes,
-                 horizontal=True)
-
-color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
-diverging_palette = 'PuOr' if palette=='Color Blind-Friendly' else 'vlag'
-
 # Pitch Names
 pitch_names = {
     'FF':'Four-Seamer', 
@@ -84,6 +76,14 @@ pitch_names = {
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
+
+palettes = ['Pitcher List','Color Blind-Friendly']
+palette = st.radio('Choose a palette:', 
+                 palettes,
+                 horizontal=True)
+
+color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
+diverging_palette = 'PuOr' if palette=='Color Blind-Friendly' else 'vlag'
 
 # Year
 years = [2022,2021,2020]
@@ -341,7 +341,7 @@ elif chart=='Pitch Quality':
         y = ax.lines[-1].get_ydata()
 
         quantiles = [1, 0.95, 0.9, 0.75, 0.5, 0.25, 0.1, 0.05, 0]
-        quant_colors = [x for x in sns.color_palette('vlag_r',n_colors=7001)[::1000]]
+        quant_colors = [x for x in sns.color_palette(f'{diverging_palette}_r',n_colors=7001)[::1000]]
 
         val_color = quant_colors[sum(i >= val_percentile for i in quantiles)-1]
 
@@ -389,7 +389,7 @@ elif chart=='Pitch Quality':
 
     def percent_bar(ax):
         quantiles = [1, 0.95, 0.9, 0.75, 0.5, 0.25, 0.1, 0.05, 0]
-        quant_colors = [x for x in sns.color_palette('vlag',n_colors=7001)[::1000]]
+        quant_colors = [x for x in sns.color_palette(f'{diverging_palette}',n_colors=7001)[::1000]]
 
         prev_limit = 0
         for idx, lim in enumerate([x/8 for x in range(0,9)]):
