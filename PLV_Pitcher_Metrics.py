@@ -83,7 +83,7 @@ palette = st.radio('Choose a palette:',
                  horizontal=True)
 
 color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
-diverging_palette = 'PuOr' if palette=='Color Blind-Friendly' else 'vlag'
+diverging_palette = 'bwr' if palette=='Color Blind-Friendly' else 'vlag'
 
 # Year
 years = [2022,2021,2020]
