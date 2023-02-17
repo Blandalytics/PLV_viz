@@ -59,6 +59,8 @@ cb_colors = {
     'UN':'#999999', 
 }
 
+diverging_palette = 'vlag'
+
 # Pitch Names
 pitch_names = {
     'FF':'Four-Seamer', 
@@ -170,7 +172,6 @@ palette = st.radio('Choose a palette:',
                  horizontal=True)
 
 color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
-diverging_palette = 'vlag'
 
 ## Selectors
 # Player
