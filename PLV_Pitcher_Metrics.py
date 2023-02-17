@@ -77,14 +77,6 @@ logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.p
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
-palettes = ['Pitcher List','Color Blind-Friendly']
-palette = st.radio('Choose a palette:', 
-                 palettes,
-                 horizontal=True)
-
-color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
-diverging_palette = 'vlag'
-
 # Year
 years = [2022,2021,2020]
 year = st.radio('Choose a year:', years)
@@ -171,6 +163,14 @@ st.dataframe(pla_df
 
 
 st.title("Pitcher Charts")
+
+palettes = ['Pitcher List','Color Blind-Friendly']
+palette = st.radio('Choose a palette:', 
+                 palettes,
+                 horizontal=True)
+
+color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
+diverging_palette = 'vlag'
 
 ## Selectors
 # Player
