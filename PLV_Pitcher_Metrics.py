@@ -129,7 +129,7 @@ def get_ids():
 
 st.title("Season PLA")
 st.write('- ***Pitch Level Average (PLA)***: Value of all pitches (ERA scale), using IP and the total predicted run value of pitches thrown.')
-st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA-scale), using total predicted run values and an IP proxy for that pitch type (pitch usage % * Total IP).')
+st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA scale), using total predicted run values and an IP proxy for that pitch type (pitch usage % * Total IP).')
 
 # pitch_threshold = 400
 
