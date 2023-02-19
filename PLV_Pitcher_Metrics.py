@@ -455,7 +455,7 @@ elif chart=='Pitch Quality':
                        .rename(columns={'subset_IP':'IP'})
                        .assign(PLA=lambda x: x['pitch_runs'] * 9 / x['IP'])
                       )
-        pitchtype_df = filtered_df.pivot_table(index=['pitcher_mlb_id','year_played'],
+        pitchtype_df = filtered_df.pivot_table(index='pitcher_mlb_id',
                                                columns='pitchtype', 
                                                values='PLA',
                                                aggfunc='mean'
