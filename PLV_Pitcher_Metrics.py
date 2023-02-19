@@ -442,12 +442,12 @@ elif chart=='Pitch Quality':
         sns.despine()
 
     def plv_card():
-        pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2020-2022_PLA_Data.csv?raw=true', encoding='latin1')
-        pla_data = pla_data.query(f'year_played =={year}').copy()
+        pla_dict = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2020-2022_PLA_Data.csv?raw=true', encoding='latin1')
+        pla_dict = pla_dict.query(f'year_played =={year}').copy()
         
-        filtered_df = (pla_data
-                       .loc[pla_data['p_hand'].isin(pitcher_hand) &
-                            pla_data['b_hand'].isin(hand_map[handedness])]
+        filtered_df = (pla_dict
+                       .loc[pla_dict['p_hand'].isin(pitcher_hand) &
+                            pla_dict['b_hand'].isin(hand_map[handedness])]
                        .groupby(['pitchername','pitcher_mlb_id','pitchtype'])
                        [['num_pitches','subset_IP','pitch_runs']]
                        .sum()
@@ -461,7 +461,7 @@ elif chart=='Pitch Quality':
                                                aggfunc='mean'
                                               ).replace({0:None})
         
-        pla_df = (filtered_df
+        pla_dict = (filtered_df
                   .groupby(['pitchername','pitcher_mlb_id'])
                   [['num_pitches','IP','pitch_runs']]
                   .sum()
@@ -475,7 +475,7 @@ elif chart=='Pitch Quality':
                   .copy()
                  )
         
-        pla_dict = pla_df.loc[pla_df['pitchername']==player,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
+        pla_dict = pla_dict.loc[pla_dict['pitchername']==player,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
         pitch_list = list(plv_df
                         .loc[(plv_df['pitchername']==player)]
