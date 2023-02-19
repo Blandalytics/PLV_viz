@@ -478,14 +478,15 @@ elif chart=='Pitch Quality':
         pla_dict = pla_dict.loc[pla_dict['pitchername']==player,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
         pitch_list = list(plv_df
-                        .loc[(plv_df['pitchername']==player)]
-                        .groupby('pitchtype',as_index=False)
-                        ['pitch_id']
-                        .count()
-                        .query('pitch_id >=20')
-                        .sort_values('pitch_id',
-                                    ascending=False)
-                        ['pitchtype'])
+                          .loc[(plv_df['pitchername']==player) &
+                               plv_df['b_hand'].isin(hand_map[handedness])]
+                          .groupby('pitchtype',as_index=False)
+                          ['pitch_id']
+                          .count()
+                          .query('pitch_id >=20')
+                          .sort_values('pitch_id',
+                                       ascending=False)
+                          ['pitchtype'])
 
         fig = plt.figure(figsize=(8,8))
 
@@ -523,7 +524,8 @@ elif chart=='Pitch Quality':
         pla_desc_ax.tick_params(left=False, bottom=False)
 
         ax_num = 2
-        total_pitches = plv_df.loc[(plv_df['pitchername']==player)].shape[0]
+        total_pitches = plv_df.loc[(plv_df['pitchername']==player) &
+                                   plv_df['b_hand'].isin(hand_map[handedness])].shape[0]
         for pitch in ['All']+pitch_list:
             type_ax = plt.subplot(grid[ax_num, 0])
             type_ax.text(0.25,-0.1, f'{pitch}', ha='center', va='bottom', 
@@ -531,6 +533,7 @@ elif chart=='Pitch Quality':
                          color='w' if pitch=='All' else color_palette[pitch])
             if pitch!='All':
                 usage = plv_df.loc[(plv_df['pitchername']==player) &
+                                   plv_df['b_hand'].isin(hand_map[handedness]) &
                                    (plv_df['pitchtype']==pitch)].shape[0] / total_pitches * 100
                 type_ax.text(0.25,-0.1,'({:.0f}%)'.format(usage), ha='center', va='top', fontsize=10)
             else:
