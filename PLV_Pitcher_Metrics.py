@@ -470,7 +470,6 @@ elif chart=='Pitch Quality':
                   .merge(pitchtype_df, how='inner',left_on='pitcher_mlb_id',right_index=True)
                   .query(f'num_pitches >= 20')
                   .fillna(np.nan)
-#                   .set_index('Pitcher')
                   [['pitchername','PLA','FF','SI','SL','CH','CU','FC','FS']]
                   .copy()
                  )
@@ -499,7 +498,7 @@ elif chart=='Pitch Quality':
                           height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
         title_ax = plt.subplot(grid[0, :-1])
-        title_ax.text(-0.25,0,"{}'s\n{} Pitch Quality{}".format(player,year,'' if handedness=='All' else f' (vs {hand_map[handedness][0]}HB)'), 
+        title_ax.text(-0.15,0,"{}'s\n{} Pitch Quality{}".format(player,year,'' if handedness=='All' else f' (vs {hand_map[handedness][0]}HB)'), 
                       ha='center', va='center', fontsize=20,
                bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
         title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
