@@ -462,12 +462,12 @@ elif chart=='Pitch Quality':
                                               ).replace({0:None})
         
         pla_df = (filtered_df
-                  .groupby(['pitchername','pitcher_mlb_id','year_played'])
+                  .groupby(['pitchername','pitcher_mlb_id'])
                   [['num_pitches','IP','pitch_runs']]
                   .sum()
                   .assign(PLA=lambda x: x['pitch_runs'] * 9 / x['IP'])
                   .reset_index()
-                  .merge(pitchtype_df, how='inner',left_on=['pitcher_mlb_id','year_played'],right_index=True)
+                  .merge(pitchtype_df, how='inner',left_on='pitcher_mlb_id',right_index=True)
                   .query(f'num_pitches >= {200}')
                   .rename(columns={'pitchername':'Pitcher',
                                    'num_pitches':'Num_Pitches'})
