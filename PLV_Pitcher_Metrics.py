@@ -469,16 +469,13 @@ elif chart=='Pitch Quality':
                   .reset_index()
                   .merge(pitchtype_df, how='inner',left_on='pitcher_mlb_id',right_index=True)
                   .query(f'num_pitches >= 20')
-                  .rename(columns={'pitchername':'Pitcher',
-                                   'num_pitches':'Num_Pitches'})
-                  .drop(columns=['pitcher_mlb_id'])
                   .fillna(np.nan)
 #                   .set_index('Pitcher')
-                  [['PLA','FF','SI','SL','CH','CU','FC','FS']]
+                  [['pitchername','PLA','FF','SI','SL','CH','CU','FC','FS']]
                   .copy()
                  )
         
-        pla_dict = pla_df.loc[pla_df['Pitcher']==player,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
+        pla_dict = pla_df.loc[pla_df['pitchername']==player,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
         pitch_list = list(plv_df
                         .loc[(plv_df['pitchername']==player)]
