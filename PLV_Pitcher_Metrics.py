@@ -468,7 +468,7 @@ elif chart=='Pitch Quality':
                   .assign(PLA=lambda x: x['pitch_runs'] * 9 / x['IP'])
                   .reset_index()
                   .merge(pitchtype_df, how='inner',left_on='pitcher_mlb_id',right_index=True)
-                  .query(f'num_pitches >= {200}')
+                  .query(f'num_pitches >= 20')
                   .rename(columns={'pitchername':'Pitcher',
                                    'num_pitches':'Num_Pitches'})
                   .drop(columns=['pitcher_mlb_id'])
