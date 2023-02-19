@@ -448,7 +448,7 @@ elif chart=='Pitch Quality':
         filtered_df = (pla_data
                        .loc[pla_data['p_hand'].isin(pitcher_hand) &
                             pla_data['b_hand'].isin(hand_map[handedness])]
-                       .groupby(['pitchername','pitcher_mlb_id','year_played','pitchtype'])
+                       .groupby(['pitchername','pitcher_mlb_id','pitchtype'])
                        [['num_pitches','subset_IP','pitch_runs']]
                        .sum()
                        .reset_index()
@@ -473,7 +473,7 @@ elif chart=='Pitch Quality':
                                    'num_pitches':'Num_Pitches'})
                   .drop(columns=['pitcher_mlb_id'])
                   .fillna(np.nan)
-                  .set_index('Pitcher')
+#                   .set_index('Pitcher')
                   [['PLA','FF','SI','SL','CH','CU','FC','FS']]
                   .copy()
                  )
