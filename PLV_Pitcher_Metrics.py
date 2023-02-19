@@ -327,6 +327,23 @@ if chart=='Pitch Distribution':
     else:
         st.write('Not enough pitches thrown in {} (<{})'.format(year,pitch_threshold))
 elif chart=='Pitch Quality':
+    # Hitter Handedness
+    handedness = st.select_slider(
+        'Hitter Handedness',
+        options=['Left', 'All', 'Right'],
+        value='All')
+    # Pitcher Handedness
+    if handedness=='All':
+        pitcher_hand = ['L','R']
+    else:
+        pitcher_hand = list(plv_df.loc[(plv_df['pitchername']==player),'p_hand'].unique())
+
+    hand_map = {
+        'Left':['L'],
+        'All':['L','R'],
+        'Right':['R']
+    }
+    
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 125
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
@@ -425,6 +442,42 @@ elif chart=='Pitch Quality':
         sns.despine()
 
     def plv_card():
+        pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2020-2022_PLA_Data.csv?raw=true', encoding='latin1')
+        pla_data = pla_data.query(f'year_played =={year}').copy()
+        
+        filtered_df = (pla_data
+                       .loc[pla_data['p_hand'].isin(pitcher_hand) &
+                            pla_data['b_hand'].isin(hand_map[handedness])]
+                       .groupby(['pitchername','pitcher_mlb_id','year_played','pitchtype'])
+                       [['num_pitches','subset_IP','pitch_runs']]
+                       .sum()
+                       .reset_index()
+                       .rename(columns={'subset_IP':'IP'})
+                       .assign(PLA=lambda x: x['pitch_runs'] * 9 / x['IP'])
+                      )
+        pitchtype_df = filtered_df.pivot_table(index=['pitcher_mlb_id','year_played'],
+                                               columns='pitchtype', 
+                                               values='PLA',
+                                               aggfunc='mean'
+                                              ).replace({0:None})
+        
+        pla_df = (filtered_df
+                  .groupby(['pitchername','pitcher_mlb_id','year_played'])
+                  [['num_pitches','IP','pitch_runs']]
+                  .sum()
+                  .assign(PLA=lambda x: x['pitch_runs'] * 9 / x['IP'])
+                  .reset_index()
+                  .merge(pitchtype_df, how='inner',left_on=['pitcher_mlb_id','year_played'],right_index=True)
+                  .query(f'num_pitches >= {200}')
+                  .rename(columns={'pitchername':'Pitcher',
+                                   'num_pitches':'Num_Pitches'})
+                  .drop(columns=['pitcher_mlb_id'])
+                  .fillna(np.nan)
+                  .set_index('Pitcher')
+                  [['PLA','FF','SI','SL','CH','CU','FC','FS']]
+                  .copy()
+                 )
+        
         pla_dict = pla_df.loc[pla_df['Pitcher']==player,['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
         pitch_list = list(plv_df
@@ -448,7 +501,8 @@ elif chart=='Pitch Quality':
                           height_ratios=[0.75,1]+[7.5/pitch_feats]*(pitch_feats)+[0.75])
 
         title_ax = plt.subplot(grid[0, :-1])
-        title_ax.text(-0.25,0,"{}\n{} Pitch Quality".format(player,year), ha='center', va='center', fontsize=20,
+        title_ax.text(-0.25,0,"{}\n{} Pitch Quality{}".format(player,year,'' if handedness=='All' else f'(vs {hand_map[handedness]}HB)'), 
+                      ha='center', va='center', fontsize=20,
                bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
         title_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
         title_ax.set_xticklabels([])
@@ -492,6 +546,8 @@ elif chart=='Pitch Quality':
 
         plv_dist_ax = plt.subplot(grid[2, 1])
         plv_kde((plv_df
+                 .loc[plv_df['p_hand'].isin(pitcher_hand) &
+                      plv_df['b_hand'].isin(hand_map[handedness])]
                  .groupby('pitchername')
                  [['pitch_id','PLV']]
                  .agg({
@@ -507,6 +563,8 @@ elif chart=='Pitch Quality':
         for pitch in pitch_list:
             pitch_ax = plt.subplot(grid[ax_num, 1])
             plv_kde((plv_df
+                     .loc[plv_df['p_hand'].isin(pitcher_hand) &
+                          plv_df['b_hand'].isin(hand_map[handedness])]
                      .groupby(['pitchername','pitchtype'])
                      [['pitch_id','PLV']]
                      .agg({
