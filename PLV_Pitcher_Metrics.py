@@ -455,11 +455,11 @@ elif chart=='Pitch Quality':
                        .rename(columns={'subset_IP':'IP'})
                        .assign(PLA=lambda x: x['pitch_runs'] * 9 / x['IP'])
                       )
-        pitchtype_df = filtered_df.pivot_table(index='pitcher_mlb_id',
-                                               columns='pitchtype', 
-                                               values='PLA',
-                                               aggfunc='mean'
-                                              ).replace({0:None})
+#         pitchtype_df = filtered_df.pivot_table(index='pitcher_mlb_id',
+#                                                  columns='pitchtype', 
+#                                                  values='PLA',
+#                                                  aggfunc='mean'
+#                                                 ).replace({0:None})
         
         pla_dict = (filtered_df
                   .groupby(['pitchername','pitcher_mlb_id'])
@@ -467,7 +467,12 @@ elif chart=='Pitch Quality':
                   .sum()
                   .assign(PLA=lambda x: x['pitch_runs'] * 9 / x['IP'])
                   .reset_index()
-                  .merge(pitchtype_df, how='inner',left_on='pitcher_mlb_id',right_index=True)
+                  .merge(filtered_df.pivot_table(index='pitcher_mlb_id',
+                                                 columns='pitchtype', 
+                                                 values='PLA',
+                                                 aggfunc='mean'
+                                                ).replace({0:None}), 
+                         how='inner',left_on='pitcher_mlb_id',right_index=True)
                   .query(f'num_pitches >= 20')
                   .fillna(np.nan)
                   [['pitchername','PLA','FF','SI','SL','CH','CU','FC','FS']]
