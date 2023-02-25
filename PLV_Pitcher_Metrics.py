@@ -233,7 +233,7 @@ if chart=='Pitch Distribution':
                     .count()
                     .dropna()
                     .sort_values('pitch_id', ascending=False)
-                    .query(f'pitch_id >= {pitch_type_thresh}')
+                    .query(f'pitch_id > {pitch_type_thresh}')
                     ['pitchtype']
                     )
 
@@ -480,7 +480,7 @@ elif chart=='Pitch Quality':
                                                  aggfunc='mean'
                                                 ).replace({0:None}), 
                          how='inner',left_on='pitcher_mlb_id',right_index=True)
-                  .query(f'num_pitches >= 20')
+                  .query(f'num_pitches > 20')
                   .fillna(np.nan)
                   [['pitchername','PLA','FF','SI','SL','CH','CU','FC','FS']]
                   .copy()
@@ -494,7 +494,7 @@ elif chart=='Pitch Quality':
                           .groupby('pitchtype',as_index=False)
                           ['pitch_id']
                           .count()
-                          .query('pitch_id >=20')
+                          .query('pitch_id > 20')
                           .sort_values('pitch_id',
                                        ascending=False)
                           ['pitchtype'])
