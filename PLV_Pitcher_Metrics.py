@@ -360,8 +360,15 @@ elif chart=='Pitch Quality':
 
         quantiles = [1, 0.95, 0.9, 0.75, 0.5, 0.25, 0.1, 0.05, 0]
         quant_colors = [x for x in sns.color_palette(f'{diverging_palette}_r',n_colors=7001)[::1000]]
+        
+        i = -1
+        for quant in quantiles:
+            if quant >= val_percentile:
+                i += 1
 
-        val_color = quant_colors[sum(i >= val_percentile for i in quantiles)-1]
+        val_color = quant_colors[i]
+
+        #val_color = quant_colors[sum(i >= val_percentile for i in quantiles)-1]
 
         for quant in range(8):
             color = quant_colors[quant]
