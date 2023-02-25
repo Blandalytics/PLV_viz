@@ -368,7 +368,7 @@ elif chart=='Pitch Quality':
 
 #         val_color = quant_colors[i]
 
-       val_color = quant_colors[sum(i >= val_percentile for i in quantiles)-1]
+        val_color = quant_colors[sum(i >= val_percentile for i in quantiles)-1]
 
         for quant in range(8):
             color = quant_colors[quant]
