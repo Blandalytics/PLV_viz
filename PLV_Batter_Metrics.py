@@ -14,7 +14,7 @@ from scipy import stats
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
-st.image(logo, width=400)
+st.image(logo, width=200)
 
 ## Set Styling
 # Plot Style
