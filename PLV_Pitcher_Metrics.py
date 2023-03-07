@@ -363,7 +363,7 @@ elif chart=='Pitch Quality':
         
         i = -1
         for quant in quantiles:
-            if quant > val_percentile:
+            if quant >= val_percentile:
                 i += 1
 
         val_color = quant_colors[i]
