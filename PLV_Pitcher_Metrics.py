@@ -345,13 +345,13 @@ elif chart=='Pitch Quality':
     }
     
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
-        pitch_thresh = 500 if pitchtype=='' else 125
+        pitch_thresh = 500 if pitchtype=='' else 100
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
 
         df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype]
         val = df.loc[df['pitchername']==name,stat].mean()
         df = df.query(f'pitch_id >= {pitch_thresh}').copy()
-        val_percentile = min(stats.percentileofscore(df[stat], val) / 100,1)
+        val_percentile = np.clip(stats.percentileofscore(df[stat], val) / 100,0,1)
 
         sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=0)
 
