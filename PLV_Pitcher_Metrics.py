@@ -351,7 +351,7 @@ elif chart=='Pitch Quality':
         df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype]
         val = df.loc[df['pitchername']==name,stat].mean()
         df = df.query(f'pitch_id >= {pitch_thresh}').copy()
-        val_percentile = stats.percentileofscore(df[stat], val) / 100
+        val_percentile = min(stats.percentileofscore(df[stat], val) / 100,1)
 
         sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=0)
 
@@ -366,9 +366,9 @@ elif chart=='Pitch Quality':
             if quant >= val_percentile:
                 i += 1
 
-#         val_color = quant_colors[i]
+        val_color = quant_colors[i]
 
-        val_color = quant_colors[sum(i >= val_percentile for i in quantiles)-1]
+#         val_color = quant_colors[sum(i >= val_percentile for i in quantiles)]
 
         for quant in range(8):
             color = quant_colors[quant]
