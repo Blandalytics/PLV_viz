@@ -368,8 +368,6 @@ elif chart=='Pitch Quality':
 
         val_color = quant_colors[np.clip(i,0,7)]
 
-#         val_color = quant_colors[sum(i >= val_percentile for i in quantiles)]
-
         for quant in range(8):
             color = quant_colors[quant]
             thresh = 10 if quant==0 else df[stat].quantile(quantiles[quant])
@@ -546,7 +544,7 @@ elif chart=='Pitch Quality':
                 usage = plv_df.loc[(plv_df['pitchername']==player) &
                                    plv_df['b_hand'].isin(hand_map[handedness]) &
                                    (plv_df['pitchtype']==pitch)].shape[0] / total_pitches * 100
-                type_ax.text(0.25,-0.1,'({:.0f}%)'.format(usage), ha='center', va='top', fontsize=10)
+                type_ax.text(0.25,-0.1,'({:.0f}% - {})'.format(usage,usage/100*total_pitches), ha='center', va='top', fontsize=10)
             else:
                 type_ax.text(0.25,-0.1,'(Usage%)', ha='center', va='top', fontsize=12)
             type_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
