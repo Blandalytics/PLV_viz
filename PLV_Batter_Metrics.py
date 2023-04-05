@@ -54,7 +54,7 @@ seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/m
 
 ## Selectors
 # Year
-year = st.radio('Choose a year:', [2022,2021,2020])
+year = st.radio('Choose a year:', [2023,2022,2021,2020])
 
 def z_score_scaler(series):
     return (series - series.mean()) / series.std()
