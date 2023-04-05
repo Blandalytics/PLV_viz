@@ -154,6 +154,9 @@ stat_values = {
 
 plv_df = plv_df.rename(columns=stat_names)
 st.title("Rolling Ability Charts")
+if year==2023:
+    st.write(f'Charts not available for {year} (yet).')
+    exit()
 
 # Player
 players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
@@ -273,11 +276,7 @@ color_norm = colors.TwoSlopeNorm(vmin=chart_10,
                                  vcenter=chart_mean,
                                  vmax=chart_90)
 
-def rolling_chart():
-    if year==2023:
-        st.write(f'Charts not available for {year} (yet).')
-        exit()
-    
+def rolling_chart():    
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(6,6))
     sns.lineplot(data=rolling_df,
