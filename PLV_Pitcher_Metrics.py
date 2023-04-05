@@ -79,6 +79,9 @@ logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.p
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
+st.write('Under construction. Sorry!')
+exit()
+
 # Year
 years = [2022,2021,2020]
 year = st.radio('Choose a year:', years)
