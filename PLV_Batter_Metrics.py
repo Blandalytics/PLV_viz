@@ -94,6 +94,9 @@ def load_season_data(year):
 
 plv_df = load_season_data(year)
 
+max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
+pitch_thresh = int(max_pitches/4)
+
 season_df = (plv_df
              .rename(columns=season_names)
              .groupby('hittername')
@@ -107,7 +110,7 @@ season_df = (plv_df
                  'Power':'mean',
                  'HP':'mean'
              })
-             .query('pitch_id >= 400')
+             .query(f'pitch_id >= {pitch_thresh}')
              .reset_index()
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches'})
