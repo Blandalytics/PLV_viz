@@ -158,7 +158,7 @@ st.title("Rolling Ability Charts")
 # Player
 players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
     'pitch_id':'count',
-    'Hitter Performance':'mean'}).query(f'pitch_id >={pitch_thresh{').sort_values('Hitter Performance', ascending=False)['hittername'])
+    'Hitter Performance':'mean'}).query(f'pitch_id >={pitch_thresh}').sort_values('Hitter Performance', ascending=False)['hittername'])
 default_player = players.index('Juan Soto')
 player = st.selectbox('Choose a hitter:', players, index=default_player)
 
