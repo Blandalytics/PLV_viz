@@ -274,6 +274,10 @@ color_norm = colors.TwoSlopeNorm(vmin=chart_10,
                                  vmax=chart_90)
 
 def rolling_chart():
+    if year==2023:
+        st.write(f'Charts not available for {year} (yet).')
+        exit()
+    
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(6,6))
     sns.lineplot(data=rolling_df,
