@@ -402,6 +402,8 @@ elif chart=='Pitch Quality':
         'Right':['R']
     }
     
+    pla_df = get_pla(year,pitch_threshold,p_hand=pitcher_hand,b_hand=hand_map[handedness])
+    
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 100
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
@@ -612,34 +614,14 @@ elif chart=='Pitch Quality':
             ax_num+=1
 
         plv_dist_ax = plt.subplot(grid[2, 1])
-        plv_kde((plv_df
-                 .loc[plv_df['p_hand'].isin(pitcher_hand) &
-                      plv_df['b_hand'].isin(hand_map[handedness])]
-                 .groupby('pitchername')
-                 [['pitch_id','PLV']]
-                 .agg({
-                     'pitch_id':'count',
-                     'PLV':'mean'
-                 })
-                 .reset_index()
-                ),
+        plv_kde((pla_df,
                 player,
                 len(pitch_list),
                 plv_dist_ax)
         ax_num = 3
         for pitch in pitch_list:
             pitch_ax = plt.subplot(grid[ax_num, 1])
-            plv_kde((plv_df
-                     .loc[plv_df['p_hand'].isin(pitcher_hand) &
-                          plv_df['b_hand'].isin(hand_map[handedness])]
-                     .groupby(['pitchername','pitchtype'])
-                     [['pitch_id','PLV']]
-                     .agg({
-                         'pitch_id':'count',
-                         'PLV':'mean'
-                     })
-                     .reset_index()
-                    ), 
+            plv_kde((pla_df, 
                     player, 
                     len(pitch_list), 
                     pitch_ax, 
