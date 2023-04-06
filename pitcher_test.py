@@ -417,7 +417,7 @@ elif chart=='Pitch Quality':
           'total_plv':'sum'
       })
       .sort_values('pitch_runs', ascending=False)
-      .query(f'num_pitches >={25)}') # 5% of total pitches threshold
+      .query(f'num_pitches >={25}')
       .reset_index()
       )
 
