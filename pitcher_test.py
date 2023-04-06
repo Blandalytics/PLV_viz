@@ -615,7 +615,7 @@ elif chart=='Pitch Quality':
                     player, 
                     len(pitch_list), 
                     pitch_ax, 
-                    pitchtype=pitch.item())
+                    pitchtype=str(pitch))
             ax_num+=1
 
         ax_num = 2
