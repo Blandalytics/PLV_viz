@@ -140,7 +140,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                               step=50, 
                               value=500)
 
-def get_pla(year,pitch_threshold,p_hand=['L','R'],b_hand=['L','R']):
+def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R']):
     pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/pla_data.csv?raw=true', encoding='latin1')
     season_df = (pla_data
              .loc[(pla_data['year_played']==year) &
@@ -402,11 +402,41 @@ elif chart=='Pitch Quality':
         'Right':['R']
     }
     
-    pla_df = get_pla(year,pitch_threshold,p_hand=pitcher_hand,b_hand=hand_map[handedness]).reset_index().rename(columns={'Pitcher':'pitchername'})
+    pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/pla_data.csv?raw=true', encoding='latin1')
+    pla_df = (pla_data
+             .loc[(pla_data['year_played']==year) &
+                  pla_data['p_hand'].isin(p_hand) &
+                  pla_data['b_hand'].isin(b_hand)]
+             .assign(total_plv = lambda x: x['num_pitches'] * x['plv'])
+      .groupby(['pitchername','pitchtype','pitcher_mlb_id'])
+      [['num_pitches','pitch_runs','total_plv','subset_ip']]
+      .agg({
+          'num_pitches':'sum',
+          'subset_ip':'sum',
+          'pitch_runs':'sum',
+          'total_plv':'sum'
+      })
+      .sort_values('pitch_runs', ascending=False)
+      .query(f'num_pitches >={25)}') # 5% of total pitches threshold
+      .reset_index()
+      )
+
+    # Clean IP to actual fractions
+    pla_df['season_IP'] = pla_df['subset_ip'].groupby(pla_df['pitcher_mlb_id']).transform('sum')
+    pla_df['season_pitches'] = pla_df['num_pitches'].groupby(pla_df['pitcher_mlb_id']).transform('sum')
+
+    # Calculate PLV, in general, and per-pitchtype
+    pla_df['PLV'] = pla_df['total_plv'].groupby(pla_df['pitcher_mlb_id']).transform('sum').div(pla_df['season_pitches']).astype('float')
+    pla_df['pitchtype_plv'] = pla_df['total_plv'].div(pla_df['num_pitches'])
+
+    # Calculate PLA, in general, and per-pitchtype
+    pla_df['PLA'] = pla_df['pitch_runs'].groupby(pla_df['pitcher_mlb_id']).transform('sum').mul(9).div(pla_df['season_IP']).astype('float')
+    pla_df['pitchtype_pla'] = pla_df['pitch_runs'].mul(9).div(pla_df['subset_ip']) # ERA Scale)get_pla(year,pitch_threshold=25,p_hand=pitcher_hand,b_hand=hand_map[handedness]).reset_index().rename(columns={'Pitcher':'pitchername'})
     
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 100
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
+        stat = stat if pitchtype=='' else 'pitchtype_'+stat
 
         df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype]
         val = df.loc[df['pitchername']==name,stat].mean()
@@ -507,15 +537,15 @@ elif chart=='Pitch Quality':
         sns.despine()
 
     def plv_card():        
-        pla_dict = pla_df.loc[(pla_df['pitchername']==player),['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
+#         pla_dict = pla_df.loc[(pla_df['pitchername']==player),['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
         pitch_list = list(pla_df
                           .loc[(pla_df['pitchername']==player)]
                           .groupby('pitchtype',as_index=False)
-                          ['Num_Pitches']
+                          ['num_pitches']
                           .mean()
-                          .query('Num_Pitches >= 25')
-                          .sort_values('Num_Pitches',
+                          .query('num_pitches >= 25')
+                          .sort_values('num_pitches',
                                        ascending=False)
                           ['pitchtype'])
 
@@ -555,7 +585,7 @@ elif chart=='Pitch Quality':
         pla_desc_ax.tick_params(left=False, bottom=False)
 
         ax_num = 2
-        total_pitches = pla_df.loc[(pla_df['pitchername']==player),'Num_Pitches'].sum()
+        total_pitches = pla_df.loc[(pla_df['pitchername']==player),'num_pitches'].sum()
         for pitch in ['All']+pitch_list:
             type_ax = plt.subplot(grid[ax_num, 0])
             type_ax.text(0.25,-0.1, f'{pitch}', ha='center', va='bottom', 
@@ -563,7 +593,7 @@ elif chart=='Pitch Quality':
                          color='w' if pitch=='All' else color_palette[pitch])
             if pitch!='All':
                 usage = pla_df.loc[(pla_df['pitchername']==player) &
-                                   (pla_df['pitchtype']==pitch),'Num_Pitches'].sum() / total_pitches * 100
+                                   (pla_df['pitchtype']==pitch),'num_pitches'].sum() / total_pitches * 100
                 type_ax.text(0.25,-0.1,'({:.0f}%)'.format(usage), ha='center', va='top', fontsize=10)
             else:
                 type_ax.text(0.25,-0.1,'(Usage%)', ha='center', va='top', fontsize=12)
@@ -590,8 +620,11 @@ elif chart=='Pitch Quality':
 
         ax_num = 2
         for pitch in ['PLA']+pitch_list:
+            stat = 'PLA' if pitch=='PLA' else 'pitchtype_pla'
+            val = pla_df.loc[pla_df['pitchername']==name,stat].mean() if pitch=='PLA' else pla_df.loc[(pla_df['pitchername']==name) &
+                                                                                                      [(pla_df['pitchtype']==pitch),stat].mean()
             pla_ax = plt.subplot(grid[ax_num, 2])
-            pla_ax.text(-0.25,0,'{:.2f}'.format(pla_dict[pitch][0]), ha='center', va='center', 
+            pla_ax.text(-0.25,0,'{:.2f}'.format(val), ha='center', va='center', 
                         fontsize=20)
             pla_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
             pla_ax.set_xticklabels([])
