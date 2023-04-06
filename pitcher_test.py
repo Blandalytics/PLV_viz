@@ -546,7 +546,8 @@ elif chart=='Pitch Quality':
                           .query('num_pitches >= 25')
                           .sort_values('num_pitches',
                                        ascending=False)
-                          ['pitchtype'])
+                          ['pitchtype']
+                          .unique())
         st.write(pitch_list[0])
 
         fig = plt.figure(figsize=(8,8))
