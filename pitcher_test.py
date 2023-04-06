@@ -439,7 +439,7 @@ elif chart=='Pitch Quality':
         stat = stat if pitchtype=='' else 'pitchtype_'+stat
 
         df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
-        val = df.loc[df['pitchername']==name,stat].mean()
+        val = df.loc[df['pitchername']==name,stat].item()
 #         df = df.query(f'pitch_id >= {25}').copy()
         val_percentile = np.clip(stats.percentileofscore(df[stat], val) / 100,0,1)
 
@@ -621,8 +621,8 @@ elif chart=='Pitch Quality':
         ax_num = 2
         for pitch in ['PLA']+pitch_list:
             stat = 'PLA' if pitch=='PLA' else 'pitchtype_pla'
-            val = pla_df.loc[pla_df['pitchername']==name,stat].mean() if pitch=='PLA' else pla_df.loc[(pla_df['pitchername']==name) &
-                                                                                                      (pla_df['pitchtype']==pitch),stat].mean()
+            val = pla_df.loc[pla_df['pitchername']==name,stat].item() if pitch=='PLA' else pla_df.loc[(pla_df['pitchername']==name) &
+                                                                                                      (pla_df['pitchtype']==pitch),stat].item()
             pla_ax = plt.subplot(grid[ax_num, 2])
             pla_ax.text(-0.25,0,'{:.2f}'.format(val), ha='center', va='center', 
                         fontsize=20)
