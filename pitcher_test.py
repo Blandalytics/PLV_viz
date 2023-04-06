@@ -614,14 +614,14 @@ elif chart=='Pitch Quality':
             ax_num+=1
 
         plv_dist_ax = plt.subplot(grid[2, 1])
-        plv_kde((pla_df,
+        plv_kde(pla_df,
                 player,
                 len(pitch_list),
                 plv_dist_ax)
         ax_num = 3
         for pitch in pitch_list:
             pitch_ax = plt.subplot(grid[ax_num, 1])
-            plv_kde((pla_df, 
+            plv_kde(pla_df, 
                     player, 
                     len(pitch_list), 
                     pitch_ax, 
