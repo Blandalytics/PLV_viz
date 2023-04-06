@@ -437,7 +437,7 @@ elif chart=='Pitch Quality':
         pitch_thresh = 500 if pitchtype=='' else 100
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
         df = df.copy() if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].reset_index(drop=True).copy()
-        stat = stat if pitchtype=='' else 'pitchtype_'+stat
+        stat = stat if pitchtype=='' else 'pitchtype_plv'
         
         val = df.loc[df['pitchername']==name,stat].mean()
         st.write(val)
@@ -608,7 +608,7 @@ elif chart=='Pitch Quality':
                 len(pitch_list),
                 plv_dist_ax)
         ax_num = 3
-        st.write(pq_df.columns)
+#         st.write(pq_df.columns)
         for pitch in pitch_list:
             pitch_ax = plt.subplot(grid[ax_num, 1])
             plv_kde(pq_df, 
