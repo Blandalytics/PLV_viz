@@ -405,8 +405,8 @@ elif chart=='Pitch Quality':
     pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/pla_data.csv?raw=true', encoding='latin1')
     pla_df = (pla_data
              .loc[(pla_data['year_played']==year) &
-                  pla_data['p_hand'].isin(p_hand) &
-                  pla_data['b_hand'].isin(b_hand)]
+                  pla_data['p_hand'].isin(pitcher_hand) &
+                  pla_data['b_hand'].isin(hand_map[handedness])]
              .assign(total_plv = lambda x: x['num_pitches'] * x['plv'])
       .groupby(['pitchername','pitchtype','pitcher_mlb_id'])
       [['num_pitches','pitch_runs','total_plv','subset_ip']]
