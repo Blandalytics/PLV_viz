@@ -548,7 +548,6 @@ elif chart=='Pitch Quality':
                                        ascending=False)
                           ['pitchtype']
                           .unique())
-        st.write(pitch_list[0])
 
         fig = plt.figure(figsize=(8,8))
 
@@ -611,6 +610,7 @@ elif chart=='Pitch Quality':
                 plv_dist_ax)
         ax_num = 3
         for pitch in pitch_list:
+            st.write(pitch)
             pitch_ax = plt.subplot(grid[ax_num, 1])
             plv_kde(pla_df, 
                     player, 
