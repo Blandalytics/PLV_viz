@@ -135,7 +135,7 @@ st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA scale), using 
 
 # Num Pitches threshold
 pitch_threshold = st.number_input(f'Min # of Pitches:',
-                              min_value=50, 
+                              min_value=200, 
                               max_value=2000,
                               step=50, 
                               value=500)
