@@ -437,7 +437,7 @@ elif chart=='Pitch Quality':
         pitch_thresh = 500 if pitchtype=='' else 100
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
         st.write(pitch_color)
-        df = df.copy() if pitchtype=='' else df.loc[df['pitchtype']==pitchtype).copy()
+        df = df.copy() if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
         stat = stat if pitchtype=='' else 'pitchtype_'+stat
         
         val = df.loc[df['pitchername']==name,stat].mean()
