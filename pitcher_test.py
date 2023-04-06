@@ -439,8 +439,7 @@ elif chart=='Pitch Quality':
         stat = stat if pitchtype=='' else 'pitchtype_'+stat
         df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
         
-        st.write(df.loc[df['pitchername']==name,stat].mean())
-        val = df.loc[df['pitchername']==name,stat].mean() if pitchtype=='' else df.loc[df['pitchername']==name,stat].item()
+        val = df.loc[df['pitchername']==name,stat].mean().copy()
 #         df = df.query(f'pitch_id >= {25}').copy()
         val_percentile = np.clip(stats.percentileofscore(df[stat], val) / 100,0,1)
 
