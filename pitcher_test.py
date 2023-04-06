@@ -622,7 +622,7 @@ elif chart=='Pitch Quality':
         for pitch in ['PLA']+pitch_list:
             stat = 'PLA' if pitch=='PLA' else 'pitchtype_pla'
             val = pla_df.loc[pla_df['pitchername']==name,stat].mean() if pitch=='PLA' else pla_df.loc[(pla_df['pitchername']==name) &
-                                                                                                      [(pla_df['pitchtype']==pitch),stat].mean()
+                                                                                                      (pla_df['pitchtype']==pitch),stat].mean()
             pla_ax = plt.subplot(grid[ax_num, 2])
             pla_ax.text(-0.25,0,'{:.2f}'.format(val), ha='center', va='center', 
                         fontsize=20)
