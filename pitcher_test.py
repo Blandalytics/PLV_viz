@@ -436,8 +436,8 @@ elif chart=='Pitch Quality':
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 100
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
+        df = df.copy() if pitchtype=='' else df.query(f'pitchtype == {pitchtype}').copy()
         st.dataframe(df)
-        df = df if pitchtype=='' else df.query(f'pitchtype == {pitchtype}')
         stat = stat if pitchtype=='' else 'pitchtype_'+stat
         
         val = df.loc[df['pitchername']==name,stat].mean()
