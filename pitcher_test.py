@@ -140,9 +140,63 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                               step=50, 
                               value=500)
 
+def get_pla(year,pitch_threshold):
+    pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/pla_data.csv?raw=true', encoding='latin1')
+    season_df = (pla_data
+             .loc[pla_df['year_played']==year]
+             .assign(total_plv = lambda x: x['num_pitches'] * x['plv'])
+      .groupby(['pitchername','pitchtype','pitcher_mlb_id'])
+      [['num_pitches','pitch_runs','total_plv','subset_ip']]
+      .agg({
+          'num_pitches':'sum',
+          'subset_ip':'sum',
+          'pitch_runs':'sum',
+          'total_plv':'sum'
+      })
+      .sort_values('pitch_runs', ascending=False)
+      .query(f'num_pitches >={int(pitch_threshold/10)}') #1/10 of total pitches threshold
+      .reset_index()
+      )
+
+    # Clean IP to actual fractions
+    season_df['season_IP'] = season_df['subset_ip'].groupby(season_df['pitcher_mlb_id']).transform('sum')
+    season_df['season_pitches'] = season_df['num_pitches'].groupby(season_df['pitcher_mlb_id']).transform('sum')
+
+    # Calculate PLV, in general, and per-pitchtype
+    season_df['PLV'] = season_df['total_plv'].groupby(season_df['pitcher_mlb_id']).transform('sum').div(season_df['season_pitches']).astype('float')
+    season_df['pitchtype_plv'] = season_df['total_plv'].div(season_df['num_pitches'])
+
+    # Calculate PLA, in general, and per-pitchtype
+    season_df['PLA'] = season_df['pitch_runs'].groupby(season_df['pitcher_mlb_id']).transform('sum').mul(9).div(season_df['season_IP']).astype('float')
+    season_df['pitchtype_pla'] = season_df['pitch_runs'].mul(9).div(season_df['subset_ip']) # ERA Scale
+
+    season_df = season_df.sort_values('PLA')
+
+    # Pivot a dataframe of per-pitchtype PLAs
+    pitchtype_df = season_df.pivot_table(index=['pitcher_mlb_id'], 
+                                          columns='pitchtype', 
+                                          values='pitchtype_pla',
+                                          aggfunc='sum'
+                                        ).replace({0:None})
+
+    # Merge season-long PLA with pitchtype PLAs
+    df = (season_df
+          .drop_duplicates('pitcher_mlb_id')
+          [['pitcher_mlb_id','pitchername','season_pitches','PLA','PLV']]
+          .merge(pitchtype_df, how='inner',left_on='pitcher_mlb_id',right_index=True)
+          .query(f'season_pitches >= {pitch_threshold}')
+          .rename(columns={'pitchername':'Pitcher',
+                           'season_pitches':'Num_Pitches'})
+          .drop(columns=['pitcher_mlb_id'])
+          .fillna(np.nan)
+          .set_index('Pitcher')
+          [['Num_Pitches','PLA','FF','SI','SL','CH','CU','FC','FS','PLV']]
+          .copy()
+          )
+    return df
+
 # Season data
-pla_df = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/PLA_{year}.csv?raw=true', encoding='latin1')
-pla_df = pla_df.loc[pla_df['Num_Pitches'] >= pitch_threshold].reset_index(drop=True).copy()
+pla_df = get_pla(year,pitch_threshold)
 
 format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
 
