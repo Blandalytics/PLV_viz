@@ -154,7 +154,7 @@ def get_pla(year,pitch_threshold):
           'total_plv':'sum'
       })
       .sort_values('pitch_runs', ascending=False)
-      .query(f'num_pitches >={int(pitch_threshold/10)}') #1/10 of total pitches threshold
+#       .query(f'num_pitches >={int(pitch_threshold/10)}') #1/10 of total pitches threshold
       .reset_index()
       )
 
