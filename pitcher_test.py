@@ -214,7 +214,7 @@ st.dataframe(pla_df
              .background_gradient(axis=0, vmin=2, vmax=6,
                                   cmap=f"{diverging_palette}_r", subset=format_cols)
              .background_gradient(axis=0, vmin=4.5, vmax=5.5,
-                                  cmap=f"{diverging_palette}", subset='PLV)
+                                  cmap=f"{diverging_palette}", subset='PLV')
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
