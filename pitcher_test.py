@@ -156,7 +156,7 @@ def get_pla(year,pitch_threshold,p_hand=['L','R'],b_hand=['L','R']):
           'total_plv':'sum'
       })
       .sort_values('pitch_runs', ascending=False)
-#       .query(f'num_pitches >={int(pitch_threshold/10)}') #1/10 of total pitches threshold
+      .query(f'num_pitches >={int(pitch_threshold/20)}') # 5% of total pitches threshold
       .reset_index()
       )
 
@@ -207,7 +207,7 @@ fill_val = pla_df[format_cols].max().max()+0.01
 def pitchtype_color(s):
     return f"background-color: {marker_colors[s]}" if s in list(marker_colors.keys()) else None
 
-st.write('At least 20 pitches thrown, per pitch type. Table is sortable.')
+st.write(f'At least {int(pitch_threshold/20)} pitches thrown, per pitch type. Table is sortable.')
 st.dataframe(pla_df
              .astype({'Num_Pitches': 'int'})
              .fillna(fill_val)
