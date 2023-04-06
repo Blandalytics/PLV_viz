@@ -140,11 +140,12 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                               step=50, 
                               value=500)
 
-def get_pla(year,pitch_threshold,handedness=['L','R']):
+def get_pla(year,pitch_threshold,p_hand=['L','R'],b_hand=['L','R']):
     pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/pla_data.csv?raw=true', encoding='latin1')
     season_df = (pla_data
              .loc[(pla_data['year_played']==year) &
-                  pla_data['b_hand'].isin(handedness)]
+                  pla_data['p_hand'].isin(p_hand) &
+                  pla_data['b_hand'].isin(b_hand)]
              .assign(total_plv = lambda x: x['num_pitches'] * x['plv'])
       .groupby(['pitchername','pitchtype','pitcher_mlb_id'])
       [['num_pitches','pitch_runs','total_plv','subset_ip']]
