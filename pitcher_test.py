@@ -442,7 +442,7 @@ elif chart=='Pitch Quality':
         val = df.loc[df['pitchername']==name,stat].mean()
         val_percentile = np.clip(stats.percentileofscore(df[stat], val) / 100,0,1)
 
-        sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=0)
+        sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=-0.5)
 
         x = ax.lines[-1].get_xdata()
         y = ax.lines[-1].get_ydata()
