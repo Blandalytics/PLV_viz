@@ -435,7 +435,7 @@ elif chart=='Pitch Quality':
     
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
-        df = df.query(f'season_pitches >= {pitch_threshold}').copy() if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].query(f'season_pitches >= {pitch_threshold}').copy()
+        df = df.query(f'season_pitches >= {pitch_threshold}').copy() if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].query(f'num_pitches >= {int(pitch_threshold/20)}').copy()
         stat = stat if pitchtype=='' else 'pitchtype_plv'
 #         df = df.copy()
         
@@ -542,7 +542,7 @@ elif chart=='Pitch Quality':
                           .groupby('pitchtype',as_index=False)
                           ['num_pitches']
                           .sum()
-                          .query('num_pitches >= 25')
+                          .query(f'num_pitches >= {int(pitch_threshold/20)}')
                           .sort_values('num_pitches',
                                        ascending=False)
                           ['pitchtype']
