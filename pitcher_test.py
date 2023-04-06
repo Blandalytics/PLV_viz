@@ -507,12 +507,10 @@ elif chart=='Pitch Quality':
         sns.despine()
 
     def plv_card():        
-        pla_dict = pla_df.loc[(pla_df['pitchername']==player) &
-                              pla_df['b_hand'].isin(hand_map[handedness]),['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
+        pla_dict = pla_df.loc[(pla_df['pitchername']==player),['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
         pitch_list = list(pla_df
-                          .loc[(pla_df['pitchername']==player) &
-                               pla_df['b_hand'].isin(hand_map[handedness])]
+                          .loc[(pla_df['pitchername']==player)]
                           .groupby('pitchtype',as_index=False)
                           ['Num_Pitches']
                           .mean()
@@ -557,8 +555,7 @@ elif chart=='Pitch Quality':
         pla_desc_ax.tick_params(left=False, bottom=False)
 
         ax_num = 2
-        total_pitches = pla_df.loc[(pla_df['pitchername']==player) &
-                                   pla_df['b_hand'].isin(hand_map[handedness]),'Num_Pitches'].sum()
+        total_pitches = pla_df.loc[(pla_df['pitchername']==player),'Num_Pitches'].sum()
         for pitch in ['All']+pitch_list:
             type_ax = plt.subplot(grid[ax_num, 0])
             type_ax.text(0.25,-0.1, f'{pitch}', ha='center', va='bottom', 
@@ -566,7 +563,6 @@ elif chart=='Pitch Quality':
                          color='w' if pitch=='All' else color_palette[pitch])
             if pitch!='All':
                 usage = pla_df.loc[(pla_df['pitchername']==player) &
-                                   pla_df['b_hand'].isin(hand_map[handedness]) &
                                    (pla_df['pitchtype']==pitch),'Num_Pitches'].sum() / total_pitches * 100
                 type_ax.text(0.25,-0.1,'({:.0f}%)'.format(usage), ha='center', va='top', fontsize=10)
             else:
