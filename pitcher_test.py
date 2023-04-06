@@ -536,9 +536,7 @@ elif chart=='Pitch Quality':
         ax.tick_params(bottom=False)
         sns.despine()
 
-    def plv_card():        
-#         pla_dict = pla_df.loc[(pla_df['pitchername']==player),['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
-
+    def plv_card():
         pitch_list = list(pla_df
                           .loc[(pla_df['pitchername']==player)]
                           .groupby('pitchtype',as_index=False)
@@ -610,7 +608,7 @@ elif chart=='Pitch Quality':
                 len(pitch_list),
                 plv_dist_ax)
         ax_num = 3
-        for pitch in pitch_list:
+        for pitch in map(str, pitch_list):
             st.write(pitch)
             pitch_ax = plt.subplot(grid[ax_num, 1])
             plv_kde(pla_df, 
