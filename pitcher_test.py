@@ -438,9 +438,8 @@ elif chart=='Pitch Quality':
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
         stat = stat if pitchtype=='' else 'pitchtype_'+stat
         df = df if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
-        val_df = df.loc[df['pitchername']==name,['pitchername',stat]].copy()
-        val = val_df[stat].mean()
-#         df = df.query(f'pitch_id >= {25}').copy()
+        
+        val = df.loc[df['pitchername']==name,stat].mean()
         val_percentile = np.clip(stats.percentileofscore(df[stat], val) / 100,0,1)
 
         sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=0)
@@ -548,6 +547,7 @@ elif chart=='Pitch Quality':
                           .sort_values('num_pitches',
                                        ascending=False)
                           ['pitchtype'])
+        st.write(pitch_list)
 
         fig = plt.figure(figsize=(8,8))
 
