@@ -80,7 +80,7 @@ logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
 # Year
-years = [2022,2021,2020]
+years = [2023,2022,2021,2020]
 year = st.radio('Choose a year:', years)
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
