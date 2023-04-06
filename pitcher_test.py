@@ -417,7 +417,7 @@ elif chart=='Pitch Quality':
           'total_plv':'sum'
       })
       .sort_values('pitch_runs', ascending=False)
-      .query(f'num_pitches >={25}')
+      .query(f'num_pitches >={1}')
       .reset_index()
       )
 
@@ -434,7 +434,7 @@ elif chart=='Pitch Quality':
     pq_df['pitchtype_pla'] = pq_df['pitch_runs'].mul(9).div(pq_df['subset_ip']) # ERA Scale)get_pla(year,pitch_threshold=25,p_hand=pitcher_hand,b_hand=hand_map[handedness]).reset_index().rename(columns={'Pitcher':'pitchername'})
     
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
-        pitch_thresh = 500 if pitchtype=='' else 100
+        pitch_thresh = 100 if pitchtype=='' else 20
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
         df = df.copy() if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].reset_index(drop=True).copy()
         stat = stat if pitchtype=='' else 'pitchtype_plv'
