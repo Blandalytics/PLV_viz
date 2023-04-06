@@ -190,7 +190,7 @@ def get_pla(year,pitch_threshold):
           .drop(columns=['pitcher_mlb_id'])
           .fillna(np.nan)
           .set_index('Pitcher')
-          [['Num_Pitches','PLA','FF','SI','SL','CH','CU','FC','FS','PLV']]
+          [['Num_Pitches','PLV','PLA','FF','SI','SL','CH','CU','FC','FS']]
           .copy()
           )
     return df
@@ -213,6 +213,8 @@ st.dataframe(pla_df
              .format(precision=2, thousands=',')
              .background_gradient(axis=0, vmin=2, vmax=6,
                                   cmap=f"{diverging_palette}_r", subset=format_cols)
+             .background_gradient(axis=0, vmin=4.5, vmax=5.5,
+                                  cmap=f"{diverging_palette}", subset='PLV)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
