@@ -608,7 +608,7 @@ elif chart=='Pitch Quality':
                 len(pitch_list),
                 plv_dist_ax)
         ax_num = 3
-        for pitch in map(str, pitch_list):
+        for pitch[1] in pitch_list:
             st.write(pitch)
             pitch_ax = plt.subplot(grid[ax_num, 1])
             plv_kde(pla_df, 
