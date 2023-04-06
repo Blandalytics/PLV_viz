@@ -440,6 +440,7 @@ elif chart=='Pitch Quality':
         stat = stat if pitchtype=='' else 'pitchtype_'+stat
         
         val = df.loc[df['pitchername']==name,stat]#.item()
+        st.write(val)
         val_percentile = np.clip(stats.percentileofscore(df[stat], val) / 100,0,1)
 
         sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=0)
