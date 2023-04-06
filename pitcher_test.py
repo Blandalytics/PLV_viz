@@ -436,8 +436,7 @@ elif chart=='Pitch Quality':
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 100
         pitch_color = 'w' if pitchtype=='' else marker_colors[pitchtype]
-        st.write(pitch_color)
-        df = df.copy() if pitchtype=='' else df.loc[df['pitchtype']==pitchtype].copy()
+        df = df.copy() if pitchtype=='' else df.loc[df['pitchtype'].str.contains([pitchtype])].copy()
         stat = stat if pitchtype=='' else 'pitchtype_'+stat
         
         val = df.loc[df['pitchername']==name,stat].mean()
@@ -615,7 +614,7 @@ elif chart=='Pitch Quality':
                     player, 
                     len(pitch_list), 
                     pitch_ax, 
-                    pitchtype=str(pitch))
+                    pitchtype=pitch)
             ax_num+=1
 
         ax_num = 2
