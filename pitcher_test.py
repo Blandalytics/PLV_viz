@@ -547,7 +547,7 @@ elif chart=='Pitch Quality':
                           .sort_values('num_pitches',
                                        ascending=False)
                           ['pitchtype'])
-        st.write([x for x in pitch_list])
+        st.write(pitch_list[0])
 
         fig = plt.figure(figsize=(8,8))
 
