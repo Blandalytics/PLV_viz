@@ -538,7 +538,7 @@ elif chart=='Pitch Quality':
     def plv_card():        
 #         pla_dict = pla_df.loc[(pla_df['pitchername']==player),['PLA','FF','SI','SL','CH','CU','FC','FS']].to_dict(orient='list')
 
-        pitch_list = (pla_df
+        pitch_list = list(pla_df
                           .loc[(pla_df['pitchername']==player)]
                           .groupby('pitchtype',as_index=False)
                           ['num_pitches']
@@ -547,7 +547,7 @@ elif chart=='Pitch Quality':
                           .sort_values('num_pitches',
                                        ascending=False)
                           ['pitchtype'])
-        st.write(pitch_list)
+        st.write([x for x in pitch_list])
 
         fig = plt.figure(figsize=(8,8))
 
