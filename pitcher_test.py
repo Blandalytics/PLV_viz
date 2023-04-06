@@ -440,7 +440,6 @@ elif chart=='Pitch Quality':
         stat = stat if pitchtype=='' else 'pitchtype_plv'
         
         val = df.loc[df['pitchername']==name,stat].mean()
-        st.write(val)
         val_percentile = np.clip(stats.percentileofscore(df[stat], val) / 100,0,1)
 
         sns.kdeplot(df[stat], ax=ax, color='w', legend=False, cut=0)
@@ -620,9 +619,8 @@ elif chart=='Pitch Quality':
 
         ax_num = 2
         for pitch in ['PLA']+pitch_list:
-            stat = 'PLA' if pitch=='PLA' else 'pitchtype_pla'
-            val = pq_df.loc[pq_df['pitchername']==name,stat].mean() if pitch=='PLA' else pq_df.loc[(pq_df['pitchername']==name) &
-                                                                                                   (pq_df['pitchtype']==pitch),stat].mean()
+            val = pq_df.loc[pq_df['pitchername']==player,'PLA'].mean() if pitch=='PLA' else pq_df.loc[(pq_df['pitchername']==player) &
+                                                                                                      (pq_df['pitchtype']==pitch),'pitchtype_pla'].mean()
             pla_ax = plt.subplot(grid[ax_num, 2])
             pla_ax.text(-0.25,0,'{:.2f}'.format(val), ha='center', va='center', 
                         fontsize=20)
