@@ -402,7 +402,7 @@ elif chart=='Pitch Quality':
         'Right':['R']
     }
     
-    pla_df = get_pla(year,pitch_threshold,p_hand=pitcher_hand,b_hand=hand_map[handedness]).reset_index().rename(columns={'Pitcher':'pitchername'])
+    pla_df = get_pla(year,pitch_threshold,p_hand=pitcher_hand,b_hand=hand_map[handedness]).reset_index().rename(columns={'Pitcher':'pitchername'})
     
     def plv_kde(df,name,num_pitches,ax,stat='PLV',pitchtype=''):
         pitch_thresh = 500 if pitchtype=='' else 100
