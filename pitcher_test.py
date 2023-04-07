@@ -223,7 +223,8 @@ st.dataframe(pla_df
 
 def get_movement(year,player):
     move_data = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_pitch_movement.csv?raw=true', encoding='latin1')
-    return move_data.loc[move_data['pitchername']==player].copy()
+    return move_data.loc[(move_data['pitchername']==player) &
+                         (move_data['pitchtype']!='UN')].copy()
 
 st.title("Pitcher Charts")
 
@@ -670,7 +671,7 @@ else:
                       .sort_values('pitch_id',ascending=False)
                       ['pitchtype']
                      )
-        st.dataframe(move_df)
+        
         fig, ax = plt.subplots(figsize=(8,8))
         
         sns.scatterplot(data=move_df,
