@@ -661,6 +661,7 @@ elif chart=='Pitch Quality':
 else:
     def movement_chart():
         move_df = get_movement(year)
+        st.dataframe(move_df)
         pitch_list = list(move_df
                           .loc[move_df['pitchername']==player]
                           .groupby('pitchtype',as_index=False)
