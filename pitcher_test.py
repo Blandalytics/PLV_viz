@@ -138,7 +138,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                               min_value=50 if year==2023 else 200, 
                               max_value=2000,
                               step=50, 
-                              value=500)
+                              value=100 if year==2023 else 500)
 
 def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R']):
     pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/pla_data.csv?raw=true', encoding='latin1')
