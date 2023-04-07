@@ -673,8 +673,7 @@ else:
                          )
         fig, ax = plt.subplots(figsize=(8,8))
         
-        sns.scatterplot(data=move_df.loc[(move_df['pitchername']==player) &
-                                         move_df['pitchtype'].isin(pitch_list)].copy(),
+        sns.scatterplot(data=move_df.loc[(move_df['pitchername']==player)].copy(),
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
@@ -683,8 +682,7 @@ else:
         ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
         ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
         
-        sns.scatterplot(data=move_df.loc[(move_df['pitchername']==player) &
-                                         move_df['pitchtype'].isin(pitch_list)].groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
+        sns.scatterplot(data=move_df.loc[(move_df['pitchername']==player)].groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
