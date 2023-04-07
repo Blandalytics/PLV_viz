@@ -221,6 +221,8 @@ st.dataframe(pla_df
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
+def get_movement(year):
+    return pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_pitch_movement.csv?raw=true', encoding='latin1')
 
 st.title("Pitcher Charts")
 
@@ -658,20 +660,20 @@ elif chart=='Pitch Quality':
     
 else:
     def movement_chart():
-        pitch_list = list(plv_df
-                          .loc[plv_df['pitchername']==player]
+        move_df = get_movement(year)
+        pitch_list = list(move_df
+                          .loc[move_df['pitchername']==player]
                           .groupby('pitchtype',as_index=False)
                           ['pitch_id']
                           .count()
                           .dropna()
                           .sort_values('pitch_id', ascending=False)
-                          .query(f'pitch_id >= 20')
                           ['pitchtype']
                          )
         fig, ax = plt.subplots(figsize=(8,8))
         
-        sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
-                                        plv_df['pitchtype'].isin(pitch_list)].copy(),
+        sns.scatterplot(data=move_df.loc[(move_df['pitchername']==player) &
+                                         move_df['pitchtype'].isin(pitch_list)].copy(),
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
@@ -680,8 +682,8 @@ else:
         ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
         ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
         
-        sns.scatterplot(data=plv_df.loc[(plv_df['pitchername']==player) &
-                                        plv_df['pitchtype'].isin(pitch_list)].groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
+        sns.scatterplot(data=move_df.loc[(move_df['pitchername']==player) &
+                                         move_df['pitchtype'].isin(pitch_list)].groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
