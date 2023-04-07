@@ -237,16 +237,10 @@ color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
 
 ## Selectors
 # Player
-players = list(plv_df
-               .groupby('pitchername', as_index=False)
-               [['pitch_id','PLV']]
-               .agg({
-                   'pitch_id':'count',
-                   'PLV':'mean'
-               })
-               .query(f'pitch_id >={pitch_threshold}')
+players = list(pla_df
+               .query(f'Num_Pitches >={pitch_threshold}')
                .sort_values('PLV', ascending=False)
-               ['pitchername']
+               ['Pitcher']
               )
 default_ix = players.index('Sandy Alcantara')
 player = st.selectbox('Choose a player:', players, index=default_ix)
