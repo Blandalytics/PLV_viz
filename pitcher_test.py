@@ -221,8 +221,9 @@ st.dataframe(pla_df
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
 
-def get_movement(year):
-    return pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_pitch_movement.csv?raw=true', encoding='latin1')
+def get_movement(year,player):
+    move_data = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_pitch_movement.csv?raw=true', encoding='latin1')
+    return move_data.loc[move_data['pitchername']==player].copy()
 
 st.title("Pitcher Charts")
 
@@ -660,20 +661,11 @@ elif chart=='Pitch Quality':
     
 else:
     def movement_chart():
-        move_df = get_movement(year)
+        move_df = get_movement(year,player)
         st.dataframe(move_df)
-        pitch_list = list(move_df
-                          .loc[move_df['pitchername']==player]
-                          .groupby('pitchtype',as_index=False)
-                          ['pitch_id']
-                          .count()
-                          .dropna()
-                          .sort_values('pitch_id', ascending=False)
-                          ['pitchtype']
-                         )
         fig, ax = plt.subplots(figsize=(8,8))
         
-        sns.scatterplot(data=move_df.loc[(move_df['pitchername']==player)].copy(),
+        sns.scatterplot(data=move_df,
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
@@ -682,15 +674,14 @@ else:
         ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
         ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
         
-        sns.scatterplot(data=move_df.loc[(move_df['pitchername']==player)].groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
+        sns.scatterplot(data=move_df.groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
                         x='IHB',
                         y='IVB',
                         hue='pitchtype',
                         palette=color_palette,
                         s=150,
                         legend=False,
-                        linewidth=2,
-#                         edgecolor='k'
+                        linewidth=2
                        )
         
         ax.set(xlim=(-27,27),
