@@ -209,14 +209,15 @@ def pitchtype_color(s):
 
 st.write(f'At least {int(pitch_threshold/20)} pitches thrown, per pitch type. Table is sortable.')
 st.dataframe(pla_df
+             .drop(columns=['PLV'])
              .astype({'Num_Pitches': 'int'})
              .fillna(fill_val)
              .style
              .format(precision=2, thousands=',')
              .background_gradient(axis=0, vmin=2, vmax=6,
                                   cmap=f"{diverging_palette}_r", subset=format_cols)
-             .background_gradient(axis=0, vmin=4.5, vmax=5.5,
-                                  cmap=f"{diverging_palette}", subset='PLV')
+#              .background_gradient(axis=0, vmin=4.5, vmax=5.5,
+#                                   cmap=f"{diverging_palette}", subset='PLV')
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
              #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
@@ -238,6 +239,8 @@ color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
 ## Selectors
 # Player
 players = list(pla_df
+               .reset_index()
+               .astype({'Num_Pitches':'int'})
                .query(f'Num_Pitches >={pitch_threshold}')
                .sort_values('PLV', ascending=False)
                ['Pitcher']
