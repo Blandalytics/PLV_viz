@@ -662,6 +662,14 @@ elif chart=='Pitch Quality':
 else:
     def movement_chart():
         move_df = get_movement(year,player)
+        pitch_list = list(move_df
+                      .groupby(pitchtype)
+                      ['pitch_id']
+                      .count()
+                      .reset_index()
+                      .sort_values('pitch_id',ascending=False)
+                      ['pitchtype']
+                     )
         st.dataframe(move_df)
         fig, ax = plt.subplots(figsize=(8,8))
         
