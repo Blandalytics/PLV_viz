@@ -702,7 +702,7 @@ else:
 
         ax.legend([handles[idx] for idx in pitchtype_order],[labels[idx] for idx in pitchtype_order])
 
-        fig.suptitle(f"{player}'s\nPitch Movement Profile",x=0.4,
+        fig.suptitle(f"{player}'s {year}\nPitch Movement Profile",x=0.4,
                      y=0.95, 
                      fontsize=18)
         
