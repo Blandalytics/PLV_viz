@@ -663,7 +663,7 @@ else:
     def movement_chart():
         move_df = get_movement(year,player)
         pitch_list = list(move_df
-                      .groupby(pitchtype)
+                      .groupby('pitchtype')
                       ['pitch_id']
                       .count()
                       .reset_index()
