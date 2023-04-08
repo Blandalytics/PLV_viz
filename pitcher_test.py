@@ -491,7 +491,7 @@ elif chart=='Pitch Quality':
               fontsize=16,
               fontweight='bold', 
               bbox=props)
-        ax.set(xlim=(3.6,6.4),
+        ax.set(xlim=(mean_plv-1.4,mean_plv+1.4),
              ylim=(0,y_max*1.2),
              xlabel=None,
              ylabel=None,
