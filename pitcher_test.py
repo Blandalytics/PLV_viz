@@ -227,6 +227,9 @@ def get_movement(year,player):
     return move_data.loc[(move_data['pitchername']==player) &
                          (move_data['pitchtype']!='UN')].copy()
 
+mean_plv = pla_df['PLV'].mul(pla_df['Num_Pitches']).sum() / pla_df['Num_Pitches'].sum()
+st.write(mean_plv)
+
 st.title("Pitcher Charts")
 
 palettes = ['Pitcher List','Color Blind-Friendly']
