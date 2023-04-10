@@ -724,7 +724,7 @@ else:
     movement_chart()
     
 st.title("General Pitch Quality")
-st.write('2023 is under construction. Sorry!')
+st.write('Under construction. Sorry!')
 exit()
 st.write('- ***Quality Pitch (QP%)***: Pitch with a PLV >= 5.5')
 st.write('- ***Average Pitch (AP%)***: Pitch with 4.5 < PLV < 5.5')
