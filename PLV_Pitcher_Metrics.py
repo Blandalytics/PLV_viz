@@ -242,13 +242,6 @@ color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
 # Player
 players = list(pla_df
                .reset_index()
-               .groupby('Pitcher', as_index=False)
-               [['pitch_id','PLV']]
-               .agg({
-                   'pitch_id':'count',
-                   'PLV':'mean'
-               })
-               .query(f'pitch_id >={pitch_threshold}')
                .sort_values('PLV', ascending=False)
                ['Pitcher']
               )
