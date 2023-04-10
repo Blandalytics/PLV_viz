@@ -256,6 +256,7 @@ rolling_df = (plv_df
                    plv_df['p_hand'].isin(hand_map[handedness]) &
                    plv_df['count'].isin(selected_options),
                    ['hittername',metric]]
+              .replace([np.inf, -np.inf], np.nan, inplace=True)
               .dropna()
               .reset_index(drop=True)
               .reset_index()
