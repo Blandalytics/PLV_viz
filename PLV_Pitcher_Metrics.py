@@ -240,7 +240,7 @@ color_palette = cb_colors if palette=='Color Blind-Friendly' else marker_colors
 
 ## Selectors
 # Player
-players = list(plv_df
+players = list(pla_df
                .groupby('pitchername', as_index=False)
                [['pitch_id','PLV']]
                .agg({
