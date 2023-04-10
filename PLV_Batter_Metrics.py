@@ -95,7 +95,7 @@ def load_season_data(year):
 plv_df = load_season_data(year)
 
 max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
-pitch_thresh = int(max_pitches/4)
+pitch_thresh = int(max_pitches/5)
 
 season_df = (plv_df
              .rename(columns=season_names)
@@ -154,9 +154,9 @@ stat_values = {
 
 plv_df = plv_df.rename(columns=stat_names)
 st.title("Rolling Ability Charts")
-if year==2023:
-    st.write(f'Charts not available for {year} (yet).')
-    exit()
+# if year==2023:
+#     st.write(f'Charts not available for {year} (yet).')
+#     exit()
 
 # Player
 players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
