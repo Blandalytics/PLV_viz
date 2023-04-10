@@ -215,6 +215,8 @@ def pitchtype_color(s):
     return f"background-color: {marker_colors[s]}" if s in list(marker_colors.keys()) else None
 
 st.write('At least 20 pitches thrown, per pitch type. Table is sortable.')
+if year == 2023:
+    st.write('Note: PLV and PLA begin to stabilize at ~500 pitches.')    
 st.dataframe(pla_df
              .astype({'Num_Pitches': 'int'})
              .fillna(fill_val)
