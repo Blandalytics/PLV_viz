@@ -733,7 +733,7 @@ st.write('- ***Bad Pitch (BP%)***: Pitch with a PLV <= 4.5')
 st.write('- ***QP-BP%***: Difference between QP and BP. Avg is 7%')
 
 # Num Pitches threshold
-pitch_min_2 =  = st.number_input(f'Min # of Pitches:',
+pitch_min_2 = st.number_input(f'Min # of Pitches:',
                               min_value=50 if year==2023 else 200, 
                               max_value=2000,
                               step=50, 
