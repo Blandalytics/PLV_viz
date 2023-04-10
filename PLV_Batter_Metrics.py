@@ -250,13 +250,13 @@ chart_75 = chart_thresh_list[metric].quantile(0.75)
 chart_25 = chart_thresh_list[metric].quantile(0.25)
 chart_10 = chart_thresh_list[metric].quantile(0.1)
 
+plv_df[metric] = plv_df[metric].replace([np.inf, -np.inf], np.nan)
 rolling_df = (plv_df
               .sort_values('pitch_id')
               .loc[(plv_df['hittername']==player) &
                    plv_df['p_hand'].isin(hand_map[handedness]) &
                    plv_df['count'].isin(selected_options),
                    ['hittername',metric]]
-              .replace([np.inf, -np.inf], np.nan, inplace=True)
               .dropna()
               .reset_index(drop=True)
               .reset_index()
