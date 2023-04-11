@@ -154,10 +154,10 @@ stat_values = {
 
 plv_df = plv_df.rename(columns=stat_names)
 st.title("Rolling Ability Charts")
-st.dataframe(plv_df)
-# if year==2023:
-#     st.write(f'Charts not available for {year} (yet).')
-#     exit()
+if year==2023:
+    st.write(f'Charts not available for {year}, yet. We need more pitches.')
+    st.markdown("![Alt Text](https://media.tenor.com/0engAwwUVF4AAAAC/more-kylo-ren.gif)")
+    exit()
 
 # Player
 players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
@@ -251,9 +251,9 @@ chart_75 = chart_thresh_list[metric].quantile(0.75)
 chart_25 = chart_thresh_list[metric].quantile(0.25)
 chart_10 = chart_thresh_list[metric].quantile(0.1)
 
-st.write(chart_10)
-st.write(chart_90)
-st.dataframe(chart_thresh_list[metric])
+# st.write(chart_10)
+# st.write(chart_90)
+# st.dataframe(chart_thresh_list[metric])
 
 plv_df[metric] = plv_df[metric].replace([np.inf, -np.inf], np.nan)
 rolling_df = (plv_df
