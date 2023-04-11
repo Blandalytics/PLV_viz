@@ -253,6 +253,7 @@ chart_10 = chart_thresh_list[metric].quantile(0.1)
 
 st.write(chart_10)
 st.write(chart_90)
+st.dataframe(chart_thresh_list[metric])
 
 plv_df[metric] = plv_df[metric].replace([np.inf, -np.inf], np.nan)
 rolling_df = (plv_df
