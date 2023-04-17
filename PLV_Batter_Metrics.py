@@ -233,7 +233,7 @@ hand_map = {
 
 st.dataframe(plv_df)
 chart_thresh_list = (plv_df
-                     .loc[plv_df['count'].isin(selected_options) &
+                     .loc[plv_df['count'].astype('str').isin(selected_options) &
                           plv_df['b_hand'].isin(hitter_hand) &
                           plv_df['p_hand'].isin(hand_map[handedness])]
                      .groupby('hittername')
@@ -242,8 +242,7 @@ chart_thresh_list = (plv_df
                          'pitch_id':'count',
                          metric:'mean'
                      })
-                     .reset_index()
-#                      .query(f'pitch_id >= {updated_threshold}')
+                     .query(f'pitch_id >= {updated_threshold}')
                      .replace([np.inf, -np.inf], 0, inplace=True)
                     )
 
