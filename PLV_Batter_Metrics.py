@@ -170,6 +170,9 @@ player = st.selectbox('Choose a hitter:', players, index=default_player)
 metrics = list(stat_names.values())
 default_stat = metrics.index('Decision Value')
 metric = st.selectbox('Choose a metric:', metrics, index=default_stat)
+if year==2023 & metric=='Contact Ability':
+    st.write('2023 Contact Ability charts are currently down. Sorry!')
+    exit()
 
 rolling_denom = {
     'Swing Aggression':'Pitches',
