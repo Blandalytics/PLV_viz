@@ -194,7 +194,6 @@ count_select = st.radio('Count Group',
                         index=0,
                         horizontal=True
                        )
-# container = st.container()
  
 if count_select=='All':
     selected_options = ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2']
@@ -243,6 +242,7 @@ chart_thresh_list = (plv_df
                          'pitch_id':'count',
                          metric:'mean'
                      })
+                     .reset_index()
                      .query(f'pitch_id >= {updated_threshold}')
                      .replace([np.inf, -np.inf], 0, inplace=True)
                     )
