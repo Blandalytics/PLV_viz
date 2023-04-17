@@ -243,8 +243,8 @@ chart_thresh_list = (plv_df
                          'pitch_id':'count',
                          metric:'mean'
                      })
-                     .query(f'pitch_id >= {updated_threshold}')
-                     .replace([np.inf, -np.inf], 0, inplace=True)
+#                      .query(f'pitch_id >= {updated_threshold}')
+                     .copy()
                     )
 
 st.dataframe(chart_thresh_list)
