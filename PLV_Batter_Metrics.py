@@ -231,7 +231,6 @@ hand_map = {
     'Right':['R']
 }
 
-st.dataframe(plv_df)
 chart_thresh_list = (plv_df
                      .loc[plv_df['count'].astype('str').isin(selected_options) &
                           plv_df['b_hand'].isin(hitter_hand) &
@@ -247,7 +246,6 @@ chart_thresh_list = (plv_df
                      .copy()
                     )
 
-st.dataframe(chart_thresh_list)
 chart_mean = plv_df.loc[plv_df['count'].isin(selected_options),metric].mean()
 chart_90 = chart_thresh_list[metric].quantile(0.9)
 chart_75 = chart_thresh_list[metric].quantile(0.75)
