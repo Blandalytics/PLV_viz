@@ -246,6 +246,7 @@ chart_thresh_list = (plv_df
                      .replace([np.inf, -np.inf], 0, inplace=True)
                     )
 
+st.dataframe(chart_thresh_list)
 chart_mean = plv_df.loc[plv_df['count'].isin(selected_options),metric].mean()
 chart_90 = chart_thresh_list[metric].quantile(0.9)
 chart_75 = chart_thresh_list[metric].quantile(0.75)
@@ -254,7 +255,6 @@ chart_10 = chart_thresh_list[metric].quantile(0.1)
 
 # st.write(chart_10)
 # st.write(chart_90)
-# st.dataframe(chart_thresh_list[metric])
 
 plv_df[metric] = plv_df[metric].replace([np.inf, -np.inf], np.nan)
 rolling_df = (plv_df
