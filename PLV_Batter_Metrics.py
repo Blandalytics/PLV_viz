@@ -352,8 +352,12 @@ def rolling_chart():
             color=sns.color_palette('vlag', n_colors=100)[9],
             alpha=1)
     
-    chart_min = min(chart_10,rolling_df['Rolling_Stat'].min())
-    chart_max = max(chart_90,rolling_df['Rolling_Stat'].max())
+    chart_min = min(chart_10,
+#                     rolling_df['Rolling_Stat'].min()
+                   )
+    chart_max = max(chart_90,
+#                     rolling_df['Rolling_Stat'].max()
+                   )
     
     ax.set(xlabel=rolling_denom[metric],
            ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
