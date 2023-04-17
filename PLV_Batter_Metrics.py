@@ -243,7 +243,7 @@ chart_thresh_list = (plv_df
                          metric:'mean'
                      })
                      .reset_index()
-                     .query(f'pitch_id >= {updated_threshold}')
+#                      .query(f'pitch_id >= {updated_threshold}')
                      .replace([np.inf, -np.inf], 0, inplace=True)
                     )
 
