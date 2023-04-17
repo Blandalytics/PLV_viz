@@ -232,6 +232,7 @@ hand_map = {
     'Right':['R']
 }
 
+st.dataframe(plv_df)
 chart_thresh_list = (plv_df
                      .loc[plv_df['count'].isin(selected_options) &
                           plv_df['b_hand'].isin(hitter_hand) &
