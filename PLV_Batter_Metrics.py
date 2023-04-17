@@ -243,6 +243,7 @@ chart_thresh_list = (plv_df
                          metric:'mean'
                      })
                      .query(f'pitch_id >= {updated_threshold}')
+                     .replace([np.inf, -np.inf], 0, inplace=True)
                     )
 
 chart_mean = plv_df.loc[plv_df['count'].isin(selected_options),metric].mean()
@@ -353,10 +354,10 @@ def rolling_chart():
             alpha=1)
     
     chart_min = min(chart_10,
-#                     rolling_df['Rolling_Stat'].min()
+                    rolling_df['Rolling_Stat'].min()
                    )
     chart_max = max(chart_90,
-#                     rolling_df['Rolling_Stat'].max()
+                    rolling_df['Rolling_Stat'].max()
                    )
     
     ax.set(xlabel=rolling_denom[metric],
