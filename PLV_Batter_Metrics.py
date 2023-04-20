@@ -154,10 +154,6 @@ stat_values = {
 
 plv_df = plv_df.rename(columns=stat_names)
 st.title("Rolling Ability Charts")
-# if year==2023:
-#     st.write(f'Charts not available for {year}, yet. We need more pitches.')
-#     st.markdown("![Alt Text](https://media.tenor.com/0engAwwUVF4AAAAC/more-kylo-ren.gif)")
-#     exit()
 
 # Player
 players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
