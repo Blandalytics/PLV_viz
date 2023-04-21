@@ -314,7 +314,6 @@ if chart=='Pitch Distribution':
                 # Plotting
                 sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
                              x='PLV_clip',
-                             hue='pitchtype',
                              color=color_palette[pitch],
                              binwidth=0.5,
                              binrange=(0,10),
