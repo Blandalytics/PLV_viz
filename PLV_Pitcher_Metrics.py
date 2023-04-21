@@ -567,7 +567,7 @@ elif chart=='Pitch Quality':
         title_ax.tick_params(left=False, bottom=False)
 
         plv_desc_ax = plt.subplot(grid[1, 1])
-        plv_desc_ax.text(0,-0.4,"PLV", ha='center', va='bottom', fontsize=18,
+        plv_desc_ax.text(0,-0.8,"PLV", ha='center', va='bottom', fontsize=18,
                bbox=dict(facecolor='#162B50', alpha=0.6, edgecolor='#162B50'))
         plv_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
         plv_desc_ax.set_xticklabels([])
