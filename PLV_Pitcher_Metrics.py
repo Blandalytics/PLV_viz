@@ -575,8 +575,8 @@ elif chart=='Pitch Quality':
         plv_desc_ax.tick_params(left=False, bottom=False)
 
         pla_desc_ax = plt.subplot(grid[1, 2])
-        pla_desc_ax.text(-0.25,-0.1,"PLA", ha='center', va='bottom', fontsize=18)
-        pla_desc_ax.text(-0.25,-0.15,"(xRuns per 9IP*)", ha='center', va='top', fontsize=10)
+        pla_desc_ax.text(-0.25,-0.4,"PLA", ha='center', va='bottom', fontsize=18)
+        pla_desc_ax.text(-0.25,-0.45,"(xRuns per 9IP*)", ha='center', va='top', fontsize=10)
         pla_desc_ax.set(xlabel=None, xlim=(-1,1), ylabel=None, ylim=(-1,1))
         pla_desc_ax.set_xticklabels([])
         pla_desc_ax.set_yticklabels([])
