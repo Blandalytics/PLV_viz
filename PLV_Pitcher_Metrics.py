@@ -723,13 +723,6 @@ st.write('- ***Average Pitch (AP%)***: Pitch with 4.5 < PLV < 5.5')
 st.write('- ***Bad Pitch (BP%)***: Pitch with a PLV <= 4.5')
 st.write('- ***QP-BP%***: Difference between QP and BP. Avg is 7%')
 
-# Num Pitches threshold
-pitch_min_2 = st.number_input(f'Min # of Pitches:',
-                              min_value=50 if year==2023 else 200, 
-                              max_value=2000,
-                              step=50, 
-                              value=100 if year==2023 else 500)
-
 class_df = (plv_df
              .rename(columns={
                  'pitchername':'Pitcher'
@@ -742,7 +735,7 @@ class_df = (plv_df
                  'Bad Pitch':'mean',
                  'pitch_id':'count'
              })
-             .query(f'pitch_id >={pitch_min_2}')
+             .query(f'pitch_id >={pitch_threshold}')
              .assign(QP_BP=lambda x: x['Quality Pitch'] - x['Bad Pitch'])
              .rename(columns={
                  'Quality Pitch':'QP%',
