@@ -101,6 +101,7 @@ season_df = (plv_df
              .rename(columns=season_names)
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches'})
+             .astype({'Name':'str'})
              .groupby('Name')
              [['Pitches']+list(season_names.values())]
              .agg({
