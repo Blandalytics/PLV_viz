@@ -225,9 +225,7 @@ st.dataframe(pla_df
              .background_gradient(axis=0, vmin=2, vmax=6,
                                   cmap=f"{diverging_palette}_r", subset=format_cols)
              .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
-             #.applymap_index(pitchtype_color, axis='columns') # Apparently Streamlit doesn't style headers
             )
-
 
 st.title("Pitcher Charts")
 
@@ -301,7 +299,6 @@ if chart=='Pitch Distribution':
 
     ## Chart function
         def arsenal_dist():
-            st.dataframe(plv_df)
             # Subplots based off of # of pitchtypes
             fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
             ax_num = 0
@@ -316,14 +313,14 @@ if chart=='Pitch Distribution':
 
                 # Plotting
                 sns.histplot(data=chart_data.loc[chart_data['pitchername']==player],
-                            x='PLV_clip',
-                            hue='pitchtype',
-                            palette=color_palette,
-                            binwidth=0.5,
-                            binrange=(0,10),
-                            alpha=1,
-                            ax=axs[ax_num],
-                            legend=False
+                             x='PLV_clip',
+                             hue='pitchtype',
+                             color=color_palette,
+                             binwidth=0.5,
+                             binrange=(0,10),
+                             alpha=1,
+                             ax=axs[ax_num],
+                             legend=False
                             )
                 # Season Avg Line
                 axs[ax_num].axvline(chart_data.loc[chart_data['pitchername']==player,'PLV'].mean(),
