@@ -301,6 +301,7 @@ if chart=='Pitch Distribution':
 
     ## Chart function
         def arsenal_dist():
+            st.dataframe(plv_df)
             # Subplots based off of # of pitchtypes
             fig, axs = plt.subplots(len(pitch_list),1,figsize=(8,8), sharex='row', sharey='row', constrained_layout=True)
             ax_num = 0
