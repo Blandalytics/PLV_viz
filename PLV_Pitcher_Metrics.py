@@ -257,9 +257,9 @@ chart = st.radio('Choose a chart type:',
                  horizontal=True)
 
 if chart=='Pitch Distribution':
-    if year==2023:
-        st.write('2023 is under construction. Sorry!')
-        exit()
+#     if year==2023:
+#         st.write('2023 is under construction. Sorry!')
+#         exit()
     # Hitter Handedness
     handedness = st.select_slider(
         'Hitter Handedness',
