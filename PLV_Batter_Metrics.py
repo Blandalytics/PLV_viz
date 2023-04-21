@@ -99,10 +99,12 @@ pitch_thresh = int(max_pitches/5)
 
 season_df = (plv_df
              .rename(columns=season_names)
-             .groupby('hittername')
-             [['pitch_id']+list(season_names.values())]
+             .rename(columns={'hittername':'Name',
+                              'pitch_id':'Pitches'})
+             .groupby('Name')
+             [['Pitches']+list(season_names.values())]
              .agg({
-                 'pitch_id':'count',
+                 'Pitches':'count',
                  'Swing Agg (%)':'mean',
                  'SZ Judge':'mean',
                  'Dec Value':'mean',
@@ -110,10 +112,8 @@ season_df = (plv_df
                  'Power':'mean',
                  'HP':'mean'
              })
-             .query(f'pitch_id >= {pitch_thresh}')
-             .reset_index()
-             .rename(columns={'hittername':'Name',
-                              'pitch_id':'Pitches'})
+             .query(f'Pitches >= {pitch_thresh}')
+#              .reset_index()
              .sort_values('HP', ascending=False)
             )
 
@@ -124,7 +124,7 @@ for stat in ['SZ Judge','Contact','Dec Value','Power','HP']:
 st.write('Metrics on a 20-80 scale. Table is sortable.')
 
 st.dataframe(season_df
-             .reset_index(drop=True)
+#              .reset_index(drop=True)
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
