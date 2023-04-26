@@ -659,6 +659,7 @@ elif chart=='Pitch Quality':
     
 else:
     def movement_chart():
+        hand = plv_df.loc[(plv_df['pitchername']==player),'p_hand'].values[0]
         move_df = get_movement(year,player)
         pitch_list = list(move_df
                       .groupby('pitchtype')
@@ -692,8 +693,8 @@ else:
         
         ax.set(xlim=(27,-27),
                ylim=(-27,27),
-               xlabel='Induced Horizontal Break (in)',
-               ylabel='Induced Vertical Break (in)')
+               xlabel='Horizontal Break (in)',
+               ylabel='Vertical Break (in)')
         ax.set_xticks([20,10,0,-10,-20])
         ax.set_xticklabels([x*-1 for x in ax.get_xticks()])
         
@@ -718,7 +719,7 @@ else:
         ax.annotate('', xy=(-0.1, 0.35), xycoords='axes fraction', xytext=(-0.1, 0.05), 
                     arrowprops=dict(arrowstyle="<-", color='w'))
 
-        fig.suptitle(f"{player}'s {year}\nPitch Movement Profile",x=0.4,
+        fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.4,
                      y=0.95, 
                      fontsize=18)
         
