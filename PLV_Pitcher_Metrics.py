@@ -417,7 +417,7 @@ elif chart=='Pitch Quality':
           'total_plv':'sum'
       })
       .sort_values('pitch_runs', ascending=False)
-      .query(f'num_pitches >={default_count/20}')
+      .query(f'num_pitches >={pitch_threshold/20}')
       .reset_index()
       )
 
