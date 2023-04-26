@@ -119,7 +119,7 @@ def load_data(year):
     
     return df
 plv_df = load_data(year)
-st.write(round(plv_df.groupby('pitchername')['pitch_id'].count().max()/2,-2)/2)
+default_count = int(min(500,round(plv_df.groupby('pitchername')['pitch_id'].count().max()/2,-2)/2))
 
 def get_ids():
     id_df = pd.DataFrame()
@@ -140,7 +140,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   min_value=100 if year==2023 else 200, 
                                   max_value=2000,
                                   step=50, 
-                                  value=100 if year==2023 else 500)
+                                  value=default_count)
 
 def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R']):
     pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/pla_data.csv?raw=true', encoding='latin1')
@@ -257,9 +257,6 @@ chart = st.radio('Choose a chart type:',
                  horizontal=True)
 
 if chart=='Pitch Distribution':
-#     if year==2023:
-#         st.write('2023 is under construction. Sorry!')
-#         exit()
     # Hitter Handedness
     handedness = st.select_slider(
         'Hitter Handedness',
@@ -420,7 +417,7 @@ elif chart=='Pitch Quality':
           'total_plv':'sum'
       })
       .sort_values('pitch_runs', ascending=False)
-#       .query(f'num_pitches >={1}')
+      .query(f'num_pitches >={default_count/20}')
       .reset_index()
       )
 
