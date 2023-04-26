@@ -706,8 +706,8 @@ else:
         ax.legend([handles[idx] for idx in pitchtype_order],[labels[idx] for idx in pitchtype_order],
                  loc='upper right' if hand =='L' else 'upper left')
         
-        fig.text(0.83,0.04,'Glove' if hand == 'L' else 'Arm',ha='left')
-        fig.text(0.185,0.04,'Arm' if hand == 'L' else 'Glove',ha='right')
+        fig.text(0.83,0.045,'Glove' if hand == 'L' else 'Arm',ha='left')
+        fig.text(0.185,0.045,'Arm' if hand == 'L' else 'Glove',ha='right')
         fig.text(0.05,0.84,'Rise',ha='center')
         fig.text(0.05,0.11,'Drop',ha='center')
 
