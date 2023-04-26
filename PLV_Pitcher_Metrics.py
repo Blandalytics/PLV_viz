@@ -690,10 +690,12 @@ else:
                         linewidth=2
                        )
         
-        ax.set(xlim=(-27,27),
+        ax.set(xlim=(27,-27),
                ylim=(-27,27),
                xlabel='Induced Horizontal Break (in)',
                ylabel='Induced Vertical Break (in)')
+        ax.set_xticks([20,10,0,-10,-20])
+        ax.set_xticklabels([x*-1 for x in ax.get_xticks()])
         
         handles, labels = ax.get_legend_handles_labels()
         pitchtype_order = []
@@ -701,6 +703,20 @@ else:
             pitchtype_order.append(labels.index(x))
 
         ax.legend([handles[idx] for idx in pitchtype_order],[labels[idx] for idx in pitchtype_order])
+        
+        fig.text(0.83,0.0575,'Glove' if hand == 'L' else 'Arm',ha='left')
+        fig.text(0.185,0.0575,'Arm' if hand == 'L' else 'Glove',ha='right')
+        fig.text(0.05,0.85,'Rise',ha='center')
+        fig.text(0.05,0.125,'Drop',ha='center')
+
+        ax.annotate('', xy=(0.65, -0.08), xycoords='axes fraction', xytext=(0.9, -0.08), 
+                    arrowprops=dict(arrowstyle="<-", color='w'))
+        ax.annotate('', xy=(0.35, -0.08), xycoords='axes fraction', xytext=(0.09, -0.08), 
+                    arrowprops=dict(arrowstyle="<-", color='w'))
+        ax.annotate('', xy=(-0.1, 0.64), xycoords='axes fraction', xytext=(-0.1, 0.93), 
+                    arrowprops=dict(arrowstyle="<-", color='w'))
+        ax.annotate('', xy=(-0.1, 0.35), xycoords='axes fraction', xytext=(-0.1, 0.05), 
+                    arrowprops=dict(arrowstyle="<-", color='w'))
 
         fig.suptitle(f"{player}'s {year}\nPitch Movement Profile",x=0.4,
                      y=0.95, 
