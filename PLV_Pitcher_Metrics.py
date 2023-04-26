@@ -706,10 +706,10 @@ else:
         ax.legend([handles[idx] for idx in pitchtype_order],[labels[idx] for idx in pitchtype_order],
                  loc='upper right' if hand =='L' else 'upper left')
         
-        fig.text(0.83,0.05,'Glove' if hand == 'L' else 'Arm',ha='left')
-        fig.text(0.185,0.05,'Arm' if hand == 'L' else 'Glove',ha='right')
-        fig.text(0.05,0.825,'Rise',ha='center')
-        fig.text(0.05,0.1,'Drop',ha='center')
+        fig.text(0.83,0.04,'Glove' if hand == 'L' else 'Arm',ha='left')
+        fig.text(0.185,0.04,'Arm' if hand == 'L' else 'Glove',ha='right')
+        fig.text(0.05,0.84,'Rise',ha='center')
+        fig.text(0.05,0.11,'Drop',ha='center')
 
         ax.annotate('', xy=(0.65, -0.08), xycoords='axes fraction', xytext=(0.9, -0.08), 
                     arrowprops=dict(arrowstyle="<-", color='w'))
