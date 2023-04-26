@@ -119,7 +119,7 @@ def load_data(year):
     
     return df
 plv_df = load_data(year)
-st.write(plv_df.groupby('pitchername')['pitch_id'].count().max())
+st.write(round(plv_df.groupby('pitchername')['pitch_id'].count().max()/2,-2)/2)
 
 def get_ids():
     id_df = pd.DataFrame()
