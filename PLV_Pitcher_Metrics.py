@@ -692,9 +692,9 @@ else:
                        )
         
         ax.set(xlim=(27,-27),
-               ylim=(-27,27),
-               xlabel='Horizontal Break (in)',
-               ylabel='Vertical Break (in)')
+               ylim=(-27,27))
+        plt.xlabel('Horizontal Break (in)', fontsize=12,labelpad=10)
+        plt.ylabel('Vertical Break (in)', fontsize=12)
         ax.set_xticks([20,10,0,-10,-20])
         ax.set_xticklabels([x*-1 for x in ax.get_xticks()])
         
@@ -703,7 +703,8 @@ else:
         for x in pitch_list:
             pitchtype_order.append(labels.index(x))
 
-        ax.legend([handles[idx] for idx in pitchtype_order],[labels[idx] for idx in pitchtype_order])
+        ax.legend([handles[idx] for idx in pitchtype_order],[labels[idx] for idx in pitchtype_order],
+                 loc='upper right' if hand =='L' else 'upper left')
         
         fig.text(0.83,0.0575,'Glove' if hand == 'L' else 'Arm',ha='left')
         fig.text(0.185,0.0575,'Arm' if hand == 'L' else 'Glove',ha='right')
