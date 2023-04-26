@@ -718,7 +718,7 @@ else:
         ax.annotate('', xy=(-0.1, 0.35), xycoords='axes fraction', xytext=(-0.1, 0.05), 
                     arrowprops=dict(arrowstyle="<-", color='w'))
 
-        fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.4,
+        fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.45,
                      y=0.95, 
                      fontsize=18)
         
