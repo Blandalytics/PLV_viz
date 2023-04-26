@@ -119,6 +119,7 @@ def load_data(year):
     
     return df
 plv_df = load_data(year)
+st.write(plv_df.groupby('pitchername')['pitch_id'].count().max())
 
 def get_ids():
     id_df = pd.DataFrame()
@@ -136,10 +137,10 @@ st.write('- ***Pitchtype PLA***: Value of a given pitch type (ERA scale), using 
 
 # Num Pitches threshold
 pitch_threshold = st.number_input(f'Min # of Pitches:',
-                              min_value=100 if year==2023 else 200, 
-                              max_value=2000,
-                              step=50, 
-                              value=100 if year==2023 else 500)
+                                  min_value=100 if year==2023 else 200, 
+                                  max_value=2000,
+                                  step=50, 
+                                  value=100 if year==2023 else 500)
 
 def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R']):
     pla_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/pla_data.csv?raw=true', encoding='latin1')
