@@ -384,3 +384,5 @@ if window > rolling_df.shape[0]:
     st.write(f'Not enough {rolling_denom[metric]} ({rolling_df.shape[0]})')
 else:
     rolling_chart()
+
+st.write("If you have questions or ideas on what you'd like to see, DM me! [link](https://twitter.com/blandalytics)")
