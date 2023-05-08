@@ -385,4 +385,4 @@ if window > rolling_df.shape[0]:
 else:
     rolling_chart()
 
-st.write("If you have questions or ideas on what you'd like to see, DM me! [link](https://twitter.com/blandalytics)")
+st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
