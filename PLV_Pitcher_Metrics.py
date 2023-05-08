@@ -773,4 +773,4 @@ st.dataframe(class_df
              .background_gradient(axis=0, cmap=f"{diverging_palette}_r", subset=['BP%'])
             )
 
-st.write("If you have questions or ideas on what you'd like to see, DM me! [link](https://twitter.com/blandalytics)")
+st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
