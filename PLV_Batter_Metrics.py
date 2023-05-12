@@ -95,7 +95,7 @@ def load_season_data(year):
 plv_df = load_season_data(year)
 
 max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
-pitch_thresh = int(max_pitches/5)
+pitch_thresh = int(max_pitches/4)
 
 season_df = (plv_df
              .rename(columns=season_names)
