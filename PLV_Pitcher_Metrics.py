@@ -158,7 +158,7 @@ def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R
           'total_plv':'sum'
       })
       .sort_values('pitch_runs', ascending=False)
-      .query(f'num_pitches >={max(5,int(pitch_threshold/20))}') # 5% of total pitches threshold
+      .query(f'num_pitches >={int(pitch_threshold/20)}') # 5% of total pitches threshold
       .reset_index()
       )
 
@@ -200,7 +200,7 @@ def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R
     return df
 
 # Season data
-pla_df = get_pla(year,max(100,pitch_threshold))
+pla_df = get_pla(year,pitch_threshold)
 
 def get_movement(year,player):
     move_data = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_pitch_movement.csv?raw=true', encoding='latin1')
