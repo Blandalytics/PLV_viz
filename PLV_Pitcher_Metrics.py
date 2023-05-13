@@ -158,7 +158,7 @@ def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R
           'total_plv':'sum'
       })
       .sort_values('pitch_runs', ascending=False)
-      .query(f'num_pitches >={int(pitch_threshold/20)}') # 5% of total pitches threshold
+      .query(f'num_pitches >={max(5,int(pitch_threshold/20))}') # 5% of total pitches threshold
       .reset_index()
       )
 
