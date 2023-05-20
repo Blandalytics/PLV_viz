@@ -269,7 +269,8 @@ window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:',
                          value=rolling_threshold[metric])
 
 rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window).mean()
-window = window if (rolling_df[metric].mean() < rolling_df['Rolling_Stat'].max()) and (rolling_df[metric].mean() > rolling_df['Rolling_Stat'].min()) else int(window*2/3)
+fixed_window = window if (rolling_df[metric].mean() < rolling_df['Rolling_Stat'].max()) and (rolling_df[metric].mean() > rolling_df['Rolling_Stat'].min()) else int(window*2/3)
+rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window, min_periods=fixed_window).mean()
 
 color_norm = colors.TwoSlopeNorm(vmin=chart_10, 
                                  vcenter=chart_mean,
@@ -284,7 +285,7 @@ def rolling_chart():
                  color='w'
                    )
     
-    line_text_loc = (rolling_df['index'].max() - window) * 1.05 + window
+    line_text_loc = (rolling_df['index'].max() - fixed_window) * 1.05 + fixed_window
     
     ax.axhline(rolling_df[metric].mean(), 
                color='w',
