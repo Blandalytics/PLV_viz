@@ -283,7 +283,7 @@ def rolling_chart():
                  color='w'
                    )
     
-    line_text_loc = (rolling_df['index'].max() - window) * 1.05 + window
+    line_text_loc = (rolling_df['index'].max() - int(window/2)) * 1.05 + int(window/2)
 
     ax.axhline(rolling_df[metric].mean(), 
                color='w',
