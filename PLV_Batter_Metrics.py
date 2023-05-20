@@ -270,6 +270,8 @@ window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:',
 
 rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window).mean()
 
+st.dataframe(rolling_df)
+
 color_norm = colors.TwoSlopeNorm(vmin=chart_10, 
                                  vcenter=chart_mean,
                                  vmax=chart_90)
