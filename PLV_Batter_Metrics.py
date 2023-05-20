@@ -268,7 +268,7 @@ window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:',
                          step=5, 
                          value=rolling_threshold[metric])
 
-rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window).mean()
+rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window, min_periods=int(window/2)).mean()
 
 st.dataframe(rolling_df)
 
