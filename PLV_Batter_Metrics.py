@@ -283,13 +283,12 @@ def rolling_chart():
                  color='w'
                    )
     
-    window = window if (rolling_df[metric].mean() < rolling_df['Rolling_Stat'].max()) and (rolling_df[metric].mean() > rolling_df['Rolling_Stat'].min()) else int(window*2/3)
+    window = window if ((rolling_df[metric].mean() < rolling_df['Rolling_Stat'].max()) and (rolling_df[metric].mean() > rolling_df['Rolling_Stat'].min())) else int(window*2/3)
     line_text_loc = (rolling_df['index'].max() - window) * 1.05 + window
     
     ax.axhline(rolling_df[metric].mean(), 
                color='w',
                linestyle='--')
-    
     ax.text(line_text_loc,
             rolling_df[metric].mean(),
             'Szn Avg',
