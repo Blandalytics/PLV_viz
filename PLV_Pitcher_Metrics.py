@@ -665,7 +665,7 @@ else:
 #                       ['pitchtype']
 #                      )
     
-        pitch_list = [x[0] for x in Counter(plv_df.loc[(plv_df['pitchername']==player),'pitchtype']).most_common() if (x[1] > int(plv_df.loc[(plv_df['pitchername']==player)].shape[0]*0.05)) & (x[0] != 'UN')]
+        pitch_list = [x[0] for x in Counter(plv_df.loc[(plv_df['pitchername']==player),'pitchtype']).most_common() if (x[0] != 'UN')]
         
         fig, ax = plt.subplots(figsize=(8,8))
         
