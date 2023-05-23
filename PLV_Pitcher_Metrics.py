@@ -653,18 +653,18 @@ elif chart=='Pitch Quality':
 else:
     def movement_chart():
         hand = plv_df.loc[(plv_df['pitchername']==player),'p_hand'].values[0]
-        move_df = plv_df.loc[(plv_df['pitchername']==player) &
-                             (plv_df['year_played']==year) &
-                             (plv_df['pitchtype']!='UN')].copy()
+        move_df = plv_df.loc[(plv_df['pitchername']==player)].copy()
 #         move_df = get_movement(year,player)
-        pitch_list = list(move_df
-                      .groupby('pitchtype')
-                      ['pitch_id']
-                      .count()
-                      .reset_index()
-                      .sort_values('pitch_id',ascending=False)
-                      ['pitchtype']
-                     )
+#         pitch_list = list(move_df
+#                       .groupby('pitchtype')
+#                       ['pitch_id']
+#                       .count()
+#                       .reset_index()
+#                       .sort_values('pitch_id',ascending=False)
+#                       ['pitchtype']
+#                      )
+    
+        pitch_list = [x[0] for x in Counter(plv_df.loc[(plv_df['pitchername']==player),'pitchtype']).most_common() if (x[1] > int(plv_df.loc[(plv_df['pitchername']==player)].shape[0]*0.05)) & (x[0] != 'UN')]
         
         fig, ax = plt.subplots(figsize=(8,8))
         
