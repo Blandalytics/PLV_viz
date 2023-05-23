@@ -101,7 +101,7 @@ def load_data(year):
           .sort_values('pitch_id')
           .astype({'pitch_id':'int',
                    'pitcher_mlb_id':'int'})
-          .query(f'pitchtype not in {["KN","SC"]}')
+          .query(f'pitchtype not in {["KN","SC","UN"]}')
           .reset_index(drop=True)
          )
     
@@ -201,11 +201,6 @@ def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R
 
 # Season data
 pla_df = get_pla(year,pitch_threshold)
-
-def get_movement(year,player):
-    move_data = pd.read_csv(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_pitch_movement.csv?raw=true', encoding='latin1')
-    return move_data.loc[(move_data['pitchername']==player) &
-                         (move_data['pitchtype']!='UN')].copy()
 
 mean_plv = pla_df['PLV'].mul(pla_df['Num_Pitches']).sum() / pla_df['Num_Pitches'].sum()
 
