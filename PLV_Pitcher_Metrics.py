@@ -8,6 +8,7 @@ import scipy as sp
 import urllib
 
 from PIL import Image
+from collections import Counter
 from scipy import stats
 
 ## Set Styling
