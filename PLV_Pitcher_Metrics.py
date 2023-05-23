@@ -653,7 +653,9 @@ elif chart=='Pitch Quality':
 else:
     def movement_chart():
         hand = plv_df.loc[(plv_df['pitchername']==player),'p_hand'].values[0]
-        move_df = plv_df.loc[(plv_df['pitchername']==player)].copy()
+        move_df = plv_df.loc[(plv_df['pitchername']==player) &
+                             (plv_df['year_played']==year) &
+                             (plv_df['pitchtype']!='UN')].copy()
 #         move_df = get_movement(year,player)
         pitch_list = list(move_df
                       .groupby('pitchtype')
