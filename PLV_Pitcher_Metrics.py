@@ -89,7 +89,7 @@ seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/m
 @st.cache_data
 def load_data(year):
     df = pd.DataFrame()
-    for month in rnage(3,11):
+    for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{month}.parquet?raw=true'
         df = pd.concat([df,
                         pd.read_parquet(file_name)[['pitchername','pitcher_mlb_id','pitch_id',
