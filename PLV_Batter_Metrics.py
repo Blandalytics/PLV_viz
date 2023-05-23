@@ -121,7 +121,7 @@ for stat in ['SZ Judge','Contact','Dec Value','Power','HP']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat], a_min=20, a_max=80).astype('int')
 
-st.write('Metrics on a 20-80 scale. Table is sortable.')
+st.write(f'Metrics on a 20-80 scale. Table is sortable. At least {max_pitches} pitches faced.')
 
 st.dataframe(season_df
              .style
