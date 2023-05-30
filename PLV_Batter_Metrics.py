@@ -95,7 +95,7 @@ def load_season_data(year):
 plv_df = load_season_data(year)
 
 max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
-start_val = int(plv_df.groupby('hittername')['pitch_id'].count().quantile(0.4)/10)*10
+start_val = int(plv_df.groupby('hittername')['pitch_id'].count().quantile(0.4)/50)*50
 
 # Num Pitches threshold
 pitch_thresh = st.number_input(f'Min # of Pitches faced:',
