@@ -95,6 +95,7 @@ def load_season_data(year):
 plv_df = load_season_data(year)
 
 max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
+st.write(plv_df.groupby('hittername')['pitch_id'].count().quantile(0.25))
 pitch_thresh = int(int(max_pitches/30)*10)
 
 season_df = (plv_df
