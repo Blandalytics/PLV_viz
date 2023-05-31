@@ -696,7 +696,7 @@ else:
             pitch_velos[x] = f' ({pitch_velo:.1f})'
         ax.legend([handles[idx] for idx in pitchtype_order],
                   [labels[idx]+pitch_velos[labels[idx]] for idx in pitchtype_order],
-                  title='Pitch (velo)',
+                  title='Pitchtype (velo)',
                   loc='upper right' if hand =='L' else 'upper left')
         
         fig.text(0.83,0.0425,'Glove' if hand == 'L' else 'Arm',ha='left')
