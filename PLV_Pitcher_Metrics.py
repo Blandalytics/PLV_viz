@@ -688,11 +688,14 @@ else:
         
         handles, labels = ax.get_legend_handles_labels()
         pitchtype_order = []
+        pitch_velo_order = []
         for x in pitch_list:
             pitchtype_order.append(labels.index(x))
-
-        ax.legend([handles[idx] for idx in pitchtype_order],[labels[idx] for idx in pitchtype_order],
-                 loc='upper right' if hand =='L' else 'upper left')
+            pitch_velo_order.append(f'{move_df.loc[move_df['pitchtype']==x,'velo'].mean():.1f}')
+        st.write(pitch_velo_order)
+        ax.legend([handles[idx] for idx in pitchtype_order],
+                  [labels[idx] for idx in pitchtype_order],
+                  loc='upper right' if hand =='L' else 'upper left')
         
         fig.text(0.83,0.0425,'Glove' if hand == 'L' else 'Arm',ha='left')
         fig.text(0.185,0.0425,'Arm' if hand == 'L' else 'Glove',ha='right')
