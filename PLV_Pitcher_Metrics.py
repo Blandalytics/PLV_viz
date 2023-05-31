@@ -656,7 +656,7 @@ else:
         hand = plv_df.loc[(plv_df['pitchername']==player),'p_hand'].values[0]
         move_df = plv_df.loc[(plv_df['pitchername']==player)].copy()
         
-        pitch_list = [x[0] for x in Counter(plv_df.loc[(plv_df['pitchername']==player),'pitchtype']).most_common() if (x[0] != 'UN')]
+        pitch_list = [x[0] for x in Counter(move_df['pitchtype']).most_common() if (x[0] != 'UN')]
         
         fig, ax = plt.subplots(figsize=(8,8))
         
@@ -691,7 +691,9 @@ else:
         pitch_velo_order = []
         for x in pitch_list:
             pitchtype_order.append(labels.index(x))
-            #pitch_velo_order.append(f'{move_df.query(f'pitchtype=={x}')['velo'].mean()} mph')
+            
+            pitch_velo = move_df.loc[move_df['pitchtype']==x,'velo'].mean()
+            pitch_velo_order.append(f'{pitch_velo:.1f} mph')
         st.write(pitch_velo_order)
         ax.legend([handles[idx] for idx in pitchtype_order],
                   [labels[idx] for idx in pitchtype_order],
