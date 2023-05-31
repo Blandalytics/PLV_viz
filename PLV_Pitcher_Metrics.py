@@ -693,8 +693,7 @@ else:
             pitchtype_order.append(labels.index(x))
             
             pitch_velo = move_df.loc[move_df['pitchtype']==x,'velo'].mean()
-            pitch_velos[x] = f' ({pitch_velo:.1f} mph)'
-#         st.write([idx for idx in pitchtype_order])
+            pitch_velos[x] = f' - {pitch_velo:.1f} mph'
         ax.legend([handles[idx] for idx in pitchtype_order],
                   [labels[idx]+pitch_velos[labels[idx]] for idx in pitchtype_order],
                   loc='upper right' if hand =='L' else 'upper left')
