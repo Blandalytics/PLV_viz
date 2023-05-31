@@ -691,7 +691,7 @@ else:
         pitch_velo_order = []
         for x in pitch_list:
             pitchtype_order.append(labels.index(x))
-            pitch_velo_order.append(f'{move_df.loc[move_df['pitchtype']==x,'velo'].mean():.1f}')
+            pitch_velo_order.append(f'{move_df.query(f'pitchtype=={x}')['velo'].mean()} mph')
         st.write(pitch_velo_order)
         ax.legend([handles[idx] for idx in pitchtype_order],
                   [labels[idx] for idx in pitchtype_order],
