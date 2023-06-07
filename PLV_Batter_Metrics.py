@@ -40,7 +40,7 @@ sns.set_theme(
 
 line_color = sns.color_palette('vlag', n_colors=100)[0]
 
-st.title("Hitter Ability Metrics")
+st.title("Hitter Ability Metrics ")
 st.write('- ***Swing Aggression***: How much more often a hitter swings at pitches, given the swing likelihoods of the pitches they face.')
 st.write('''
 - ***Strikezone Judgement***: The "correctness" of a hitter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
