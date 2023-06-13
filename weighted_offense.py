@@ -5,10 +5,10 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']].set_index('Team')
+rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']]
 st.dataframe(rank_df
              .style
              .format(precision=3)
-             .background_gradient(axis=0, gmap=rank_df['wOBA'], cmap='vlag'
+             .background_gradient(axis=0, gmap=rank_df['Tier'], cmap='vlag'
                                  )
             )
