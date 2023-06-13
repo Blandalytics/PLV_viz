@@ -18,6 +18,7 @@ colors = {
 #   f"color: {colors[tier]}"
 
 def highlight_cols(s):
+  if s in colors.keys():
     color = colors[s]
     return 'background-color: % s' % color
   
