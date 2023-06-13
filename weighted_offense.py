@@ -20,7 +20,7 @@ colors = {
 def highlight_cols(s):
   if s in colors.keys():
     color = colors[s]
-    return 'background-color: % s' % color
+    return 'background-color: % s; color: black' % color
   
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']]
 st.dataframe(rank_df
