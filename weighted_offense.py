@@ -26,7 +26,7 @@ rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9m
 st.title('MLB Offense Ranks')
 st.dataframe(rank_df
              .style
-             .format(precision=3)
+             .format(precision=4)
              .apply(highlight_cols, axis=None),
              width=500,
              height=800
