@@ -5,10 +5,20 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+colors = {
+  'Top':'#f4cccc',
+  'Solid':'#fce5cd',
+  'Average':'#fff2cc',
+  'Weak':'#d9ead3',
+  'Poor':'#c9daf8'
+}
+
+def background_color(tier):
+    return f"color: {colors[tier]}"
+
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']]
 st.dataframe(rank_df
              .style
              .format(precision=3)
-             .background_gradient(axis=0, gmap=rank_df['Tier'], cmap='vlag'
-                                 )
+             .applymap(background_color(rank_df['Tier']))
             )
