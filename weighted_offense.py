@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 colors = {
-  'Top':'#f4cccc',
+#   'Top':'#f4cccc',
+  'Top':sns.color_palette('vlag',n_colors=1001)[1000],
   'Solid':'#fce5cd',
   'Average':'#fff2cc',
   'Weak':'#d9ead3',
