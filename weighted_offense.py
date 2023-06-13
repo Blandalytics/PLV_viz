@@ -27,7 +27,7 @@ st.dataframe(rank_df
              .format(precision=3)
              .apply(highlight_cols, axis=None),
              width=200,
-             height=2100
+             height=1000
             )
 
 # st.dataframe(highlight_cols(rank_df))
