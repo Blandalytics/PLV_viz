@@ -14,10 +14,9 @@ colors = {
 }
 
 def highlight_cols(x):
-    #copy df to new - original data are not changed
     df = x.copy()
-    #select all values to default value - red color
-    df[['Team','wOBA','Tier']] = df['Tier'].apply(lambda x: f'color: black; background-color: {colors[x]}')
+    #select all values
+    df[['Team','wOBA','Tier']] = df['Tier'].map(colors)
     #return color df
     return df[['Team','wOBA','Tier']]
   
