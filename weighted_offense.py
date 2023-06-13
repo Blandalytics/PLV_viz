@@ -28,6 +28,6 @@ st.dataframe(rank_df
              .style
              .format(precision=4)
              .apply(highlight_cols, axis=None),
-             width=500,
+             width=400,
              height=800
             )
