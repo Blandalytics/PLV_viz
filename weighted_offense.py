@@ -27,7 +27,8 @@ st.title('MLB Offense Ranks')
 st.dataframe(rank_df
              .style
              .format(precision=4)
-             .apply(highlight_cols, axis=None),
+#              .apply(highlight_cols, axis=None),
+             .background_gradient(axis=None, gmap=rank_df['wOBA'], cmap='vlag'
              width=500,
              height=800
             )
