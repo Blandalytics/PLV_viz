@@ -13,10 +13,6 @@ colors = {
   'Poor':'#c9daf8'
 }
 
-# def background_color(col):
-#     return [f'background-color: {colors[tier]}' for i,x in col.iteritems()]
-#   f"color: {colors[tier]}"
-
 def highlight_cols(x):
     #copy df to new - original data are not changed
     df = x.copy()
@@ -26,8 +22,10 @@ def highlight_cols(x):
     return df[['Team','wOBA','Tier']]
   
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']]
-st.dataframe(rank_df
-             .style
+# st.dataframe(rank_df
+#              .style
 #              .format(precision=3)
-             .apply(highlight_cols, axis=None)
-            )
+#              .apply(highlight_cols, axis=None)
+#             )
+
+st.dataframe(highlight_cols(rank_df))
