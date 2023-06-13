@@ -6,4 +6,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']].set_index('Team')
-st.dataframe(rank_df)
+st.dataframe(rank_df
+             .style
+             .format(precision=3)
+             .background_gradient(axis=1, cmap="vlag",
+                                  subset=['wOBA']
+                                 ))
