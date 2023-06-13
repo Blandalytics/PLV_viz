@@ -9,6 +9,6 @@ rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9m
 st.dataframe(rank_df
              .style
              .format(precision=3)
-             .background_gradient(axis=0, gmap='wOBA, cmap="vlag"
+             .background_gradient(axis=0, gmap='wOBA', cmap='vlag'
                                  )
             )
