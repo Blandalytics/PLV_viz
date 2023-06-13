@@ -17,7 +17,7 @@ def highlight_cols(x):
     df = x.copy()
     #select all values
     for col in ['Team','wOBA','Tier']:
-      df[col] = df['Tier'].apply(lambda x: 'color: black; border-color: white; background-color: '+colors[x])
+      df[col] = df['Tier'].apply(lambda x: 'color: black; border-right: 1px solid white; background-color: '+colors[x])
     #return color df
     return df
   
