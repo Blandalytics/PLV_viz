@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 colors = {
-  'Top':'#ff4040',
-  'Solid':'#ffa940',
-  'Average':'#f4ff80',
-  'Weak':'#30bf48',
-  'Poor':'#4056ff'
+  'Top':'#bb5f5d',
+  'Solid':'#dbaba8',
+  'Average':'#faf5f5',
+  'Weak':'#aebcd1',
+  'Poor':'#5a84bd'
 }
 
 def highlight_cols(x):
