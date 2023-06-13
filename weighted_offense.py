@@ -23,7 +23,7 @@ def highlight_cols(x):
   
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']].query("Tier != ''")
 
-color_thresh = (rank_df['wOBA'].max() - rank_df['wOBA'].min())/3
+color_thresh = (rank_df['wOBA'].max() - rank_df['wOBA'].min())/4
 
 st.title('MLB Offense Ranks')
 st.dataframe(rank_df
