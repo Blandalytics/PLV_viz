@@ -31,7 +31,7 @@ st.dataframe(rank_df
              .format(precision=4)
 #              .apply(highlight_cols, axis=None)
              .background_gradient(axis=0,gmap=(rank_df['wOBA']-0.318)/rank_df['wOBA'].std(), 
-                                  vmin=-2,vmax=2,
+                                  vmin=-2,vmax=3,
                                   cmap='vlag'),
              width=400,
              height=800
