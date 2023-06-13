@@ -18,9 +18,13 @@ colors = {
 #   f"color: {colors[tier]}"
 
 def highlight_cols(s):
-  if s in colors.keys():
-    color = colors[s]
-    return 'background-color: % s; color: black' % color
+#   if s in colors.keys():
+#     color = colors[s]
+#     return 'background-color: % s; color: black' % color
+  
+    df1 = pd.DataFrame('', index=s.index, columns=s.columns)
+    df1 = df1['Tier'].map(colors)
+    return df1
   
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']]
 st.dataframe(rank_df
