@@ -34,5 +34,5 @@ st.dataframe(rank_df
                                   vmin=-2,vmax=2,
                                   cmap='vlag'),
              width=400,
-             height=800
+             height=300
             )
