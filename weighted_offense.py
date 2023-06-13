@@ -6,18 +6,18 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 colors = {
-  'Top':'#bb5f5d',
-  'Solid':'#dbaba8',
-  'Average':'#faf5f5',
-  'Weak':'#aebcd1',
-  'Poor':'#5a84bd'
+  'Top':['white','#bb5f5d'],
+  'Solid':['black','#dbaba8'],
+  'Average':['black','#faf5f5'],
+  'Weak':['black','#aebcd1'],
+  'Poor':['white','#5a84bd']
 }
 
 def highlight_cols(x):
     df = x.copy()
     #select all values
     for col in ['Team','wOBA','Tier']:
-      df[col] = df['Tier'].apply(lambda x: 'color: black; border: 1.5px solid white; background-color: '+colors[x])
+      df[col] = df['Tier'].apply(lambda x: 'color: black; border: 1.5px solid '++colors[x][0]+'; background-color: '+colors[x][1])
     #return color df
     return df
   
