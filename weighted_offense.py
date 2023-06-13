@@ -22,6 +22,8 @@ def highlight_cols(x):
     return df
   
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']].query("Tier != ''")
+
+st.title('MLB Offense Ranks')
 st.dataframe(rank_df
              .style
              .format(precision=3)
@@ -29,5 +31,3 @@ st.dataframe(rank_df
              width=500,
              height=800
             )
-
-# st.dataframe(highlight_cols(rank_df))
