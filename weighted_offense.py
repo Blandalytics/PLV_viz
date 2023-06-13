@@ -23,7 +23,7 @@ def highlight_cols(x):
     #select all values to default value - red color
     df[['Team','wOBA','Tier']] = df['Tier'].apply(lambda x: f'color: black; background-color: {colors[x]}')
     #return color df
-    return df
+    return df[['Team','wOBA','Tier']]
   
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']]
 st.dataframe(rank_df
