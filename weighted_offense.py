@@ -25,7 +25,8 @@ rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9m
 st.dataframe(rank_df
              .style
              .format(precision=3)
-             .apply(highlight_cols, axis=None)
+             .apply(highlight_cols, axis=None),
+             use_container_width=True
             )
 
 # st.dataframe(highlight_cols(rank_df))
