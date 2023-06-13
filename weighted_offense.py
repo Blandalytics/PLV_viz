@@ -35,5 +35,5 @@ st.dataframe(rank_df
                                   cmap='vlag'),
              width=400,
              height=300,
-             hide_index=True
+#              hide_index=True
             )
