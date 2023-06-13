@@ -23,8 +23,9 @@ def highlight_cols(s):
 #     return 'background-color: % s; color: black' % color
   
     df1 = pd.DataFrame('', index=s.index, columns=s.columns)
-    df1[['Team','wOBA','Tier']] = 'background-color: '+rank_df['Tier'].map(colors)
-    return df1
+    df1['color'] = rank_df['Tier'].map(colors)
+    df1[['Team','wOBA','Tier']] = 'background-color: '+df1['color']
+    return df1[['Team','wOBA','Tier']]
   
 rank_df = pd.read_csv('https://docs.google.com/spreadsheets/d/1-vizwKykEEPNhUl9mtSR_2VaTslTXVjOLsHqxo3Jpfs/export?format=csv&gid=1365643765')[['Team','wOBA','Tier']]
 st.dataframe(rank_df
