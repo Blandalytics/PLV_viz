@@ -16,7 +16,8 @@ colors = {
 def highlight_cols(x):
     df = x.copy()
     #select all values
-    df[['Team','wOBA','Tier']] = df['Tier'].map(colors)
+    for col in ['Team','wOBA','Tier']:
+      df[col] = df['Tier'].map(colors)
     #return color df
     return df[['Team','wOBA','Tier']]
   
