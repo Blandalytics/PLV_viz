@@ -69,7 +69,7 @@ season_names = {
 }
 
 # Load Data
-@st.cache
+@st.cache_data
 def load_season_data(year):
     df = pd.DataFrame()
     for month in range(3,11):
