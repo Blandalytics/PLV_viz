@@ -118,7 +118,7 @@ def load_data(year):
 pitch_df = load_data(year)
 
 # Has at least 1 pitch with at least 50 thrown
-pitcher_list = pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query('pitch_id >=50')['pitchername'].sort_values().unique()
+pitcher_list = list(pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query('pitch_id >=50')['pitchername'].sort_values().unique())
 
 # Player
 default_ix = pitcher_list.index('Bailey Ober')
