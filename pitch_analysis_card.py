@@ -88,10 +88,6 @@ logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
 st.title("Pitch Type Analysis")
-st.write('- ***Induced Vertical Break (IVB)***: Vertical break of the pitch, controlling for the effect of gravity.')
-st.write("- ***Adjusted Vertical Approach Angle (VAA)***: Vertical angle at which a pitch approaches home plate, controlled for its vertical location at the plate.")
-st.write("- ***xZone%***: Predicted likelihood of being in the zone (as is called), assuming a swing isn't made.")
-st.write('- ***Pitch Level Value (PLV)***: Estimated value of all pitches, based on the predicted outcomes of those pitches (0-10 scale, 5 is league average).')
 
 # Year
 years = [2023,
@@ -368,3 +364,8 @@ def pitch_analysis_card(card_player,pitch_type):
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
+
+st.write('- ***Induced Vertical Break (IVB)***: Vertical break of the pitch, controlling for the effect of gravity.')
+st.write("- ***Adjusted Vertical Approach Angle (VAA)***: Vertical angle at which a pitch approaches home plate, controlled for its vertical location at the plate.")
+st.write("- ***xZone%***: Predicted likelihood of being in the zone (as is called), assuming a swing isn't made.")
+st.write('- ***Pitch Level Value (PLV)***: Estimated value of all pitches, based on the predicted outcomes of those pitches (0-10 scale, 5 is league average).')
