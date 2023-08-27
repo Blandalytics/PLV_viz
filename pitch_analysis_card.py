@@ -87,7 +87,7 @@ logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.p
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
-st.title("Pitch Type Analysis")
+st.title("Pitchtype Cards")
 
 # Year
 years = [2023,
