@@ -157,11 +157,8 @@ def pitch_analysis_card(card_player,pitch_type):
         .sort_values('zone_pred', ascending=False)
     )
 
-    def min_max_scaler(x):
-        return ((x-x.min())/(x.max()-x.min()))
-
     for col in ['PLV','velo','pitch_extension','IVB','IHB','adj_vaa','zone_pred']:
-        pitch_df[col+'_scale'] = min_max_scaler(pitch_df[col])
+        pitch_df[col+'_scale'] = pitch_df[col].sub(pitch_df[col].min()).div(pitch_df[col].max()-pitch_df[col].min())
 
     chart_stats = ['velo','pitch_extension','IVB','IHB','adj_vaa','zone_pred','PLV']
     fig = plt.figure(figsize=(10,10))
