@@ -125,7 +125,7 @@ default_ix = pitcher_list.index('Bailey Ober')
 card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
 
 # Pitch
-pitches = list(model_df.loc[model_df['pitchername']=='Bailey Ober'].groupby('pitchtype')['pitch_id'].count().sort_values(ascending=False).reset_index().query('pitch_id>=50')['pitchtype'])
+pitches = list(model_df.loc[model_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().sort_values(ascending=False).reset_index().query('pitch_id>=50')['pitchtype'])
 pitch_type = st.selectbox('Choose a pitch:', pitches)
 
 def pitch_analysis_card(card_player,pitch_type):
