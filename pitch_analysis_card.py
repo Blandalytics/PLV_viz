@@ -83,9 +83,6 @@ y_bot = -0.5
 y_lim = 6
 plate_y = -.25
 
-def min_max_scaler(x):
-    return ((x-x.min())/(x.max()-x.min()))
-
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
@@ -159,6 +156,9 @@ def pitch_analysis_card(card_player,pitch_type):
         .reset_index()
         .sort_values('zone_pred', ascending=False)
     )
+
+    def min_max_scaler(x):
+        return ((x-x.min())/(x.max()-x.min()))
 
     for col in ['PLV','velo','pitch_extension','IVB','IHB','adj_vaa','zone_pred']:
         pitch_df[col+'_scale'] = min_max_scaler(pitch_df[col])
