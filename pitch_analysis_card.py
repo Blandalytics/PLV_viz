@@ -278,8 +278,8 @@ def pitch_analysis_card(card_player,pitch_type):
     fig.text(0.62,0.89,'Movement',fontsize=18)
     sns.despine(left=True,bottom=True)
 
-    fig.text(0.5,0.455,'Pitch Characteristics',ha='center',fontsize=18)
-    fig.text(0.5,0.435,f'(Compared to league {pitch_names[pitch_type]}s - Min {pitch_num_thresh} Thrown)',ha='center',fontsize=12)
+    fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
+    fig.text(0.5,0.43,f'(Compared to league {pitch_names[pitch_type]}s - Min {pitch_num_thresh} Thrown)',ha='center',fontsize=12)
     for stat in chart_stats:
         val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
                                  stat].item()
