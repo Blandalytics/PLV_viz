@@ -365,6 +365,7 @@ def pitch_analysis_card(card_player,pitch_type):
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
 
+st.title("Metric Definitions")
 st.write('- ***Induced Vertical Break (IVB)***: Vertical break of the pitch, controlling for the effect of gravity.')
 st.write("- ***Adjusted Vertical Approach Angle (VAA)***: Vertical angle at which a pitch approaches home plate, controlled for its vertical location at the plate.")
 st.write("- ***xZone%***: Predicted likelihood of being in the zone (as is called), assuming a swing isn't made.")
