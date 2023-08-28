@@ -361,6 +361,8 @@ def pitch_analysis_card(card_player,pitch_type):
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     fig.suptitle(f"{card_player}{apostrophe_text} 2023 {pitch_names[pitch_type]}",y=0.97,fontsize=20,x=0.525)
     fig.text(0.525,0.925,"(From Pitcher's Perspective)",ha='center',fontsize=12)
+    fig.text(0.77,0.07,"@Blandalytics",ha='center',fontsize=10)
+    fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
