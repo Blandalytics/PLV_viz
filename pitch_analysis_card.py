@@ -368,8 +368,8 @@ def pitch_analysis_card(card_player,pitch_type):
 pitch_analysis_card(card_player,pitch_type)
 
 st.title("Metric Definitions")
-st.write("- ***Velocity***: Release velocity of the pitch, out of the pitcher's hand (in miles per hour).")
-st.write('- ***Release Extension***: Distance the pitcher releases the pitch from the pitching rubber (in feet).')
+st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
+st.write('- ***Release Extension***: Distance towards the plate when the pitcher releases the pitch (in feet).')
 st.write('- ***Induced Vertical Break (IVB)***: Vertical break of the pitch, controlling for the effect of gravity (in inches).')
 st.write("- ***Arm-Side Break***: Horizontal break of the pitch, relative to the pitcher's handedness (in inches).")
 st.write("- ***Adjusted Vertical Approach Angle (VAA)***: Vertical angle at which the pitch approaches home plate, controlling for its vertical location at the plate (in degrees).")
