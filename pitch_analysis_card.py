@@ -374,4 +374,4 @@ st.write('- ***Induced Vertical Break (IVB)***: Vertical break of the pitch, con
 st.write("- ***Arm-Side Break***: Horizontal break of the pitch, relative to the pitcher's handedness (in inches).")
 st.write("- ***Adjusted Vertical Approach Angle (VAA)***: Vertical angle at which the pitch approaches home plate, controlling for its vertical location at the plate (in degrees).")
 st.write("- ***xZone%***: Predicted likelihood of the pitch being in the strike zone (as is called), assuming a swing isn't made.")
-st.write('- ***Pitch Level Value (PLV)***: Estimated value of the pitch, based on the predicted outcomes of the pitch (0-10 scale, 5 is league average).')
+st.write('- ***Pitch Level Value (PLV)***: Estimated value of the pitch, based on the predicted outcomes of the pitch (0-10 scale. 5 is league average pitch value. PLV is not adjusted for pitch type.).')
