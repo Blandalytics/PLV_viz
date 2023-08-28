@@ -120,7 +120,7 @@ pitch_df = load_data(year)
 pitcher_list = list(pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query('pitch_id >=50')['pitchername'].sort_values().unique())
 
 # Player
-default_ix = pitcher_list.index('Shohei Ohtani')
+default_ix = pitcher_list.index('Zack Wheeler')
 card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
 
 # Pitch
