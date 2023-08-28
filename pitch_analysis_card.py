@@ -91,7 +91,7 @@ st.title("Pitchtype Cards")
 
 # Year
 years = [2023,
-#          2022,2021,2020
+         2022,2021,2020
         ]
 year = st.radio('Choose a year:', years)
 # Load Data
