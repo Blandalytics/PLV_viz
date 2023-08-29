@@ -128,7 +128,8 @@ with col1:
 
 with col2:
     # Pitch
-    pitches = {pitch_names[x] for x in list(pitch_df.loc[pitch_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().sort_values(ascending=False).reset_index().query('pitch_id>=50')['pitchtype'])}
+    pitches = list(pitch_df.loc[pitch_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().sort_values(ascending=False).reset_index().query('pitch_id>=50')['pitchtype'])
+    pitches = {pitch_names[x] for x in pitches}
     pitch_type = st.selectbox('Choose a pitch:', pitches)
 
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
