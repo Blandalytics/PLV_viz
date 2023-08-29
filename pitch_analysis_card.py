@@ -119,13 +119,17 @@ pitch_df = load_data(year)
 # Has at least 1 pitch with at least 50 thrown
 pitcher_list = list(pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query('pitch_id >=50')['pitchername'].sort_values().unique())
 
-# Player
-default_ix = pitcher_list.index('Zack Wheeler')
-card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
+col1, col2 = st.columns(2)
 
-# Pitch
-pitches = list(pitch_df.loc[pitch_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().sort_values(ascending=False).reset_index().query('pitch_id>=50')['pitchtype'])
-pitch_type = st.selectbox('Choose a pitch:', pitches)
+with col1:
+    # Player
+    default_ix = pitcher_list.index('Zack Wheeler')
+    card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
+
+with col2:
+    # Pitch
+    pitches = list(pitch_df.loc[pitch_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().sort_values(ascending=False).reset_index().query('pitch_id>=50')['pitchtype'])
+    pitch_type = st.selectbox('Choose a pitch:', pitches)
 
 def pitch_analysis_card(card_player,pitch_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
