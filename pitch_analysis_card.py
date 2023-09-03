@@ -125,8 +125,8 @@ with col1:
     # Player
     default_ix = pitcher_list.index('Zack Wheeler')
     card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
+    pitches = pitch_df.loc[pitch_df['pitchername']==card_player,'pitchtype'].map(pitch_names).value_counts().reset_index().query('pitchtype >= 50')['index'].to_list()
 
-pitches = pitch_df.loc[pitch_df['pitchername']==card_player,'pitchtype'].map(pitch_names).value_counts().reset_index().query('pitchtype >= 50')['index'].to_list()
 with col2:
     # Pitch
     pitch_type = st.selectbox('Choose a pitch:', pitches)
