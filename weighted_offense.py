@@ -66,16 +66,16 @@ time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelt
 def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075):    
     thresh = thresh if df.shape[0] >= 60000 else thresh*2 if df.shape[0] >= 30000 else thresh*3 if df.shape[0] >= 15000 else thresh*4
 
-    test_df = pd.DataFrame(index=test_pa_df['hitterteam'].sort_values().unique())
-    test_df['wOBA'] = test_pa_df.groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_lhp'] = test_pa_df.loc[test_pa_df['pitcherside']=='L'].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_rhp'] = test_pa_df.loc[test_pa_df['pitcherside']=='R'].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_home'] = test_pa_df.loc[test_pa_df['is_home']==1].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_away'] = test_pa_df.loc[test_pa_df['is_home']==0].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_lhp_home'] = test_pa_df.loc[(test_pa_df['pitcherside']=='L') & (test_pa_df['is_home']==1)].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_lhp_away'] = test_pa_df.loc[(test_pa_df['pitcherside']=='L') & (test_pa_df['is_home']==0)].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_rhp_home'] = test_pa_df.loc[(test_pa_df['pitcherside']=='R') & (test_pa_df['is_home']==1)].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_rhp_away'] = test_pa_df.loc[(test_pa_df['pitcherside']=='R') & (test_pa_df['is_home']==0)].groupby('hitterteam')['wOBA'].mean()
+    test_df = pd.DataFrame(index=df['hitterteam'].sort_values().unique())
+    test_df['wOBA'] = df.groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA_lhp'] = df.loc[df['pitcherside']=='L'].groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA_rhp'] = df.loc[df['pitcherside']=='R'].groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA_home'] = df.loc[df['is_home']==1].groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA_away'] = df.loc[df['is_home']==0].groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA_lhp_home'] = df.loc[(df['pitcherside']=='L') & (df['is_home']==1)].groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA_lhp_away'] = df.loc[(df['pitcherside']=='L') & (df['is_home']==0)].groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA_rhp_home'] = df.loc[(df['pitcherside']=='R') & (df['is_home']==1)].groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA_rhp_away'] = df.loc[(df['pitcherside']=='R') & (df['is_home']==0)].groupby('hitterteam')['wOBA'].mean()
     test_df['hand_stdev'] = test_df[['wOBA_lhp','wOBA_rhp']].std(axis=1).div(test_df['wOBA'])
     test_df['location_stdev'] = test_df[['wOBA_home','wOBA_away']].std(axis=1).div(test_df['wOBA'])
     test_df['val'] = 'season'
