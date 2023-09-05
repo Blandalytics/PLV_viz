@@ -58,15 +58,12 @@ def highlight_cols(x):
 pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023_PAs.csv?raw=true')
 pa_df['game_played'] = pd.to_datetime(pa_df['game_played'])
 
+time_string = st.radio('Choose a time frame:', ['Season','Last 30','Last 15'])
+time_thresh = 365 if time_frame=='Season' else int(time_frame[-2:])
+time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelta(days=time_thresh))].copy()
+
 # @st.cache_data(ttl=12*3600)
-def calc_wOBA_ranks(df=pa_df,time_frame='Season',thresh=0.075):
-    if time_frame=='Season':
-        time_thresh = 365
-    else:
-        time_thresh = int(time_frame[-2:])
-    
-    test_pa_df = df[df['game_played'] > (df['game_played'].max() - pd.Timedelta(days=time_thresh))]
-    
+def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075):    
     thresh = thresh if test_pa_df.shape[0] >= 60000 else thresh*2 if test_pa_df.shape[0] >= 30000 else thresh*3 if test_pa_df.shape[0] >= 15000 else thresh*4
 
     test_df = pd.DataFrame(index=test_pa_df['hitterteam'].sort_values().unique())
@@ -108,8 +105,7 @@ def calc_wOBA_ranks(df=pa_df,time_frame='Season',thresh=0.075):
     weighted_test_df = pd.DataFrame.from_dict(test_ranks, orient='index').rename(columns={0:'wOBA'}).sort_values('wOBA',ascending=False)
     return weighted_test_df
 
-time_string = st.radio('Choose a time frame:', ['Season','Last 30','Last 15'])
-rank_df = calc_wOBA_ranks(df=pa_df,time_frame=time_string,thresh=0.075)
+rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string,thresh=0.075)
 
 time_frame_deviation = {
   'Season':0.0125,
@@ -121,7 +117,7 @@ st.title('MLB Offense Ranks')
 st.dataframe(rank_df
              .style
              .format(precision=4)
-             .background_gradient(axis=0,gmap=(rank_df['wOBA']-pa_df['wOBA'].mean())/time_frame_deviation[time_string], 
+             .background_gradient(axis=0,gmap=(rank_df['wOBA']-time_df['wOBA'].mean())/time_df.groupby('hitterteam')['wOBA'].mean().std(), 
                                   vmin=-2,vmax=2.5,
                                   cmap='vlag'),
              width=400,
