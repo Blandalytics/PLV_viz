@@ -112,7 +112,7 @@ time_string = st.radio('Choose a time frame:', ['Season','Last 30','Last 15'])
 rank_df = calc_wOBA_ranks(df=pa_df,time_frame=time_string,thresh=0.075)
 
 time_frame_deviation = {
-  'Season':0.015,
+  'Season':0.0125,
   'Last 30':0.02,
   'Last 15':0.025
 }
