@@ -122,7 +122,7 @@ st.dataframe(rank_df
              .style
              .format(precision=4)
              .background_gradient(axis=0,gmap=(rank_df['wOBA']-pa_df['wOBA'].mean())/time_frame_deviation[time_string], 
-                                  vmin=-2,vmax=2,
+                                  vmin=-2,vmax=2.5,
                                   cmap='vlag'),
              width=400,
              height=800,
