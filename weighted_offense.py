@@ -60,7 +60,7 @@ st.title('MLB Offense Ranks')
 pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023_PAs.csv?raw=true')
 pa_df['game_played'] = pd.to_datetime(pa_df['game_played'])
 
-time_string = st.radio('Choose a time frame:', ['Season','Last 30','Last 15'])
+time_string = st.radio('Choose a time frame:', ['Season','Last 60','Last 30','Last 15'])
 time_thresh = 365 if time_string=='Season' else int(time_string[-2:])
 time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelta(days=time_thresh))].copy()
 
@@ -108,12 +108,6 @@ def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075):
     return weighted_test_df
 
 rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string,thresh=0.075)
-
-time_frame_deviation = {
-  'Season':0.0125,
-  'Last 30':0.02,
-  'Last 15':0.025
-}
 
 st.dataframe(rank_df
              .style
