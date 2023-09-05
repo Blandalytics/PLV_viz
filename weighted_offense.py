@@ -94,18 +94,24 @@ with col2:
                 test_ranks.update({team+' (Away; vs LHP)':test_df.loc[test_df['index']==team,'wOBA_lhp_away'].item()})
     
         weighted_test_df = pd.DataFrame.from_dict(test_ranks, orient='index').rename(columns={0:'wOBA'}).sort_values('wOBA',ascending=False)
-        return weighted_test_df
+        weighted_test_df['z_wOBA'] = weighted_test_df['wOBA'].sub(weighted_test_df['wOBA'].mean()).div(weighted_test_df['wOBA'].std())
+        offense_tiers = ['Poor', 'Weak', 'Average', 'Solid', 'Top']
+        weighted_test_df['bucket'] = pd.cut(weighted_test_df['wOBA'].rank(), 5,labels=offense_tiers)
+        weighted_test_df['count'] = weighted_test_df.groupby((weighted_test_df['bucket'] != weighted_test_df['bucket'].shift(1)).cumsum()).cumcount()+1
+        
+        return pd.pivot(weighted_test_df.reset_index().round(3).astype({'wOBA':'str'}).assign(team_wOBA = lambda x: x['index']+': '+x['wOBA']),
+                        values='index', index=['count'], columns=['bucket'])[offense_tiers[::-1]]
     
     rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string,thresh=0.075)
     
     st.dataframe(rank_df
-                 .style
-                 .format(precision=4)
-                 .background_gradient(axis=0,gmap=(rank_df['wOBA']-time_df['wOBA'].mean())/time_df.groupby('hitterteam')['wOBA'].mean().std(), 
-                                      vmin=-2,vmax=2.5,
-                                      cmap='vlag'),
-                  width=300,
-                  height=800,
+                 # .style
+                 # .format(precision=4)
+                 # .background_gradient(axis=0,gmap=(rank_df['wOBA']-time_df['wOBA'].mean())/time_df.groupby('hitterteam')['wOBA'].mean().std(), 
+                 #                      vmin=-2,vmax=2.5,
+                 #                      cmap='vlag'),
+                 #  width=300,
+                  height=300,
     #              hide_index=True
                 )
 
