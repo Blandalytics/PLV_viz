@@ -90,7 +90,7 @@ def calc_wOBA_ranks(df=pa_df,time_frame='Season',thresh=0.075):
 
     test_ranks = {}
     for team in test_df['index']:
-        subset = test_df.loc[season_df['index']==team,'val'].item()
+        subset = test_df.loc[test_df['index']==team,'val'].item()
         if subset=='season':
             test_ranks.update({team:test_df.loc[test_df['index']==team,'wOBA'].item()})   
         elif subset=='location':
