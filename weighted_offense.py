@@ -59,7 +59,7 @@ pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023
 pa_df['game_played'] = pd.to_datetime(pa_df['game_played'])
 
 time_string = st.radio('Choose a time frame:', ['Season','Last 30','Last 15'])
-time_thresh = 365 if time_frame=='Season' else int(time_frame[-2:])
+time_thresh = 365 if time_string=='Season' else int(time_string[-2:])
 time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelta(days=time_thresh))].copy()
 
 # @st.cache_data(ttl=12*3600)
