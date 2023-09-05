@@ -5,13 +5,13 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-colors = {
-  'Top':['white','#bb5f5d'],
-  'Solid':['black','#dbaba8'],
-  'Average':['black','#faf5f5'],
-  'Weak':['black','#aebcd1'],
-  'Poor':['white','#5a84bd']
-}
+# colors = {
+#   'Top':['white','#bb5f5d'],
+#   'Solid':['black','#dbaba8'],
+#   'Average':['black','#faf5f5'],
+#   'Weak':['black','#aebcd1'],
+#   'Poor':['white','#5a84bd']
+# }
 
 team_map = {
     'Arizona Diamondbacks':'ARI', 
@@ -47,13 +47,13 @@ team_map = {
     'Washington Nationals':'WSH'
 }
 
-def highlight_cols(x):
-    df = x.copy()
-    #select all values
-    for col in ['Team','wOBA','Tier']:
-      df[col] = df['Tier'].apply(lambda x: f'color: {colors[x][0]}; border: 1.5px solid white; background-color: {colors[x][1]}')
-    #return color df
-    return df
+# def highlight_cols(x):
+#     df = x.copy()
+#     #select all values
+#     for col in ['Team','wOBA','Tier']:
+#       df[col] = df['Tier'].apply(lambda x: f'color: {colors[x][0]}; border: 1.5px solid white; background-color: {colors[x][1]}')
+#     #return color df
+#     return df
 
 st.title('MLB Offense Ranks')
 
@@ -66,7 +66,7 @@ time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelt
 
 # @st.cache_data(ttl=12*3600)
 def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075):    
-    thresh = thresh if df.shape[0] >= 60000 else thresh*2 if df.shape[0] >= 30000 else thresh*3 if df.shape[0] >= 15000 else thresh*4
+    thresh = thresh if df.shape[0] >= 45000 else thresh*2 if df.shape[0] >= 30000 else thresh*3 if df.shape[0] >= 15000 else thresh*4
 
     test_df = pd.DataFrame(index=df['hitterteam'].sort_values().unique())
     test_df['wOBA'] = df.groupby('hitterteam')['wOBA'].mean()
