@@ -38,7 +38,7 @@ team_map = {
     'Toronto Blue Jays':'TOR',
     'Washington Nationals':'WSH'
 }
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([0.2,0.6,0.2])
 
 with col1:
     st.write(' ')
