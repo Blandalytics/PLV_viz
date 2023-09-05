@@ -66,7 +66,7 @@ time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelt
 
 # @st.cache_data(ttl=12*3600)
 def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075):    
-    thresh = thresh if df.shape[0] >= 75000 else thresh*2 if df.shape[0] >= 30000 else thresh*3 if df.shape[0] >= 15000 else thresh*4
+    thresh = thresh if df.shape[0] >= 60000 else thresh*2 if df.shape[0] >= 30000 else thresh*3 if df.shape[0] >= 15000 else thresh*4
 
     test_df = pd.DataFrame(index=df['hitterteam'].sort_values().unique())
     test_df['wOBA'] = df.groupby('hitterteam')['wOBA'].mean()
