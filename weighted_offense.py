@@ -55,6 +55,8 @@ def highlight_cols(x):
     #return color df
     return df
 
+st.title('MLB Offense Ranks')
+
 pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023_PAs.csv?raw=true')
 pa_df['game_played'] = pd.to_datetime(pa_df['game_played'])
 
@@ -113,7 +115,6 @@ time_frame_deviation = {
   'Last 15':0.025
 }
 
-st.title('MLB Offense Ranks')
 st.dataframe(rank_df
              .style
              .format(precision=4)
