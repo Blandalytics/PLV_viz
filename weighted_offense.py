@@ -60,8 +60,8 @@ st.title('MLB Offense Ranks')
 pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023_PAs.csv?raw=true')
 pa_df['game_played'] = pd.to_datetime(pa_df['game_played'])
 
-time_string = st.radio('Choose a time frame:', ['Season','Last 60','Last 30','Last 15'])
-time_thresh = 365 if time_string=='Season' else int(time_string[-2:])
+time_string = st.radio('Choose a time frame:', ['Season','Last 60 Days','Last 30 Days','Last 15 Days'])
+time_thresh = 365 if time_string=='Season' else int(time_string[5:-5])
 time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelta(days=time_thresh))].copy()
 
 # @st.cache_data(ttl=12*3600)
