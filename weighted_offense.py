@@ -111,11 +111,17 @@ def calc_wOBA_ranks(df=pa_df,time_frame='Season',thresh=0.075):
 time_string = st.radio('Choose a time frame:', ['Season','Last 30','Last 15'])
 rank_df = calc_wOBA_ranks(df=pa_df,time_frame=time_string,thresh=0.075)
 
+time_frame_deviation = {
+  'Season':0.015,
+  'Last 30':0.02,
+  'Last 15':0.025
+}
+
 st.title('MLB Offense Ranks')
 st.dataframe(rank_df
              .style
              .format(precision=4)
-             .background_gradient(axis=0,gmap=(rank_df['wOBA']-pa_df['wOBA'].mean())/0.015, 
+             .background_gradient(axis=0,gmap=(rank_df['wOBA']-pa_df['wOBA'].mean())/time_frame_deviation[time_string], 
                                   vmin=-2,vmax=2,
                                   cmap='vlag'),
              width=400,
