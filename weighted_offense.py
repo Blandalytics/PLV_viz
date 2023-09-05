@@ -73,8 +73,8 @@ def calc_wOBA_ranks(df=pa_df,time_frame='Season',thresh=0.075):
     weighted_test_df = pd.DataFrame.from_dict(test_ranks, orient='index').rename(columns={0:'wOBA'}).sort_values('wOBA',ascending=False)
     return weighted_test_df
 
-time_frame = st.radio('Choose a time frame:', ['Season','Last 30','Last 15'])
-rank_df = calc_wOBA_ranks(df=pa_df,time_frame=time_frame,thresh=0.075)
+time_string = st.radio('Choose a time frame:', ['Season','Last 30','Last 15'])
+rank_df = calc_wOBA_ranks(df=pa_df,time_frame=time_string,thresh=0.075)
 
 st.title('MLB Offense Ranks')
 st.dataframe(rank_df
