@@ -21,11 +21,11 @@ def highlight_cols(x):
     #return color df
     return df
 
+@st.cache_data(ttl=12*3600)
 pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023_PAs.csv?raw=true')
 
-@st.cache_data(ttl=12*3600)
 def calc_wOBA_ranks(df=pa_df,time_frame='Season',thresh=0.075):
-    if time_frame=='season':
+    if time_frame=='Season':
         time_thresh = 365
     else:
         time_thresh = int(time_frame[-2:])
