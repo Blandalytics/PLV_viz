@@ -95,12 +95,11 @@ rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string,thresh=0.075)
 
 st.dataframe(rank_df
              .style
-             .set_properties(**{'text-align': 'center'})
              .format(precision=4)
              .background_gradient(axis=0,gmap=(rank_df['wOBA']-time_df['wOBA'].mean())/time_df.groupby('hitterteam')['wOBA'].mean().std(), 
                                   vmin=-2,vmax=2.5,
                                   cmap='vlag'),
-              width=400,
+              width=300,
               height=800,
 #              hide_index=True
             )
