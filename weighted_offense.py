@@ -115,7 +115,7 @@ st.title('MLB Offense Ranks')
 st.dataframe(rank_df
              .style
              .format(precision=4)
-             .background_gradient(axis=0,gmap=(rank_df['wOBA']-pa_df['wOBA'].mean())/(pa_df['wOBA'].std()/20), 
+             .background_gradient(axis=0,gmap=(rank_df['wOBA']-pa_df['wOBA'].mean())/0.015, 
                                   vmin=-2,vmax=2,
                                   cmap='vlag'),
              width=400,
