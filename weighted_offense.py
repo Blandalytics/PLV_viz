@@ -118,7 +118,8 @@ rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string, stat=stat)
 
 st.dataframe(rank_df
              .style
-             .set_properties(**{'color': 'black'})
+             .set_properties(**{'color': 'black',
+                                'width': '100px'})
              .set_properties(**{'background-color': '#eda1a1'}, subset='Top')
              .set_properties(**{'background-color': '#f9dddc'}, subset='Solid')
              .set_properties(**{'background-color': '#e6dbcf'}, subset='Average')
@@ -128,7 +129,7 @@ st.dataframe(rank_df
              # .background_gradient(axis=0,gmap=(rank_df['wOBA']-time_df['wOBA'].mean())/time_df.groupby('hitterteam')['wOBA'].mean().std(), 
              #                      vmin=-2,vmax=2.5,
              #                      cmap='vlag'),
-              width=800,
+              # width=800,
               height=400,
              hide_index=True
             )
