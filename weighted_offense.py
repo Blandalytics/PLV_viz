@@ -112,7 +112,7 @@ st.dataframe(rank_df,
              #                      cmap='vlag'),
              #  width=300,
               height=300,
-#              hide_index=True
+             hide_index=True
             )
 
 # with col3:
