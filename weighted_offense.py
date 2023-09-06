@@ -129,7 +129,7 @@ st.dataframe(rank_df
              #                      vmin=-2,vmax=2.5,
              #                      cmap='vlag'),
               width=600,
-              height=300,
+              height=400,
              hide_index=True
             )
 
