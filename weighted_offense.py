@@ -106,6 +106,7 @@ rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string,thresh=0.075)
 
 st.dataframe(rank_df
              .style
+             .set_properties(**{'color': 'black'})
              .set_properties(**{'background-color': '#eda1a1'}, subset='Top')
              .set_properties(**{'background-color': '#f9dddc'}, subset='Solid')
              .set_properties(**{'background-color': '#e6dbcf'}, subset='Average')
