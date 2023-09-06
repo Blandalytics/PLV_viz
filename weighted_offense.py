@@ -61,7 +61,8 @@ time_thresh = 365 if time_string=='Season' else int(time_string[5:-5])
 time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelta(days=time_thresh))].copy()
 
 # @st.cache_data(ttl=12*3600)
-def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075, stat='wOBA'):    
+def calc_wOBA_ranks(df=time_df,time_frame='Season', stat='wOBA'):   
+    thresh= 0.075 if stat=='wOBA' else 0.02
     thresh = thresh if df.shape[0] >= 60000 else thresh*1.75 if df.shape[0] >= 45000 else thresh*2 if df.shape[0] >= 30000 else thresh*3 if df.shape[0] >= 15000 else thresh*4
 
     test_df = pd.DataFrame(index=df['hitterteam'].sort_values().unique())
@@ -74,8 +75,12 @@ def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075, stat='wOBA'):
     test_df['wOBA_lhp_away'] = df.loc[(df['pitcherside']=='L') & (df['is_home']==0)].groupby('hitterteam')[stat].mean()
     test_df['wOBA_rhp_home'] = df.loc[(df['pitcherside']=='R') & (df['is_home']==1)].groupby('hitterteam')[stat].mean()
     test_df['wOBA_rhp_away'] = df.loc[(df['pitcherside']=='R') & (df['is_home']==0)].groupby('hitterteam')[stat].mean()
-    test_df['hand_stdev'] = test_df[['wOBA_lhp','wOBA_rhp']].std(axis=1).div(test_df['wOBA'])
-    test_df['location_stdev'] = test_df[['wOBA_home','wOBA_away']].std(axis=1).div(test_df['wOBA'])
+    if stat=='wOBA':
+        test_df['hand_stdev'] = test_df[['wOBA_lhp','wOBA_rhp']].std(axis=1).div(test_df['wOBA'])
+        test_df['location_stdev'] = test_df[['wOBA_home','wOBA_away']].std(axis=1).div(test_df['wOBA'])
+    else:
+        test_df['hand_stdev'] = test_df[['wOBA_lhp','wOBA_rhp']].std(axis=1)
+        test_df['location_stdev'] = test_df[['wOBA_home','wOBA_away']].std(axis=1)
     test_df['val'] = 'season'
     test_df.loc[test_df['hand_stdev']>=thresh,'val'] = 'hand'
     test_df.loc[test_df['location_stdev']>=thresh,'val'] = 'location'
@@ -109,7 +114,7 @@ def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075, stat='wOBA'):
     return pd.pivot(weighted_test_df.reset_index().round(3).astype({'wOBA':'str'}),
                     values='index', index=['count'], columns=['bucket'])[offense_tiers[::-1]]
 
-rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string,thresh=0.075, stat=stat)
+rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string, stat=stat)
 
 st.dataframe(rank_df
              .style
