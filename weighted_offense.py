@@ -128,7 +128,7 @@ st.dataframe(rank_df
              # .background_gradient(axis=0,gmap=(rank_df['wOBA']-time_df['wOBA'].mean())/time_df.groupby('hitterteam')['wOBA'].mean().std(), 
              #                      vmin=-2,vmax=2.5,
              #                      cmap='vlag'),
-              width=600,
+              width=800,
               height=400,
              hide_index=True
             )
