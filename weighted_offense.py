@@ -38,12 +38,7 @@ team_map = {
     'Toronto Blue Jays':'TOR',
     'Washington Nationals':'WSH'
 }
-# col1, col2, col3 = st.columns([0.2,0.6,0.2])
 
-# with col1:
-#     st.write(' ')
-
-# with col2:
 st.title('MLB Offense Ranks')
 
 pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023_PAs.csv?raw=true')
@@ -125,14 +120,6 @@ st.dataframe(rank_df
              .set_properties(**{'background-color': '#e6dbcf'}, subset='Average')
              .set_properties(**{'background-color': '#e2f3e3'}, subset='Weak')
              .set_properties(**{'background-color': '#acdcb2'}, subset='Poor'),
-             # .format(precision=4)
-             # .background_gradient(axis=0,gmap=(rank_df['wOBA']-time_df['wOBA'].mean())/time_df.groupby('hitterteam')['wOBA'].mean().std(), 
-             #                      vmin=-2,vmax=2.5,
-             #                      cmap='vlag'),
-              # width=800,
-              height=400,
+              # height=400,
              hide_index=True
             )
-
-# with col3:
-#     st.write(' ')
