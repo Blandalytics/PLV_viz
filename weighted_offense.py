@@ -39,6 +39,8 @@ team_map = {
     'Washington Nationals':'WSH'
 }
 
+pd.set_option('display.max_colwidth', 120)
+
 st.title('MLB Offense Ranks')
 
 pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023_PAs.csv?raw=true')
@@ -113,8 +115,7 @@ rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string, stat=stat)
 
 st.dataframe(rank_df
              .style
-             .set_properties(**{'color': 'black',
-                                'width': '200px'})
+             .set_properties(**{'color': 'black'})
              .set_properties(**{'background-color': '#eda1a1'}, subset='Top')
              .set_properties(**{'background-color': '#f9dddc'}, subset='Solid')
              .set_properties(**{'background-color': '#e6dbcf'}, subset='Average')
