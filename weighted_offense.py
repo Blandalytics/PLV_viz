@@ -119,7 +119,7 @@ rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string, stat=stat)
 st.dataframe(rank_df
              .style
              .set_properties(**{'color': 'black',
-                                'width': '100px'})
+                                'width': '200px'})
              .set_properties(**{'background-color': '#eda1a1'}, subset='Top')
              .set_properties(**{'background-color': '#f9dddc'}, subset='Solid')
              .set_properties(**{'background-color': '#e6dbcf'}, subset='Average')
