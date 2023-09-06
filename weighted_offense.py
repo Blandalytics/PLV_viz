@@ -49,24 +49,31 @@ st.title('MLB Offense Ranks')
 pa_df = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/2023_PAs.csv?raw=true')
 pa_df['game_played'] = pd.to_datetime(pa_df['game_played'])
 
+stat_dict = {
+    'wOBA (Actual Results)':'wOBA',
+    'Hitter Performance (Context Adjusted)':'hitter_perf'
+}
+stat_string = st.radio('Choose a measurement:', list(stat_dict.keys()))
+stat = stat_dict[stat_string]
+
 time_string = st.radio('Choose a time frame:', ['Season','Last 60 Days','Last 30 Days','Last 15 Days'])
 time_thresh = 365 if time_string=='Season' else int(time_string[5:-5])
 time_df = pa_df[pa_df['game_played'] > (pa_df['game_played'].max() - pd.Timedelta(days=time_thresh))].copy()
 
 # @st.cache_data(ttl=12*3600)
-def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075):    
+def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075, stat='wOBA'):    
     thresh = thresh if df.shape[0] >= 60000 else thresh*1.75 if df.shape[0] >= 45000 else thresh*2 if df.shape[0] >= 30000 else thresh*3 if df.shape[0] >= 15000 else thresh*4
 
     test_df = pd.DataFrame(index=df['hitterteam'].sort_values().unique())
-    test_df['wOBA'] = df.groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_lhp'] = df.loc[df['pitcherside']=='L'].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_rhp'] = df.loc[df['pitcherside']=='R'].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_home'] = df.loc[df['is_home']==1].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_away'] = df.loc[df['is_home']==0].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_lhp_home'] = df.loc[(df['pitcherside']=='L') & (df['is_home']==1)].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_lhp_away'] = df.loc[(df['pitcherside']=='L') & (df['is_home']==0)].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_rhp_home'] = df.loc[(df['pitcherside']=='R') & (df['is_home']==1)].groupby('hitterteam')['wOBA'].mean()
-    test_df['wOBA_rhp_away'] = df.loc[(df['pitcherside']=='R') & (df['is_home']==0)].groupby('hitterteam')['wOBA'].mean()
+    test_df['wOBA'] = df.groupby('hitterteam')[stat].mean()
+    test_df['wOBA_lhp'] = df.loc[df['pitcherside']=='L'].groupby('hitterteam')[stat].mean()
+    test_df['wOBA_rhp'] = df.loc[df['pitcherside']=='R'].groupby('hitterteam')[stat].mean()
+    test_df['wOBA_home'] = df.loc[df['is_home']==1].groupby('hitterteam')[stat].mean()
+    test_df['wOBA_away'] = df.loc[df['is_home']==0].groupby('hitterteam')[stat].mean()
+    test_df['wOBA_lhp_home'] = df.loc[(df['pitcherside']=='L') & (df['is_home']==1)].groupby('hitterteam')[stat].mean()
+    test_df['wOBA_lhp_away'] = df.loc[(df['pitcherside']=='L') & (df['is_home']==0)].groupby('hitterteam')[stat].mean()
+    test_df['wOBA_rhp_home'] = df.loc[(df['pitcherside']=='R') & (df['is_home']==1)].groupby('hitterteam')[stat].mean()
+    test_df['wOBA_rhp_away'] = df.loc[(df['pitcherside']=='R') & (df['is_home']==0)].groupby('hitterteam')[stat].mean()
     test_df['hand_stdev'] = test_df[['wOBA_lhp','wOBA_rhp']].std(axis=1).div(test_df['wOBA'])
     test_df['location_stdev'] = test_df[['wOBA_home','wOBA_away']].std(axis=1).div(test_df['wOBA'])
     test_df['val'] = 'season'
@@ -99,10 +106,10 @@ def calc_wOBA_ranks(df=time_df,time_frame='Season',thresh=0.075):
     weighted_test_df['bucket'] = pd.cut(weighted_test_df['wOBA'].rank(), 5,labels=offense_tiers)
     weighted_test_df['count'] = weighted_test_df.groupby((weighted_test_df['bucket'] != weighted_test_df['bucket'].shift(1)).cumsum()).cumcount()+1
     
-    return pd.pivot(weighted_test_df.reset_index().round(3).astype({'wOBA':'str'}).assign(team_wOBA = lambda x: x['index']+': '+x['wOBA']),
+    return pd.pivot(weighted_test_df.reset_index().round(3).astype({'wOBA':'str'}),
                     values='index', index=['count'], columns=['bucket'])[offense_tiers[::-1]]
 
-rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string,thresh=0.075)
+rank_df = calc_wOBA_ranks(df=time_df,time_frame=time_string,thresh=0.075, stat=stat)
 
 st.dataframe(rank_df
              .style
