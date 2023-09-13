@@ -102,7 +102,7 @@ pitch_thresh = st.number_input(f'Min # of Pitches faced:',
                                min_value=min(100,start_val), 
                                max_value=2000,
                                step=50, 
-                               value=start_val)
+                               value=500)
 
 season_df = (plv_df
              .rename(columns=season_names)
