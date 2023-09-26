@@ -43,7 +43,7 @@ line_color = sns.color_palette('vlag', n_colors=100)[0]
 st.title("Hitter Ability Metrics ")
 st.write('- ***Swing Aggression***: How much more often a hitter swings at pitches, given the swing likelihoods of the pitches they face.')
 st.write('''
-- ***Strikezone Judgement***: The "correctness" of a hitter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
+- ***Strikezone Judgment***: The "correctness" of a hitter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
 ''')
 st.write("- ***Decision Value***: Modeled value (runs per 100 pitches) of a hitter's decision to swing or take, minus the modeled value of the alternative.")
 st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
