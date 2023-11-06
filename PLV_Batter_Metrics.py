@@ -77,7 +77,7 @@ def load_season_data(year):
         df = pd.concat([df,
                         pd.read_parquet(file_name)[['hittername','p_hand','b_hand','pitch_id','balls','strikes','swing_agg',
                                                     'strike_zone_judgement','decision_value','contact_over_expected',
-                                                    'adj_power','batter_wOBA','pitchtype']]
+                                                    'adj_power','batter_wOBA','pitchtype','pitch_type_bucket']]
                        ])
     
     df = df.reset_index(drop=True)
