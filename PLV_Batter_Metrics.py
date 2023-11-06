@@ -178,14 +178,14 @@ with col1:
 
 with col2:
     # Pitchtype Selection
-    pitchtype_select = st.selectbox('Vs Pitchtype', 
-                                    ['All','Fastball', 'Breaking Ball', 'Offspeed','Custom'],
+    pitchtype_base = st.selectbox('Vs Pitchtype', 
+                                    ['All','Fastball', 'Breaking Ball', 'Offspeed'],
                                     index=0
                                     )
-    if pitchtype_select == 'All':
+    if pitchtype_base == 'All':
         pitchtype_select = ['Fastball', 'Breaking Ball', 'Offspeed', 'Other']
     else:
-        pitchtype_select = [pitchtype_select]
+        pitchtype_select = [pitchtype_base]
 
 rolling_denom = {
     'Swing Aggression':'Pitches',
@@ -389,8 +389,9 @@ def rolling_chart():
     fig.suptitle("{}'s {} {}\n{}".format(player,
                                                  year,
                                                  metric,
-                                                 '(Rolling {} {}{}{})'.format(window,
+                                                 '(Rolling {} {}{}{}{})'.format(window,
                                                                       rolling_denom[metric],
+                                                                      '' if pitchtype_base == 'All' else f'; vs {pitchtype_select[0]}s',
                                                                       '' if (count_select in ['All','Custom']) else f'; in {count_select} Counts',
                                                                       '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                                                      )
