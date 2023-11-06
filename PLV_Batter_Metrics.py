@@ -83,7 +83,7 @@ def load_season_data(year):
                        ])
     
     df = df.reset_index(drop=True)
-    for stat in ['swing_agg','strike_zone_judgement','contact_over_expected','in_play_input]:
+    for stat in ['swing_agg','strike_zone_judgement','contact_over_expected','in_play_input']:
         df[stat] = df[stat].mul(100).astype('float')
     
     # Convert to runs added
