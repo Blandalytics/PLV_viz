@@ -180,7 +180,7 @@ with col2:
     # Pitchtype Selection
     pitchtype_select = st.selectbox('Vs Pitchtype', 
                                     ['All','Fastball', 'Breaking Ball', 'Offspeed','Custom'],
-                                    index='All'
+                                    index=0
                                     )
     if pitchtype_select == 'All':
         pitchtype_select = ['Fastball', 'Breaking Ball', 'Offspeed', 'Other']
