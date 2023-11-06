@@ -77,7 +77,7 @@ def load_season_data(year):
         df = pd.concat([df,
                         pd.read_parquet(file_name)[['hittername','p_hand','b_hand','pitch_id','balls','strikes','swing_agg',
                                                     'strike_zone_judgement','decision_value','contact_over_expected',
-                                                    'adj_power','batter_wOBA']]
+                                                    'adj_power','batter_wOBA','pitchtype']]
                        ])
     
     df = df.reset_index(drop=True)
@@ -168,10 +168,24 @@ players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter 
 default_player = players.index('Juan Soto')
 player = st.selectbox('Choose a hitter:', players, index=default_player)
 
-# Metric
-metrics = list(stat_names.values())
-default_stat = metrics.index('Decision Value')
-metric = st.selectbox('Choose a metric:', metrics, index=default_stat)
+col1, col2 = st.columns([0.5,0.5])
+
+with col1:
+    # Metric Selection
+    metrics = list(stat_names.values())
+    default_stat = metrics.index('Decision Value')
+    metric = st.selectbox('Choose a metric:', metrics, index=default_stat)
+
+with col2:
+    # Pitchtype Selection
+    pitchtype_select = st.selectbox('Vs Pitchtype', 
+                                    ['All','Fastball', 'Breaking Ball', 'Offspeed','Custom'],
+                                    index='All'
+                                    )
+    if pitchtype_select == 'All':
+        pitchtype_select = ['Fastball', 'Breaking Ball', 'Offspeed', 'Other']
+    else:
+        pitchtype_select = [pitchtype_select]
 
 rolling_denom = {
     'Swing Aggression':'Pitches',
@@ -235,6 +249,7 @@ hand_map = {
 
 chart_thresh_list = (plv_df
                      .loc[plv_df['count'].astype('str').isin(selected_options) &
+                          plv_df['pitch_type_bucket'].isin(pitchtype_select) &
                           plv_df['b_hand'].isin(hitter_hand) &
                           plv_df['p_hand'].isin(hand_map[handedness])
                          ]
@@ -248,7 +263,7 @@ chart_thresh_list = (plv_df
                      .copy()
                     )
 
-chart_mean = plv_df.loc[plv_df['count'].isin(selected_options),metric].mean()
+chart_mean = plv_df.loc[plv_df['count'].isin(selected_options) & plv_df['pitch_type_bucket'].isin(pitchtype_select),metric].mean()
 chart_90 = chart_thresh_list[metric].quantile(0.9)
 chart_75 = chart_thresh_list[metric].quantile(0.75)
 chart_25 = chart_thresh_list[metric].quantile(0.25)
@@ -259,7 +274,8 @@ rolling_df = (plv_df
               .sort_values('pitch_id')
               .loc[(plv_df['hittername']==player) &
                    plv_df['p_hand'].isin(hand_map[handedness]) &
-                   plv_df['count'].isin(selected_options),
+                   plv_df['count'].isin(selected_options) &
+                   plv_df['pitch_type_bucket'].isin(pitchtype_select),
                    ['hittername',metric]]
               .dropna()
               .reset_index(drop=True)
