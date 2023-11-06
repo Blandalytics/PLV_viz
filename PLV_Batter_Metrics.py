@@ -394,9 +394,13 @@ def rolling_chart():
                  chart_max+(chart_max - chart_min)/25)           
           )
     
-    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement','Pitch Hittability']:
+    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
         ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
+
+    if metric =='Pitch Hittability':
+        #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
+        ax.set_yticklabels([f'{x:.1f}%' for x in ax.get_yticks()])
 
     pitch_text = f'; vs {pitchtype_select[0]}' if pitchtype_base == 'Offspeed' else f'; vs {pitchtype_select[0]}s'
     
