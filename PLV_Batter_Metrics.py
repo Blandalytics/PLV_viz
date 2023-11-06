@@ -46,6 +46,7 @@ st.write('''
 - ***Strikezone Judgment***: The "correctness" of a hitter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
 ''')
 st.write("- ***Decision Value***: Modeled value (runs per 100 pitches) of a hitter's decision to swing or take, minus the modeled value of the alternative.")
+st.write("- ***Pitch Hittability***: Likelihood of the pitches a hitter faces becoming batted balls.")
 st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- ***Power***: Modeled number of extra bases (xISO on contact) above a pitch's expectation, for each BBE.")
 st.write("- ***Hitter Performance (HP)***: Runs added per 100 pitches seen by the hitter (including swing/take decisions), after accounting for pitch quality.")
@@ -77,11 +78,12 @@ def load_season_data(year):
         df = pd.concat([df,
                         pd.read_parquet(file_name)[['hittername','p_hand','b_hand','pitch_id','balls','strikes','swing_agg',
                                                     'strike_zone_judgement','decision_value','contact_over_expected',
-                                                    'adj_power','batter_wOBA','pitchtype','pitch_type_bucket']]
+                                                    'adj_power','batter_wOBA','pitchtype','pitch_type_bucket',
+                                                   'in_play_input']]
                        ])
     
     df = df.reset_index(drop=True)
-    for stat in ['swing_agg','strike_zone_judgement','contact_over_expected']:
+    for stat in ['swing_agg','strike_zone_judgement','contact_over_expected','in_play_input]:
         df[stat] = df[stat].mul(100).astype('float')
     
     # Convert to runs added
@@ -144,6 +146,7 @@ stat_names = {
     'swing_agg':'Swing Aggression',
     'strike_zone_judgement':'Strikezone Judgement',
     'decision_value':'Decision Value',
+    'in_play_input':'Pitch Hittability',
     'contact_over_expected':'Contact Ability',
     'adj_power':'Power',
     'batter_wOBA':'Hitter Performance'
@@ -153,6 +156,7 @@ stat_values = {
     'swing_agg':'Swing Frequency, Above Expected',
     'strike_zone_judgement':'Ball/Strike Correctness',
     'decision_value':'Runs Added, per 100 Pitches',
+    'in_play_input':'Likelihood of BBE',
     'contact_over_expected':'Contact Frequency, Above Expected',
     'adj_power':'Expected Extra Bases Added, per BBE',
     'batter_wOBA':'Runs Added, per 100 Pitches'
@@ -197,6 +201,7 @@ rolling_denom = {
     'Swing Aggression':'Pitches',
     'Strikezone Judgement':'Pitches',
     'Decision Value':'Pitches',
+    'Pitch Hittability':'Pitches',
     'Contact Ability':'Swings',
     'Power': 'BBE',
     'Hitter Performance':'Pitches'
@@ -206,6 +211,7 @@ rolling_threshold = {
     'Swing Aggression':400,
     'Strikezone Judgement':400,
     'Decision Value':400,
+    'Pitch Hittability':400,
     'Contact Ability':200,
     'Power': 75,
     'Hitter Performance':800
@@ -388,7 +394,7 @@ def rolling_chart():
                  chart_max+(chart_max - chart_min)/25)           
           )
     
-    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement']:
+    if metric in ['Swing Aggression','Contact Ability','Strikezone Judgement','Pitch Hittability']:
         #ax.yaxis.set_major_formatter(ticker.PercentFormatter())
         ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
 
