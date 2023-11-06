@@ -156,7 +156,7 @@ stat_values = {
     'swing_agg':'Swing Frequency, Above Expected',
     'strike_zone_judgement':'Ball/Strike Correctness',
     'decision_value':'Runs Added, per 100 Pitches',
-    'in_play_input':'Likelihood of BBE',
+    'in_play_input':'Batted Ball Likelihood of Pitches',
     'contact_over_expected':'Contact Frequency, Above Expected',
     'adj_power':'Expected Extra Bases Added, per BBE',
     'batter_wOBA':'Runs Added, per 100 Pitches'
