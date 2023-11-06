@@ -179,9 +179,9 @@ with col1:
 with col2:
     # Pitchtype Selection
     pitchtype_help = '''
-    *Fastballs*: 4-Seam, Sinkers, some Cutters\n
-    *Breaking Balls*: Sliders, Curveballs, most Cutters\n
-    *Offspeed*: Changeups, Splitters
+    **Fastballs**: 4-Seam, Sinkers, some Cutters\n
+    **Breaking Balls**: Sliders, Curveballs, most Cutters\n
+    **Offspeed**: Changeups, Splitters
     '''
     pitchtype_base = st.selectbox('Vs Pitchtype', 
                                   ['All','Fastball', 'Breaking Ball', 'Offspeed'],
