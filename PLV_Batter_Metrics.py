@@ -188,14 +188,14 @@ with col2:
     **Offspeed**: Changeups, Splitters
     '''
     pitchtype_base = st.selectbox('Vs Pitchtype', 
-                                  ['All','Fastball', 'Breaking Ball', 'Offspeed'],
+                                  ['All','Fastballs', 'Breaking Balls', 'Offspeed'],
                                   index=0,
                                   help=pitchtype_help
                                     )
     if pitchtype_base == 'All':
         pitchtype_select = ['Fastball', 'Breaking Ball', 'Offspeed', 'Other']
     else:
-        pitchtype_select = [pitchtype_base]
+        pitchtype_select = [pitchtype_base] if pitchtype_base=='Offspeed' else [pitchtype_base[:-1]] # remove the 's'
 
 rolling_denom = {
     'Swing Aggression':'Pitches',
