@@ -410,7 +410,7 @@ def rolling_chart():
                                                  '(Rolling {} {}{}{}{})'.format(window,
                                                                       rolling_denom[metric],
                                                                       '' if pitchtype_base == 'All' else pitch_text,
-                                                                      '' if (count_select in ['All','Custom']) else f'; in {count_select} Counts',
+                                                                      '' if count_select=='All' else f'; in {selected_options} counts' if count_select=='Custom' else f'; in {count_select} Counts',
                                                                       '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                                                      )
                                                 ),
