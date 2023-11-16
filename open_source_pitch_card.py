@@ -172,12 +172,12 @@ def pitch_analysis_card(card_player,pitch_type):
     # Top tile is for the scatterplots
     # Bottom tile is for the violinplots
     grid = plt.GridSpec(2,1,hspace=0.2)
-    scatter_grid = gridspec.GridSpecFromSubplotSpec(1, 2, subplot_spec=grid[0])
+    scatter_grid = gridspec.GridSpecFromSubplotSpec(1, 7, subplot_spec=grid[0])
     stat_grid = gridspec.GridSpecFromSubplotSpec(1, len(chart_stats), subplot_spec=grid[1])
 
     ## Top Tile
     # Plot location
-    ax = plt.subplot(scatter_grid[0])
+    ax = plt.subplot(scatter_grid[0:3])
     sns.scatterplot(data=(pitch_df
                           .loc[(pitch_df['name']==card_player) &
                                (pitch_df['pitchtype']==pitch_type)]
@@ -217,7 +217,7 @@ def pitch_analysis_card(card_player,pitch_type):
 
     # Plot moovement
     hand = pitch_df.loc[(pitch_df['name']==card_player),'pitcher_hand'].values[0]
-    ax = plt.subplot(scatter_grid[1])
+    ax = plt.subplot(scatter_grid[3:])
     sns.scatterplot(data=pitch_df.loc[(pitch_df['name']==card_player) &
                                       (pitch_df['pitchtype']==pitch_type)],
                     x='horizontal_movement',
