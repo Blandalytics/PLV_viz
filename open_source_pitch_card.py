@@ -86,6 +86,7 @@ def pitch_analysis_card(card_player,pitch_type):
     # Generate df for card bottom stats
     pitch_stats_df = (
         pitch_df
+        .assign(horizontal_movement = lambda x: np.where(x['pitcher_hand']=='R',x['horizontal_movement']*-1,x['horizontal_movement'])
         .loc[(pitch_df['pitchtype']==pitch_type)]
         .groupby(['name'])
         [['pitch_id','pitcher_hand','velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis','adj_spin_axis']]
