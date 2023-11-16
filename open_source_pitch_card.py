@@ -57,7 +57,9 @@ if pitch_file is not None:
 
 st.dataframe(pitch_df)
 # Marker Style
-marker_colors = dict(zip(list(pitch_data['pitch_name'].value_counts().index),list(sns.color_palette('tab20',n_colors=len(pitch_data['pitch_name'].unique())))))
+pitch_list = list(pitch_data['pitchtype'].value_counts().index)
+marker_colors = dict(zip(pitch_list,
+                         list(sns.color_palette('tab20',n_colors=len(pitch_list)))))
 
 # Movement values should be in inches
 for axis in ['horizontal','vertical']:
