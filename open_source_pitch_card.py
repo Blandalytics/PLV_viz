@@ -9,36 +9,7 @@ import scipy as sp
 from collections import Counter
 from scipy import stats
 
-# ## Set Styling
-# # Plot Style
-# pl_white = '#FEFEFE'
-# pl_background = '#162B50'
-# pl_text = '#72a3f7'
-# pl_line_color = '#293a6b'
-
-# sns.set_theme(
-#     style={
-#         'axes.edgecolor': pl_background,
-#         'axes.facecolor': pl_background,
-#         'axes.labelcolor': pl_white,
-#         'xtick.color': pl_white,
-#         'ytick.color': pl_white,
-#         'figure.facecolor':pl_background,
-#         'grid.color': pl_background,
-#         'grid.linestyle': '-',
-#         'legend.facecolor':pl_background,
-#         'text.color': pl_white
-#      }
-#     )
-
-sz_bot = 1.5
-sz_top = 3.5
-x_ft = 2.5
-y_bot = -0.5
-y_lim = 6
-plate_y = -.25
-
-st.title("Pitchtype Cards")
+st.title("Open-Source Pitchtype Card")
 st.write(
   '''File needs to contain the following columns, with these exact names:\n
   pitch_id (unique id for each pitch)\n
@@ -170,6 +141,14 @@ def pitch_analysis_card(card_player,pitch_type):
         'spin_rate':'Lower',
         'spin_axis':'Horizontal',
     }
+
+  # Plot parameters
+  sz_bot = 1.5
+  sz_top = 3.5
+  x_ft = 2.5
+  y_bot = -0.5
+  y_lim = 6
+  plate_y = -.25
 
     # Divide card into tiles
     grid = plt.GridSpec(2, len(chart_stats),height_ratios=[5,5],hspace=0.2)
@@ -357,3 +336,6 @@ def pitch_analysis_card(card_player,pitch_type):
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
+
+st.write('Code is located [here](https://github.com/Blandalytics/PLV_viz/blob/main/open_source_pitch_card.py)')
+st.write('For questions, contact me [@Blandalytics](https://twitter.com/blandalytics)')
