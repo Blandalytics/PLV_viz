@@ -20,7 +20,7 @@ pitch_file = st.file_uploader("Please upload a pitch-level CSV file:")
 if pitch_file is None:
     st.warning(
       '''
-      CSV file ***must*** have the following columns:\n
+      CSV file ***must*** have the following columns (column names should be the same):\n
       - pitch_id (unique id for each pitch)\n
       - name (name of pitcher)\n
       - pitchtype (name of pitchtype)\n
