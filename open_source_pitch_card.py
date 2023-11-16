@@ -70,7 +70,6 @@ pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'] = pitch_df.loc[pitch
 pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'].sub(180).abs()
 pitch_df['adj_spin_axis'] = pitch_df['adj_spin_axis'].sub(90).abs()
 
-st.dataframe(pitch_df)
 # Marker Style
 pitch_list = list(pitch_df['pitchtype'].value_counts().index)
 marker_colors = dict(zip(pitch_list,
