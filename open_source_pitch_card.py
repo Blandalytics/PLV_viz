@@ -20,7 +20,7 @@ st.write(
   horizontal_location (horizontal location of pitch, in feet)\n
   vertical_location (vertical location of pitch, in feet)\n
   horizontal_movement (horizontal movement of pitch, in inches)\n
-  vertical_movement (vertical movement of pitch, in feet)\n
+  vertical_movement (vertical movement of pitch, in inches)\n
   spin_rate (spin rate of pitch, in rpm)\n
   spin_axis (spin axis/tilt of pitch, in degrees)\n
   extension (release extension of pitch, in feet)\n
