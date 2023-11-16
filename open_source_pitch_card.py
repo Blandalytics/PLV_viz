@@ -1,5 +1,6 @@
 import streamlit as st
 import matplotlib as mpl
+import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -170,8 +171,8 @@ def pitch_analysis_card(card_player,pitch_type):
     # Top tile is for the scatterplots
     # Bottom tile is for the violinplots
     grid = plt.GridSpec(1, 2,hspace=0.2)
-    scatter_grid = mpl.gridSpec.GridSpecFromSubplotSpec(1, 2, subplot_spec=grid[0])
-    stat_grid = mpl.gridSpec.GridSpecFromSubplotSpec(1, len(chart_stats), subplot_spec=grid[1])
+    scatter_grid = gridSpec.GridSpecFromSubplotSpec(1, 2, subplot_spec=grid[0])
+    stat_grid = gridSpec.GridSpecFromSubplotSpec(1, len(chart_stats), subplot_spec=grid[1])
 
     ## Top Tile
     # Plot location
