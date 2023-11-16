@@ -110,7 +110,7 @@ def pitch_analysis_card(card_player,pitch_type):
         pitch_df
         .loc[(pitch_df['pitchtype']==pitch_type)]
         .groupby(['name'])
-        [['pitch_id','pitcher_hand','velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis']]
+        [['pitch_id','pitcher_hand','velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis','adj_spin_axis']]
         .agg({
             'pitch_id':'count',
             'pitcher_hand':pd.Series.mode,
@@ -120,7 +120,8 @@ def pitch_analysis_card(card_player,pitch_type):
             'horizontal_movement':'mean',
             'vaa':'mean',
             'spin_rate':'mean',
-            'spin_axis':'mean'
+            'spin_axis':'mean',
+            'adj_spin_axis':'mean'
         })
         .query(f'pitch_id>={pitch_num_thresh}')
         .reset_index()
