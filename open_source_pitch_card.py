@@ -52,9 +52,10 @@ pitch_file = st.file_uploader("Load a pitch-level CSV file")
 if pitch_file is None:
     st.warning('Please load a file')
     st.stop()
-else:
+if pitch_file is not None:
     pitch_df =  pd.read_csv(pitch_file)
 
+st.dataframe(pitch_df)
 # Marker Style
 marker_colors = dict(zip(list(pitch_data['pitch_name'].value_counts().index),list(sns.color_palette('tab20',n_colors=len(pitch_data['pitch_name'].unique())))))
 
