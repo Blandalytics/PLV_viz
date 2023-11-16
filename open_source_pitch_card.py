@@ -35,6 +35,13 @@ if pitch_file is None:
     st.stop()
 if pitch_file is not None:
     pitch_df =  pd.read_csv(pitch_file)
+
+needed_cols = ['pitch_id','name','pitchtype','pitcher_hand','velo','horizontal_location','vertical_location',
+               'horizontal_movement','vertical_movement','spin_rate','spin_axis','extension','vaa']
+if all(item in pitch_df.columns.to_list() for item in needed_cols)==False:
+    st.warning('The following columns are missing: ',
+               list(set(needed_cols).difference(pitch_df.columns.to_list())))
+    st.stop()
 # Need to standardize spin axis to be vertical vs horizontal
 pitch_df['adj_spin_axis'] = pitch_df['spin_axis'].copy()
 pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'].sub(360).abs()
