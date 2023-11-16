@@ -94,7 +94,7 @@ def pitch_analysis_card(card_player,pitch_type):
 
     # Dictionary to aggregate stats in groupby df
     stat_agg_dict = {
-      'pitch_id':'count,
+      'pitch_id':'count',
       'pitcher_hand':pd.Series.mode,
       'vertical_movement':'mean',
       'horizontal_movement':'mean'
