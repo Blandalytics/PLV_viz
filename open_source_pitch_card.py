@@ -11,7 +11,7 @@ from scipy import stats
 
 st.title("Open-Source Pitchtype Card")
 st.write(
-  '''CSV file needs to contain the following columns, with these column names:\n
+  '''CSV file needs to contain the following columns:\n
   pitch_id (unique id for each pitch)\n
   name (name of pitcher)\n
   pitchtype (name of pitchtype)\n
