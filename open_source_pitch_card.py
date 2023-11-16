@@ -135,7 +135,8 @@ def pitch_analysis_card(card_player,pitch_type):
     for col in ['velo','velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis']:
         if col=='spin_axis':
             pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df['adj_spin_axis'])
-        pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df[col])
+        else:
+            pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df[col])
 
     chart_stats = ['velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis']
     fig = plt.figure(figsize=(10,10))
