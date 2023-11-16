@@ -18,7 +18,8 @@ st.write('For questions, contact me [@Blandalytics](https://twitter.com/blandaly
 pitch_file = st.file_uploader("Please upload a pitch-level CSV file:")
 if pitch_file is None:
     st.warning(
-      '''CSV file **must** have the following columns:\n
+      '''
+      CSV file **must** have the following columns:\n
       - pitch_id (unique id for each pitch)\n
       - name (name of pitcher)\n
       - pitchtype (name of pitchtype)\n
@@ -26,7 +27,7 @@ if pitch_file is None:
       - horizontal_location (horizontal location of pitch, in feet)\n
       - vertical_location (vertical location of pitch, in feet)\n
       - horizontal_movement (horizontal movement of pitch, in inches)\n
-      - vertical_movement (vertical movement of pitch, in inches)\n
+      - vertical_movement (vertical movement of pitch, in inches)\n\n
       It may also contain the following columns:\n
       - velo (release speed of pitch, in mph)\n
       - spin_rate (spin rate of pitch, in rpm)\n
