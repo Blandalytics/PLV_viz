@@ -44,8 +44,8 @@ st.write(
   pitch_id (unique id for each pitch)\n
   name (name of pitcher)\n
   pitchtype (name of pitchtype)\n
-  pitcher_hand (handedness of pitcher)\n
-  velo (release speed of pitch)\n
+  pitcher_hand (handedness of pitcher, R/L)\n
+  velo (release speed of pitch, in mph)\n
   horizontal_location (horizontal location of pitch, in feet)\n
   vertical_location (vertical location of pitch, in feet)\n
   horizontal_movement (horizontal movement of pitch, in inches)\n
