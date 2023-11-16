@@ -169,7 +169,7 @@ def pitch_analysis_card(card_player,pitch_type):
     # Divide card into tiles
     # Top tile is for the scatterplots
     # Bottom tile is for the violinplots
-    grid = plt.GridSpec(1, 2, height_ratios=[5,5],hspace=0.2)
+    grid = plt.GridSpec(1, 2,hspace=0.2)
     scatter_grid = gridspec.GridSpecFromSubplotSpec(1, 2, subplot_spec=grid[0])
     stat_grid = gridspec.GridSpecFromSubplotSpec(1, len(chart_stats), subplot_spec=grid[1])
 
