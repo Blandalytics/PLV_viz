@@ -11,9 +11,8 @@ from scipy import stats
 
 st.title("Open-Source Pitchtype Card")
 st.write('This app is designed to allow a user to upload their own pitch-level data and generate cards for the various pitchtypes of the players included.')
-st.write('Code is located [here](https://github.com/Blandalytics/PLV_viz/blob/main/open_source_pitch_card.py)')
+st.write('Code is located [here](https://github.com/Blandalytics/PLV_viz/blob/main/open_source_pitch_card.py), and a CSV with 2023 MLB Statcast data formatted for this app can be found [here](https://drive.google.com/file/d/1cWKBBSsWNlZbAz3Mwex-g9VMp99mr7cQ/view?usp=sharing)')
 st.write('For questions, contact me [@Blandalytics](https://twitter.com/blandalytics)')
-st.write('CSV with 2023 MLB Statcast data for this app can be found [here](https://drive.google.com/file/d/1cWKBBSsWNlZbAz3Mwex-g9VMp99mr7cQ/view?usp=sharing)')
 
 # Load Data
 pitch_file = st.file_uploader("Please upload a pitch-level CSV file:")
