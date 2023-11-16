@@ -67,7 +67,8 @@ if pitch_file is not None:
 # Need to standardize spin axis to be vertical vs horizontal
 pitch_df['adj_spin_axis'] = pitch_df['spin_axis'].copy()
 pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'].sub(360).abs()
-pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'].sub(270).abs()
+pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'].sub(180).abs()
+pitch_df['adj_spin_axis'] = pitch_df['adj_spin_axis'].sub(90).abs()
 
 st.dataframe(pitch_df)
 # Marker Style
