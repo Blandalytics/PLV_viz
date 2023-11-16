@@ -272,15 +272,26 @@ def pitch_analysis_card(card_player,pitch_type):
             low_thresh = min(pitch_stats_df[stat].quantile(0.01),
                              val)
         ax = plt.subplot(grid[1, chart_stats.index(stat)])
-        sns.violinplot(data=pitch_stats_df.loc[(pitch_stats_df[stat] <= up_thresh) &
-                                               (pitch_stats_df[stat] >= low_thresh)],
-                       y=stat+'_scale',
-                       inner=None,
-                       orient='v',
-                       cut=0,
-                       color=marker_colors[pitch_type],
-                       linewidth=1
-                     )
+        if stat == 'spin_axis':
+            sns.violinplot(data=pitch_stats_df.loc[(pitch_stats_df['adj_spin_axis'] <= up_thresh) &
+                                                   (pitch_stats_df['adj_spin_axis'] >= low_thresh)],
+                           y=stat+'_scale',
+                           inner=None,
+                           orient='v',
+                           cut=0,
+                           color=marker_colors[pitch_type],
+                           linewidth=1
+                         )
+        else:
+             sns.violinplot(data=pitch_stats_df.loc[(pitch_stats_df[stat] <= up_thresh) &
+                                                   (pitch_stats_df[stat] >= low_thresh)],
+                           y=stat+'_scale',
+                           inner=None,
+                           orient='v',
+                           cut=0,
+                           color=marker_colors[pitch_type],
+                           linewidth=1
+                         )
         ax.collections[0].set_edgecolor('k')
 
         top = ax.get_ylim()[1]
