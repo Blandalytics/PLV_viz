@@ -11,16 +11,19 @@ from scipy import stats
 
 st.title("Open-Source Pitchtype Card")
 st.write(
-  '''CSV file needs to contain the following columns:\n
+  '''CSV file **must** have the following columns:\n
   pitch_id (unique id for each pitch)\n
   name (name of pitcher)\n
   pitchtype (name of pitchtype)\n
   pitcher_hand (handedness of pitcher, R/L)\n
-  velo (release speed of pitch, in mph)\n
   horizontal_location (horizontal location of pitch, in feet)\n
   vertical_location (vertical location of pitch, in feet)\n
   horizontal_movement (horizontal movement of pitch, in inches)\n
-  vertical_movement (vertical movement of pitch, in inches)\n
+  vertical_movement (vertical movement of pitch, in inches)
+  '''
+st.write(
+  '''It may also contain the following columns:\n
+  velo (release speed of pitch, in mph)\n
   spin_rate (spin rate of pitch, in rpm)\n
   spin_axis (spin axis/tilt of pitch, in degrees)\n
   extension (release extension of pitch, in feet)\n
@@ -36,17 +39,20 @@ if pitch_file is None:
 if pitch_file is not None:
     pitch_df =  pd.read_csv(pitch_file)
 
-needed_cols = ['pitch_id','name','pitchtype','pitcher_hand','velo','horizontal_location','vertical_location',
-               'horizontal_movement','vertical_movement','spin_rate','spin_axis','extension','vaa']
-if all(item in pitch_df.columns.to_list() for item in needed_cols)==False:
+mandatory_cols = ['pitch_id','name','pitchtype','pitcher_hand','horizontal_location',
+                  'vertical_location','horizontal_movement','vertical_movement']
+needed_cols = ['velo','spin_rate','spin_axis','extension','vaa']
+if all(item in pitch_df.columns.to_list() for item in mandatory_cols)==False:
     st.warning('The following columns are missing: ',
-               list(set(needed_cols).difference(pitch_df.columns.to_list())))
+               list(set(mandatory_cols).difference(pitch_df.columns.to_list())))
     st.stop()
+  
 # Need to standardize spin axis to be vertical vs horizontal
-pitch_df['adj_spin_axis'] = pitch_df['spin_axis'].copy()
-pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'].sub(360).abs()
-pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'].sub(180).abs()
-pitch_df['adj_spin_axis'] = pitch_df['adj_spin_axis'].sub(90).abs()
+if 'spin_axis' in pitch_df.columns.to_list():
+    pitch_df['adj_spin_axis'] = pitch_df['spin_axis'].copy()
+    pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'].sub(360).abs()
+    pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'].sub(180).abs()
+    pitch_df['adj_spin_axis'] = pitch_df['adj_spin_axis'].sub(90).abs()
 
 # Marker Style
 pitch_list = list(pitch_df['pitchtype'].value_counts().index)
@@ -82,6 +88,17 @@ def pitch_analysis_card(card_player,pitch_type):
                                int(pitch_df.loc[(pitch_df['pitchtype']==pitch_type)].groupby('name')['pitch_id'].count().nlargest(75)[-1]/50)*50
                               )
                           )
+    # Utilize any of the following stats, if they're available
+    additional_stat_cols = [x for x in ['velo','extension','vaa','spin_rate','spin_axis','adj_spin_axis'] if x in pitch_df.columns.to_list()]
+
+    # Dictionary to aggregate stats in groupby df
+    stat_agg_dict = {
+      'pitch_id':'count,
+      'pitcher_hand':pd.Series.mode,
+      'vertical_movement':'mean',
+      'horizontal_movement':'mean'
+    }
+    stat_agg_dict.update({x:'mean' for x in additional_stat_cols})
 
     # Generate df for card bottom stats
     pitch_stats_df = (
@@ -89,19 +106,8 @@ def pitch_analysis_card(card_player,pitch_type):
         .assign(horizontal_movement = lambda x: np.where(x['pitcher_hand']=='R',x['horizontal_movement']*-1,x['horizontal_movement']))
         .loc[(pitch_df['pitchtype']==pitch_type)]
         .groupby(['name'])
-        [['pitch_id','pitcher_hand','velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis','adj_spin_axis']]
-        .agg({
-            'pitch_id':'count',
-            'pitcher_hand':pd.Series.mode,
-            'velo':'mean',
-            'extension':'mean',
-            'vertical_movement':'mean',
-            'horizontal_movement':'mean',
-            'vaa':'mean',
-            'spin_rate':'mean',
-            'spin_axis':'mean',
-            'adj_spin_axis':'mean'
-        })
+        [['pitch_id','pitcher_hand','vertical_movement','horizontal_movement']+additional_stat_cols]
+        .agg(stat_agg_dict)
         .query(f'pitch_id>={pitch_num_thresh}')
         .reset_index()
         .sort_values('velo', ascending=False)
@@ -117,7 +123,7 @@ def pitch_analysis_card(card_player,pitch_type):
         else:
             pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df[col])
 
-    chart_stats = ['velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis']
+    chart_stats = ['vertical_movement','horizontal_movement']+additional_stat_cols
     fig = plt.figure(figsize=(10,10))
 
     # Dictionaries for names and top/bottom text of each chart
@@ -140,6 +146,7 @@ def pitch_analysis_card(card_player,pitch_type):
         'spin_rate':'Higher',
         'spin_axis':'Vertical',
     }
+
     stat_bottoms = {
         'velo':'Slower',
         'extension':'Shorter',
