@@ -182,7 +182,7 @@ def pitch_analysis_card(card_player,pitch_type):
                     x='horizontal_location',
                     y='vertical_location',
                     color=marker_colors[pitch_type],
-                    linecolor='#777777',
+                    edgecolor='#777777',
                     alpha=1)
 
     # Strike zone outline
@@ -218,7 +218,7 @@ def pitch_analysis_card(card_player,pitch_type):
                     x='horizontal_movement',
                     y='vertical_movement',
                     color=marker_colors[pitch_type],
-                    linecolor='#777777',
+                    edgecolor='#777777',
                     s=25,
                     alpha=1)
 
@@ -239,7 +239,7 @@ def pitch_analysis_card(card_player,pitch_type):
                     color=marker_colors[pitch_type],
                     s=200,
                     legend=False,
-                    linecolor='#777777',
+                    edgecolor='#777777',
                     linewidth=2
                    )
 
