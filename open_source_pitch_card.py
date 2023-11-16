@@ -211,7 +211,7 @@ def pitch_analysis_card(card_player,pitch_type):
            ylim=(y_bot,y_lim),
            aspect=1)
     fig.text(0.29,0.89,'Locations',fontsize=18,ha='center',bbox=dict(facecolor='w', alpha=0.75, edgecolor='w'))
-    fig.text(0.29,0.86,'(MLB Strike Zone Shown)',fontsize=10,ha='center',bbox=dict(facecolor='w', alpha=0.75, edgecolor='w'))
+    fig.text(0.29,0.87,'(MLB Strike Zone Shown)',fontsize=10,ha='center',bbox=dict(facecolor='w', alpha=0.75, edgecolor='w'))
     ax.axis('off')
     sns.despine()
 
