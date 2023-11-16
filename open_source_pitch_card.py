@@ -49,7 +49,10 @@ st.write(
 
 # Load Data
 pitch_file = st.file_uploader("Load a pitch-level CSV file")
-if pitch_file is not None:
+if pitch_file is None:
+    st.warning('Please load a file')
+    st.stop()
+else:
     pitch_df =  pd.read_csv(pitch_file)
 
 # Marker Style
