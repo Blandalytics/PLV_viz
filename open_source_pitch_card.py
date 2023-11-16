@@ -48,7 +48,6 @@ st.write(
 )
 
 # Load Data
-@st.cache_data(ttl=12*3600)
 def load_data():
   pitch_file = st.file_uploader("Load a pitch-level CSV file")
   if pitch_file is not None:
