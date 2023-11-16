@@ -307,7 +307,7 @@ def pitch_analysis_card(card_player,pitch_type):
             'vertical_movement':f'{val:.1f}"',
             'horizontal_movement':f'{val:.1f}"',
             'vaa':f'{val:.1f}°',
-            'spin_rate':f'{val:,}rpm',
+            'spin_rate':f'{val:,.0f}rpm',
             'spin_axis':f'{val:.1f}°',
         }
         ax.axhline(pitch_stats_df[stat+'_scale'].median(),
