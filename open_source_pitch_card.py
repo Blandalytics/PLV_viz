@@ -112,7 +112,6 @@ def pitch_analysis_card(card_player,pitch_type):
         .agg(stat_agg_dict)
         .query(f'pitch_id>={pitch_num_thresh}')
         .reset_index()
-        .sort_values('velo', ascending=False)
     )
 
     # Scale pitches for violin plots (will all be 0-100)
