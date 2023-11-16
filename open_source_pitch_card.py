@@ -40,9 +40,9 @@ if pitch_file is None:
 if pitch_file is not None:
     pitch_df =  pd.read_csv(pitch_file)
 
+# Make sure CSV file has necessary columns
 mandatory_cols = ['pitch_id','name','pitchtype','pitcher_hand','horizontal_location',
                   'vertical_location','horizontal_movement','vertical_movement']
-needed_cols = ['velo','spin_rate','spin_axis','extension','vaa']
 if all(item in pitch_df.columns.to_list() for item in mandatory_cols)==False:
     st.warning('The following columns are missing: ',
                list(set(mandatory_cols).difference(pitch_df.columns.to_list())))
@@ -118,13 +118,13 @@ def pitch_analysis_card(card_player,pitch_type):
     def min_max_scaler(x):
         return ((x-x.min())/(x.max()-x.min()))
 
-    for col in ['velo','velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis']:
+    chart_stats = additional_stat_cols+['vertical_movement','horizontal_movement']
+    for col in chart_stats:
         if col=='spin_axis':
             pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df['adj_spin_axis'])
         else:
             pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df[col])
 
-    chart_stats = ['vertical_movement','horizontal_movement']+additional_stat_cols
     fig = plt.figure(figsize=(10,10))
 
     # Dictionaries for names and top/bottom text of each chart
@@ -167,8 +167,15 @@ def pitch_analysis_card(card_player,pitch_type):
     plate_y = -.25
 
     # Divide card into tiles
-    grid = plt.GridSpec(2, len(chart_stats),height_ratios=[5,5],hspace=0.2)
-    ax = plt.subplot(grid[0, :3])
+    # Top tile is for the scatterplots
+    # Bottom tile is for the violinplots
+    grid = plt.GridSpec(1, 2, height_ratios=[5,5],hspace=0.2)
+    scatter_grid = gridspec.GridSpecFromSubplotSpec(1, 2, subplot_spec=grid[0])
+    stat_grid = gridspec.GridSpecFromSubplotSpec(1, len(chart_stats), subplot_spec=grid[1])
+
+    ## Top Tile
+    # Plot location
+    ax = plt.subplot(scatter_grid[0])
     sns.scatterplot(data=(pitch_df
                           .loc[(pitch_df['name']==card_player) &
                                (pitch_df['pitchtype']==pitch_type)]
@@ -205,8 +212,9 @@ def pitch_analysis_card(card_player,pitch_type):
     ax.axis('off')
     sns.despine()
 
+    # Plot moovement
     hand = pitch_df.loc[(pitch_df['name']==card_player),'pitcher_hand'].values[0]
-    ax = plt.subplot(grid[0, 3:])
+    ax = plt.subplot(scatter_grid[1])
     sns.scatterplot(data=pitch_df.loc[(pitch_df['name']==card_player) &
                                       (pitch_df['pitchtype']==pitch_type)],
                     x='horizontal_movement',
@@ -220,6 +228,7 @@ def pitch_analysis_card(card_player,pitch_type):
     ax.axvline(0, color='k', linestyle='--', linewidth=1, alpha=0.5)
     ax.set(aspect=1)
 
+    # Plot average movement
     sns.scatterplot(data=(pitch_df
                           .loc[(pitch_df['name']==card_player) &
                                (pitch_df['pitchtype']==pitch_type)]
@@ -244,6 +253,7 @@ def pitch_analysis_card(card_player,pitch_type):
                 )
     ax.set(xlim=(ax_lim,-ax_lim),
            ylim=(-ax_lim,ax_lim))
+    # Custom label axes
     plt.xlabel('Arm-Side Break', fontsize=12)
     plt.ylabel('Vertical Break', fontsize=12,labelpad=-1)
     ax.set_xticks([x*10 for x in range(-int(ax_lim/10),int(ax_lim/10)+1)][::-1])
@@ -252,12 +262,12 @@ def pitch_analysis_card(card_player,pitch_type):
     fig.text(0.62,0.89,'Movement',fontsize=18)
     sns.despine(left=True,bottom=True)
 
+    ## Add Title and subtitle for violinplots
     fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
     fig.text(0.5,0.43,f'(Compared to league {pitch_type}s - Min {pitch_num_thresh} Thrown)',ha='center',fontsize=12)
     for stat in chart_stats:
         if stat == 'spin_axis':
-            val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),
-                                     stat].item()
+            val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),stat].item()
             temp_val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),'adj_spin_axis'].item()
           
             up_thresh = max(pitch_stats_df['adj_spin_axis'].quantile(0.99),
@@ -265,13 +275,13 @@ def pitch_analysis_card(card_player,pitch_type):
             low_thresh = min(pitch_stats_df['adj_spin_axis'].quantile(0.01),
                              temp_val)
         else:
-            val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),
-                                     stat].item()
+            val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),stat].item()
             up_thresh = max(pitch_stats_df[stat].quantile(0.99),
                             val)
             low_thresh = min(pitch_stats_df[stat].quantile(0.01),
                              val)
-        ax = plt.subplot(grid[1, chart_stats.index(stat)])
+        # Plot violin of given stat
+        ax = plt.subplot(stat_grid[chart_stats.index(stat)])
         if stat == 'spin_axis':
             sns.violinplot(data=pitch_stats_df.loc[(pitch_stats_df['adj_spin_axis'] <= up_thresh) &
                                                    (pitch_stats_df['adj_spin_axis'] >= low_thresh)],
@@ -346,6 +356,7 @@ def pitch_analysis_card(card_player,pitch_type):
                                              top + plot_height))
         ax.xaxis.set_label_position('top')
 
+    # Add Title for entire card
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     fig.suptitle(f"{card_player}{apostrophe_text} {pitch_type}",y=0.97,fontsize=20,x=0.525)
     fig.text(0.525,0.925,"(From Pitcher's Perspective)",ha='center',fontsize=12)
