@@ -64,6 +64,10 @@ if pitch_file is None:
     st.stop()
 if pitch_file is not None:
     pitch_df =  pd.read_csv(pitch_file)
+# Need to standardize spin axis to be vertical vs horizontal
+pitch_df['adj_spin_axis'] = pitch_df['spin_axis'].copy()
+pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>180,'adj_spin_axis'].sub(360).abs()
+pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'] = pitch_df.loc[pitch_df['adj_spin_axis']>90,'adj_spin_axis'].sub(270).abs()
 
 st.dataframe(pitch_df)
 # Marker Style
@@ -128,6 +132,8 @@ def pitch_analysis_card(card_player,pitch_type):
         return ((x-x.min())/(x.max()-x.min()))
 
     for col in ['velo','velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis']:
+        if col=='spin_axis':
+            pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df['adj_spin_axis'])
         pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df[col])
 
     chart_stats = ['velo','extension','vertical_movement','horizontal_movement','vaa','spin_rate','spin_axis']
@@ -151,7 +157,7 @@ def pitch_analysis_card(card_player,pitch_type):
         'horizontal_movement':'Arm',
         'vaa':'Flatter',
         'spin_rate':'Higher',
-        'spin_axis':'Up/Down',
+        'spin_axis':'Vertical',
     }
     stat_bottoms = {
         'velo':'Slower',
@@ -160,7 +166,7 @@ def pitch_analysis_card(card_player,pitch_type):
         'horizontal_movement':'Glove',
         'vaa':'Steeper',
         'spin_rate':'Lower',
-        'spin_axis':'Left/Right',
+        'spin_axis':'Horizontal',
     }
 
     # Divide card into tiles
@@ -249,12 +255,20 @@ def pitch_analysis_card(card_player,pitch_type):
     fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
     fig.text(0.5,0.43,f'(Compared to league {pitch_type}s - Min {pitch_num_thresh} Thrown)',ha='center',fontsize=12)
     for stat in chart_stats:
-        val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),
-                                 stat].item()
-        up_thresh = max(pitch_stats_df[stat].quantile(0.99),
-                        val)
-        low_thresh = min(pitch_stats_df[stat].quantile(0.01),
-                         val)
+        if stat == 'spin_axis':
+            val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),
+                                     'adj_spin_axis'].item()
+            up_thresh = max(pitch_stats_df['adj_spin_axis'].quantile(0.99),
+                            val)
+            low_thresh = min(pitch_stats_df['adj_spin_axis'].quantile(0.01),
+                             val)
+        else:
+            val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),
+                                     stat].item()
+            up_thresh = max(pitch_stats_df[stat].quantile(0.99),
+                            val)
+            low_thresh = min(pitch_stats_df[stat].quantile(0.01),
+                             val)
         ax = plt.subplot(grid[1, chart_stats.index(stat)])
         sns.violinplot(data=pitch_stats_df.loc[(pitch_stats_df[stat] <= up_thresh) &
                                                (pitch_stats_df[stat] >= low_thresh)],
@@ -294,7 +308,7 @@ def pitch_analysis_card(card_player,pitch_type):
                 va='center',
                 ha='center',
                 fontsize=12 if stat=='velo' else 14,
-                bbox=dict(facecolor='w', alpha=0.75, edgecolor='w'))
+                bbox=dict(facecolor='w', alpha=0.8, edgecolor='k'))
         ax.text(0,
                 top + (0.5 * plot_height),
                 stat_name_dict[stat],
