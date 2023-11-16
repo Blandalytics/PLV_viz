@@ -90,8 +90,6 @@ with col2:
     pitches = list(pitch_df.loc[pitch_df['name']==card_player].groupby('pitchtype')['pitch_id'].count().reset_index().sort_values('pitch_id',ascending=False).query('pitch_id>=20')['pitchtype'])
     pitch_type = st.selectbox('Choose a pitch:', pitches)
 
-pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
-
 def pitch_analysis_card(card_player,pitch_type):
     # Find number of this pitchtype thrown by this pitcher 
     pitches_thrown = int(pitch_df.loc[(pitch_df['name']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
