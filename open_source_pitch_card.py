@@ -77,7 +77,7 @@ for axis in ['horizontal','vertical']:
     pitch_df[axis+'_movement'] = pitch_df[axis+'_movement'].mul(12)
 
 # Has at least 1 pitch with at least 20 thrown
-pitcher_list = list(pitch_df.groupby(['name','pitchtype'])['pitch_id'].count().reset_index().query('pitch_id >=20')['pitchername'].sort_values().unique())
+pitcher_list = list(pitch_df.groupby(['name','pitchtype'])['pitch_id'].count().reset_index().query('pitch_id >=20')['name'].sort_values().unique())
 
 col1, col2 = st.columns(2)
 
@@ -99,7 +99,7 @@ def pitch_analysis_card(card_player,pitch_type):
     # Threshold at number of pitches thrown by pitcher, or 75th %ile of population, whichever is higher
     pitch_num_thresh = max(20,
                            min(pitches_thrown,
-                               int(pitch_df.loc[(pitch_df['pitchtype']==pitch_type)].groupby('pitchername')['pitch_id'].count().nlargest(75)[-1]/50)*50
+                               int(pitch_df.loc[(pitch_df['pitchtype']==pitch_type)].groupby('name')['pitch_id'].count().nlargest(75)[-1]/50)*50
                               )
                           )
 
@@ -290,7 +290,7 @@ def pitch_analysis_card(card_player,pitch_type):
                    xmax=0.9,
                    color='k')
         ax.text(0,
-                pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
+                pitch_stats_df.loc[(pitch_stats_df['name']==card_player),
                                    stat+'_scale'],
                 format_dict[stat],
                 va='center',
