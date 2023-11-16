@@ -307,7 +307,7 @@ def pitch_analysis_card(card_player,pitch_type):
             'vertical_movement':f'{val:.1f}"',
             'horizontal_movement':f'{val:.1f}"',
             'vaa':f'{val:.1f}°',
-            'spin_rate':f'{val:.0f}rpm',
+            'spin_rate':f'{val:,d}rpm',
             'spin_axis':f'{val:.1f}°',
         }
         ax.axhline(pitch_stats_df[stat+'_scale'].median(),
@@ -323,7 +323,7 @@ def pitch_analysis_card(card_player,pitch_type):
                 format_dict[stat],
                 va='center',
                 ha='center',
-                fontsize=12 if stat=='velo' else 14,
+                fontsize=12 if stat in ['velo','spin_rate'] else 14,
                 bbox=dict(facecolor='w', alpha=0.8, edgecolor='k'))
         ax.text(0,
                 top + (0.5 * plot_height),
