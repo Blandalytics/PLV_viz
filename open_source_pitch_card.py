@@ -339,4 +339,4 @@ pitch_analysis_card(card_player,pitch_type)
 
 st.write('Code is located [here](https://github.com/Blandalytics/PLV_viz/blob/main/open_source_pitch_card.py)')
 st.write('For questions, contact me [@Blandalytics](https://twitter.com/blandalytics)')
-st.write('CSV with 2023 Statcast data for this app can be found [here](https://drive.google.com/file/d/1cWKBBSsWNlZbAz3Mwex-g9VMp99mr7cQ/view?usp=sharing)')
+st.write('CSV with 2023 MLB Statcast data for this app can be found [here](https://drive.google.com/file/d/1cWKBBSsWNlZbAz3Mwex-g9VMp99mr7cQ/view?usp=sharing)')
