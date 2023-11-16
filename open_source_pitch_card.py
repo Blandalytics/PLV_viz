@@ -12,22 +12,23 @@ from scipy import stats
 st.title("Open-Source Pitchtype Card")
 st.write(
   '''CSV file **must** have the following columns:\n
-  pitch_id (unique id for each pitch)\n
-  name (name of pitcher)\n
-  pitchtype (name of pitchtype)\n
-  pitcher_hand (handedness of pitcher, R/L)\n
-  horizontal_location (horizontal location of pitch, in feet)\n
-  vertical_location (vertical location of pitch, in feet)\n
-  horizontal_movement (horizontal movement of pitch, in inches)\n
-  vertical_movement (vertical movement of pitch, in inches)
+  - pitch_id (unique id for each pitch)\n
+  - name (name of pitcher)\n
+  - pitchtype (name of pitchtype)\n
+  - pitcher_hand (handedness of pitcher, R/L)\n
+  - horizontal_location (horizontal location of pitch, in feet)\n
+  - vertical_location (vertical location of pitch, in feet)\n
+  - horizontal_movement (horizontal movement of pitch, in inches)\n
+  - vertical_movement (vertical movement of pitch, in inches)
   '''
+)
 st.write(
   '''It may also contain the following columns:\n
-  velo (release speed of pitch, in mph)\n
-  spin_rate (spin rate of pitch, in rpm)\n
-  spin_axis (spin axis/tilt of pitch, in degrees)\n
-  extension (release extension of pitch, in feet)\n
-  vaa (vertical approach angle of pitch, in degrees)
+  - velo (release speed of pitch, in mph)\n
+  - spin_rate (spin rate of pitch, in rpm)\n
+  - spin_axis (spin axis/tilt of pitch, in degrees)\n
+  - extension (release extension of pitch, in feet)\n
+  - vaa (vertical approach angle of pitch, in degrees)
   '''
 )
 
