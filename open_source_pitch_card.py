@@ -319,11 +319,6 @@ def pitch_analysis_card(card_player,pitch_type):
                                              top + plot_height))
         ax.xaxis.set_label_position('top')
 
-    # Add PL logo
-    pl_ax = fig.add_axes([0.41,0.025,0.2,0.2], anchor='S', zorder=1)
-    pl_ax.imshow(logo)
-    pl_ax.axis('off')
-
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     fig.suptitle(f"{card_player}{apostrophe_text} {year} {pitch_type}",y=0.97,fontsize=20,x=0.525)
     fig.text(0.525,0.925,"(From Pitcher's Perspective)",ha='center',fontsize=12)
