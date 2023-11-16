@@ -120,6 +120,8 @@ def pitch_analysis_card(card_player,pitch_type):
         return ((x-x.min())/(x.max()-x.min()))
 
     chart_stats = additional_stat_cols+['vertical_movement','horizontal_movement']
+    if 'spin_axis' in chart_stats:
+        chart_stats.remove('adj_spin_axis')
     for col in chart_stats:
         if col=='spin_axis':
             pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df['adj_spin_axis'])
