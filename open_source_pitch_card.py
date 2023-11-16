@@ -10,32 +10,35 @@ from collections import Counter
 from scipy import stats
 
 st.title("Open-Source Pitchtype Card")
-st.write(
-  '''CSV file **must** have the following columns:\n
-  - pitch_id (unique id for each pitch)\n
-  - name (name of pitcher)\n
-  - pitchtype (name of pitchtype)\n
-  - pitcher_hand (handedness of pitcher, R/L)\n
-  - horizontal_location (horizontal location of pitch, in feet)\n
-  - vertical_location (vertical location of pitch, in feet)\n
-  - horizontal_movement (horizontal movement of pitch, in inches)\n
-  - vertical_movement (vertical movement of pitch, in inches)
-  '''
-)
-st.write(
-  '''It may also contain the following columns:\n
-  - velo (release speed of pitch, in mph)\n
-  - spin_rate (spin rate of pitch, in rpm)\n
-  - spin_axis (spin axis/tilt of pitch, in degrees)\n
-  - extension (release extension of pitch, in feet)\n
-  - vaa (vertical approach angle of pitch, in degrees)
-  '''
-)
+st.write('This app is designed to allow a user to upload their own pitch-level data and generate cards for the various pitchtypes of the players included.')
+st.write('Code is located [here](https://github.com/Blandalytics/PLV_viz/blob/main/open_source_pitch_card.py)')
+st.write('For questions, contact me [@Blandalytics](https://twitter.com/blandalytics)')
+st.write('CSV with 2023 MLB Statcast data for this app can be found [here](https://drive.google.com/file/d/1cWKBBSsWNlZbAz3Mwex-g9VMp99mr7cQ/view?usp=sharing)')
 
 # Load Data
-pitch_file = st.file_uploader("Load a pitch-level CSV file")
+pitch_file = st.file_uploader("Please upload a pitch-level CSV file:")
 if pitch_file is None:
-    st.warning('Please load a file')
+    st.write(
+      '''CSV file **must** have the following columns:\n
+      - pitch_id (unique id for each pitch)\n
+      - name (name of pitcher)\n
+      - pitchtype (name of pitchtype)\n
+      - pitcher_hand (handedness of pitcher, R/L)\n
+      - horizontal_location (horizontal location of pitch, in feet)\n
+      - vertical_location (vertical location of pitch, in feet)\n
+      - horizontal_movement (horizontal movement of pitch, in inches)\n
+      - vertical_movement (vertical movement of pitch, in inches)
+      '''
+    )
+    st.write(
+      '''It may also contain the following columns:\n
+      - velo (release speed of pitch, in mph)\n
+      - spin_rate (spin rate of pitch, in rpm)\n
+      - spin_axis (spin axis/tilt of pitch, in degrees)\n
+      - extension (release extension of pitch, in feet)\n
+      - vaa (vertical approach angle of pitch, in degrees)
+      '''
+    )
     st.stop()
 if pitch_file is not None:
     pitch_df =  pd.read_csv(pitch_file)
@@ -352,7 +355,3 @@ def pitch_analysis_card(card_player,pitch_type):
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
-
-st.write('Code is located [here](https://github.com/Blandalytics/PLV_viz/blob/main/open_source_pitch_card.py)')
-st.write('For questions, contact me [@Blandalytics](https://twitter.com/blandalytics)')
-st.write('CSV with 2023 MLB Statcast data for this app can be found [here](https://drive.google.com/file/d/1cWKBBSsWNlZbAz3Mwex-g9VMp99mr7cQ/view?usp=sharing)')
