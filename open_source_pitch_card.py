@@ -41,9 +41,19 @@ plate_y = -.25
 st.title("Pitchtype Cards")
 st.write(
   '''File needs to contain the following columns, with these exact names:\n
-  pitch_id, name, pitchtype, pitcher_hand, velo\n
-  horizontal_location, vertical_location, horizontal_movement, vertical_movement\n
-  spin_rate, spin_axis, extension, vaa\n
+  pitch_id (unique id for each pitch)\n
+  name (name of pitcher)\n
+  pitchtype (name of pitchtype)\n
+  pitcher_hand (handedness of pitcher)\n
+  velo (release speed of pitch)\n
+  horizontal_location (horizontal location of pitch, in feet)\n
+  vertical_location (vertical location of pitch, in feet)\n
+  horizontal_movement (horizontal movement of pitch, in inches)\n
+  vertical_movement (vertical movement of pitch, in feet)\n
+  spin_rate (spin rate of pitch, in rpm)\n
+  spin_axis (spin axis/tilt of pitch, in degrees)\n
+  extension (release extension of pitch, in feet)\n
+  vaa (vertical approach angle of pitch, in degrees)
   '''
 )
 
