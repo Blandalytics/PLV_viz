@@ -320,7 +320,7 @@ def pitch_analysis_card(card_player,pitch_type):
         ax.xaxis.set_label_position('top')
 
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
-    fig.suptitle(f"{card_player}{apostrophe_text} {year} {pitch_type}",y=0.97,fontsize=20,x=0.525)
+    fig.suptitle(f"{card_player}{apostrophe_text} {pitch_type}",y=0.97,fontsize=20,x=0.525)
     fig.text(0.525,0.925,"(From Pitcher's Perspective)",ha='center',fontsize=12)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
