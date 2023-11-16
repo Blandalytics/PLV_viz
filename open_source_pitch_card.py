@@ -142,13 +142,13 @@ def pitch_analysis_card(card_player,pitch_type):
         'spin_axis':'Horizontal',
     }
 
-  # Plot parameters
-  sz_bot = 1.5
-  sz_top = 3.5
-  x_ft = 2.5
-  y_bot = -0.5
-  y_lim = 6
-  plate_y = -.25
+    # Plot parameters
+    sz_bot = 1.5
+    sz_top = 3.5
+    x_ft = 2.5
+    y_bot = -0.5
+    y_lim = 6
+    plate_y = -.25
 
     # Divide card into tiles
     grid = plt.GridSpec(2, len(chart_stats),height_ratios=[5,5],hspace=0.2)
