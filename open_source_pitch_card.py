@@ -260,11 +260,13 @@ def pitch_analysis_card(card_player,pitch_type):
     for stat in chart_stats:
         if stat == 'spin_axis':
             val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),
-                                     'adj_spin_axis'].item()
+                                     stat].item()
+            temp_val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),'adj_spin_axis'].item()
+          
             up_thresh = max(pitch_stats_df['adj_spin_axis'].quantile(0.99),
-                            val)
+                            temp_val)
             low_thresh = min(pitch_stats_df['adj_spin_axis'].quantile(0.01),
-                             val)
+                             temp_val)
         else:
             val = pitch_stats_df.loc[(pitch_stats_df['name']==card_player),
                                      stat].item()
