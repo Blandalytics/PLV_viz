@@ -67,7 +67,7 @@ if pitch_file is not None:
 
 st.dataframe(pitch_df)
 # Marker Style
-pitch_list = list(pitch_data['pitchtype'].value_counts().index)
+pitch_list = list(pitch_df['pitchtype'].value_counts().index)
 marker_colors = dict(zip(pitch_list,
                          list(sns.color_palette('tab20',n_colors=len(pitch_list)))))
 
