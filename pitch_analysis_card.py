@@ -134,7 +134,7 @@ with col2:
     pitches = {pitch_names[x] for x in _pitches}
     pitch_type = st.selectbox('Choose a pitch:', pitches)
 
-print(_pitches)
+st.write(_pitches)
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
 def pitch_analysis_card(card_player,pitch_type):
