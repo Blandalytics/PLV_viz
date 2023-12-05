@@ -116,7 +116,7 @@ def load_data(year):
     return df
 pitch_df = load_data(year)
 
-pitch_thresh = 50
+pitch_thresh = 10
 
 # Has at least 1 pitch with at least 50 thrown
 pitcher_list = list(pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query(f'pitch_id >={pitch_thresh}')['pitchername'].sort_values().unique())
