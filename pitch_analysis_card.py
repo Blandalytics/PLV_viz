@@ -116,8 +116,10 @@ def load_data(year):
     return df
 pitch_df = load_data(year)
 
+pitch_thresh = 50
+
 # Has at least 1 pitch with at least 50 thrown
-pitcher_list = list(pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query('pitch_id >=50')['pitchername'].sort_values().unique())
+pitcher_list = list(pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query(f'pitch_id >={pitch_thresh}')['pitchername'].sort_values().unique())
 
 col1, col2 = st.columns(2)
 
@@ -128,11 +130,11 @@ with col1:
 
 with col2:
     # Pitch
-    _pitches = list(pitch_df.loc[pitch_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().reset_index().sort_values('pitch_id',ascending=False).query('pitch_id>=50')['pitchtype'])
+    _pitches = list(pitch_df.loc[pitch_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().reset_index().sort_values('pitch_id',ascending=False).query(f'pitch_id>={pitch_thresh}')['pitchtype'])
     pitches = {pitch_names[x] for x in _pitches}
     pitch_type = st.selectbox('Choose a pitch:', pitches)
 
-#print(_pitches)
+print(_pitches)
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
 def pitch_analysis_card(card_player,pitch_type):
