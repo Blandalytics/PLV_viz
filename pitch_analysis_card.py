@@ -185,7 +185,7 @@ with col2:
 # st.write(_pitches)
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
-kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
+# kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
 
 def pitch_analysis_card(card_player,pitch_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
@@ -463,29 +463,29 @@ def kde_chart(hand_index,kde_data=kde_diffs,p_hand=p_hand):
     sns.despine(bottom=True,left=True)
     st.pyplot(fig)
 
-col1, col2, col3 = st.columns([0.45,0.1,0.45])
+# col1, col2, col3 = st.columns([0.45,0.1,0.45])
 
-with col1:
-    kde_chart(0)
+# with col1:
+#     kde_chart(0)
 
-with col2:
-    fig, ax = plt.subplots(figsize=(1, 3))
-    norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
-    cb1 = mpl.colorbar.ColorbarBase(ax, 
-                                    cmap=mpl.colors.ListedColormap(kde_palette),
-                                    norm=norm,
-                                    boundaries=[x/100 for x in range(-10,11)])
-    ax.set_xticklabels([])
-    ax.set_yticklabels([])
-    ax.tick_params(right=False, bottom=False)
-    ax.text(0.5,0.09,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
-    ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
-    ax.text(0.5,-0.09,'\n-10%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
-    sns.despine()
-    st.pyplot(fig)
+# with col2:
+#     fig, ax = plt.subplots(figsize=(1, 3))
+#     norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
+#     cb1 = mpl.colorbar.ColorbarBase(ax, 
+#                                     cmap=mpl.colors.ListedColormap(kde_palette),
+#                                     norm=norm,
+#                                     boundaries=[x/100 for x in range(-10,11)])
+#     ax.set_xticklabels([])
+#     ax.set_yticklabels([])
+#     ax.tick_params(right=False, bottom=False)
+#     ax.text(0.5,0.09,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
+#     ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
+#     ax.text(0.5,-0.09,'\n-10%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
+#     sns.despine()
+#     st.pyplot(fig)
     
-with col3:
-    kde_chart(1)
+# with col3:
+#     kde_chart(1)
 
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
