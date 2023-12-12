@@ -482,11 +482,11 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     ax.text(0.5,-0.1,'\n-10%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
     ax.axis('off')
     fig.suptitle(f"{card_player}'s {pitch_type} Locations",ha='center',y=1.005, fontsize=18)
-    fig.text(0.5,0.87,"(From Pitcher's Perspective; Relative to MLB)\n\n",ha='center',va='bottom')
+    fig.text(0.5,0.88,"(From Pitcher's Perspective; Relative to MLB)\n\n",ha='center',va='bottom')
     sns.despine(left=True,bottom=True)
 
     # Add PL logo
-    pl_ax = plt.subplot(grid[1, :])
+    pl_ax = fig.add_axes([0.41,0.025,0.2,0.2], anchor='S', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
     st.pyplot(fig)
