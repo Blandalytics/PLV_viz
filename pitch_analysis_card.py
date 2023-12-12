@@ -140,6 +140,9 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
 
         x_loc_pitcher = kde_df.loc[kde_df['pitchername']==pitcher,'kde_x']
         y_loc_pitcher = kde_df.loc[kde_df['pitchername']==pitcher,'kde_z']
+        if x_loc_pitcher.shape[0]==0:
+          kde_diffs += []
+          continue
 
         xmin = x_loc_league.min()
         xmax = x_loc_league.max()
@@ -433,6 +436,8 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     for hand in ['L','R']:
         hand_index = 0 if hand=='L' else 1
         ax = plt.subplot(grid[0, 0]) if hand=='L' else plt.subplot(grid[0, 2])
+        if kde_diffs[hand_index]==[]:
+          continue
         sns.heatmap(kde_diffs[hand_index],
                     cmap=kde_palette,
                     center=0,
