@@ -428,8 +428,8 @@ pitch_analysis_card(card_player,pitch_type)
 kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
 p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
 def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
-    fig = plt.figure(figsize=(11,6))
-    grid = plt.GridSpec(1, 3,width_ratios=[5,1,5],wspace=0.05)
+    fig = plt.figure(figsize=(11,7))
+    grid = plt.GridSpec(2, 3,height_ratios=[6,1],,width_ratios=[5,1,5],wspace=0.05)
     for hand in ['L','R']:
         hand_index = 0 if hand=='L' else 1
         ax = plt.subplot(grid[0, 0]) if hand=='L' else plt.subplot(grid[0, 2])
@@ -484,6 +484,11 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     fig.suptitle(f"{card_player}'s {pitch_type} Locations",ha='center',y=1.005, fontsize=18)
     fig.text(0.5,0.87,"(From Pitcher's Perspective; Relative to MLB)\n\n",ha='center',va='bottom')
     sns.despine(left=True,bottom=True)
+
+    # Add PL logo
+    pl_ax = plt.subplot(grid[1, :])
+    pl_ax.imshow(logo)
+    pl_ax.axis('off')
     st.pyplot(fig)
 kde_chart()
 
