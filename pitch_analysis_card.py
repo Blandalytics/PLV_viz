@@ -498,7 +498,7 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     pl_ax = fig.add_axes([0.41,0.015,0.2,0.2], anchor='S', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
-    fig.text(0.77,0.09,"@Blandalytics",ha='center',fontsize=10)
+    fig.text(0.77,0.08,"@Blandalytics",ha='center',fontsize=10)
     fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
     st.pyplot(fig)
 kde_chart()
