@@ -480,7 +480,7 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     ax.text(0.5,0.1,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
     ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
     ax.text(0.5,-0.1,'\n-10%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
-    fig.suptitle(f"{pitcher}'s {pitchtype} Locations",ha='center',y=1.01, fontsize=18)
+    fig.suptitle(f"{card_player}'s {pitchtype} Locations",ha='center',y=1.01, fontsize=18)
     fig.text(0.5,0.875,'(Relative to MLB)\n\n',ha='center',va='bottom')
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
