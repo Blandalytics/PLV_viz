@@ -434,7 +434,7 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     for hand in ['L','R']:
         hand_index = 0 if hand=='L' else 1
         ax = plt.subplot(grid[0, 0]) if hand=='L' else plt.subplot(grid[0, 2])
-        sns.heatmap(kde_data[hand_index],
+        sns.heatmap(kde_diffs[hand_index],
                     cmap=kde_palette,
                     center=0,
                     vmin=-0.1,
@@ -455,13 +455,15 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
         ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
         ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
     
-        ax.axis('off')
+        ax.set(xlabel=None, ylabel=None)
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.tick_params(left=False, bottom=False)
     
         ax.set(xlim=(40,0),
               ylim=(0,48))
     
         ax.text(20,49,f"{p_hand[0]}HP vs {hand}HH",ha='center',fontsize=16)
-        sns.despine(left=True,bottom=True)
     ax = plt.subplot(grid[0, 1])
     norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
     cb1 = mpl.colorbar.ColorbarBase(ax, 
@@ -471,7 +473,9 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
                                    )
     
     cb1.outline.set_visible(False)
-    ax.axis('off')
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.tick_params(right=False, bottom=False)
     ax.set(ylim=(-0.15,0.15))
     ax.text(0.5,0.1,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
     ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
