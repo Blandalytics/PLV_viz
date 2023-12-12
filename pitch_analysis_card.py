@@ -140,9 +140,9 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
 
         x_loc_pitcher = kde_df.loc[kde_df['pitchername']==pitcher,'kde_x']
         y_loc_pitcher = kde_df.loc[kde_df['pitchername']==pitcher,'kde_z']
-        # if x_loc_pitcher.shape[0]==0:
-        #   kde_diffs += []
-        #   continue
+        if x_loc_pitcher.empty:
+          kde_diffs += [pd.DataFrame()]
+          continue
 
         xmin = x_loc_league.min()
         xmax = x_loc_league.max()
@@ -436,8 +436,13 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     for hand in ['L','R']:
         hand_index = 0 if hand=='L' else 1
         ax = plt.subplot(grid[0, 0]) if hand=='L' else plt.subplot(grid[0, 2])
-        # if kde_diffs[hand_index]==[]:
-        #   continue
+        ax.set(xlabel=None, ylabel=None)
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.tick_params(left=False, bottom=False)
+        if kde_diffs[hand_index].empty:
+            ax.text(0.5,0.5,f'None thrown\nto {hand}HH',va='center',ha='center',fontsize=18)
+            continue
         sns.heatmap(kde_diffs[hand_index],
                     cmap=kde_palette,
                     center=0,
@@ -458,11 +463,6 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
         ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
         ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
         ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
-    
-        ax.set(xlabel=None, ylabel=None)
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
-        ax.tick_params(left=False, bottom=False)
     
         ax.set(xlim=(40,0),
                ylim=(0,48))
