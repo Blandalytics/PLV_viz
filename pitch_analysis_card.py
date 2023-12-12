@@ -114,6 +114,48 @@ def load_data(year):
          )
     
     return df
+
+def kde_calcs(df,pitcher,pitchtype,year=year):
+    p_hand = df.loc[(df['pitchername']==pitcher),'pitcherside'].iloc[0]
+    kde_diffs = []
+    for b_hand in ['L','R']:
+        kde_df = (df
+                  .loc[(df['year_played']==year) &
+                       (df['pitchtype']==pitchtype) &
+                       (df['hitterside']==b_hand) &
+                       (df['pitcherside']==p_hand)
+                      ]
+                  .assign(kde_x = lambda x: np.clip(x['p_x'].astype('float').mul(12).round(0).astype('int').div(12),-20/12,20/12),
+                          kde_z = lambda x: np.clip(x['p_z'].astype('float').mul(12).round(0).astype('int').div(12),0.5,4.5))
+                  .reset_index(drop=True)
+                 )
+        x_loc_league = kde_df['kde_x']
+        y_loc_league = kde_df['kde_z']
+
+        x_loc_pitcher = kde_df.loc[kde_df['pitchername']==pitcher,'kde_x']
+        y_loc_pitcher = kde_df.loc[kde_df['pitchername']==pitcher,'kde_z']
+
+        xmin = x_loc_league.min()
+        xmax = x_loc_league.max()
+        ymin = y_loc_league.min()
+        ymax = y_loc_league.max()
+
+        X, Y = np.mgrid[xmin:xmax:41j, ymin:ymax:49j]
+        positions = np.vstack([X.ravel(), Y.ravel()])
+
+        # league matrix
+        values_league = np.vstack([x_loc_league, y_loc_league])
+        kernel_league = sp.stats.gaussian_kde(values_league)
+        f_league = np.reshape(kernel_league(positions).T, X.shape)
+
+        # pitcher matrix
+        values_pitcher = np.vstack([x_loc_pitcher, y_loc_pitcher])
+        kernel_pitcher = sp.stats.gaussian_kde(values_pitcher)
+        f_pitcher = np.reshape(kernel_pitcher(positions).T, X.shape)
+        
+        kde_diffs += [pd.DataFrame(f_pitcher-f_league).T]
+    return kde_diffs
+
 pitch_df = load_data(year)
 
 pitch_thresh = 10
@@ -136,6 +178,8 @@ with col2:
 
 # st.write(_pitches)
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
+
+kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
 
 def pitch_analysis_card(card_player,pitch_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
@@ -376,6 +420,65 @@ def pitch_analysis_card(card_player,pitch_type):
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
+
+def kde_chart(hand_index,kde_data=kde_diffs):
+    b_hand = 'L' if hand_index == 0 else 'R'
+    fig, ax = plt.subplots(figsize=(5,6))
+    sns.heatmap(kde_diffs[hand_index],
+                cmap=kde_palette,
+                center=0,
+                vmin=-0.1,
+                vmax=0.1,
+                cbar=False
+               )
+
+    # Strikezone
+    ax.axhline(12, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+    ax.axhline(36, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+    ax.axvline(10, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+    ax.axvline(30, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+
+    # Inner Strikezone
+    ax.axhline(20, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+    ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+    ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+    ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+
+    ax.set(xlabel=None, ylabel=None)
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.tick_params(left=False, bottom=False)
+
+    ax.set(xlim=(40,0),
+          ylim=(0,48))
+
+    plt.suptitle(f"{pitcher}'s {pitchtype} Locations\nRelative to MLB {p_hand[0]}HP vs {b_hand}HH",y=0.9,va='bottom')
+    sns.despine(bottom=True,left=True)
+    st.pyplot(fig)
+
+col1, col2, col3 = st.columns([0.45,0.1,0.45)
+
+with col1:
+    kde_chart(0)
+
+with col2:
+    fig, ax = plt.subplots(figsize=(1, 3))
+    norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
+    cb1 = mpl.colorbar.ColorbarBase(ax, 
+                                    cmap=mpl.colors.ListedColormap(kde_palette),
+                                    norm=norm,
+                                    boundaries=[x/100 for x in range(-10,11)])
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.tick_params(right=False, bottom=False)
+    ax.text(0.5,0.09,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
+    ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
+    ax.text(0.5,-0.09,'\n-10%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
+    sns.despine()
+    st.pyplot(fig)
+    
+with col3:
+    kde_chart(1)
 
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
