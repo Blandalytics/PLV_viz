@@ -100,7 +100,7 @@ def load_data(year):
     df = pd.DataFrame()
     for chunk in [1,2,3]:
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_Pitch_Analysis_Data-{chunk}.parquet?raw=true'
-        print(pd.read_parquet(file_name).columns.values
+        print(pd.read_parquet(file_name).columns.values)
         df = pd.concat([df,
                         pd.read_parquet(file_name)[['pitchername','pitchtype','pitch_id',
                                                     'p_hand','IHB','IVB','called_strike_pred',
