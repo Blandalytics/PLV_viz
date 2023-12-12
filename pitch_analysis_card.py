@@ -433,38 +433,38 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     grid = plt.GridSpec(1, 3,width_ratios=[5,1,5],wspace=0.05)
     for hand in ['L','R']:
         hand_index = 0 if hand=='L' else 1
-        kde_ax = plt.subplot(grid[0, 0]) if hand=='L' else plt.subplot(grid[0, 2])
+        ax = plt.subplot(grid[0, 0]) if hand=='L' else plt.subplot(grid[0, 2])
         sns.heatmap(kde_diffs[hand_index],
                     cmap=kde_palette,
                     center=0,
                     vmin=-0.1,
                     vmax=0.1,
                     cbar=False,
-                    ax=kde_ax
+                    ax=ax
                    )
     
         # Strikezone
-        kde_ax.axhline(12, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-        kde_ax.axhline(36, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-        kde_ax.axvline(10, ymin=1/4, ymax=3/4, color='black', linewidth=2)
-        kde_ax.axvline(30, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+        ax.axhline(12, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+        ax.axhline(36, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+        ax.axvline(10, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+        ax.axvline(30, ymin=1/4, ymax=3/4, color='black', linewidth=2)
     
         # Inner Strikezone
-        kde_ax.axhline(20, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-        kde_ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-        kde_ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
-        kde_ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+        ax.axhline(20, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+        ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+        ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+        ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
     
-        kde_ax.set(xlabel=None, ylabel=None)
-        kde_ax.set_xticklabels([])
-        kde_ax.set_yticklabels([])
-        kde_ax.tick_params(left=False, bottom=False)
+        ax.set(xlabel=None, ylabel=None)
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.tick_params(left=False, bottom=False)
     
-        kde_ax.set(xlim=(40,0),
-                    ylim=(0,48))
+        ax.set(xlim=(40,0),
+               ylim=(0,48))
     
-        kde_ax.text(20,49,f"{p_hand[0]}HP vs {hand}HH",ha='center',fontsize=16)
-        kde_ax.axis('off')
+        ax.text(20,49,f"{p_hand[0]}HP vs {hand}HH",ha='center',fontsize=16)
+        ax.axis('off')
     ax = plt.subplot(grid[0, 1])
     norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
     cb1 = mpl.colorbar.ColorbarBase(ax, 
