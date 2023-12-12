@@ -428,40 +428,40 @@ def pitch_analysis_card(card_player,pitch_type):
 pitch_analysis_card(card_player,pitch_type)
 
 p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
-def kde_chart(hand_index,kde_data=kde_diffs,p_hand=p_hand):
-    b_hand = 'L' if hand_index == 0 else 'R'
-    fig, ax = plt.subplots(figsize=(5,6))
-    sns.heatmap(kde_diffs[hand_index],
-                cmap=kde_palette,
-                center=0,
-                vmin=-0.1,
-                vmax=0.1,
-                cbar=False
-               )
+# def kde_chart(hand_index,kde_data=kde_diffs,p_hand=p_hand):
+#     b_hand = 'L' if hand_index == 0 else 'R'
+#     fig, ax = plt.subplots(figsize=(5,6))
+#     sns.heatmap(kde_diffs[hand_index],
+#                 cmap=kde_palette,
+#                 center=0,
+#                 vmin=-0.1,
+#                 vmax=0.1,
+#                 cbar=False
+#                )
 
-    # Strikezone
-    ax.axhline(12, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-    ax.axhline(36, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-    ax.axvline(10, ymin=1/4, ymax=3/4, color='black', linewidth=2)
-    ax.axvline(30, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+#     # Strikezone
+#     ax.axhline(12, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+#     ax.axhline(36, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+#     ax.axvline(10, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+#     ax.axvline(30, ymin=1/4, ymax=3/4, color='black', linewidth=2)
 
-    # Inner Strikezone
-    ax.axhline(20, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-    ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-    ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
-    ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+#     # Inner Strikezone
+#     ax.axhline(20, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+#     ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+#     ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+#     ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
 
-    ax.set(xlabel=None, ylabel=None)
-    ax.set_xticklabels([])
-    ax.set_yticklabels([])
-    ax.tick_params(left=False, bottom=False)
+#     ax.set(xlabel=None, ylabel=None)
+#     ax.set_xticklabels([])
+#     ax.set_yticklabels([])
+#     ax.tick_params(left=False, bottom=False)
 
-    ax.set(xlim=(40,0),
-          ylim=(0,48))
+#     ax.set(xlim=(40,0),
+#           ylim=(0,48))
 
-    plt.suptitle(f"{card_player}'s {pitch_type} Locations\nRelative to MLB {p_hand[0]}HP vs {b_hand}HH",y=0.9,va='bottom')
-    sns.despine(bottom=True,left=True)
-    st.pyplot(fig)
+#     plt.suptitle(f"{card_player}'s {pitch_type} Locations\nRelative to MLB {p_hand[0]}HP vs {b_hand}HH",y=0.9,va='bottom')
+#     sns.despine(bottom=True,left=True)
+#     st.pyplot(fig)
 
 # col1, col2, col3 = st.columns([0.45,0.1,0.45])
 
