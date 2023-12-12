@@ -440,7 +440,7 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
                     vmin=-0.1,
                     vmax=0.1,
                     cbar=False,
-                    ax=ax
+                    # ax=ax
                    )
     
         # Strikezone
@@ -455,9 +455,9 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
         ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
         ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
     
-        # ax.set(xlabel=None, ylabel=None)
-        # ax.set_xticklabels([])
-        # ax.set_yticklabels([])
+        ax.set(xlabel=None, ylabel=None)
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
         ax.tick_params(left=False, bottom=False)
     
         ax.set(xlim=(40,0),
@@ -473,8 +473,8 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
                                    )
     
     cb1.outline.set_visible(False)
-    # ax.set_xticklabels([])
-    # ax.set_yticklabels([])
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
     ax.tick_params(right=False, bottom=False)
     ax.set(ylim=(-0.15,0.15))
     ax.text(0.5,0.1,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
