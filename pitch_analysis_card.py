@@ -120,8 +120,7 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
     kde_diffs = []
     for b_hand in ['L','R']:
         kde_df = (df
-                  .loc[(df['year_played']==year) &
-                       (df['pitchtype']==pitchtype) &
+                  .loc[(df['pitchtype']==pitchtype) &
                        (df['b_hand']==b_hand) &
                        (df['p_hand']==p_hand)
                       ]
