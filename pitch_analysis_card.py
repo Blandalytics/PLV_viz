@@ -459,7 +459,7 @@ def kde_chart(hand_index,kde_data=kde_diffs,p_hand=p_hand):
     ax.set(xlim=(40,0),
           ylim=(0,48))
 
-    plt.suptitle(f"{pitcher}'s {pitchtype} Locations\nRelative to MLB {p_hand[0]}HP vs {b_hand}HH",y=0.9,va='bottom')
+    plt.suptitle(f"{card_player}'s {pitch_type} Locations\nRelative to MLB {p_hand[0]}HP vs {b_hand}HH",y=0.9,va='bottom')
     sns.despine(bottom=True,left=True)
     st.pyplot(fig)
 
