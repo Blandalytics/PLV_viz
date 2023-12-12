@@ -429,7 +429,8 @@ pitch_analysis_card(card_player,pitch_type)
 
 p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
 def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
-    fig, ax = plt.subplots(figsize=(11,6))
+    fig = plt.figure(figsize=(11,6))
+    ax.axis(;off')
     grid = plt.GridSpec(1, 3,width_ratios=[5,1,5],wspace=0.05)
     for hand in ['L','R']:
         hand_index = 0 if hand=='L' else 1
