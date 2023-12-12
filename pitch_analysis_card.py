@@ -116,14 +116,14 @@ def load_data(year):
     return df
 
 def kde_calcs(df,pitcher,pitchtype,year=year):
-    p_hand = df.loc[(df['pitchername']==pitcher),'pitcherside'].iloc[0]
+    p_hand = df.loc[(df['pitchername']==pitcher),'p_hand'].iloc[0]
     kde_diffs = []
     for b_hand in ['L','R']:
         kde_df = (df
                   .loc[(df['year_played']==year) &
                        (df['pitchtype']==pitchtype) &
-                       (df['hitterside']==b_hand) &
-                       (df['pitcherside']==p_hand)
+                       (df['b_hand']==b_hand) &
+                       (df['p_hand']==p_hand)
                       ]
                   .assign(kde_x = lambda x: np.clip(x['p_x'].astype('float').mul(12).round(0).astype('int').div(12),-20/12,20/12),
                           kde_z = lambda x: np.clip(x['p_z'].astype('float').mul(12).round(0).astype('int').div(12),0.5,4.5))
