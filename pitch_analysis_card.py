@@ -477,9 +477,9 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     ax.set_yticklabels([])
     ax.tick_params(right=False, bottom=False)
     ax.set(ylim=(-0.15,0.15))
-    ax.text(0.5,0.1,'More\nOften\n+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
+    ax.text(0.5,0.1,'More\nOften\n\n+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
     ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
-    ax.text(0.5,-0.1,'\n-10%\nLess\nOften',ha='center',va='top',color=kde_palette[150],fontweight='bold')
+    ax.text(0.5,-0.1,'\n-10%\n\nLess\nOften',ha='center',va='top',color=kde_palette[150],fontweight='bold')
     ax.axis('off')
   
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
