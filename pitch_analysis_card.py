@@ -455,9 +455,9 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
         ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
         ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
     
-        ax.set(xlabel=None, ylabel=None)
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
+        # ax.set(xlabel=None, ylabel=None)
+        # ax.set_xticklabels([])
+        # ax.set_yticklabels([])
         ax.tick_params(left=False, bottom=False)
     
         ax.set(xlim=(40,0),
@@ -473,8 +473,8 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
                                    )
     
     cb1.outline.set_visible(False)
-    ax.set_xticklabels([])
-    ax.set_yticklabels([])
+    # ax.set_xticklabels([])
+    # ax.set_yticklabels([])
     ax.tick_params(right=False, bottom=False)
     ax.set(ylim=(-0.15,0.15))
     ax.text(0.5,0.1,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
@@ -483,8 +483,8 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     fig.suptitle(f"{card_player}'s {pitch_type} Locations",ha='center',y=1.01, fontsize=18)
     fig.text(0.5,0.875,'(Relative to MLB)\n\n',ha='center',va='bottom')
     sns.despine(left=True,bottom=True)
-    # st.pyplot(fig)
-st.pyplot(kde_chart())
+    st.pyplot(fig)
+kde_chart()
 
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
