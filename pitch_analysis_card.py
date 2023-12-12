@@ -483,8 +483,8 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
     fig.suptitle(f"{card_player}'s {pitch_type} Locations",ha='center',y=1.01, fontsize=18)
     fig.text(0.5,0.875,'(Relative to MLB)\n\n',ha='center',va='bottom')
     sns.despine(left=True,bottom=True)
-    st.pyplot(fig)
-kde_chart()
+    # st.pyplot(fig)
+st.pyplot(kde_chart())
 
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
