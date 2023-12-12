@@ -456,7 +456,7 @@ def kde_chart(hand_index,kde_data=kde_diffs):
     sns.despine(bottom=True,left=True)
     st.pyplot(fig)
 
-col1, col2, col3 = st.columns([0.45,0.1,0.45)
+col1, col2, col3 = st.columns([0.45,0.1,0.45])
 
 with col1:
     kde_chart(0)
