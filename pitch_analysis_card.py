@@ -185,7 +185,7 @@ with col2:
 # st.write(_pitches)
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
-# kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
+kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
 
 def pitch_analysis_card(card_player,pitch_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
@@ -428,64 +428,63 @@ def pitch_analysis_card(card_player,pitch_type):
 pitch_analysis_card(card_player,pitch_type)
 
 p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
-# def kde_chart(hand_index,kde_data=kde_diffs,p_hand=p_hand):
-#     b_hand = 'L' if hand_index == 0 else 'R'
-#     fig, ax = plt.subplots(figsize=(5,6))
-#     sns.heatmap(kde_diffs[hand_index],
-#                 cmap=kde_palette,
-#                 center=0,
-#                 vmin=-0.1,
-#                 vmax=0.1,
-#                 cbar=False
-#                )
-
-#     # Strikezone
-#     ax.axhline(12, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-#     ax.axhline(36, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-#     ax.axvline(10, ymin=1/4, ymax=3/4, color='black', linewidth=2)
-#     ax.axvline(30, ymin=1/4, ymax=3/4, color='black', linewidth=2)
-
-#     # Inner Strikezone
-#     ax.axhline(20, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-#     ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-#     ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
-#     ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
-
-#     ax.set(xlabel=None, ylabel=None)
-#     ax.set_xticklabels([])
-#     ax.set_yticklabels([])
-#     ax.tick_params(left=False, bottom=False)
-
-#     ax.set(xlim=(40,0),
-#           ylim=(0,48))
-
-#     plt.suptitle(f"{card_player}'s {pitch_type} Locations\nRelative to MLB {p_hand[0]}HP vs {b_hand}HH",y=0.9,va='bottom')
-#     sns.despine(bottom=True,left=True)
-#     st.pyplot(fig)
-
-# col1, col2, col3 = st.columns([0.45,0.1,0.45])
-
-# with col1:
-#     kde_chart(0)
-
-# with col2:
-#     fig, ax = plt.subplots(figsize=(1, 3))
-#     norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
-#     cb1 = mpl.colorbar.ColorbarBase(ax, 
-#                                     cmap=mpl.colors.ListedColormap(kde_palette),
-#                                     norm=norm,
-#                                     boundaries=[x/100 for x in range(-10,11)])
-#     ax.set_xticklabels([])
-#     ax.set_yticklabels([])
-#     ax.tick_params(right=False, bottom=False)
-#     ax.text(0.5,0.09,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
-#     ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
-#     ax.text(0.5,-0.09,'\n-10%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
-#     sns.despine()
-#     st.pyplot(fig)
+def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
+    fig, axs = plt.subplots(1,3,figsize=(11,6))
+    grid = plt.GridSpec(1, 3,width_ratios=[5,1,5],wspace=0.05)
+    for hand in ['L','R']:
+        hand_index = 0 if hand=='L' else 1
+        ax = plt.subplot(grid[0, 0]) if hand=='L' else plt.subplot(grid[0, 2])
+        sns.heatmap(kde_data[hand_index],
+                    cmap=kde_palette,
+                    center=0,
+                    vmin=-0.1,
+                    vmax=0.1,
+                    cbar=False,
+                    ax=ax
+                   )
     
-# with col3:
-#     kde_chart(1)
+        # Strikezone
+        ax.axhline(12, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+        ax.axhline(36, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+        ax.axvline(10, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+        ax.axvline(30, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+    
+        # Inner Strikezone
+        ax.axhline(20, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+        ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+        ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+        ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+    
+        ax.set(xlabel=None, ylabel=None)
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.tick_params(left=False, bottom=False)
+    
+        ax.set(xlim=(40,0),
+              ylim=(0,48))
+    
+        ax.text(20,49,f"{p_hand[0]}HP vs {hand}HH",ha='center',fontsize=16)
+    ax = plt.subplot(grid[0, 1])
+    norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
+    cb1 = mpl.colorbar.ColorbarBase(ax, 
+                                    cmap=mpl.colors.ListedColormap(kde_palette),
+                                    norm=norm,
+                                    values=[x/100 for x in range(-10,11)],
+                                   )
+    
+    cb1.outline.set_visible(False)
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.tick_params(right=False, bottom=False)
+    ax.set(ylim=(-0.15,0.15))
+    ax.text(0.5,0.1,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
+    ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
+    ax.text(0.5,-0.1,'\n-10%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
+    fig.suptitle(f"{pitcher}'s {pitchtype} Locations",ha='center',y=1.01, fontsize=18)
+    fig.text(0.5,0.875,'(Relative to MLB)\n\n',ha='center',va='bottom')
+    sns.despine(left=True,bottom=True)
+    st.pyplot(fig)
+kde_chart()
 
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
