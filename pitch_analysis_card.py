@@ -435,7 +435,7 @@ pitch_analysis_card(card_player,pitch_type)
 #     exit()
 kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
 p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
-def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
+def kde_chart(kde_data=kde_diffs,p_hand=p_hand,kde_thresh=0.1):
     fig = plt.figure(figsize=(11,7))
     grid = plt.GridSpec(2, 3,height_ratios=[50,1],width_ratios=[5,1,5],hspace=0,wspace=0.05)
     for hand in ['L','R']:
@@ -451,8 +451,8 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
         sns.heatmap(kde_diffs[hand_index],
                     cmap=kde_palette,
                     center=0,
-                    vmin=-0.1,
-                    vmax=0.1,
+                    vmin=-kde_thresh,
+                    vmax=kde_thresh,
                     cbar=False,
                     ax=ax
                    )
@@ -483,23 +483,23 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
         ax.text(20,55,f"{p_hand[0]}HP vs {hand}HH",ha='center',fontsize=16)
         ax.axis('off')
     ax = plt.subplot(grid[0, 1])
-    norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
+    norm = mpl.colors.Normalize(vmin=-kde_thresh, vmax=kde_thresh)
     cb1 = mpl.colorbar.ColorbarBase(ax, 
                                     cmap=mpl.colors.ListedColormap(kde_palette),
                                     norm=norm,
-                                    values=[x/100 for x in range(-10,11)],
+                                    values=[x/100 for x in range(-int(kde_thresh*100),int(kde_thresh*100)+1)],
                                    )
     
     cb1.outline.set_visible(False)
     ax.set_xticklabels([])
     ax.set_yticklabels([])
     ax.tick_params(right=False, bottom=False)
-    ax.set(ylim=(-0.15,0.15))
-    ax.text(0.5,0.1,'+10%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
-    ax.text(0.5,0.125,'More\nOften',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
+    ax.set(ylim=(-kde_thresh*1.5,kde_thresh*1.5))
+    ax.text(0.5,kde_thresh*1.5,f'+{int(kde_thresh*100)}%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
+    ax.text(0.5,kde_thresh*1.25,'More\nOften',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
     ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
-    ax.text(0.5,-0.1,'\n-10%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
-    ax.text(0.5,-0.125,'Less\nOften',ha='center',va='top',color=kde_palette[150],fontweight='bold')
+    ax.text(0.5,-kde_thresh,f'\n-{int(kde_thresh*100)}%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
+    ax.text(0.5,-kde_thresh*1.25,'Less\nOften',ha='center',va='top',color=kde_palette[150],fontweight='bold')
     ax.axis('off')
   
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
