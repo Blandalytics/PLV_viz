@@ -19,11 +19,10 @@ pl_text = '#72a3f7'
 pl_line_color = '#293a6b'
 
 kde_min = '#236abe'
-kde_mid = '#fefefe'
 kde_max = '#a9373b'
 
-kde_palette = (sns.color_palette(f'blend:{kde_min},{kde_mid}', n_colors=1001)[:-1] +
-               sns.color_palette(f'blend:{kde_mid},{kde_max}', n_colors=1001)[:-1])
+kde_palette = (sns.color_palette(f'blend:{kde_min},{pl_white}', n_colors=1001)[:-1] +
+               sns.color_palette(f'blend:{pl_white},{kde_max}', n_colors=1001)[:-1])
 
 sns.set_theme(
     style={
