@@ -108,11 +108,11 @@ def load_data(year):
     for chunk in [1,2,3]:
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_Pitch_Analysis_Data-{chunk}.parquet?raw=true'
         load_cols = ['pitchername','pitchtype','pitch_id',
-                                                    'p_hand','IHB','IVB','called_strike_pred',
+                                                    'p_hand','b_hand','IHB','IVB','called_strike_pred',
                                                     'ball_pred','PLV','velo','pitch_extension',
                                                     'adj_vaa','p_x','p_z']
-        if year == 2023:
-            load_cols += ['b_hand']
+        # if year == 2023:
+        #     load_cols += ['b_hand']
         df = pd.concat([df,
                         pd.read_parquet(file_name)[load_cols]
                        ])
@@ -431,8 +431,8 @@ def pitch_analysis_card(card_player,pitch_type):
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
 
-if year!=2023:
-    exit()
+# if year!=2023:
+#     exit()
 kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
 p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
 def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
