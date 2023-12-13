@@ -135,7 +135,7 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
                        (df['p_hand']==p_hand)
                       ]
                   .assign(kde_x = lambda x: np.clip(x['p_x'].astype('float').mul(12).round(0).astype('int').div(12),-20/12,20/12),
-                          kde_z = lambda x: np.clip(x['p_z'].astype('float').mul(12).round(0).astype('int').div(12),0.5,4.5))
+                          kde_z = lambda x: np.clip(x['p_z'].astype('float').mul(12).round(0).astype('int').div(12),0,4.5))
                   .reset_index(drop=True)
                  )
         x_loc_league = kde_df['kde_x']
@@ -286,11 +286,11 @@ def pitch_analysis_card(card_player,pitch_type):
     ax.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
 
     # Plate
-    ax.plot([-8.5/12,8.5/12], [plate_y,plate_y], color='w', linewidth=2)
-    ax.axvline(8.5/12, ymin=(plate_y-y_bot)/(y_lim-y_bot), ymax=(plate_y+0.15-y_bot)/(y_lim-y_bot), color='w', linewidth=2)
-    ax.axvline(-8.5/12, ymin=(plate_y-y_bot)/(y_lim-y_bot), ymax=(plate_y+0.15-y_bot)/(y_lim-y_bot), color='w', linewidth=2)
-    ax.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
-    ax.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
+    ax.plot([-8.5/12,8.5/12], [plate_y,plate_y], color='w', linewidth=2))
+    ax.plot([-8.75/12,-8.5/12], [plate_y,plate_y+0.15], color='k', linewidth=1)
+    ax.plot([8.75/12,8.5/12], [plate_y,plate_y+0.15], color='k', linewidth=1)
+    ax.plot([8.53/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
+    ax.plot([-8.53/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
 
     ax.set(xlim=(-x_ft,x_ft),
            ylim=(y_bot,y_lim),
@@ -456,23 +456,30 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
                     cbar=False,
                     ax=ax
                    )
-    
+
         # Strikezone
-        ax.axhline(12, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-        ax.axhline(36, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-        ax.axvline(10, ymin=1/4, ymax=3/4, color='black', linewidth=2)
-        ax.axvline(30, ymin=1/4, ymax=3/4, color='black', linewidth=2)
+        ax.axhline(18, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+        ax.axhline(42, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+        ax.axvline(10, ymin=1/3, ymax=7/9, color='black', linewidth=2)
+        ax.axvline(30, ymin=1/3, ymax=7/9, color='black', linewidth=2)
     
         # Inner Strikezone
-        ax.axhline(20, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-        ax.axhline(28, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-        ax.axvline(10+20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
-        ax.axvline(30-20/3, ymin=1/4, ymax=3/4, color='black', linewidth=1)
+        ax.axhline(26, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+        ax.axhline(34, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+        ax.axvline(10+20/3, ymin=1/3, ymax=7/9, color='black', linewidth=1)
+        ax.axvline(30-20/3, ymin=1/3, ymax=7/9, color='black', linewidth=1)
+    
+        # Plate
+        ax.plot([11.27,27.73], [1,1], color='k', linewidth=1)
+        ax.plot([11.25,11.5], [1,2], color='k', linewidth=1)
+        ax.plot([27.75,27.5], [1,2], color='k', linewidth=1)
+        ax.plot([27.43,20], [2,3], color='k', linewidth=1)
+        ax.plot([11.57,20], [2,3], color='k', linewidth=1)
     
         ax.set(xlim=(40,0),
-               ylim=(0,48))
+               ylim=(0,54))
     
-        ax.text(20,49,f"{p_hand[0]}HP vs {hand}HH",ha='center',fontsize=16)
+        ax.text(20,55,f"{p_hand[0]}HP vs {hand}HH",ha='center',fontsize=16)
         ax.axis('off')
     ax = plt.subplot(grid[0, 1])
     norm = mpl.colors.Normalize(vmin=-0.1, vmax=0.1)
