@@ -286,11 +286,11 @@ def pitch_analysis_card(card_player,pitch_type):
     ax.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
 
     # Plate
-    ax.plot([-8.5/12,8.5/12], [plate_y,plate_y], color='w', linewidth=2))
-    ax.plot([-8.75/12,-8.5/12], [plate_y,plate_y+0.15], color='k', linewidth=1)
-    ax.plot([8.75/12,8.5/12], [plate_y,plate_y+0.15], color='k', linewidth=1)
-    ax.plot([8.53/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
-    ax.plot([-8.53/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
+    ax.plot([-8.5/12,8.5/12], [plate_y,plate_y], color='w', linewidth=2)
+    ax.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color='k', linewidth=1)
+    ax.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color='k', linewidth=1)
+    ax.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
+    ax.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
 
     ax.set(xlim=(-x_ft,x_ft),
            ylim=(y_bot,y_lim),
@@ -470,9 +470,9 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
         ax.axvline(30-20/3, ymin=1/3, ymax=7/9, color='black', linewidth=1)
     
         # Plate
-        ax.plot([11.27,27.73], [1,1], color='k', linewidth=1)
-        ax.plot([11.25,11.5], [1,2], color='k', linewidth=1)
-        ax.plot([27.75,27.5], [1,2], color='k', linewidth=1)
+        ax.plot([11.52,27.48], [1,1], color='k', linewidth=1)
+        ax.plot([11.5,11.75], [1,2], color='k', linewidth=1)
+        ax.plot([27.5,27.25], [1,2], color='k', linewidth=1)
         ax.plot([27.43,20], [2,3], color='k', linewidth=1)
         ax.plot([11.57,20], [2,3], color='k', linewidth=1)
     
