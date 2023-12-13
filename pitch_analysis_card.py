@@ -107,11 +107,14 @@ def load_data(year):
     df = pd.DataFrame()
     for chunk in [1,2,3]:
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_Pitch_Analysis_Data-{chunk}.parquet?raw=true'
-        df = pd.concat([df,
-                        pd.read_parquet(file_name)[['pitchername','pitchtype','pitch_id',
-                                                    'p_hand','b_hand','IHB','IVB','called_strike_pred',
+        load_cols = ['pitchername','pitchtype','pitch_id',
+                                                    'p_hand','IHB','IVB','called_strike_pred',
                                                     'ball_pred','PLV','velo','pitch_extension',
-                                                    'adj_vaa','p_x','p_z']]
+                                                    'adj_vaa','p_x','p_z']
+        if year == 2023:
+            load_cols += ['b_hand']
+        df = pd.concat([df,
+                        pd.read_parquet(file_name)[load_cols]
                        ])
     df = (df
           .sort_values('pitch_id')
