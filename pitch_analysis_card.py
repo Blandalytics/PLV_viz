@@ -429,7 +429,7 @@ def pitch_analysis_card(card_player,pitch_type):
 pitch_analysis_card(card_player,pitch_type)
 
 if year!=2023:
-    break
+    exit()
 kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
 p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
 def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
