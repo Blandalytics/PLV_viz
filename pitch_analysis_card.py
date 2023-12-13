@@ -477,7 +477,8 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand):
         ax.plot([11.7,20], [2,3], color='k', linewidth=1)
     
         ax.set(xlim=(40,0),
-               ylim=(0,54))
+               ylim=(0,54),
+               aspect=1)
     
         ax.text(20,55,f"{p_hand[0]}HP vs {hand}HH",ha='center',fontsize=16)
         ax.axis('off')
