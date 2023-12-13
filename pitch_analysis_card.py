@@ -495,7 +495,7 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand,kde_thresh=0.1):
     ax.set_yticklabels([])
     ax.tick_params(right=False, bottom=False)
     ax.set(ylim=(-kde_thresh*1.5,kde_thresh*1.5))
-    ax.text(0.5,kde_thresh*1.5,f'+{int(kde_thresh*100)}%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
+    ax.text(0.5,kde_thresh,f'+{int(kde_thresh*100)}%\n',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
     ax.text(0.5,kde_thresh*1.25,'More\nOften',ha='center',va='bottom',color=kde_palette[-150],fontweight='bold')
     ax.text(0.5,0,'0%',ha='center',va='center',color='k',fontweight='bold')
     ax.text(0.5,-kde_thresh,f'\n-{int(kde_thresh*100)}%',ha='center',va='top',color=kde_palette[150],fontweight='bold')
