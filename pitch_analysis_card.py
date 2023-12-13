@@ -430,6 +430,7 @@ def pitch_analysis_card(card_player,pitch_type):
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
 
+p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
 def kde_chart(kde_data,p_hand=p_hand,kde_thresh=0.1):
     fig = plt.figure(figsize=(11,7))
     grid = plt.GridSpec(2, 3,height_ratios=[50,1],width_ratios=[5,1,5],hspace=0,wspace=0.05)
@@ -513,7 +514,6 @@ if pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']=
     st.write('Not enough pitches to generate heatmaps (<50)')
 else:
     kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
-    p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
     kde_chart(kde_diffs)
 
 st.title("Metric Definitions")
