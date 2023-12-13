@@ -510,8 +510,10 @@ def kde_chart(kde_data,p_hand=p_hand,kde_thresh=0.1):
     fig.text(0.77,0.08,"@Blandalytics",ha='center',fontsize=10)
     fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
     st.pyplot(fig)
-if pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0] <50 :
-    st.write('Not enough pitches to generate heatmaps (<50)')
+
+heatmap_thresh = 100
+if pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0] < heatmap_thresh :
+    st.write(f'Not enough pitches to generate heatmaps (<{heatmap_thresh})')
 else:
     kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
     kde_chart(kde_diffs)
