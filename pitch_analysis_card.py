@@ -430,11 +430,7 @@ def pitch_analysis_card(card_player,pitch_type):
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type)
 
-# if year!=2023:
-#     exit()
-kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
-p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
-def kde_chart(kde_data=kde_diffs,p_hand=p_hand,kde_thresh=0.1):
+def kde_chart(kde_data,p_hand=p_hand,kde_thresh=0.1):
     fig = plt.figure(figsize=(11,7))
     grid = plt.GridSpec(2, 3,height_ratios=[50,1],width_ratios=[5,1,5],hspace=0,wspace=0.05)
     for hand in ['L','R']:
@@ -513,7 +509,12 @@ def kde_chart(kde_data=kde_diffs,p_hand=p_hand,kde_thresh=0.1):
     fig.text(0.77,0.08,"@Blandalytics",ha='center',fontsize=10)
     fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
     st.pyplot(fig)
-kde_chart()
+if pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0] <50 :
+    st.write('Not enough pitches to generate heatmaps (<50)')
+else:
+    kde_diffs = kde_calcs(pitch_df,pitcher=card_player,pitchtype=pitch_type,year=year)
+    p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
+    kde_chart(kde_diffs)
 
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
