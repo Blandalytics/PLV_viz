@@ -152,7 +152,7 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
         ymin = y_loc_league.min()
         ymax = y_loc_league.max()
 
-        X, Y = np.mgrid[xmin:xmax:41j, ymin:ymax:49j]
+        X, Y = np.mgrid[xmin:xmax:41j, ymin:ymax:55j]
         positions = np.vstack([X.ravel(), Y.ravel()])
 
         # league matrix
