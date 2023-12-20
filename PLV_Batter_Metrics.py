@@ -464,7 +464,7 @@ if window > rolling_df.shape[0]:
 else:
     rolling_chart()
 
-st.title("PLV Heatmaps")
+# st.title("PLV Heatmaps")
 
 zone_df = pd.DataFrame(columns=['x','z'])
 for x in range(-20,21):
