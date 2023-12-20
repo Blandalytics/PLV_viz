@@ -23,6 +23,13 @@ pl_background = '#162B50'
 pl_text = '#72a3f7'
 pl_line_color = '#293a6b'
 
+kde_min = '#236abe'
+kde_mid = '#fefefe'
+kde_max = '#a9373b'
+
+kde_palette = (sns.color_palette(f'blend:{kde_min},{kde_mid}', n_colors=1001)[:-1] +
+               sns.color_palette(f'blend:{kde_mid},{kde_max}', n_colors=1001)[:-1])
+
 sns.set_theme(
     style={
         'axes.edgecolor': pl_white,
@@ -79,7 +86,7 @@ def load_season_data(year):
                         pd.read_parquet(file_name)[['hittername','p_hand','b_hand','pitch_id','balls','strikes','swing_agg',
                                                     'strike_zone_judgement','decision_value','contact_over_expected',
                                                     'adj_power','batter_wOBA','pitchtype','pitch_type_bucket',
-                                                   'in_play_input']]
+                                                   'in_play_input','p_x','p_z']]
                        ])
     
     df = df.reset_index(drop=True)
@@ -95,6 +102,32 @@ def load_season_data(year):
     return df
 
 plv_df = load_season_data(year)
+
+
+plv_df.loc[plv_df['p_x'].notna(),'kde_x'] = np.clip(plv_df.loc[plv_df['p_x'].notna(),'p_x'].astype('float').mul(12).round(0).astype('int').div(12),
+                                                    -20/12,
+                                                    20/12)
+plv_df.loc[model_df['sz_z'].notna(),'kde_z'] = np.clip(plv_df.loc[plv_df['sz_z'].notna(),'sz_z'].astype('float').mul(24).round(0).astype('int').div(24),
+                                                       -1.5,
+                                                       1.25)
+
+plv_df['base_decision_value'] = plv_df['decision_value'].groupby([plv_df['p_hand'],
+                                                                  plv_df['b_hand'],
+                                                                  plv_df['pitchtype'],
+                                                                  plv_df['kde_x'],
+                                                                  plv_df['kde_z'],
+                                                                  plv_df['balls'],
+                                                                  plv_df['strikes']]).transform('mean')
+plv_df['base_power'] = plv_df['adj_power'].groupby([plv_df['p_hand'],
+                                                    plv_df['b_hand'],
+                                                    plv_df['pitchtype'],
+                                                    plv_df['kde_x'],
+                                                    plv_df['kde_z'],
+                                                    plv_df['balls'],
+                                                    plv_df['strikes']]).transform('mean')
+
+plv_df['dv_oa'] = plv_df['decision_value'].sub(plv_df['base_decision_value'])#.div(model_df['base_decision_value'])
+plv_df['pow_oa'] = plv_df['adj_power'].sub(plv_df['base_power'])#.div(model_df['base_power'])
 
 max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
 start_val = int(plv_df.groupby('hittername')['pitch_id'].count().quantile(0.4)/50)*50
@@ -428,5 +461,103 @@ if window > rolling_df.shape[0]:
     st.write(f'Not enough {rolling_denom[metric]} ({rolling_df.shape[0]})')
 else:
     rolling_chart()
+
+def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
+    fig, ax = plt.subplots(figsize=(10,5))
+    grid = plt.GridSpec(2, 3,height_ratios=[10,1])
+    stat_dict = {
+        'dv_oa':[plt.subplot(grid[0, 0]),'Decision Value',0.01],
+        'contact_over_expected':[plt.subplot(grid[0, 1]),'Contact Ability',0.1],
+        'pow_oa':[plt.subplot(grid[0, 2]),'Power',0.05]
+    }
+    
+    sz_top = round(df.loc[df['hittername']==hitter,'strike_zone_top'].median()*12)
+    sz_bot = round(df.loc[df['hittername']==hitter,'strike_zone_bottom'].median()*12)
+    sz_range = sz_top-sz_bot
+    
+    for stat in stat_dict.keys():    
+        v_center = df[stat].mean()
+        kde_df = pd.merge(zone_df,
+                          (df
+                           .loc[(df['year_played']==year) &
+                                (df['hittername']==hitter)
+                               ]
+                           .dropna(subset=[stat,'p_x','sz_z'])
+                           [['kde_x','kde_z',stat]]
+                          ),
+                          how='left',
+                          left_on=['x','z'],
+                          right_on=['kde_x','kde_z']).fillna({stat:v_center})
+        kernel_regression = KernelReg(endog=kde_df[stat], 
+                                      exog= [kde_df['x'], kde_df['z']], 
+                                      bw=[1/4,1/4],
+                                      var_type='cc')
+        kde_df['kernel_stat'] = kernel_regression.fit([kde_df['x'], kde_df['z']])[0]
+        kde_df = kde_df.pivot_table(columns='x',index='z',values=['kernel_stat'], aggfunc='mean')
+
+        sns.heatmap(data=kde_df['kernel_stat'].astype('float'),
+                    cmap=kde_palette,
+                    center=v_center,
+                    vmin=v_center-stat_dict[stat][2],
+                    vmax=v_center+stat_dict[stat][2],
+                    ax=stat_dict[stat][0],
+                    cbar=False
+                   )
+
+        stat_dict[stat][0].set(xlabel=None, ylabel=None)
+        stat_dict[stat][0].set_xticklabels([])
+        stat_dict[stat][0].set_yticklabels([])
+        stat_dict[stat][0].tick_params(left=False, bottom=False)
+
+        stat_dict[stat][0].set(xlim=(40,0),
+                               ylim=(0,54))
+
+        # Strikezone
+        stat_dict[stat][0].axhline(sz_bot, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+        stat_dict[stat][0].axhline(sz_top, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+        stat_dict[stat][0].axvline(10, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=2)
+        stat_dict[stat][0].axvline(30, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=2)
+
+        # Inner Strikezone
+        stat_dict[stat][0].axhline(sz_bot+sz_range/3, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+        stat_dict[stat][0].axhline(sz_bot+2*sz_range/3, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+        stat_dict[stat][0].axvline(10+20/3, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=1)
+        stat_dict[stat][0].axvline(30-20/3, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=1)
+
+        # Plate
+        stat_dict[stat][0].plot([11.27,27.73], [1,1], color='k', linewidth=1)
+        stat_dict[stat][0].plot([11.25,11.5], [1,2], color='k', linewidth=1)
+        stat_dict[stat][0].plot([27.75,27.5], [1,2], color='k', linewidth=1)
+        stat_dict[stat][0].plot([27.43,20], [2,3], color='k', linewidth=1)
+        stat_dict[stat][0].plot([11.57,20], [2,3], color='k', linewidth=1)
+        stat_dict[stat][0].set_title(f"{stat_dict[stat][1]}",pad=7)
+    kde_thresh=0.1
+    cb_ax = plt.subplot(grid[1, :])
+    norm = mpl.colors.Normalize(vmin=-kde_thresh, vmax=kde_thresh)
+    cb1 = mpl.colorbar.ColorbarBase(cb_ax, 
+                                    cmap=mpl.colors.ListedColormap(kde_palette),
+                                    norm=norm,
+                                    values=[x/100 for x in range(-int(kde_thresh*100),int(kde_thresh*100)+1)],
+                                    orientation='horizontal'
+                                   )
+
+    cb1.outline.set_visible(False)
+    cb_ax.set_xticklabels([])
+    cb_ax.set_yticklabels([])
+    cb_ax.tick_params(right=False, bottom=False)
+    cb_ax.set(xlim=(-kde_thresh*1.25,kde_thresh*1.25))
+    cb_ax.text(kde_thresh*1.06,0.5,'Great',ha='left',va='center',
+               color=sns.color_palette('vlag',n_colors=11)[-1],fontweight='bold',
+              fontsize=12)
+    cb_ax.text(0,0.5,'Avg',ha='center',va='center',color='k',fontweight='bold')
+    cb_ax.text(-kde_thresh*1.06,0.5,'Terrible',ha='right',va='center',
+               color=sns.color_palette('vlag',n_colors=11)[0],fontweight='bold',
+              fontsize=12)
+    fig.tight_layout()
+    fig.suptitle(f"{hitter}'s {year} PLV Hitter Heatmaps",y=1.02,x=0.5)
+    sns.despine(left=True,bottom=True)
+    st.pyplot(fig)
+    
+plv_hitter_heatmap()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
