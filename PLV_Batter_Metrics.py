@@ -92,6 +92,32 @@ def load_season_data(year):
                        ])
     
     df = df.reset_index(drop=True)
+
+    df.loc[df['p_x'].notna(),'kde_x'] = np.clip(df.loc[df['p_x'].notna(),'p_x'].astype('float').mul(12).round(0).astype('int').div(12),
+                                                        -20/12,
+                                                        20/12)
+    df.loc[df['sz_z'].notna(),'kde_z'] = np.clip(df.loc[df['sz_z'].notna(),'sz_z'].astype('float').mul(24).round(0).astype('int').div(24),
+                                                         -1.5,
+                                                         1.25)
+    
+    df['base_decision_value'] = df['decision_value'].groupby([df['p_hand'],
+                                                                      df['b_hand'],
+                                                                      df['pitchtype'],
+                                                                      df['kde_x'],
+                                                                      df['kde_z'],
+                                                                      df['balls'],
+                                                                      df['strikes']]).transform('mean')
+    df['base_power'] = df['adj_power'].groupby([df['p_hand'],
+                                                        df['b_hand'],
+                                                        df['pitchtype'],
+                                                        df['kde_x'],
+                                                        df['kde_z'],
+                                                        df['balls'],
+                                                        df['strikes']]).transform('mean')
+    
+    df['dv_oa'] = df['decision_value'].sub(df['base_decision_value'])
+    df['pow_oa'] = df['adj_power'].sub(df['base_power'])
+
     for stat in ['swing_agg','strike_zone_judgement','contact_over_expected','in_play_input']:
         df[stat] = df[stat].mul(100).astype('float')
     
@@ -104,31 +130,6 @@ def load_season_data(year):
     return df
 
 plv_df = load_season_data(year)
-
-plv_df.loc[plv_df['p_x'].notna(),'kde_x'] = np.clip(plv_df.loc[plv_df['p_x'].notna(),'p_x'].astype('float').mul(12).round(0).astype('int').div(12),
-                                                    -20/12,
-                                                    20/12)
-plv_df.loc[plv_df['sz_z'].notna(),'kde_z'] = np.clip(plv_df.loc[plv_df['sz_z'].notna(),'sz_z'].astype('float').mul(24).round(0).astype('int').div(24),
-                                                     -1.5,
-                                                     1.25)
-
-plv_df['base_decision_value'] = plv_df['decision_value'].groupby([plv_df['p_hand'],
-                                                                  plv_df['b_hand'],
-                                                                  plv_df['pitchtype'],
-                                                                  plv_df['kde_x'],
-                                                                  plv_df['kde_z'],
-                                                                  plv_df['balls'],
-                                                                  plv_df['strikes']]).transform('mean')
-plv_df['base_power'] = plv_df['adj_power'].groupby([plv_df['p_hand'],
-                                                    plv_df['b_hand'],
-                                                    plv_df['pitchtype'],
-                                                    plv_df['kde_x'],
-                                                    plv_df['kde_z'],
-                                                    plv_df['balls'],
-                                                    plv_df['strikes']]).transform('mean')
-
-plv_df['dv_oa'] = plv_df['decision_value'].sub(plv_df['base_decision_value'])
-plv_df['pow_oa'] = plv_df['adj_power'].sub(plv_df['base_power'])
 
 max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
 start_val = int(plv_df.groupby('hittername')['pitch_id'].count().quantile(0.4)/50)*50
@@ -475,7 +476,7 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
     grid = plt.GridSpec(2, 3,height_ratios=[10,1])
     stat_dict = {
         'dv_oa':[plt.subplot(grid[0, 0]),'Decision Value',0.01],
-        'contact_over_expected':[plt.subplot(grid[0, 1]),'Contact Ability',0.1],
+        'Contact Ability':[plt.subplot(grid[0, 1]),'Contact Ability',0.1],
         'pow_oa':[plt.subplot(grid[0, 2]),'Power',0.05]
     }
     
