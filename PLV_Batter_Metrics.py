@@ -462,102 +462,102 @@ if window > rolling_df.shape[0]:
 else:
     rolling_chart()
 
-def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
-    fig, ax = plt.subplots(figsize=(10,5))
-    grid = plt.GridSpec(2, 3,height_ratios=[10,1])
-    stat_dict = {
-        'dv_oa':[plt.subplot(grid[0, 0]),'Decision Value',0.01],
-        'contact_over_expected':[plt.subplot(grid[0, 1]),'Contact Ability',0.1],
-        'pow_oa':[plt.subplot(grid[0, 2]),'Power',0.05]
-    }
+# def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
+#     fig, ax = plt.subplots(figsize=(10,5))
+#     grid = plt.GridSpec(2, 3,height_ratios=[10,1])
+#     stat_dict = {
+#         'dv_oa':[plt.subplot(grid[0, 0]),'Decision Value',0.01],
+#         'contact_over_expected':[plt.subplot(grid[0, 1]),'Contact Ability',0.1],
+#         'pow_oa':[plt.subplot(grid[0, 2]),'Power',0.05]
+#     }
     
-    sz_top = round(df.loc[df['hittername']==hitter,'strike_zone_top'].median()*12)
-    sz_bot = round(df.loc[df['hittername']==hitter,'strike_zone_bottom'].median()*12)
-    sz_range = sz_top-sz_bot
+#     sz_top = round(df.loc[df['hittername']==hitter,'strike_zone_top'].median()*12)
+#     sz_bot = round(df.loc[df['hittername']==hitter,'strike_zone_bottom'].median()*12)
+#     sz_range = sz_top-sz_bot
     
-    for stat in stat_dict.keys():    
-        v_center = df[stat].mean()
-        kde_df = pd.merge(zone_df,
-                          (df
-                           .loc[(df['year_played']==year) &
-                                (df['hittername']==hitter)
-                               ]
-                           .dropna(subset=[stat,'p_x','sz_z'])
-                           [['kde_x','kde_z',stat]]
-                          ),
-                          how='left',
-                          left_on=['x','z'],
-                          right_on=['kde_x','kde_z']).fillna({stat:v_center})
-        kernel_regression = KernelReg(endog=kde_df[stat], 
-                                      exog= [kde_df['x'], kde_df['z']], 
-                                      bw=[1/4,1/4],
-                                      var_type='cc')
-        kde_df['kernel_stat'] = kernel_regression.fit([kde_df['x'], kde_df['z']])[0]
-        kde_df = kde_df.pivot_table(columns='x',index='z',values=['kernel_stat'], aggfunc='mean')
+#     for stat in stat_dict.keys():    
+#         v_center = df[stat].mean()
+#         kde_df = pd.merge(zone_df,
+#                           (df
+#                            .loc[(df['year_played']==year) &
+#                                 (df['hittername']==hitter)
+#                                ]
+#                            .dropna(subset=[stat,'p_x','sz_z'])
+#                            [['kde_x','kde_z',stat]]
+#                           ),
+#                           how='left',
+#                           left_on=['x','z'],
+#                           right_on=['kde_x','kde_z']).fillna({stat:v_center})
+#         kernel_regression = KernelReg(endog=kde_df[stat], 
+#                                       exog= [kde_df['x'], kde_df['z']], 
+#                                       bw=[1/4,1/4],
+#                                       var_type='cc')
+#         kde_df['kernel_stat'] = kernel_regression.fit([kde_df['x'], kde_df['z']])[0]
+#         kde_df = kde_df.pivot_table(columns='x',index='z',values=['kernel_stat'], aggfunc='mean')
 
-        sns.heatmap(data=kde_df['kernel_stat'].astype('float'),
-                    cmap=kde_palette,
-                    center=v_center,
-                    vmin=v_center-stat_dict[stat][2],
-                    vmax=v_center+stat_dict[stat][2],
-                    ax=stat_dict[stat][0],
-                    cbar=False
-                   )
+#         sns.heatmap(data=kde_df['kernel_stat'].astype('float'),
+#                     cmap=kde_palette,
+#                     center=v_center,
+#                     vmin=v_center-stat_dict[stat][2],
+#                     vmax=v_center+stat_dict[stat][2],
+#                     ax=stat_dict[stat][0],
+#                     cbar=False
+#                    )
 
-        stat_dict[stat][0].set(xlabel=None, ylabel=None)
-        stat_dict[stat][0].set_xticklabels([])
-        stat_dict[stat][0].set_yticklabels([])
-        stat_dict[stat][0].tick_params(left=False, bottom=False)
+#         stat_dict[stat][0].set(xlabel=None, ylabel=None)
+#         stat_dict[stat][0].set_xticklabels([])
+#         stat_dict[stat][0].set_yticklabels([])
+#         stat_dict[stat][0].tick_params(left=False, bottom=False)
 
-        stat_dict[stat][0].set(xlim=(40,0),
-                               ylim=(0,54))
+#         stat_dict[stat][0].set(xlim=(40,0),
+#                                ylim=(0,54))
 
-        # Strikezone
-        stat_dict[stat][0].axhline(sz_bot, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-        stat_dict[stat][0].axhline(sz_top, xmin=1/4, xmax=3/4, color='black', linewidth=2)
-        stat_dict[stat][0].axvline(10, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=2)
-        stat_dict[stat][0].axvline(30, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=2)
+#         # Strikezone
+#         stat_dict[stat][0].axhline(sz_bot, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+#         stat_dict[stat][0].axhline(sz_top, xmin=1/4, xmax=3/4, color='black', linewidth=2)
+#         stat_dict[stat][0].axvline(10, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=2)
+#         stat_dict[stat][0].axvline(30, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=2)
 
-        # Inner Strikezone
-        stat_dict[stat][0].axhline(sz_bot+sz_range/3, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-        stat_dict[stat][0].axhline(sz_bot+2*sz_range/3, xmin=1/4, xmax=3/4, color='black', linewidth=1)
-        stat_dict[stat][0].axvline(10+20/3, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=1)
-        stat_dict[stat][0].axvline(30-20/3, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=1)
+#         # Inner Strikezone
+#         stat_dict[stat][0].axhline(sz_bot+sz_range/3, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+#         stat_dict[stat][0].axhline(sz_bot+2*sz_range/3, xmin=1/4, xmax=3/4, color='black', linewidth=1)
+#         stat_dict[stat][0].axvline(10+20/3, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=1)
+#         stat_dict[stat][0].axvline(30-20/3, ymin=sz_bot/54, ymax=sz_top/54, color='black', linewidth=1)
 
-        # Plate
-        stat_dict[stat][0].plot([11.27,27.73], [1,1], color='k', linewidth=1)
-        stat_dict[stat][0].plot([11.25,11.5], [1,2], color='k', linewidth=1)
-        stat_dict[stat][0].plot([27.75,27.5], [1,2], color='k', linewidth=1)
-        stat_dict[stat][0].plot([27.43,20], [2,3], color='k', linewidth=1)
-        stat_dict[stat][0].plot([11.57,20], [2,3], color='k', linewidth=1)
-        stat_dict[stat][0].set_title(f"{stat_dict[stat][1]}",pad=7)
-    kde_thresh=0.1
-    cb_ax = plt.subplot(grid[1, :])
-    norm = mpl.colors.Normalize(vmin=-kde_thresh, vmax=kde_thresh)
-    cb1 = mpl.colorbar.ColorbarBase(cb_ax, 
-                                    cmap=mpl.colors.ListedColormap(kde_palette),
-                                    norm=norm,
-                                    values=[x/100 for x in range(-int(kde_thresh*100),int(kde_thresh*100)+1)],
-                                    orientation='horizontal'
-                                   )
+#         # Plate
+#         stat_dict[stat][0].plot([11.27,27.73], [1,1], color='k', linewidth=1)
+#         stat_dict[stat][0].plot([11.25,11.5], [1,2], color='k', linewidth=1)
+#         stat_dict[stat][0].plot([27.75,27.5], [1,2], color='k', linewidth=1)
+#         stat_dict[stat][0].plot([27.43,20], [2,3], color='k', linewidth=1)
+#         stat_dict[stat][0].plot([11.57,20], [2,3], color='k', linewidth=1)
+#         stat_dict[stat][0].set_title(f"{stat_dict[stat][1]}",pad=7)
+#     kde_thresh=0.1
+#     cb_ax = plt.subplot(grid[1, :])
+#     norm = mpl.colors.Normalize(vmin=-kde_thresh, vmax=kde_thresh)
+#     cb1 = mpl.colorbar.ColorbarBase(cb_ax, 
+#                                     cmap=mpl.colors.ListedColormap(kde_palette),
+#                                     norm=norm,
+#                                     values=[x/100 for x in range(-int(kde_thresh*100),int(kde_thresh*100)+1)],
+#                                     orientation='horizontal'
+#                                    )
 
-    cb1.outline.set_visible(False)
-    cb_ax.set_xticklabels([])
-    cb_ax.set_yticklabels([])
-    cb_ax.tick_params(right=False, bottom=False)
-    cb_ax.set(xlim=(-kde_thresh*1.25,kde_thresh*1.25))
-    cb_ax.text(kde_thresh*1.06,0.5,'Great',ha='left',va='center',
-               color=sns.color_palette('vlag',n_colors=11)[-1],fontweight='bold',
-              fontsize=12)
-    cb_ax.text(0,0.5,'Avg',ha='center',va='center',color='k',fontweight='bold')
-    cb_ax.text(-kde_thresh*1.06,0.5,'Terrible',ha='right',va='center',
-               color=sns.color_palette('vlag',n_colors=11)[0],fontweight='bold',
-              fontsize=12)
-    fig.tight_layout()
-    fig.suptitle(f"{hitter}'s {year} PLV Hitter Heatmaps",y=1.02,x=0.5)
-    sns.despine(left=True,bottom=True)
-    st.pyplot(fig)
+#     cb1.outline.set_visible(False)
+#     cb_ax.set_xticklabels([])
+#     cb_ax.set_yticklabels([])
+#     cb_ax.tick_params(right=False, bottom=False)
+#     cb_ax.set(xlim=(-kde_thresh*1.25,kde_thresh*1.25))
+#     cb_ax.text(kde_thresh*1.06,0.5,'Great',ha='left',va='center',
+#                color=sns.color_palette('vlag',n_colors=11)[-1],fontweight='bold',
+#               fontsize=12)
+#     cb_ax.text(0,0.5,'Avg',ha='center',va='center',color='k',fontweight='bold')
+#     cb_ax.text(-kde_thresh*1.06,0.5,'Terrible',ha='right',va='center',
+#                color=sns.color_palette('vlag',n_colors=11)[0],fontweight='bold',
+#               fontsize=12)
+#     fig.tight_layout()
+#     fig.suptitle(f"{hitter}'s {year} PLV Hitter Heatmaps",y=1.02,x=0.5)
+#     sns.despine(left=True,bottom=True)
+#     st.pyplot(fig)
     
-plv_hitter_heatmap()
+# plv_hitter_heatmap()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
