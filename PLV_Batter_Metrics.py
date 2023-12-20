@@ -569,6 +569,6 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
     
-plv_hitter_heatmap()
+# plv_hitter_heatmap()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
