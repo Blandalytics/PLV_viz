@@ -464,6 +464,11 @@ else:
 
 st.title("PLV Heatmaps")
 
+zone_df = pd.DataFrame(columns=['x','z'])
+for x in range(-20,21):
+    for y in range(0,55):
+        zone_df.loc[len(zone_df)] = [x/12,y/12]
+
 def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
     fig, ax = plt.subplots(figsize=(10,5))
     grid = plt.GridSpec(2, 3,height_ratios=[10,1])
