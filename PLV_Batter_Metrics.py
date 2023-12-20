@@ -107,9 +107,9 @@ plv_df = load_season_data(year)
 plv_df.loc[plv_df['p_x'].notna(),'kde_x'] = np.clip(plv_df.loc[plv_df['p_x'].notna(),'p_x'].astype('float').mul(12).round(0).astype('int').div(12),
                                                     -20/12,
                                                     20/12)
-plv_df.loc[model_df['sz_z'].notna(),'kde_z'] = np.clip(plv_df.loc[plv_df['sz_z'].notna(),'sz_z'].astype('float').mul(24).round(0).astype('int').div(24),
-                                                       -1.5,
-                                                       1.25)
+plv_df.loc[plv_df['sz_z'].notna(),'kde_z'] = np.clip(plv_df.loc[plv_df['sz_z'].notna(),'sz_z'].astype('float').mul(24).round(0).astype('int').div(24),
+                                                     -1.5,
+                                                     1.25)
 
 plv_df['base_decision_value'] = plv_df['decision_value'].groupby([plv_df['p_hand'],
                                                                   plv_df['b_hand'],
