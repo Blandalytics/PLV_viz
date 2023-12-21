@@ -465,7 +465,7 @@ if window > rolling_df.shape[0]:
 else:
     rolling_chart()
 
-st.title("PLV Heatmaps")
+# st.title("PLV Heatmaps")
 
 zone_df = pd.DataFrame(columns=['x','z'])
 for x in range(-20,21):
@@ -572,6 +572,6 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
     sns.despine()
     st.pyplot(fig)
     
-plv_hitter_heatmap()
+# plv_hitter_heatmap()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
