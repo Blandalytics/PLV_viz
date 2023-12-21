@@ -222,7 +222,7 @@ st.dataframe(pla_df
              .format(precision=2, thousands=',')
              .background_gradient(axis=0, vmin=2, vmax=6,
                                   cmap=f"{diverging_palette}_r", subset=format_cols)
-             .applymap(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
+             .map(lambda x: 'color: transparent; background-color: transparent' if x==fill_val else '')
             )
 
 st.title("Pitcher Charts")
