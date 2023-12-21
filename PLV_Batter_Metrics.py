@@ -561,12 +561,15 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
     cb_ax.text(-kde_thresh*1.07,0.5,'Worse',ha='right',va='center',
                color=sns.color_palette('vlag',n_colors=11)[0],fontweight='bold',
               fontsize=12)
+  
+    fig.suptitle(f"{hitter}'s {year} PLV Hitter Heatmaps",y=1.01,x=0.5)
+  
     # Add PL logo
     pl_ax = fig.add_axes([0.74,0.91,0.15,0.15], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
-    fig.suptitle(f"{hitter}'s {year} PLV Hitter Heatmaps",y=1.01,x=0.5)
-    sns.despine(left=True,bottom=True)
+  
+    sns.despine()
     st.pyplot(fig)
     
 plv_hitter_heatmap()
