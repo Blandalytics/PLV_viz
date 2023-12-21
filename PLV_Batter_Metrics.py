@@ -116,6 +116,7 @@ def load_season_data(year):
                                                         df['strikes']]).transform('mean')
     
     df['dv_oa'] = df['decision_value'].sub(df['base_decision_value'])
+    df['ca_oa'] = df['contact_over_expected'].copy()
     df['pow_oa'] = df['adj_power'].sub(df['base_power'])
 
     for stat in ['swing_agg','strike_zone_judgement','contact_over_expected','in_play_input']:
@@ -464,7 +465,7 @@ if window > rolling_df.shape[0]:
 else:
     rolling_chart()
 
-# st.title("PLV Heatmaps")
+st.title("PLV Heatmaps")
 
 zone_df = pd.DataFrame(columns=['x','z'])
 for x in range(-20,21):
@@ -476,7 +477,7 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
     grid = plt.GridSpec(2, 3,height_ratios=[10,1])
     stat_dict = {
         'dv_oa':[plt.subplot(grid[0, 0]),'Decision Value',0.01],
-        'Contact Ability':[plt.subplot(grid[0, 1]),'Contact Ability',0.1],
+        'ca_oa':[plt.subplot(grid[0, 1]),'Contact Ability',0.1],
         'pow_oa':[plt.subplot(grid[0, 2]),'Power',0.05]
     }
     
@@ -568,6 +569,6 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
     
-# plv_hitter_heatmap()
+plv_hitter_heatmap()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
