@@ -464,7 +464,7 @@ if window > rolling_df.shape[0]:
 else:
     rolling_chart()
 
-# st.title("PLV Heatmaps")
+st.title("PLV Heatmaps")
 
 zone_df = pd.DataFrame(columns=['x','z'])
 for x in range(-20,21):
@@ -560,15 +560,14 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year):
     cb_ax.text(-kde_thresh*1.07,0.5,'Worse',ha='right',va='center',
                color=sns.color_palette('vlag',n_colors=11)[0],fontweight='bold',
               fontsize=12)
-    fig.tight_layout()
     # Add PL logo
-    pl_ax = fig.add_axes([0.8,0.95,0.15,0.15], anchor='NE', zorder=1)
+    pl_ax = fig.add_axes([0.74,0.91,0.15,0.15], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
-    fig.suptitle(f"{hitter}'s {year} PLV Hitter Heatmaps",y=1.05,x=0.5)
+    fig.suptitle(f"{hitter}'s {year} PLV Hitter Heatmaps",y=1.01,x=0.5)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
     
-# plv_hitter_heatmap()
+plv_hitter_heatmap()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
