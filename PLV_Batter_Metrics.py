@@ -478,7 +478,7 @@ for x in range(-20,21):
     for y in range(0,55):
         zone_df.loc[len(zone_df)] = [x/12,y/12]
 
-def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
+def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitchtype_select):
     b_hand = df.loc[(df['hittername']==hitter),'b_hand'].unique()[0]
     fig= plt.figure(figsize=(7,10))
     grid = plt.GridSpec(3, 4,height_ratios=[7,7,1],hspace=0.15,
@@ -489,18 +489,6 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
         2:['ca_oa',plt.subplot(grid[1, :2]),'Contact Ability',0.1],
         3:['pow_oa',plt.subplot(grid[1, 2:]),'Power',0.1]
     }
-    
-    pitch_type_dict = {
-        'All':0.25,
-        'Fastball':0.25,
-        'Breaking Ball':0.175,
-        'Offspeed':0.125
-    }
-    
-    if pitchtype == 'All':
-        pitchtype_select = ['Fastball', 'Breaking Ball', 'Offspeed', 'Other']
-    else:
-        pitchtype_select = [pitchtype]
     
     bandwidth = np.clip(df
                         .loc[(df['hittername']==hitter) &
@@ -612,7 +600,7 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
     pl_ax = fig.add_axes([0.72,0.03,0.15,0.15], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
-    pitchtype_text = '' if pitchtype=='All' else f' (vs {pitchtype}'+(')' if pitchtype=='Offspeed' else 's)')
+    pitchtype_text = '' if len(pitchtype_select)>1 else f' (vs {pitchtype_select[0]}' + (')' if pitchtype_select[0]=='Offspeed' else 's)')
     fig.suptitle(f"{hitter}'s {year}\nPLV Hitter Heatmaps{pitchtype_text}",y=0.95,x=0.5)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
