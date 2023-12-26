@@ -114,7 +114,8 @@ def load_season_data(year):
                                                         df['kde_z'],
                                                         df['balls'],
                                                         df['strikes']]).transform('mean')
-    
+
+    df['sa_oa'] = df['swing_agg'].copy()
     df['dv_oa'] = df['decision_value'].sub(df['base_decision_value'])
     df['ca_oa'] = df['contact_over_expected'].copy()
     df['pow_oa'] = df['adj_power'].sub(df['base_power'])
@@ -478,7 +479,7 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
     grid = plt.GridSpec(3, 4,height_ratios=[7,7,1],hspace=0.15,
                         width_ratios=[1,1,1.1,0.9],wspace=0.025)
     stat_dict = {
-        0:['swing_agg',plt.subplot(grid[0, :2]),'Swing Aggression',0.175],
+        0:['sa_oa',plt.subplot(grid[0, :2]),'Swing Aggression',0.175],
         1:['dv_oa',plt.subplot(grid[0, 2:]),'Decision Value',0.01],
         2:['ca_oa',plt.subplot(grid[1, :2]),'Contact Ability',0.1],
         3:['pow_oa',plt.subplot(grid[1, 2:]),'Power',0.1]
