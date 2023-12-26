@@ -546,8 +546,8 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
         stat_dict[stat][1].set_yticklabels([])
         stat_dict[stat][1].tick_params(left=False, bottom=False)
 
-        stat_dict[stat][1].set(xlim=(40,0),
-                               ylim=(0,54),
+        stat_dict[stat][1].set(#xlim=(40,0),
+                               #ylim=(0,54),
                                aspect=1)
 
         # Strikezone
