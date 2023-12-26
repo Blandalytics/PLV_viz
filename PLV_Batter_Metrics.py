@@ -93,29 +93,29 @@ def load_season_data(year):
     
     df = df.reset_index(drop=True)
 
-    st.write(df['p_z'].mean())
+    st.write(df['sz_z'])
 
     df.loc[df['p_x'].notna(),'kde_x'] = np.clip(df.loc[df['p_x'].notna(),'p_x'].astype('float').mul(12).round(0).astype('int').div(12),
-                                                        -20/12,
-                                                        20/12)
+                                                -20/12,
+                                                20/12)
     df.loc[df['sz_z'].notna(),'kde_z'] = np.clip(df.loc[df['sz_z'].notna(),'sz_z'].astype('float').mul(24).round(0).astype('int').div(24),
-                                                         -1.5,
-                                                         1.25)
+                                                 -1.5,
+                                                 1.25)
     
     df['base_decision_value'] = df['decision_value'].groupby([df['p_hand'],
-                                                                      df['b_hand'],
-                                                                      df['pitchtype'],
-                                                                      df['kde_x'],
-                                                                      df['kde_z'],
-                                                                      df['balls'],
-                                                                      df['strikes']]).transform('mean')
+                                                              df['b_hand'],
+                                                              df['pitchtype'],
+                                                              df['kde_x'],
+                                                              df['kde_z'],
+                                                              df['balls'],
+                                                              df['strikes']]).transform('mean')
     df['base_power'] = df['adj_power'].groupby([df['p_hand'],
-                                                        df['b_hand'],
-                                                        df['pitchtype'],
-                                                        df['kde_x'],
-                                                        df['kde_z'],
-                                                        df['balls'],
-                                                        df['strikes']]).transform('mean')
+                                                df['b_hand'],
+                                                df['pitchtype'],
+                                                df['kde_x'],
+                                                df['kde_z'],
+                                                df['balls'],
+                                                df['strikes']]).transform('mean')
 
     df['sa_oa'] = df['swing_agg'].copy()
     df['dv_oa'] = df['decision_value'].sub(df['base_decision_value'])
