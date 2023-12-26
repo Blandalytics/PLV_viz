@@ -478,7 +478,7 @@ for x in range(-20,21):
     for y in range(0,55):
         zone_df.loc[len(zone_df)] = [x/12,y/12]
 
-@st.cache_data(ttl=12*3600)
+@st.cache_resource()
 def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype=pitchtype_base):
     if pitchtype == 'All':
         pitchtype_select = ['Fastball', 'Breaking Ball', 'Offspeed', 'Other']
