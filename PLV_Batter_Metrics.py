@@ -353,8 +353,7 @@ color_norm = colors.TwoSlopeNorm(vmin=chart_10,
                                  vcenter=chart_mean,
                                  vmax=chart_90)
 
-@st.cache_data(ttl=12*3600)
-def rolling_chart(player=player,metric=metric,pitchtype_select=pitchtype_select,window=window,count_select=count_select,handedness=handedness):    
+def rolling_chart():    
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(6,6))
     sns.lineplot(data=rolling_df,
