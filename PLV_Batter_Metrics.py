@@ -93,7 +93,7 @@ def load_season_data(year):
     
     df = df.reset_index(drop=True)
 
-    st.write(df['sz_z'])
+    st.write(df['sz_z'].mean())
 
     df.loc[df['p_x'].notna(),'kde_x'] = np.clip(df.loc[df['p_x'].notna(),'p_x'].astype('float').mul(12).round(0).astype('int').div(12),
                                                 -20/12,
