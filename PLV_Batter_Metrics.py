@@ -122,6 +122,11 @@ def load_season_data(year):
     df['ca_oa'] = df['contact_over_expected'].copy()
     df['pow_oa'] = df['adj_power'].sub(df['base_power'])
 
+    
+    df.loc[df['sz_z'].notna(),'kde_z'] = np.clip(df.loc[df['sz_z'].notna(),'p_z'].astype('float').mul(12).round(0).astype('int').div(12),
+                                                 0,
+                                                 4.5)
+
     for stat in ['swing_agg','strike_zone_judgement','contact_over_expected','in_play_input']:
         df[stat] = df[stat].mul(100).astype('float')
     
@@ -546,8 +551,8 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
         stat_dict[stat][1].set_yticklabels([])
         stat_dict[stat][1].tick_params(left=False, bottom=False)
 
-        stat_dict[stat][1].set(#xlim=(40,0),
-                               #ylim=(0,54),
+        stat_dict[stat][1].set(xlim=(40,0),
+                               ylim=(0,54),
                                aspect=1)
 
         # Strikezone
