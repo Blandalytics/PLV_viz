@@ -599,10 +599,10 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitcht
     # Add PL logo
     pl_ax = fig.add_axes([0.72,0.03,0.15,0.15], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
-    pl_ax.text(0.5,-2,'plv-hitter-attributes.streamlit.app',va='top',ha='center',fontsize=6)
     pl_ax.axis('off')
     pitchtype_text = '' if len(pitchtype_select)>1 else f' (vs {pitchtype_select[0]}' + (')' if pitchtype_select[0]=='Offspeed' else 's)')
     fig.suptitle(f"{hitter}'s {year}\nPLV Hitter Heatmaps{pitchtype_text}",y=0.95,x=0.5)
+    plt.text(0.98,0.02,'plv-hitter-attributes.streamlit.app',va='bottom',ha='right',fontsize=6)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
     
