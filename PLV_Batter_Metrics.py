@@ -475,7 +475,7 @@ for x in range(-20,21):
 
 def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
     b_hand = df.loc[(df['hittername']==hitter),'b_hand'].unique()[0]
-    fig, ax = plt.subplots(figsize=(7,10))
+    fig= plt.figure(figsize=(7,10))
     grid = plt.GridSpec(3, 4,height_ratios=[7,7,1],hspace=0.15,
                         width_ratios=[1,1,1.1,0.9],wspace=0.025)
     stat_dict = {
