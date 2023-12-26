@@ -353,6 +353,7 @@ color_norm = colors.TwoSlopeNorm(vmin=chart_10,
                                  vcenter=chart_mean,
                                  vmax=chart_90)
 
+@st.cache_data(ttl=12*3600)
 def rolling_chart():    
     rolling_df['index'] = rolling_df['index']+1 #Yay 0-based indexing
     fig, ax = plt.subplots(figsize=(6,6))
@@ -471,13 +472,14 @@ if window > rolling_df.shape[0]:
 else:
     rolling_chart()
 
-# st.title("PLV Heatmaps")
+st.title("PLV Heatmaps")
 
 zone_df = pd.DataFrame(columns=['x','z'])
 for x in range(-20,21):
     for y in range(0,55):
         zone_df.loc[len(zone_df)] = [x/12,y/12]
 
+@st.cache_data(ttl=12*3600)
 def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitchtype_select):
     b_hand = df.loc[(df['hittername']==hitter),'b_hand'].unique()[0]
     fig= plt.figure(figsize=(7,10))
