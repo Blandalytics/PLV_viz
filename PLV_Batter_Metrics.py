@@ -478,12 +478,7 @@ for x in range(-20,21):
     for y in range(0,55):
         zone_df.loc[len(zone_df)] = [x/12,y/12]
 
-@st.cache_resource()
-def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype=pitchtype_base):
-    if pitchtype == 'All':
-        pitchtype_select = ['Fastball', 'Breaking Ball', 'Offspeed', 'Other']
-    else:
-        pitchtype_select = [pitchtype] if pitchtype=='Offspeed' else [pitchtype[:-1]] # remove the 's'
+def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitchtype_select):
     b_hand = df.loc[(df['hittername']==hitter),'b_hand'].unique()[0]
     fig= plt.figure(figsize=(7,10))
     grid = plt.GridSpec(3, 4,height_ratios=[7,7,1],hspace=0.15,
