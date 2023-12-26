@@ -513,8 +513,7 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
         v_center = df[stat_dict[stat][0]].mean()
         kde_df = pd.merge(zone_df,
                           (df
-                           .loc[(df['year_played']==year) &
-                                (df['hittername']==hitter) &
+                           .loc[(df['hittername']==hitter) &
                                 (df['pitch_type_bucket'].isin(pitchtype_select))
                                ]
                            .dropna(subset=[stat_dict[stat][0],'p_x','sz_z'])
