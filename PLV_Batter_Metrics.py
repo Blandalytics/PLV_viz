@@ -93,6 +93,8 @@ def load_season_data(year):
     
     df = df.reset_index(drop=True)
 
+    print(df['p_z'].mean())
+
     df.loc[df['p_x'].notna(),'kde_x'] = np.clip(df.loc[df['p_x'].notna(),'p_x'].astype('float').mul(12).round(0).astype('int').div(12),
                                                         -20/12,
                                                         20/12)
@@ -566,8 +568,7 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype='All'):
         stat_dict[stat][1].plot([27.75,27.5], [1,2], color='k', linewidth=1)
         stat_dict[stat][1].plot([27.43,20], [2,3], color='k', linewidth=1)
         stat_dict[stat][1].plot([11.57,20], [2,3], color='k', linewidth=1)
-        stat_dict[stat][1].set_title(f"{stat_dict[stat][2]}"#,pad=7
-                                    )
+        stat_dict[stat][1].set_title(f"{stat_dict[stat][2]}")
         
         stat_dict[stat][1].text(37.5 if b_hand=='L' else 2.5,
                                 sz_mid,
