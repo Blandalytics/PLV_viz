@@ -423,7 +423,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                                                  top + plot_height))
             ax.xaxis.set_label_position('top')
         else:
-            plot_val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player,stat+'_scale'].item()
+            plot_val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),stat+'_scale'].item()
             text_val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),stat].item()
 
             format_dict = {
