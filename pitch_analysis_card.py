@@ -439,7 +439,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
             ax = plt.subplot(grid[1, chart_stats.index(stat)])
             ax.bar(1, 1, color='w',alpha=0.1)
             ax.bar(1, plot_val, color=marker_colors[pitch_type])
-            ax.set(ylim=(0,1.2))
+            ax.set(ylim=(0,1.25))
             ax.text(1, plot_val,
                     format_dict[stat],
                     va='bottom',
