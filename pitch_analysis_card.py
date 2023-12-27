@@ -452,7 +452,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                     va='bottom',
                     ha='center',
                     fontsize=12 if stat=='velo' else 14,
-                    bbox=dict(facecolor='#2d4061', alpha=0.75, edgecolor='#2d4061',pad=1))
+                    bbox=dict(facecolor='#2d4061', alpha=0.75 if plot_val<0.5 else 0, linewidth=0, pad=1))
             ax.text(1,
                     1.5,
                     stat_name_dict[stat],
