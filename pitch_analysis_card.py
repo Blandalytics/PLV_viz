@@ -174,7 +174,7 @@ pitch_thresh = 10
 # Has at least 1 pitch with at least 50 thrown
 pitcher_list = list(pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query(f'pitch_id >={pitch_thresh}')['pitchername'].sort_values().unique())
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     # Player
@@ -187,11 +187,16 @@ with col2:
     pitches = [pitch_names[x] for x in _pitches]
     pitch_ix = pitches.index('Four-Seamer') if 'Four-Seamer' in pitches else 0
     pitch_type = st.selectbox('Choose a pitch:', pitches, index=pitch_ix)
+  
+with col3:
+    # Chart Type
+    charts = ['Bar','Violin']
+    chart_type = st.selectbox('Choose a chart style:', charts)
 
 # st.write(_pitches)
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
-def pitch_analysis_card(card_player,pitch_type):
+def pitch_analysis_card(card_player,pitch_type,chart_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
     pitch_num_thresh = max(pitch_thresh,
                            min(pitches_thrown,
@@ -347,75 +352,101 @@ def pitch_analysis_card(card_player,pitch_type):
     fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
     fig.text(0.5,0.43,f'(Compared to MLB {pitch_names[pitch_type]}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
     for stat in chart_stats:
-        val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
-                                 stat].item()
-        up_thresh = max(pitch_stats_df[stat].quantile(0.99),
-                        val)
-        low_thresh = min(pitch_stats_df[stat].quantile(0.01),
-                         val)
-        ax = plt.subplot(grid[1, chart_stats.index(stat)])
-        sns.violinplot(data=pitch_stats_df.loc[(pitch_stats_df[stat] <= up_thresh) &
-                                               (pitch_stats_df[stat] >= low_thresh)],
-                       y=stat+'_scale',
-                       inner=None,
-                       orient='v',
-                       cut=0,
-                       color=marker_colors[pitch_type],
-                       linewidth=1
-                     )
-        ax.collections[0].set_edgecolor('w')
+        if chart_type=='Violin':
+            val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
+                                     stat].item()
+            up_thresh = max(pitch_stats_df[stat].quantile(0.99),
+                            val)
+            low_thresh = min(pitch_stats_df[stat].quantile(0.01),
+                             val)
+            ax = plt.subplot(grid[1, chart_stats.index(stat)])
+            sns.violinplot(data=pitch_stats_df.loc[(pitch_stats_df[stat] <= up_thresh) &
+                                                   (pitch_stats_df[stat] >= low_thresh)],
+                           y=stat+'_scale',
+                           inner=None,
+                           orient='v',
+                           cut=0,
+                           color=marker_colors[pitch_type],
+                           linewidth=1
+                         )
+            ax.collections[0].set_edgecolor('w')
+    
+            top = ax.get_ylim()[1]
+            bot = ax.get_ylim()[0]
+            plot_height = top - bot
+    
+            format_dict = {
+                'PLV':f'{val:.2f}',
+                'velo':f'{val:.1f}mph',
+                'pitch_extension':f'{val:.1f}ft',
+                'IVB':f'{val:.1f}"',
+                'IHB':f'{val:.1f}"',
+                'adj_vaa':f'{val:.1f}°',
+                'zone_pred':f'{val*100:.1f}%'
+            }
+            ax.axhline(pitch_stats_df[stat+'_scale'].median(),
+                       linestyle='--',
+                       color='w')
+            ax.axhline(top + (0.25 * plot_height),
+                       xmin=0.1,
+                       xmax=0.9,
+                       color='w')
+            ax.text(0,
+                    pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
+                                       stat+'_scale'],
+                    format_dict[stat],
+                    va='center',
+                    ha='center',
+                    fontsize=12 if stat=='velo' else 14,
+                    bbox=dict(facecolor=pl_background, alpha=0.75, edgecolor='w'))
+            ax.text(0,
+                    top + (0.5 * plot_height),
+                    stat_name_dict[stat],
+                    va='center',
+                    ha='center',
+                    fontsize=14)
+            ax.text(0,
+                    top + (0.2 * plot_height),
+                    stat_tops[stat],
+                    va='top',
+                    ha='center',
+                    fontsize=12)
+            ax.text(0,
+                    bot - (0.2 * plot_height),
+                    stat_bottoms[stat],
+                    va='bottom',
+                    ha='center',
+                    fontsize=12)
+            ax.tick_params(left=False, bottom=False)
+            ax.set_yticklabels([])
+            ax.set(xlabel=None,ylabel=None,ylim=(bot - (0.15 * plot_height),
+                                                 top + plot_height))
+            ax.xaxis.set_label_position('top')
+        else:
+            plot_val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player,stat+'_scale'].item()
+            text_val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),stat].item()
 
-        top = ax.get_ylim()[1]
-        bot = ax.get_ylim()[0]
-        plot_height = top - bot
-
-        format_dict = {
-            'PLV':f'{val:.2f}',
-            'velo':f'{val:.1f}mph',
-            'pitch_extension':f'{val:.1f}ft',
-            'IVB':f'{val:.1f}"',
-            'IHB':f'{val:.1f}"',
-            'adj_vaa':f'{val:.1f}°',
-            'zone_pred':f'{val*100:.1f}%'
-        }
-        ax.axhline(pitch_stats_df[stat+'_scale'].median(),
-                   linestyle='--',
-                   color='w')
-        ax.axhline(top + (0.25 * plot_height),
-                   xmin=0.1,
-                   xmax=0.9,
-                   color='w')
-        ax.text(0,
-                pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
-                                   stat+'_scale'],
-                format_dict[stat],
-                va='center',
-                ha='center',
-                fontsize=12 if stat=='velo' else 14,
-                bbox=dict(facecolor=pl_background, alpha=0.75, edgecolor='w'))
-        ax.text(0,
-                top + (0.5 * plot_height),
-                stat_name_dict[stat],
-                va='center',
-                ha='center',
-                fontsize=14)
-        ax.text(0,
-                top + (0.2 * plot_height),
-                stat_tops[stat],
-                va='top',
-                ha='center',
-                fontsize=12)
-        ax.text(0,
-                bot - (0.2 * plot_height),
-                stat_bottoms[stat],
-                va='bottom',
-                ha='center',
-                fontsize=12)
-        ax.tick_params(left=False, bottom=False)
-        ax.set_yticklabels([])
-        ax.set(xlabel=None,ylabel=None,ylim=(bot - (0.15 * plot_height),
-                                             top + plot_height))
-        ax.xaxis.set_label_position('top')
+            format_dict = {
+                'PLV':f'{text_val:.2f}',
+                'velo':f'{text_val:.1f}mph',
+                'pitch_extension':f'{text_val:.1f}ft',
+                'IVB':f'{text_val:.1f}"',
+                'IHB':f'{text_val:.1f}"',
+                'adj_vaa':f'{text_val:.1f}°',
+                'zone_pred':f'{text_val*100:.1f}%'
+            }
+            
+            ax = plt.subplot(grid[1, chart_stats.index(stat)])
+            ax.bar(1, val, color=marker_colors[pitch_type])
+            ax.set(ylim=(0,1.1))
+            ax.text(1, val,
+                    format_dict[stat],
+                    va='bottom',
+                    ha='center',
+                    fontsize=12 if stat=='velo' else 14)
+            ax.set_xticklabels([])
+            ax.set_yticklabels([])
+            ax.tick_params(left=False, bottom=False)
 
     # Add PL logo
     pl_ax = fig.add_axes([0.41,0.025,0.2,0.2], anchor='S', zorder=1)
@@ -429,7 +460,7 @@ def pitch_analysis_card(card_player,pitch_type):
     fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
-pitch_analysis_card(card_player,pitch_type)
+pitch_analysis_card(card_player,pitch_type,chart_type)
 
 p_hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].iloc[0]
 def kde_chart(kde_data,p_hand=p_hand,kde_thresh=0.1):
