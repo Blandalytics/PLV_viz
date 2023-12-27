@@ -233,6 +233,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     for col in ['PLV','velo','pitch_extension','IVB','IHB','adj_vaa','zone_pred']:
         pitch_stats_df[col+'_scale'] = min_max_scaler(pitch_stats_df[col])
+        pitch_stats_df[col+'_pct'] = pitch_stats_df[col].rank(pct=True)
 
     chart_stats = ['velo','pitch_extension','IVB','IHB','adj_vaa','zone_pred','PLV']
     fig = plt.figure(figsize=(10,10))
@@ -423,7 +424,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                                                  top + plot_height))
             ax.xaxis.set_label_position('top')
         else:
-            plot_val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),stat+'_scale'].item()
+            plot_val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),stat+'_pct'].item()
             text_val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),stat].item()
 
             format_dict = {
@@ -443,7 +444,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                        color='w')
             ax.bar(1, 1, color='w',alpha=0.1)
             ax.bar(1, plot_val, color=marker_colors[pitch_type])
-            ax.axhline(pitch_stats_df[stat+'_scale'].median(),
+            ax.axhline(0.5,
                        linestyle='--',
                        color='w')
             ax.text(1, plot_val,
@@ -451,7 +452,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                     va='bottom',
                     ha='center',
                     fontsize=12 if stat=='velo' else 14,
-                    bbox=dict(facecolor=pl_background, alpha=0.75, edgecolor=None))
+                    bbox=dict(facecolor=pl_background, alpha=0.75, edgecolor=pl_background))
             ax.text(1,
                     1.5,
                     stat_name_dict[stat],
