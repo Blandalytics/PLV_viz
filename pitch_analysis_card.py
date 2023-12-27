@@ -438,7 +438,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
             }
             
             ax = plt.subplot(grid[1, chart_stats.index(stat)])
-            ax.axhline(1.25,
+            ax.axhline(1.15,
                        xmin=0.1,
                        xmax=0.9,
                        color='w')
@@ -454,14 +454,14 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                     fontsize=12 if stat=='velo' else 14,
                     bbox=dict(facecolor='#2d4061', alpha=0.75 if plot_val<0.5 else 0, linewidth=0, pad=1))
             ax.text(1,
-                    1.5,
+                    1.4,
                     stat_name_dict[stat],
                     va='center',
                     ha='center',
                     fontsize=14)
             ax.set_xticklabels([])
             ax.set_yticklabels([])
-            ax.set(ylim=(0,2))
+            ax.set(ylim=(0,1.9))
             ax.tick_params(left=False, bottom=False)
 
     # Add PL logo
