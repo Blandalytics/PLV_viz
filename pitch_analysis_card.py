@@ -448,7 +448,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                     va='bottom',
                     ha='center',
                     fontsize=12 if stat=='velo' else 14)
-            ax.text(0,
+            ax.text(1,
                     1.5,
                     stat_name_dict[stat],
                     va='center',
