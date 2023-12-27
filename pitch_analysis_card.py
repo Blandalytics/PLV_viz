@@ -137,14 +137,14 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
                           kde_z = lambda x: np.clip(x['p_z'].astype('float').mul(12).round(0).astype('int').div(12),0,4.5))
                   .reset_index(drop=True)
                  )
+        if kde_df.shape[0] < 50:
+            kde_diffs += [pd.DataFrame()]
+            continue
         x_loc_league = kde_df['kde_x']
         y_loc_league = kde_df['kde_z']
 
         x_loc_pitcher = kde_df.loc[kde_df['pitchername']==pitcher,'kde_x']
         y_loc_pitcher = kde_df.loc[kde_df['pitchername']==pitcher,'kde_z']
-        if x_loc_pitcher.empty:
-          kde_diffs += [pd.DataFrame()]
-          continue
 
         xmin = x_loc_league.min()
         xmax = x_loc_league.max()
