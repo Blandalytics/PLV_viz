@@ -79,9 +79,8 @@ season_names = {
 
 # Load Data
 @st.cache_data(ttl=12*3600)
-def load_season_data(year):
+def load_season_data(year,my_bar=my_bar,prog_text=progress_text):
     progress_text = f"Loading {year} data"
-    my_bar = st.progress(0, text=progress_text)
     df = pd.DataFrame()
     for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{month}.parquet?raw=true'
@@ -92,7 +91,7 @@ def load_season_data(year):
                                                     'in_play_input','p_x','p_z','sz_z','strike_zone_top','strike_zone_bottom'
                                                    ]]
                        ])
-        my_bar.progress(int(100/(11-month)), text=progress_text)
+        my_bar.progress(int(100/(11-month)), text=prog_text)
     
     df = df.reset_index(drop=True)
 
@@ -139,7 +138,10 @@ def load_season_data(year):
     
     return df
 
+progress_text = f"Loading {year} data"
+my_bar = st.progress(0, text=progress_text)
 plv_df = load_season_data(year)
+my_bar.empty()
 
 max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
 start_val = int(plv_df.groupby('hittername')['pitch_id'].count().quantile(0.4)/50)*50
