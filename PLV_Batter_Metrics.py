@@ -77,6 +77,9 @@ season_names = {
     'batter_wOBA':'HP'
 }
 
+progress_text = f"Loading {year} data"
+my_bar = st.progress(0, text=progress_text)
+
 # Load Data
 @st.cache_data(ttl=12*3600)
 def load_season_data(year,my_bar=my_bar,prog_text=progress_text):
@@ -138,8 +141,6 @@ def load_season_data(year,my_bar=my_bar,prog_text=progress_text):
     
     return df
 
-progress_text = f"Loading {year} data"
-my_bar = st.progress(0, text=progress_text)
 plv_df = load_season_data(year)
 my_bar.empty()
 
