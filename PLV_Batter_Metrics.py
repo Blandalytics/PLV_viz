@@ -80,6 +80,8 @@ season_names = {
 # Load Data
 @st.cache_data(ttl=12*3600)
 def load_season_data(year):
+    progress_text = f"Loading {year} data"
+    my_bar = st.progress(0, text=progress_text)
     df = pd.DataFrame()
     for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{month}.parquet?raw=true'
@@ -90,6 +92,7 @@ def load_season_data(year):
                                                     'in_play_input','p_x','p_z','sz_z','strike_zone_top','strike_zone_bottom'
                                                    ]]
                        ])
+        my_bar.progress(int(100/(11-month)), text=progress_text)
     
     df = df.reset_index(drop=True)
 
