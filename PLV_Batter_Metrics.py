@@ -77,12 +77,9 @@ season_names = {
     'batter_wOBA':'HP'
 }
 
-progress_text = f"Loading {year} data"
-my_bar = st.progress(0, text=progress_text)
-
 # Load Data
 @st.cache_data(ttl=12*3600)
-def load_season_data(year,my_bar=my_bar,prog_text=progress_text):
+def load_season_data(year):
     progress_text = f"Loading {year} data"
     df = pd.DataFrame()
     for month in range(3,11):
@@ -94,7 +91,6 @@ def load_season_data(year,my_bar=my_bar,prog_text=progress_text):
                                                     'in_play_input','p_x','p_z','sz_z','strike_zone_top','strike_zone_bottom'
                                                    ]]
                        ])
-        my_bar.progress(int(100/(11-month)), text=prog_text)
     
     df = df.reset_index(drop=True)
 
@@ -142,7 +138,6 @@ def load_season_data(year,my_bar=my_bar,prog_text=progress_text):
     return df
 
 plv_df = load_season_data(year)
-my_bar.empty()
 
 max_pitches = plv_df.groupby('hittername')['pitch_id'].count().max()
 start_val = int(plv_df.groupby('hittername')['pitch_id'].count().quantile(0.4)/50)*50
