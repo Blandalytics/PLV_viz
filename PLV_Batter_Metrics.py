@@ -78,9 +78,8 @@ season_names = {
 }
 
 # Load Data
-@st.cache_data(ttl=12*3600)
+@st.cache_data(ttl=12*3600,show_spinner=f"Loading {year} data")
 def load_season_data(year):
-    progress_text = f"Loading {year} data"
     df = pd.DataFrame()
     for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{month}.parquet?raw=true'
