@@ -237,9 +237,8 @@ def plv_hitter_heatmap(hitter=player,df=heatmap_df):
     bandwidth = np.clip(df
                         .loc[(df['hittername']==hitter)]
                         .shape[0]/2000,
-                        0.175,
+                        0.2,
                         0.25)
-    bandwidth = 0.25
     
     sz_top = round(df.loc[df['hittername']==hitter,'strike_zone_top'].median()*12)
     sz_bot = round(df.loc[df['hittername']==hitter,'strike_zone_bottom'].median()*12)
