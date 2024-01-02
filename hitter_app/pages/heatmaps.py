@@ -112,13 +112,6 @@ def load_season_data(year):
     df.loc[df['sz_z'].notna(),'kde_z'] = np.clip(df.loc[df['sz_z'].notna(),'p_z'].astype('float').mul(12).round(0).astype('int').div(12),
                                                  0,
                                                  4.5)
-
-    for stat in ['swing_agg','strike_zone_judgement','contact_over_expected','in_play_input']:
-        df[stat] = df[stat].mul(100).astype('float')
-    
-    # Convert to runs added
-    df['decision_value'] = df['decision_value'].div(seasonal_constants.loc[year]['run_constant']).mul(100)
-    df['batter_wOBA'] = df['batter_wOBA'].div(seasonal_constants.loc[year]['run_constant']).mul(100)
     
     df['count'] = df['balls'].astype('str')+'-'+df['strikes'].astype('str')
     
