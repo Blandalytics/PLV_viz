@@ -218,7 +218,11 @@ for x in range(-20,21):
     for y in range(0,55):
         zone_df.loc[len(zone_df)] = [x/12,y/12]
 
-def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitchtype_select):
+heatmap_df = plv_df.loc[plv_df['p_hand'].isin(hand_map[handedness]) &
+                        plv_df['count'].isin(selected_options) &
+                        plv_df['pitch_type_bucket'].isin(pitchtype_select)].copy()
+
+def plv_hitter_heatmap(hitter=player,df=heatmap_df):
     b_hand = df.loc[(df['hittername']==hitter),'b_hand'].unique()[0]
     fig= plt.figure(figsize=(7,10))
     grid = plt.GridSpec(3, 4,height_ratios=[7,7,1],hspace=0.15,
@@ -232,6 +236,7 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitcht
     
     bandwidth = np.clip(df
                         .loc[(df['hittername']==hitter) &
+                             (df['count'].astype('str').isin(selected_options)
                              (df['pitch_type_bucket'].isin(pitchtype_select))]
                         .shape[0]/2000,
                         0.175,
@@ -345,7 +350,7 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitcht
     if (pitchtype_base == 'All') & (count_select=='All') & (handedness=='All'):
         context_text = ''
     else:
-        context_text = '({}{}{})'.format('' if pitchtype_base == 'All' else pitchtype_text,
+        context_text = '\n({}{}{})'.format('' if pitchtype_base == 'All' else pitchtype_text,
                                          '' if count_select=='All' else f'; in {selected_options} counts' if count_select=='Custom' else f'; in {count_select} Counts',
                                          '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                          )
