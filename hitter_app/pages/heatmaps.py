@@ -358,8 +358,17 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitcht
     pl_ax = fig.add_axes([0.72,0.03,0.15,0.15], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
-    pitchtype_text = '' if len(pitchtype_select)>1 else f' (vs {pitchtype_select[0]}' + (')' if pitchtype_select[0]=='Offspeed' else 's)')
-    fig.suptitle(f"{hitter}'s {year}\nPLV Hitter Heatmaps{pitchtype_text}",y=0.95,x=0.5)
+    pitchtype_text = '' if len(pitchtype_select)>1 else f' vs {pitchtype_select[0]}' + ('' if pitchtype_select[0]=='Offspeed' else 's')
+  
+    if (pitchtype_base == 'All') & (count_select=='All') & (handedness=='All'):
+        context_text = ''
+    else:
+        context_text = f'({}{}{})'.format('' if pitchtype_base == 'All' else pitchtype_text,
+                                         '' if count_select=='All' else f'; in {selected_options} counts' if count_select=='Custom' else f'; in {count_select} Counts',
+                                         '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
+                                         )
+    
+    fig.suptitle(f"{hitter}'s {year}\nPLV Hitter Heatmaps{context_text}",y=0.95,x=0.5)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
     
