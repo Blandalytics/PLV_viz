@@ -608,3 +608,4 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitcht
 # plv_hitter_heatmap()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
+st.write("Heatmaps can now be found at [plv-hitter-heatmaps.streamlit.app](https://plv-hitter-heatmaps.streamlit.app/)")
