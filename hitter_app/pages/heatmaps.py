@@ -353,7 +353,7 @@ def plv_hitter_heatmap(hitter=player,df=heatmap_df):
                                          '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                          )
     
-    fig.suptitle(f"{hitter}'s {year}\nPLV Hitter Heatmaps{context_text}",y=0.95,x=0.5)
+    fig.suptitle(f"{hitter}'s {year}\nPLV Hitter Heatmaps{context_text}",y=0.95 if context_text=='' else 1,x=0.5)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
     
