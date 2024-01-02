@@ -235,9 +235,7 @@ def plv_hitter_heatmap(hitter=player,df=heatmap_df):
     }
     
     bandwidth = np.clip(df
-                        .loc[(df['hittername']==hitter) &
-                             (df['count'].astype('str').isin(selected_options)
-                             (df['pitch_type_bucket'].isin(pitchtype_select))]
+                        .loc[(df['hittername']==hitter)]
                         .shape[0]/2000,
                         0.175,
                         0.25)
