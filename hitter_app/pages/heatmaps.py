@@ -348,9 +348,10 @@ def plv_hitter_heatmap(hitter=player,df=heatmap_df):
     if (pitchtype_base == 'All') & (count_select=='All') & (handedness=='All'):
         context_text = ''
     else:
-        context_text = '\n({}{}{})'.format('' if pitchtype_base == 'All' else pitchtype_text,
-                                         '' if count_select=='All' else f'; in {selected_options} counts' if count_select=='Custom' else f'; in {count_select} Counts',
-                                         '' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
+        comma_text = ',' if sum([pitchtype_base == 'All',count_select=='All',handedness=='All'])<2 else ''
+        context_text = '\n({}{}{})'.format('' if pitchtype_base == 'All' else f'{pitchtype_text}{comma_text}',
+                                         '' if count_select=='All' else f'In {selected_options} counts{comma_text}' if count_select=='Custom' else f'In {count_select} Counts{comma_text}',
+                                         '' if handedness=='All' else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
                                          )
     
     fig.suptitle(f"{hitter}'s {year}\nPLV Hitter Heatmaps{context_text}",y=0.95 if context_text=='' else 1,x=0.5)
