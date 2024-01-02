@@ -48,16 +48,7 @@ sns.set_theme(
 
 line_color = sns.color_palette('vlag', n_colors=100)[0]
 
-st.title("Hitter Ability Metrics ")
-st.write('- ***Swing Aggression***: How much more often a hitter swings at pitches, given the swing likelihoods of the pitches they face.')
-st.write('''
-- ***Strikezone Judgment***: The "correctness" of a hitter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
-''')
-st.write("- ***Decision Value***: Modeled value (runs per 100 pitches) of a hitter's decision to swing or take, minus the modeled value of the alternative.")
-st.write("- ***Pitch Hittability***: Likelihood of the pitches a hitter faces becoming batted balls.")
-st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
-st.write("- ***Power***: Modeled number of extra bases (xISO on contact) above a pitch's expectation, for each BBE.")
-st.write("- ***Hitter Performance (HP)***: Runs added per 100 pitches seen by the hitter (including swing/take decisions), after accounting for pitch quality.")
+st.title("PLV Hitter Heatmaps")
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
@@ -229,8 +220,6 @@ hand_map = {
     'Right':['R']
 }
 
-st.title("PLV Heatmaps")
-
 zone_df = pd.DataFrame(columns=['x','z'])
 for x in range(-20,21):
     for y in range(0,55):
@@ -375,3 +364,8 @@ def plv_hitter_heatmap(hitter=player,df=plv_df,year=year,pitchtype_select=pitcht
 plv_hitter_heatmap()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
+
+st.write('- ***Swing Aggression***: How much more often a hitter swings at pitches, given the swing likelihoods of the pitches they face.')
+st.write("- ***Decision Value***: Modeled value (runs per 100 pitches) of a hitter's decision to swing or take, minus the modeled value of the alternative.")
+st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
+st.write("- ***Power***: Modeled number of extra bases (xISO on contact) above a pitch's expectation, for each BBE.")
