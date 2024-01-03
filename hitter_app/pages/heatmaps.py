@@ -50,8 +50,6 @@ line_color = sns.color_palette('vlag', n_colors=100)[0]
 
 st.title("PLV Hitter Heatmaps")
 
-seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
-
 ## Selectors
 # Year
 year = st.radio('Choose a year:', [2023,2022,2021,2020])
