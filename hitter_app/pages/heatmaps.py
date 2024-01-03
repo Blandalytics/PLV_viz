@@ -144,9 +144,9 @@ plv_df = plv_df.rename(columns=stat_names)
 players = list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
     'pitch_id':'count',
     'Hitter Performance':'mean'}).query(f'pitch_id >=100').sort_values('Hitter Performance', ascending=False)['hittername'])
-default_player = np.random.choice(list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
+default_player = players.index(np.random.choice(list(plv_df.groupby('hittername', as_index=False)[['pitch_id','Hitter Performance']].agg({
     'pitch_id':'count',
-    'Hitter Performance':'mean'}).query(f'pitch_id >=1500').sort_values('Hitter Performance', ascending=False)['hittername']))
+    'Hitter Performance':'mean'}).query(f'pitch_id >=1500').sort_values('Hitter Performance', ascending=False)['hittername'])))
 # default_player = players.index('Juan Soto')
 player = st.selectbox('Choose a hitter:', players, index=default_player)
 
