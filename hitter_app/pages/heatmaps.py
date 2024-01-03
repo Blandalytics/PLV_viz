@@ -14,7 +14,8 @@ from scipy import stats
 from statsmodels.nonparametric.kernel_regression import KernelReg
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-logo = Image.open(urllib.request.urlopen(logo_loc))
+# logo = Image.open(urllib.request.urlopen(logo_loc))
+logo = Image.open('PL-text-wht.png?raw=true')
 st.image(logo, width=200)
 
 ## Set Styling
