@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import scipy as sp
+import time
 import urllib
 
 from matplotlib import ticker
@@ -248,6 +249,7 @@ def plv_hitter_heatmap(hitter=player,df=heatmap_df):
     sz_mid = sz_bot + sz_range/2
     
     for stat in range(len(stat_dict)):
+        time.sleep(1)
         v_center = df[stat_dict[stat][0]].mean()
         kde_df = pd.merge(zone_df,
                           (df
