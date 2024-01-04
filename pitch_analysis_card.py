@@ -182,11 +182,26 @@ with col1:
     card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
 
 with col2:
+    pitches = (pitch_df
+     .loc[pitch_df['pitchername']==card_player,'pitchtype']
+     .map(pitch_names)
+     .value_counts(normalize=True)
+     .where(lambda x : x>0)
+     .dropna()
+     .to_dict()
+    )
+    
+    select_list = []
+    for pitch in pitches.keys():
+        select_list += [f'{pitch} ({pitches[pitch]:.1%})']
     # Pitch
-    _pitches = list(pitch_df.loc[pitch_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().reset_index().sort_values('pitch_id',ascending=False).query(f'pitch_id>={pitch_thresh}')['pitchtype'])
-    pitches = [pitch_names[x] for x in _pitches]
-    pitch_ix = pitches.index('Four-Seamer') if 'Four-Seamer' in pitches else 0
-    pitch_type = st.selectbox('Choose a pitch:', pitches, index=pitch_ix)
+    # _pitches = list(pitch_df.loc[pitch_df['pitchername']==card_player].groupby('pitchtype')['pitch_id'].count().reset_index().sort_values('pitch_id',ascending=False).query(f'pitch_id>={pitch_thresh}')['pitchtype'])
+    # pitches = [pitch_names[x] for x in _pitches]
+    # pitch_ix = pitches.index('Four-Seamer') if 'Four-Seamer' in pitches else 0
+    pitch_type = st.selectbox('Choose a pitch:', select_list, 
+                              # pitches, index=pitch_ix
+                             )
+    pitch_type = pitch_type.split('(')[0][:-1]
   
 with col3:
     # Chart Type
