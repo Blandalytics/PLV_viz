@@ -187,7 +187,7 @@ with col2:
      .loc[pitch_df['pitchername']==card_player,'pitchtype']
      .map(pitch_names)
      .value_counts(normalize=True)
-     .where(lambda x : x>0)
+     .where(lambda x : x>0.005)
      .dropna()
      .to_dict()
     )
