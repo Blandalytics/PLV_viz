@@ -59,15 +59,15 @@ test_df['smoothed_stat'] = kernel_regression.fit([test_df['x'], test_df['z']])[0
 # Pivot df to 2D, to better play with Seaborn's heatmap code 
 heatmap_df = test_df.pivot_table(columns='x',index='z',values=['smoothed_stat'], aggfunc='mean')
 
-fig, ax = plt.subplots(figsize=(5,6))
 # Create Chart
+fig, ax = plt.subplots(figsize=(5,6))
 sns.heatmap(data=heatmap_df['smoothed_stat'].astype('float'),
             cmap='vlag', # My preferred diverging palette, but use whatever you want
             center=avg_test_value # Force the color scale to center on your average/median value
             )
 
-# Set chart direction+scale
-ax.set(xlim=(0,40), # for hitter's perspective (40,0) if pitcher's perspective
+# Set chart orientation & scale
+ax.set(xlim=(0,40), # from hitter's perspective, use (40,0) if pitcher's perspective
        ylim=(0,60), 
        aspect=1) # so that each increment of X and Z are visually the same
 
