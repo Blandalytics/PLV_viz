@@ -27,6 +27,7 @@ test_df = pd.DataFrame(test_data)
 
 ### Generate a df with every possible X/Z location to fill missing data
 # Adds 20" horizontally and 30 inches vertically, in each direction
+# I'm sure there's a better way to do this lol
 zone_df = pd.DataFrame(columns=['x','z'])
 for x in range(-20,21):
     for y in range(0,61):
