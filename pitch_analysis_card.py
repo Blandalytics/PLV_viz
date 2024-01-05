@@ -529,6 +529,21 @@ def kde_chart(kde_data,p_hand=p_hand,kde_thresh=0.1):
         ax.plot([27.5,27.25], [1,2], color='k', linewidth=1)
         ax.plot([27.3,20], [2,3], color='k', linewidth=1)
         ax.plot([11.7,20], [2,3], color='k', linewidth=1)
+
+        
+        ax.text(37.5 if hand=='L' else 2.5,
+                30,
+                'Hitter',
+                rotation=270 if hand=='L' else 90,
+                fontsize=14,
+                color='k',
+                ha='center',
+                va='center',
+                bbox=dict(boxstyle='round',
+                          color='w',
+                          alpha=0.5,
+                          pad=0.2)
+               )
     
         ax.set(xlim=(40,0),
                ylim=(0,54),
