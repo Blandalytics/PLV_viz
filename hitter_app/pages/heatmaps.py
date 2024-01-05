@@ -249,7 +249,7 @@ def plv_hitter_heatmap(hitter=player,df=heatmap_df):
     sz_mid = sz_bot + sz_range/2
     
     for stat in range(len(stat_dict)):
-        time.sleep(1)
+        time.sleep(1.5)
         v_center = df[stat_dict[stat][0]].mean()
         kde_df = pd.merge(zone_df,
                           (df
