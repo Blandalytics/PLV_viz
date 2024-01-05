@@ -533,9 +533,9 @@ def kde_chart(kde_data,p_hand=p_hand,kde_thresh=0.1):
         
         ax.text(37.5 if hand=='L' else 2.5,
                 30,
-                'Hitter',
+                'Hitter Stands Here',
                 rotation=270 if hand=='L' else 90,
-                fontsize=14,
+                fontsize=18,
                 color='k',
                 ha='center',
                 va='center',
