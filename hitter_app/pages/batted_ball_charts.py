@@ -182,8 +182,8 @@ def kde_chart(kde_data,hitter,levels=13):
     fig.suptitle(f"{hitter}{apostrophe_text} {year} Batted Ball Profile",ha='center',x=0.45,y=0.88,fontsize=16)
     fig.text(0.45,0.827,'(Compared to rest of MLB)',ha='center',fontsize=12)
     fig.text(-0.06,0.115,'batted-ball-charts.streamlit.app',ha='left',fontsize=6)
-    fig.text(0.8,0.13,'@blandalytics',ha='center',fontsize=6)
-    fig.text(0.8,0.115,'Data: Baseball Savant via pybaseball',ha='center',fontsize=6)
+    fig.text(0.8,0.125,'@blandalytics',ha='center',fontsize=8)
+    fig.text(0.8,0.11,'Data: Baseball Savant via pybaseball',ha='center',fontsize=6)
 
     sns.despine()
     st.pyplot(fig)
