@@ -119,8 +119,8 @@ def kde_calc(df,hitter,year=year,league_vals=f_league):
     return f_player - league_vals
 
 def kde_chart(kde_data,hitter,levels=13):
-    b_hand = bbe_df.loc[bbe_df['hittername']==hitter,'stand'].value_counts().index[0]
-    fig, ax = plt.subplots(figsize=(5,5))
+    b_hand = pitch_data.loc[pitch_data['hittername']==hitter,'stand'].value_counts().index[0]
+    fig, ax = plt.subplots(figsize=(7,7))
     ax.set_xlim(0, 90)
     ax.set_ylim(-30, 60)
     cfset = ax.contourf(X, Y, kde_data*1000, list(range(-levels+1,levels-1))[::2], 
@@ -143,15 +143,15 @@ def kde_chart(kde_data,hitter,levels=13):
     x_labels = ['Pull','Center','Oppo']
     # labels at the center of their range
     for label, pos0, pos1 in zip(x_labels, x_ticks[:-1], x_ticks[1:]):
-        ax.text((pos0 + pos1) / 2, -0.02, label, ha='center', va='top', 
-                fontsize=12, clip_on=False, transform=ax.get_xaxis_transform())
+        ax.text((pos0 + pos1) / 2, -0.04, label, ha='center', va='top', 
+                fontsize=15, clip_on=False, transform=ax.get_xaxis_transform())
 
     y_ticks = [-30,10,20,50,60]
     y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
     # labels at the center of their range
     for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
         ax.text(-0.13, (pos0 + pos1) / 2, label, ha='center', va='center', 
-                fontsize=12, clip_on=False, transform=ax.get_yaxis_transform())
+                fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
 
     bounds = [x/levels for x in range(levels)]+[1]
     norm = mpl.colors.BoundaryNorm(bounds, sns.color_palette('vlag', as_cmap=True).N)
@@ -170,7 +170,7 @@ def kde_chart(kde_data,hitter,levels=13):
     label_colors = [sns.color_palette('vlag',n_colors=25)[0],'k',sns.color_palette('vlag',n_colors=25)[-1]]
     for label, deg, color in zip(['Less\nOften','Same','More\nOften'], [-24,15,53.5], label_colors):
         cb.ax.text(1.115, deg, label, ha='center', va='center', color=color, 
-                   fontsize=12, fontweight='medium', clip_on=False, 
+                   fontsize=15, fontweight='medium', clip_on=False, 
                    transform=ax.get_yaxis_transform())
 
     # Add PL logo
@@ -179,8 +179,8 @@ def kde_chart(kde_data,hitter,levels=13):
     pl_ax.axis('off')
 
     apostrophe_text = "'" if hitter[-1]=='s' else "'s"
-    fig.suptitle(f"{hitter}{apostrophe_text}\n{year} Batted Ball Profile",ha='center',x=0.45,y=0.94,fontsize=14)
-    fig.text(0.45,0.83,'(Compared to rest of MLB)',ha='center',fontsize=10)
+    fig.suptitle(f"{hitter}{apostrophe_text} {year} Batted Ball Profile",ha='center',x=0.45,y=0.88,fontsize=16)
+    fig.text(0.45,0.83,'(Compared to rest of MLB)',ha='center',fontsize=12)
 
     sns.despine()
     st.pyplot(fig)
