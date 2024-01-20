@@ -90,13 +90,21 @@ bbe_df, f_league = load_data(year)
 
 X, Y = np.mgrid[0:90:91j, -30:60:91j]
 
-players = list(bbe_df
-               .reset_index()
-               .sort_values('hittername')
-               ['hittername'].unique()
-              )
-default_ix = players.index('Ronald Acuña Jr.')
-player = st.selectbox('Choose a player:', players, index=default_ix)
+col1, col2 = st.columns([0.7,0.3])
+
+with col1:
+    # Player
+    players = list(bbe_df
+                   .reset_index()
+                   .sort_values('hittername')
+                   ['hittername'].unique()
+                  )
+    default_ix = players.index('Ronald Acuña Jr.')
+    player = st.selectbox('Choose a player:', players, index=default_ix)
+with col2:
+    # Color Scale
+    color_scales = ['Discrete','Continuous']
+    color_scale_type = st.selectbox('Choose a color scale:', color_scales)
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
     x_loc_player = df.loc[df['hittername']==hitter,'spray_deg']
@@ -118,23 +126,45 @@ def kde_calc(df,hitter,year=year,league_vals=f_league):
 
     return f_player - league_vals
 
-def kde_chart(kde_data,hitter,levels=13):
+def kde_chart(kde_data,hitter,color_scale_type='Discrete'):
+    levels=13
     b_hand = bbe_df.loc[bbe_df['hittername']==hitter,'stand'].value_counts().index[0]
     fig, ax = plt.subplots(figsize=(7,7))
-    ax.set_xlim(0, 90)
-    ax.set_ylim(-30, 60)
-    cfset = ax.contourf(X, Y, kde_data*1000, list(range(-levels+1,levels-1))[::2], 
-                        cmap='vlag',extend='both')
-    ax.set(xlim=(0,90) if b_hand=='R' else (90,0),
+    if color_scale_type=='Discrete':
+        cfset = ax.contourf(X, Y, kde_data*1000, list(range(-levels+1,levels-1))[::2], 
+                            cmap='vlag',extend='both')
+        ax.set(xlim=(0,90) if b_hand=='R' else (90,0),
+               xlabel='',
+               ylim=(-30,60),
+               ylabel='',
+               aspect=1)
+        ax.axhline(y=10, color='k',linewidth=1,alpha=0.25)
+        ax.axhline(y=20, color='k',linewidth=1,alpha=0.25)
+        ax.axhline(y=50, color='k',linewidth=1,alpha=0.25)
+        ax.axvline(x=30, color='k',linewidth=1,alpha=0.25)
+        ax.axvline(x=60, color='k',linewidth=1,alpha=0.25)
+    else:
+        kde_thresh=0.01
+        kde_data = pd.DataFrame(kde_data).T
+        sns.heatmap(kde_data,
+                    cmap=kde_palette,
+                    center=0,
+                    vmin=-kde_thresh,
+                    vmax=kde_thresh,
+                    cbar=False,
+                    ax=ax
+                   )
+        
+        ax.set(xlim=(0,90) if b_hand=='R' else (90,0),
            xlabel='',
-           ylim=(-30,60),
+           ylim=(0,90),
            ylabel='',
            aspect=1)
-    ax.axhline(y=10, color='k',linewidth=1,alpha=0.25)
-    ax.axhline(y=20, color='k',linewidth=1,alpha=0.25)
-    ax.axhline(y=50, color='k',linewidth=1,alpha=0.25)
-    ax.axvline(x=30, color='k',linewidth=1,alpha=0.25)
-    ax.axvline(x=60, color='k',linewidth=1,alpha=0.25)
+        ax.axhline(y=10, color='k',linewidth=1,alpha=0.25)
+        ax.axhline(y=20, color='k',linewidth=1,alpha=0.25)
+        ax.axhline(y=50, color='k',linewidth=1,alpha=0.25)
+        ax.axvline(x=30, color='k',linewidth=1,alpha=0.25)
+        ax.axvline(x=60, color='k',linewidth=1,alpha=0.25)
 
     ax.set_xticks([])
     ax.set_yticks([])
@@ -146,7 +176,7 @@ def kde_chart(kde_data,hitter,levels=13):
         ax.text((pos0 + pos1) / 2, -0.04, label, ha='center', va='top', 
                 fontsize=15, clip_on=False, transform=ax.get_xaxis_transform())
 
-    y_ticks = [-30,10,20,50,60]
+    y_ticks = [-30,10,20,50,60] if color_scale_type=='Discrete' else [0,40,50,80,90]
     y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
     # labels at the center of their range
     for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
@@ -154,7 +184,10 @@ def kde_chart(kde_data,hitter,levels=13):
                 fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
 
     bounds = [x/levels for x in range(levels)]+[1]
-    norm = mpl.colors.BoundaryNorm(bounds, sns.color_palette('vlag', as_cmap=True).N)
+    if color_scale_type=='Discrete':
+        norm = mpl.colors.BoundaryNorm(bounds, sns.color_palette('vlag', as_cmap=True).N)
+    else:
+        norm = mpl.colors.CenteredNorm()
 
     colorbar_scale = 0.8
     sm = plt.cm.ScalarMappable(norm=norm, cmap='vlag')
@@ -168,7 +201,9 @@ def kde_chart(kde_data,hitter,levels=13):
                      )
     cb.ax.axis('off')
     label_colors = [sns.color_palette('vlag',n_colors=25)[0],'k',sns.color_palette('vlag',n_colors=25)[-1]]
-    for label, deg, color in zip(['Less\nOften','Same','More\nOften'], [-24,15,53.5], label_colors):
+    for label, deg, color in zip(['Less\nOften','Same','More\nOften'], 
+                                 [-24,15,53.5] if color_scale_type=='Discrete' else [6,45,83.5], 
+                                 label_colors):
         cb.ax.text(1.115, deg, label, ha='center', va='center', color=color, 
                    fontsize=15, fontweight='medium', clip_on=False, 
                    transform=ax.get_yaxis_transform())
@@ -180,13 +215,12 @@ def kde_chart(kde_data,hitter,levels=13):
 
     apostrophe_text = "'" if hitter[-1]=='s' else "'s"
     fig.suptitle(f"{hitter}{apostrophe_text} {year} Batted Ball Profile",ha='center',x=0.45,y=0.88,fontsize=16)
-    fig.text(0.45,0.827,'(Compared to rest of MLB)',ha='center',fontsize=10)
+    fig.text(0.45,0.827,'(Compared to rest of MLB)',ha='center',fontsize=12)
     fig.text(-0.06,0.116,'batted-ball-charts.streamlit.app',ha='left',fontsize=6)
     fig.text(0.83,0.115,'@blandalytics',ha='center',fontsize=10)
     fig.text(-0.065,0.1,'Data: Baseball Savant/pybaseball',ha='left',fontsize=6)
 
     sns.despine()
     st.pyplot(fig)
-
-kde_chart(kde_calc(bbe_df,player),player)
+kde_chart(kde_calc(bbe_df,player),player,color_scale_type)
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
