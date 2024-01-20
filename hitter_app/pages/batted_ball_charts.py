@@ -160,11 +160,11 @@ def kde_chart(kde_data,hitter,color_scale_type='Discrete'):
            ylim=(0,90),
            ylabel='',
            aspect=1)
-        ax.axhline(y=10, color='k',linewidth=1,alpha=0.25)
-        ax.axhline(y=20, color='k',linewidth=1,alpha=0.25)
-        ax.axhline(y=50, color='k',linewidth=1,alpha=0.25)
-        ax.axvline(x=30, color='k',linewidth=1,alpha=0.25)
-        ax.axvline(x=60, color='k',linewidth=1,alpha=0.25)
+        ax.axhline(y=40, color='k', linewidth=1, alpha=0.25)
+        ax.axhline(y=50, color='k', linewidth=1, alpha=0.25)
+        ax.axhline(y=80, color='k', linewidth=1, alpha=0.25)
+        ax.axvline(x=30, color='k', linewidth=1, alpha=0.25)
+        ax.axvline(x=60, color='k', linewidth=1, alpha=0.25)
 
     ax.set_xticks([])
     ax.set_yticks([])
