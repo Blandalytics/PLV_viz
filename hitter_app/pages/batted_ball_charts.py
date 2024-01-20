@@ -1,4 +1,5 @@
 import streamlit as st
+st.set_page_config(page_title='Batted Ball Charts')
 import math
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -182,6 +183,6 @@ def kde_chart(kde_data,hitter,levels=13):
     fig.text(0.45,0.84,'(Compared to rest of MLB)',ha='center',fontsize=12)
 
     sns.despine()
-    st.pyplot(fig)
+    st.pyplot(fig,use_container_width=False)
 
 kde_chart(kde_calc(bbe_df,player),player)
