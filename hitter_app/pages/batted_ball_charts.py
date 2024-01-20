@@ -189,3 +189,4 @@ def kde_chart(kde_data,hitter,levels=13):
     st.pyplot(fig)
 
 kde_chart(kde_calc(bbe_df,player),player)
+st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
