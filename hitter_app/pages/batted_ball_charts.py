@@ -12,6 +12,9 @@ from PIL import Image
 from scipy import stats
 from statsmodels.nonparametric.kernel_regression import KernelReg
 
+st.title('Batted Ball Charts')
+st.write("Charts compare a hitter's batted ball distribution against the MLB distribution")
+
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
