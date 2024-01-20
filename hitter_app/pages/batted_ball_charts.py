@@ -180,4 +180,4 @@ def kde_chart(kde_data,hitter,levels=13):
     sns.despine()
     st.pyplot(fig)
 
-kde_chart(kde_calcs(bbe_df,player),player)
+kde_chart(kde_calc(bbe_df,player),player)
