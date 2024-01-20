@@ -150,7 +150,7 @@ def kde_chart(kde_data,hitter,levels=13):
     y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
     # labels at the center of their range
     for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
-        ax.text(-0.13, (pos0 + pos1) / 2, label, ha='center', va='center', 
+        ax.text(-0.14, (pos0 + pos1) / 2, label, ha='center', va='center', 
                 fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
 
     bounds = [x/levels for x in range(levels)]+[1]
