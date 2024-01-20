@@ -14,7 +14,7 @@ from scipy import stats
 from statsmodels.nonparametric.kernel_regression import KernelReg
 
 st.title('Batted Ball Charts')
-st.write("Charts compare a hitter's batted ball distribution against the MLB distribution")
+st.write("These charts compare a hitter's batted ball distribution\nto the distribution of all MLB batted balls")
 
 ## Set Styling
 # Plot Style
