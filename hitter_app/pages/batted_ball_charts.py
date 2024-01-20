@@ -87,6 +87,8 @@ def load_data(year):
 
 bbe_df, f_league = load_data(year)
 
+X, Y = np.mgrid[0:90:91j, -30:60:91j]
+
 players = list(bbe_df
                .reset_index()
                .sort_values('hittername')
