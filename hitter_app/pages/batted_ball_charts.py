@@ -114,7 +114,7 @@ def kde_calc(df,hitter,year=year,league_vals=f_league):
     return f_player - league_vals
 
 def kde_chart(kde_data,hitter,levels=13):
-    b_hand = pitch_data.loc[pitch_data['hittername']==hitter,'stand'].value_counts().index[0]
+    b_hand = bbe_df.loc[bbe_df['hittername']==hitter,'stand'].value_counts().index[0]
     fig, ax = plt.subplots(figsize=(6,6))
     ax.set_xlim(0, 90)
     ax.set_ylim(-30, 60)
