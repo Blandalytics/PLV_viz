@@ -183,6 +183,6 @@ def kde_chart(kde_data,hitter,levels=13):
     fig.text(0.45,0.83,'(Compared to rest of MLB)',ha='center',fontsize=10)
 
     sns.despine()
-    st.pyplot(fig,use_container_width=False)
+    st.pyplot(fig)
 
 kde_chart(kde_calc(bbe_df,player),player)
