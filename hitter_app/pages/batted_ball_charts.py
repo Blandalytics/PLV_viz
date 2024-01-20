@@ -52,7 +52,7 @@ year = st.radio('Choose a year:', years)
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
     pitch_data = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df.csv?raw=true', encoding='latin1')
-    return (
+    bbe_df = (
       pitch_data
       .loc[(pitch_data['spray_deg']>=0) &
              (pitch_data['spray_deg']<=90) &
@@ -66,7 +66,26 @@ def load_data(year):
         .copy()
     )
 
-bbe_df = load_data(year)
+    x_loc_league = bbe_df['spray_deg']
+    y_loc_league = bbe_df['launch_angle']
+    
+    xmin = x_loc_league.min()
+    xmax = x_loc_league.max()
+    ymin = y_loc_league.min()
+    ymax = y_loc_league.max()
+    
+    X, Y = np.mgrid[xmin:xmax:91j, ymin:ymax:91j]
+    positions = np.vstack([X.ravel(), Y.ravel()])
+    
+    # league matrix
+    values_league = np.vstack([x_loc_league, y_loc_league])
+    kernel_league = sp.stats.gaussian_kde(values_league)
+    f_league = np.reshape(kernel_league(positions).T, X.shape)
+    f_league = f_league * (100/f_league.sum())
+  
+    return bbe_df, f_league
+
+bbe_df, f_league = load_data(year)
 
 players = list(bbe_df
                .reset_index()
@@ -75,23 +94,6 @@ players = list(bbe_df
               )
 default_ix = players.index('Ronald Acuña Jr.')
 player = st.selectbox('Choose a player:', players, index=default_ix)
-
-x_loc_league = bbe_df['spray_deg']
-y_loc_league = bbe_df['launch_angle']
-
-xmin = x_loc_league.min()
-xmax = x_loc_league.max()
-ymin = y_loc_league.min()
-ymax = y_loc_league.max()
-
-X, Y = np.mgrid[xmin:xmax:91j, ymin:ymax:91j]
-positions = np.vstack([X.ravel(), Y.ravel()])
-
-# league matrix
-values_league = np.vstack([x_loc_league, y_loc_league])
-kernel_league = sp.stats.gaussian_kde(values_league)
-f_league = np.reshape(kernel_league(positions).T, X.shape)
-f_league = f_league * (100/f_league.sum())
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
     x_loc_player = df.loc[df['hittername']==hitter,'spray_deg']
