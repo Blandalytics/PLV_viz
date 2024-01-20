@@ -174,14 +174,14 @@ def kde_chart(kde_data,hitter,levels=13):
                    transform=ax.get_yaxis_transform())
 
     # Add PL logo
-    pl_ax = fig.add_axes([-0.035,0.09,0.2,0.2], anchor='SW', zorder=1)
+    pl_ax = fig.add_axes([-0.035,0.12,0.15,0.15], anchor='SW', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
     apostrophe_text = "'" if hitter[-1]=='s' else "'s"
     fig.suptitle(f"{hitter}{apostrophe_text} {year} Batted Ball Profile",ha='center',x=0.45,y=0.88,fontsize=16)
     fig.text(0.45,0.827,'(Compared to rest of MLB)',ha='center',fontsize=12)
-    fig.text(-0.06,0.09,'batted-ball-charts.streamlit.app',ha='left',fontsize=8)
+    fig.text(-0.06,0.115,'batted-ball-charts.streamlit.app',ha='left',fontsize=6)
 
     sns.despine()
     st.pyplot(fig)
