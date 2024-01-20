@@ -173,7 +173,7 @@ def kde_chart(kde_data,hitter,levels=13):
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
-    apostrophe_text = "'" if card_player[-1]=='s' else "'s"
+    apostrophe_text = "'" if hitter[-1]=='s' else "'s"
     fig.suptitle(f"{hitter}{apostrophe_text}\n{year} Batted Ball Profile",ha='center',x=0.45,y=0.95,fontsize=18)
     fig.text(0.45,0.84,'(Compared to rest of MLB)',ha='center',fontsize=12)
 
