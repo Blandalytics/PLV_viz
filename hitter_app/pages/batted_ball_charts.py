@@ -180,7 +180,7 @@ def kde_chart(kde_data,hitter,levels=13):
 
     apostrophe_text = "'" if hitter[-1]=='s' else "'s"
     fig.suptitle(f"{hitter}{apostrophe_text} {year} Batted Ball Profile",ha='center',x=0.45,y=0.88,fontsize=16)
-    fig.text(0.45,0.83,'(Compared to rest of MLB)',ha='center',fontsize=12)
+    fig.text(0.45,0.827,'(Compared to rest of MLB)',ha='center',fontsize=12)
 
     sns.despine()
     st.pyplot(fig)
