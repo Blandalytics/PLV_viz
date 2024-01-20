@@ -71,7 +71,7 @@ bbe_df = load_data(year)
 players = list(bbe_df
                .reset_index()
                .sort_values('hittername')
-               ['hittername']
+               ['hittername'].unique()
               )
 default_ix = players.index('Ronald Acuña Jr.')
 player = st.selectbox('Choose a player:', players, index=default_ix)
@@ -114,8 +114,8 @@ def kde_calc(df,hitter,year=year,league_vals=f_league):
     return f_player - league_vals
 
 def kde_chart(kde_data,hitter,levels=13):
-    b_hand = bbe_df.loc[bbe_df['hittername']==hitter,'stand'].value_counts().index[0]
-    fig, ax = plt.subplots(figsize=(7,7))
+    b_hand = pitch_data.loc[pitch_data['hittername']==hitter,'stand'].value_counts().index[0]
+    fig, ax = plt.subplots(figsize=(6,6))
     ax.set_xlim(0, 90)
     ax.set_ylim(-30, 60)
     cfset = ax.contourf(X, Y, kde_data*1000, list(range(-levels+1,levels-1))[::2], 
@@ -139,14 +139,14 @@ def kde_chart(kde_data,hitter,levels=13):
     # labels at the center of their range
     for label, pos0, pos1 in zip(x_labels, x_ticks[:-1], x_ticks[1:]):
         ax.text((pos0 + pos1) / 2, -0.02, label, ha='center', va='top', 
-                fontsize=15, clip_on=False, transform=ax.get_xaxis_transform())
+                fontsize=14, clip_on=False, transform=ax.get_xaxis_transform())
 
     y_ticks = [-30,10,20,50,60]
     y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
     # labels at the center of their range
     for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
-        ax.text(-0.13, (pos0 + pos1) / 2, label, ha='center', va='center', 
-                fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
+        ax.text(-0.14, (pos0 + pos1) / 2, label, ha='center', va='center', 
+                fontsize=14, clip_on=False, transform=ax.get_yaxis_transform())
 
     bounds = [x/levels for x in range(levels)]+[1]
     norm = mpl.colors.BoundaryNorm(bounds, sns.color_palette('vlag', as_cmap=True).N)
@@ -173,8 +173,8 @@ def kde_chart(kde_data,hitter,levels=13):
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
-    apostrophe_text = "'" if hitter[-1]=='s' else "'s"
-    fig.suptitle(f"{hitter}{apostrophe_text} {year} Batted Ball Profile",ha='center',x=0.45,y=0.9,fontsize=18)
+    apostrophe_text = "'" if card_player[-1]=='s' else "'s"
+    fig.suptitle(f"{hitter}{apostrophe_text}\n{year} Batted Ball Profile",ha='center',x=0.45,y=0.95,fontsize=18)
     fig.text(0.45,0.84,'(Compared to rest of MLB)',ha='center',fontsize=12)
 
     sns.despine()
