@@ -19,4 +19,7 @@ date_range = st.slider(
     min_value=test_df['game_played'].min(),
     max_value=test_df['game_played'].max(),
     format="MM/DD")
-st.write(f'Range selected:{date_range}')
+min_date = date_range[0]
+max_date = date_range[1]
+pitches = test_df.loc[(test_df['game_played']>=min_date) & (test_df['game_played']<=max_date)].shape[0]
+st.write(f'Pitch count: {pitches}')
