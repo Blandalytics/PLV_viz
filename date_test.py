@@ -12,6 +12,7 @@ from collections import Counter
 from scipy import stats
 
 test_df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/date_pitch_map.parquet?raw=true')
+st.write(test_df.dtypes)
 date_range = st.slider(
     "Date range:",
     value=(test_df['game_played'].min(), 
