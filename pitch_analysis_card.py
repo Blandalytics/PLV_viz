@@ -121,6 +121,7 @@ def load_data(year):
           .query(f'pitchtype not in {["KN","SC","UN"]}')
           .reset_index(drop=True)
          )
+    df['game_played'] = df['pitch_id'].map(pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/date_pitch_map.parquet?raw=true').set_index('pitch_id').to_dict()['game_played'])
     
     return df
 
