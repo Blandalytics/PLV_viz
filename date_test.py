@@ -1,4 +1,5 @@
 import streamlit as st
+import datetime as dt
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,11 +8,13 @@ import seaborn as sns
 import scipy as sp
 import urllib
 
+from datetime import time
 from PIL import Image
 from collections import Counter
 from scipy import stats
 
 test_df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/date_pitch_map.parquet?raw=true')
+test_df['game_played'] = pd.to_datetime(test_df['game_played']).dt.date
 st.write(test_df.dtypes)
 date_range = st.slider(
     "Date range:",
