@@ -15,7 +15,12 @@ from scipy import stats
 
 test_df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/date_pitch_map.parquet?raw=true')
 test_df['game_played'] = pd.to_datetime(test_df['game_played']).dt.date
+test_df['year_played'] = test_df['game_played'].dt.year
 st.write(test_df.dtypes)
+years = [2023,2022,2021,2020]
+year = st.radio('Choose a year:', years)
+test_df = test_df.loc[test_df['year_played']==year].copy()
+
 date_range = st.slider(
     "Date range:",
     value=(test_df['game_played'].min(), 
@@ -23,7 +28,4 @@ date_range = st.slider(
     min_value=test_df['game_played'].min(),
     max_value=test_df['game_played'].max(),
     format="MM/DD")
-min_date = date_range[0]
-max_date = date_range[1]
-pitches = test_df.loc[(test_df['game_played']>=min_date) & (test_df['game_played']<=max_date)].shape[0]
-st.write(f'Pitch count: {pitches}')
+st.dataframe(test_df.loctest_df.loc[(test_df['game_played']>=date_range[0]) & (test_df['game_played']<=date_range[1])])
