@@ -15,7 +15,7 @@ from scipy import stats
 
 test_df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/date_pitch_map.parquet?raw=true')
 test_df['game_played'] = pd.to_datetime(test_df['game_played']).dt.date
-test_df['year_played'] = test_df['game_played'].dt.year
+test_df['year_played'] = test_df['game_played'].year
 st.write(test_df.dtypes)
 years = [2023,2022,2021,2020]
 year = st.radio('Choose a year:', years)
