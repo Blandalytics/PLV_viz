@@ -35,12 +35,12 @@ season_end = test_df['game_played'].max()
 
 col1, col2 = st.columns(2)
 with col1:
-    start_date = st.date_input("Timeframe Start", season_start,
+    start_date = st.date_input("Date Start", season_start,
                                min_value=season_start,
                                max_value=season_end,
                                format="MM/DD/YYYY")
 with col2:
-    end_date = st.date_input("Timeframe End", season_end,
+    end_date = st.date_input("Date End", season_end,
                              min_value=season_start,
                              max_value=season_end,
                              format="MM/DD/YYYY")
