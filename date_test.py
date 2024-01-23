@@ -28,7 +28,7 @@ date_range = st.slider(
     min_value=test_df['game_played'].min(),
     max_value=test_df['game_played'].max(),
     format="MM/DD")
-st.write(f'Date range: {date_range[0]:%d/%m/%Y} - {date_range[1]:%d/%m/%Y}')
+st.write(f'Date range: {date_range[0]:%m/%d/%Y} - {date_range[1]:%m/%d/%Y}')
 
 col1, col2 = st.columns(2)
 with col1:
@@ -36,4 +36,4 @@ with col1:
 with col2:
     end_date = st.date_input("Timeframe End", test_df['game_played'].max())
 
-st.write(f'Date range: {start_date:%d/%m/%Y} - {end_date:%d/%m/%Y}')
+st.write(f'Date range: {start_date:%m/%d/%Y} - {end_date:%m/%d/%Y}')
