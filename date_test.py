@@ -30,7 +30,7 @@ date_range = st.slider(
     format="MM/DD")
 st.write(f'Date range: {date_range[0]}-{date_range[1]}')
 
-st.columns(2)
+col1, col2 = st.columns(2)
 with col1:
     start_date = st.date_input("Timeframe Start", test_df['game_played'].min())
 with col2:
