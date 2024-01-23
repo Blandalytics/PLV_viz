@@ -45,4 +45,4 @@ with col2:
                              max_value=season_end,
                              format="MM/DD/YYYY")
 
-st.write(f'Date range: {start_date:%m/%d} - {end_date:%m/%d}')
+st.write(f'Date range: {start_date:%-m/%d} - {end_date:%-m/%d}')
