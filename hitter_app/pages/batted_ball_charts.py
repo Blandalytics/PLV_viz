@@ -246,8 +246,8 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     st.pyplot(fig)
 
 if comparison=='Self':
-    if year_before_df.loc[year_before_df['hittername']==card_player].shape[0]==0:
-        st,write(f'No data on {card_player} for {year-1}')
+    if year_before_df.loc[year_before_df['hittername']==player].shape[0]==0:
+        st,write(f'No data on {player} for {year-1}')
     else:
         xmin = 0
         xmax = 90
