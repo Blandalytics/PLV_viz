@@ -212,7 +212,7 @@ date_range = st.slider(
            season_end),
     min_value=season_start,
     max_value=season_end,
-    format="MM/DD")
+    format="MM/DD/YYYY")
 
 # col1, col2 = st.columns(2)
 # with col1:
