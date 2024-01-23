@@ -169,21 +169,6 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
     return kde_diffs
 
 pitch_df = load_data(year)
-season_start = pitch_df['game_played'].min()
-season_end = pitch_df['game_played'].max()
-
-col1, col2 = st.columns(2)
-with col1:
-    start_date = st.date_input("Start Date (test)", season_start,
-                               min_value=season_start,
-                               max_value=season_end,
-                               format="MM/DD/YYYY")
-with col2:
-    end_date = st.date_input("End Date (test)", season_end,
-                             min_value=season_start,
-                             max_value=season_end,
-                             format="MM/DD/YYYY")
-
 pitch_thresh = 10
 
 # Has at least 1 pitch with at least 50 thrown
@@ -218,7 +203,21 @@ with col3:
     charts = ['Bar','Violin']
     chart_type = st.selectbox('Choose a chart style:', charts)
 
-# st.write(_pitches)
+season_start = pitch_df['game_played'].min()
+season_end = pitch_df['game_played'].max()
+
+col1, col2 = st.columns(2)
+with col1:
+    start_date = st.date_input("Start Date (test)", season_start,
+                               min_value=season_start,
+                               max_value=season_end,
+                               format="MM/DD/YYYY")
+with col2:
+    end_date = st.date_input("End Date (test)", season_end,
+                             min_value=season_start,
+                             max_value=season_end,
+                             format="MM/DD/YYYY")
+
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
 def pitch_analysis_card(card_player,pitch_type,chart_type):
