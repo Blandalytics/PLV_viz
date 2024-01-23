@@ -263,7 +263,7 @@ if comparison=='Self':
     f_before = np.reshape(kernel_before(positions).T, X.shape)
     f_before = f_before * (100/f_before.sum())
 
-    kde_chart(kde_calcs(bbe_df,player,
+    kde_chart(kde_calc(bbe_df,player,
                         league_vals=f_before),
               player,
               color_scale_type,
