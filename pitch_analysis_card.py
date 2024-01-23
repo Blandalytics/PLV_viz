@@ -597,7 +597,9 @@ def kde_chart(kde_data,p_hand=p_hand,kde_thresh=0.1):
   
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     fig.suptitle(f"{card_player}{apostrophe_text} {year} {pitch_names[pitch_type]} Locations",ha='center',y=1, fontsize=18)
-    fig.text(0.5,0.88,"(From Pitcher's Perspective; Relative to MLB)\n\n",ha='center',va='bottom')
+    date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
+    fig.text(0.5,0.88,f"({date_text}From Pitcher's Perspective; Relative to MLB)\n\n", ha='center', va='bottom')
+    # fig.text(0.5,0.88,"(From Pitcher's Perspective; Relative to MLB)\n\n",ha='center',va='bottom')
     sns.despine(left=True,bottom=True)
 
     # Add PL logo
