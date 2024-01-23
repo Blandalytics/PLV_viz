@@ -206,17 +206,25 @@ with col3:
 season_start = pitch_df['game_played'].min()
 season_end = pitch_df['game_played'].max()
 
-col1, col2 = st.columns(2)
-with col1:
-    start_date = st.date_input("Start Date (test)", season_start,
-                               min_value=season_start,
-                               max_value=season_end,
-                               format="MM/DD/YYYY")
-with col2:
-    end_date = st.date_input("End Date (test)", season_end,
-                             min_value=season_start,
-                             max_value=season_end,
-                             format="MM/DD/YYYY")
+date_range = st.slider(
+    "Date range (test)",
+    value=(season_start, 
+           season_end),
+    min_value=season_start,
+    max_value=season_end,
+    format="MM/DD")
+
+# col1, col2 = st.columns(2)
+# with col1:
+#     start_date = st.date_input("Start Date (test)", season_start,
+#                                min_value=season_start,
+#                                max_value=season_end,
+#                                format="MM/DD/YYYY")
+# with col2:
+#     end_date = st.date_input("End Date (test)", season_end,
+#                              min_value=season_start,
+#                              max_value=season_end,
+#                              format="MM/DD/YYYY")
 
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
