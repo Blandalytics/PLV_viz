@@ -42,4 +42,4 @@ with col2:
                              max_value=test_df['game_played'].max(),
                              format="MM/DD/YYYY")
 
-st.write(f'Date range: {start_date:%m/%d/%Y} - {end_date:%m/%d/%Y}')
+st.write(f'Date range: {start_date:%b/%d} - {end_date:%b/%d}')
