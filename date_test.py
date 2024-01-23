@@ -28,4 +28,4 @@ date_range = st.slider(
     min_value=test_df['game_played'].min(),
     max_value=test_df['game_played'].max(),
     format="MM/DD")
-st.dataframe(test_df.loctest_df.loc[(test_df['game_played']>=date_range[0]) & (test_df['game_played']<=date_range[1])])
+st.dataframe(test_df.loc[(test_df['game_played']>=date_range[0]) & (test_df['game_played']<=date_range[1])])
