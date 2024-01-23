@@ -169,6 +169,20 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
     return kde_diffs
 
 pitch_df = load_data(year)
+season_start = pitch_df['game_played'].min()
+season_end = pitch_df['game_played'].max()
+
+col1, col2 = st.columns(2)
+with col1:
+    start_date = st.date_input("Start Date (test)", season_start,
+                               min_value=season_start,
+                               max_value=season_end,
+                               format="MMM D")
+with col2:
+    end_date = st.date_input("End Date (test)", season_end,
+                             min_value=season_start,
+                             max_value=season_end,
+                             format="MMM D")
 
 pitch_thresh = 10
 
