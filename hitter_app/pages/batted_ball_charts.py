@@ -246,6 +246,14 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     st.pyplot(fig)
 
 if comparison=='Self':
+    xmin = 0
+    xmax = 90
+    ymin = -30
+    ymax = 60
+
+    X, Y = np.mgrid[xmin:xmax:91j, ymin:ymax:91j]
+    positions = np.vstack([X.ravel(), Y.ravel()])
+    
     x_loc_before = year_before_df.loc[year_before_df['hittername']==player,'spray_deg']
     y_loc_before = year_before_df.loc[year_before_df['hittername']==player,'launch_angle']
 
