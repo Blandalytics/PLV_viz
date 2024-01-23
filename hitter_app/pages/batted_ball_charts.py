@@ -246,28 +246,31 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     st.pyplot(fig)
 
 if comparison=='Self':
-    xmin = 0
-    xmax = 90
-    ymin = -30
-    ymax = 60
-
-    X, Y = np.mgrid[xmin:xmax:91j, ymin:ymax:91j]
-    positions = np.vstack([X.ravel(), Y.ravel()])
+    if year_before_df.loc[year_before_df['hittername']==card_player].shape[0]==0:
+        st,write(f'No data on {card_player} for {year-1}')
+    else:
+        xmin = 0
+        xmax = 90
+        ymin = -30
+        ymax = 60
     
-    x_loc_before = year_before_df.loc[year_before_df['hittername']==player,'spray_deg']
-    y_loc_before = year_before_df.loc[year_before_df['hittername']==player,'launch_angle']
-
-    # league matrix
-    values_before = np.vstack([x_loc_before, y_loc_before])
-    kernel_before = sp.stats.gaussian_kde(values_before)
-    f_before = np.reshape(kernel_before(positions).T, X.shape)
-    f_before = f_before * (100/f_before.sum())
-
-    kde_chart(kde_calc(bbe_df,player,
-                        league_vals=f_before),
-              player,
-              color_scale_type,
-              comparison)
+        X, Y = np.mgrid[xmin:xmax:91j, ymin:ymax:91j]
+        positions = np.vstack([X.ravel(), Y.ravel()])
+        
+        x_loc_before = year_before_df.loc[year_before_df['hittername']==player,'spray_deg']
+        y_loc_before = year_before_df.loc[year_before_df['hittername']==player,'launch_angle']
+    
+        # league matrix
+        values_before = np.vstack([x_loc_before, y_loc_before])
+        kernel_before = sp.stats.gaussian_kde(values_before)
+        f_before = np.reshape(kernel_before(positions).T, X.shape)
+        f_before = f_before * (100/f_before.sum())
+    
+        kde_chart(kde_calc(bbe_df,player,
+                            league_vals=f_before),
+                  player,
+                  color_scale_type,
+                  comparison)
 else:
     kde_chart(kde_calc(bbe_df,player),
               player,
