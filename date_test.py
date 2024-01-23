@@ -32,8 +32,10 @@ st.write(f'Date range: {date_range[0]:%m/%d/%Y} - {date_range[1]:%m/%d/%Y}')
 
 col1, col2 = st.columns(2)
 with col1:
-    start_date = st.date_input("Timeframe Start", test_df['game_played'].min())
+    start_date = st.date_input("Timeframe Start", test_df['game_played'].min(),
+                               format="MM/DD/YYYY")
 with col2:
-    end_date = st.date_input("Timeframe End", test_df['game_played'].max())
+    end_date = st.date_input("Timeframe End", test_df['game_played'].max(),
+                               format="MM/DD/YYYY")
 
 st.write(f'Date range: {start_date:%m/%d/%Y} - {end_date:%m/%d/%Y}')
