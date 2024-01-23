@@ -121,8 +121,10 @@ with col2:
     color_scale_type = st.selectbox('Choose a color scale:', color_scales)
 with col3:
     # Comparison
-    comparisons = ['League','Self']
+    comparisons = ['League','Self (prior year)']
     comparison = st.selectbox('Compared to:', comparisons)
+    if comparison=='Self (prior year)':
+        comparison = 'Self'
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
     x_loc_player = df.loc[df['hittername']==hitter,'spray_deg']
