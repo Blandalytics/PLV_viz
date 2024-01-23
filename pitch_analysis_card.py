@@ -177,12 +177,12 @@ with col1:
     start_date = st.date_input("Start Date (test)", season_start,
                                min_value=season_start,
                                max_value=season_end,
-                               format="MMM D")
+                               format="MM/DD/YYYY")
 with col2:
     end_date = st.date_input("End Date (test)", season_end,
                              min_value=season_start,
                              max_value=season_end,
-                             format="MMM D")
+                             format="MM/DD/YYYY")
 
 pitch_thresh = 10
 
