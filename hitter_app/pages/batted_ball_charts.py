@@ -67,6 +67,20 @@ def load_data(year):
         .copy()
     )
 
+    year_before_df = (
+      pitch_data
+      .loc[(pitch_data['spray_deg']>=0) &
+             (pitch_data['spray_deg']<=90) &
+             (pitch_data['launch_angle']>=-30) &
+             (pitch_data['launch_angle']<=60) &
+             (pitch_data['game_year']==year-1)]
+      [['hittername','stand','spray_deg','launch_angle']]
+      .astype({'spray_deg':'float',
+               'launch_angle':'int'})
+      .dropna(subset=['spray_deg','launch_angle'])
+      .copy()
+      )
+
     x_loc_league = bbe_df['spray_deg']
     y_loc_league = bbe_df['launch_angle']
     
@@ -84,13 +98,13 @@ def load_data(year):
     f_league = np.reshape(kernel_league(positions).T, X.shape)
     f_league = f_league * (100/f_league.sum())
   
-    return bbe_df, f_league
+    return bbe_df, f_league, year_before_df
 
-bbe_df, f_league = load_data(year)
+bbe_df, f_league, year_before_df = load_data(year)
 
 X, Y = np.mgrid[0:90:91j, -30:60:91j]
 
-col1, col2 = st.columns([0.7,0.3])
+col1, col2, col3 = st.columns([0.5,0.25,0.25])
 
 with col1:
     # Player
@@ -105,6 +119,10 @@ with col2:
     # Color Scale
     color_scales = ['Discrete','Continuous']
     color_scale_type = st.selectbox('Choose a color scale:', color_scales)
+with col3:
+    # Comparison
+    comparisons = ['League','Self']
+    comparison = st.selectbox('Compared to:', comparisons)
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
     x_loc_player = df.loc[df['hittername']==hitter,'spray_deg']
@@ -126,7 +144,9 @@ def kde_calc(df,hitter,year=year,league_vals=f_league):
 
     return f_player - league_vals
 
-def kde_chart(kde_data,hitter,color_scale_type='Discrete'):
+def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
+    if (year==2020) & (comparison=='Self'):
+        st.write("No data for comparison year (2019).\nPlease select a year above 2020.")
     levels=13
     b_hand = bbe_df.loc[bbe_df['hittername']==hitter,'stand'].value_counts().index[0]
     fig, ax = plt.subplots(figsize=(7,7))
@@ -214,13 +234,34 @@ def kde_chart(kde_data,hitter,color_scale_type='Discrete'):
     pl_ax.axis('off')
 
     apostrophe_text = "'" if hitter[-1]=='s' else "'s"
-    fig.suptitle(f"{hitter}{apostrophe_text} {year} Batted Ball Profile",ha='center',x=0.45,y=0.88,fontsize=16)
-    fig.text(0.45,0.827,'(Compared to rest of MLB)',ha='center',fontsize=12)
+    fig.suptitle(f"{hitter}{apostrophe_text} {year} Batted Ball Profile" if comparison=='League' else f'{hitter}{apostrophe_text} Batted Ball Difference',
+                 ha='center',x=0.45,y=0.88,fontsize=16)
+    fig.text(0.45,0.827,'(Compared to rest of MLB)' if comparison=='League' else f'({year}, compared to {year-1})',
+             ha='center',fontsize=12)
     fig.text(-0.06,0.116,'batted-ball-charts.streamlit.app',ha='left',fontsize=6)
     fig.text(0.83,0.115,'@blandalytics',ha='center',fontsize=10)
     fig.text(-0.065,0.1,'Data: Baseball Savant/pybaseball',ha='left',fontsize=6)
 
     sns.despine()
     st.pyplot(fig)
-kde_chart(kde_calc(bbe_df,player),player,color_scale_type)
+
+if comparison=='Self':
+    x_loc_before = year_before_df.loc[year_before_df['hittername']==player,'spray_deg']
+    y_loc_before = year_before_df.loc[year_before_df['hittername']==player,'launch_angle']
+
+    # league matrix
+    values_before = np.vstack([x_loc_before, y_loc_before])
+    kernel_before = sp.stats.gaussian_kde(values_before)
+    f_before = np.reshape(kernel_before(positions).T, X.shape)
+    f_before = f_before * (100/f_before.sum())
+
+    kde_chart(kde_calcs(bbe_df,player,
+                        league_vals=f_before),
+              player,
+              color_scale_type,
+              comparison)
+else:
+    kde_chart(kde_calc(bbe_df,player),
+              player,
+              color_scale_type)
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
