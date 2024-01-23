@@ -169,11 +169,11 @@ def kde_calcs(df,pitcher,pitchtype,year=year):
         kde_diffs += [pd.DataFrame(f_pitcher-f_league).T]
     return kde_diffs
 
-pitch_df = load_data(year)
+base_df = load_data(year)
 pitch_thresh = 10
 
 # Has at least 1 pitch with at least 50 thrown
-pitcher_list = list(pitch_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query(f'pitch_id >={pitch_thresh}')['pitchername'].sort_values().unique())
+pitcher_list = list(base_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query(f'pitch_id >={pitch_thresh}')['pitchername'].sort_values().unique())
 
 col1, col2, col3 = st.columns([0.4,0.4,0.2])
 
@@ -184,8 +184,8 @@ with col1:
 
 with col2:
     # Pitch
-    pitches = (pitch_df
-     .loc[pitch_df['pitchername']==card_player,'pitchtype']
+    pitches = (base_df
+     .loc[base_df['pitchername']==card_player,'pitchtype']
      .map(pitch_names)
      .value_counts(normalize=True)
      .where(lambda x : x>0.005)
@@ -196,7 +196,7 @@ with col2:
     select_list = []
     for pitch in pitches.keys():
         select_list += [f'{pitch} ({pitches[pitch]:.1%})']
-    pitch_type = st.selectbox('Choose a pitch (usage):', select_list)
+    pitch_type = st.selectbox('Choose a pitch (season usage):', select_list)
     pitch_type = pitch_type.split('(')[0][:-1]
   
 with col3:
@@ -204,16 +204,8 @@ with col3:
     charts = ['Bar','Violin']
     chart_type = st.selectbox('Choose a chart style:', charts)
 
-season_start = pitch_df['game_played'].min()
-season_end = pitch_df['game_played'].max()
-
-# date_range = st.slider(
-#     "Date range (test)",
-#     value=(season_start, 
-#            season_end),
-#     min_value=season_start,
-#     max_value=season_end,
-#     format="MM/DD/YYYY")
+season_start = base_df.loc[base_df['pitchername']==card_player,'game_played'].min()
+season_end = base_df.loc[base_df['pitchername']==card_player,'game_played'].max()
 
 col1, col2 = st.columns(2)
 with col1:
@@ -229,6 +221,9 @@ with col2:
 
 pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
+pitch_df = base_df.loc[(base_df['game_played']>=start_date) &
+                        (base_df['game_played']<=end_date)].copy()
+
 def pitch_analysis_card(card_player,pitch_type,chart_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
     pitch_num_thresh = max(pitch_thresh,
@@ -237,7 +232,6 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                               )
                           )
 
-    # model_df['zone_pred'] = model_df['called_strike_pred'].div(model_df[['called_strike_pred','ball_pred']].sum(axis=1))
     pitch_stats_df = (
         pitch_df
         .assign(IHB = lambda x: np.where(x['p_hand']=='R',x['IHB']*-1,x['IHB']),
