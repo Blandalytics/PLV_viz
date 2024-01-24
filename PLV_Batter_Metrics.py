@@ -155,7 +155,7 @@ season_df = (plv_df
                               'decision_value_o':'oDec Value',})
              .astype({'Name':'str'})
              .groupby('Name')
-             [['Pitches']+list(season_names.values())]
+             [['Pitches','zDec Value','oDec Value']+list(season_names.values())]
              .agg({
                  'Pitches':'count',
                  'Swing Agg (%)':'mean',
@@ -177,7 +177,7 @@ for stat in ['SZ Judge','Contact','Dec Value','zDec Value','oDec Value','Power',
 
 st.write(f'Metrics on a 20-80 scale. Table is sortable.')
 
-st.dataframe(season_df
+st.dataframe(season_df[['Pitches','SZ Judge','Dec Value','zDec Value','oDec Value','Contact','Power','HP']]
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
