@@ -124,6 +124,13 @@ def load_season_data(year):
     df['decision_value'] = df['decision_value'].div(seasonal_constants.loc[year]['run_constant']).mul(100)
     df['batter_wOBA'] = df['batter_wOBA'].div(seasonal_constants.loc[year]['run_constant']).mul(100)
     
+    df['zone'] = 1
+    df.loc[(df['p_x'].abs()>10/12) | 
+            (df['sz_z'].abs()>0.5),'zone'] = 0
+
+    df['decision_value_z'] = np.where(df['zone'==1,df['decision_value'],None)
+    df['decision_value_o'] = np.where(df['zone'==0,df['decision_value'],None)
+    
     df['count'] = df['balls'].astype('str')+'-'+df['strikes'].astype('str')
     
     return df
@@ -143,7 +150,9 @@ pitch_thresh = st.number_input(f'Min # of Pitches faced:',
 season_df = (plv_df
              .rename(columns=season_names)
              .rename(columns={'hittername':'Name',
-                              'pitch_id':'Pitches'})
+                              'pitch_id':'Pitches',
+                              'decision_value_z':'zDec Value',
+                              'decision_value_o':'oDec Value',})
              .astype({'Name':'str'})
              .groupby('Name')
              [['Pitches']+list(season_names.values())]
@@ -152,6 +161,8 @@ season_df = (plv_df
                  'Swing Agg (%)':'mean',
                  'SZ Judge':'mean',
                  'Dec Value':'mean',
+                 'zDec Value':'mean',
+                 'oDec Value':'mean',
                  'Contact':'mean',
                  'Power':'mean',
                  'HP':'mean'
@@ -160,7 +171,7 @@ season_df = (plv_df
              .sort_values('HP', ascending=False)
             )
 
-for stat in ['SZ Judge','Contact','Dec Value','Power','HP']:
+for stat in ['SZ Judge','Contact','Dec Value','zDec Value','oDec Value','Power','HP']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat].fillna(50), a_min=20, a_max=80).astype('int')
 
@@ -170,8 +181,8 @@ st.dataframe(season_df
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
-                                  subset=['SZ Judge','Dec Value','Contact',
-                                          'Power','HP']
+                                  subset=['SZ Judge','Dec Value','zDec Value','oDec Value',
+                                          'Contact','Power','HP']
                                  ) 
             )
 
