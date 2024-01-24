@@ -128,8 +128,8 @@ def load_season_data(year):
     df.loc[(df['p_x'].abs()>10/12) | 
             (df['sz_z'].abs()>0.5),'zone'] = 0
 
-    df['decision_value_z'] = np.where(df['zone'==1,df['decision_value'],None)
-    df['decision_value_o'] = np.where(df['zone'==0,df['decision_value'],None)
+    df['decision_value_z'] = np.where(df['zone']==1,df['decision_value'],None)
+    df['decision_value_o'] = np.where(df['zone']==0,df['decision_value'],None)
     
     df['count'] = df['balls'].astype('str')+'-'+df['strikes'].astype('str')
     
