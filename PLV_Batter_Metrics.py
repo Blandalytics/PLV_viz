@@ -152,7 +152,7 @@ season_df = (plv_df
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches',
                               'decision_value_z':'zDec Value',
-                              'decision_value_o':'oDec Value',})
+                              'decision_value_o':'oDec Value'})
              .astype({'Name':'str'})
              .groupby('Name')
              [['Pitches','zDec Value','oDec Value']+list(season_names.values())]
@@ -161,8 +161,8 @@ season_df = (plv_df
                  'Swing Agg (%)':'mean',
                  'SZ Judge':'mean',
                  'Dec Value':'mean',
-                 'zDec Value':'mean',
-                 'oDec Value':'mean',
+                 'zDec Value':np.nanmean,
+                 'oDec Value':np.nanmean,
                  'Contact':'mean',
                  'Power':'mean',
                  'HP':'mean'
