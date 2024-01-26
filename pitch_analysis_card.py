@@ -152,8 +152,7 @@ with col2:
     
     select_list = []
     for pitch in pitches.keys():
-        pitch = pitch if (card_player != 'Kutter Crawford') | (pitch != 'Cutter') else 'Kutter'
-        select_list += [f'{pitch} ({pitches[pitch]:.1%})']
+        select_list += [f'{pitch} ({pitches[pitch]:.1%})'] if (card_player != 'Kutter Crawford') | (pitch != 'Cutter') else [f'Kutter ({pitches[pitch]:.1%})']
     pitch_type = st.selectbox('Choose a pitch (season usage):', select_list)
     pitch_type = pitch_type.split('(')[0][:-1]
     pitch_type = pitch_type if pitch_type != 'Kutter' else 'Cutter'
