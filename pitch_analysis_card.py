@@ -458,7 +458,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
-    fig.suptitle(f"{card_player}{apostrophe_text} {year} {pitch_names[pitch_type]}",y=0.97,fontsize=20,x=0.525)
+    fig.suptitle(f"{card_player}{apostrophe_text} {year} {adjusted_pitch_name}",y=0.97,fontsize=20,x=0.525)
     date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
     fig.text(0.525,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
     fig.text(0.77,0.07,"@Blandalytics",ha='center',fontsize=10)
