@@ -152,9 +152,11 @@ with col2:
     
     select_list = []
     for pitch in pitches.keys():
+        pitch = pitch if (card_player != 'Kutter Crawford') | (pitch != 'Cutter') else 'Kutter'
         select_list += [f'{pitch} ({pitches[pitch]:.1%})']
     pitch_type = st.selectbox('Choose a pitch (season usage):', select_list)
     pitch_type = pitch_type.split('(')[0][:-1]
+    pitch_type = pitch_type if pitch_type != 'Kutter' else 'Cutter'
   
 with col3:
     # Chart Type
@@ -456,6 +458,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     pl_ax.axis('off')
 
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
+    adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
     fig.suptitle(f"{card_player}{apostrophe_text} {year} {pitch_names[pitch_type]}",y=0.97,fontsize=20,x=0.525)
     date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
     fig.text(0.525,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
@@ -596,7 +599,8 @@ def kde_chart(kde_data,p_hand=p_hand,kde_thresh=0.1):
     ax.axis('off')
   
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
-    fig.suptitle(f"{card_player}{apostrophe_text} {year} {pitch_names[pitch_type]} Locations",ha='center',y=1, fontsize=18)
+    adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
+    fig.suptitle(f"{card_player}{apostrophe_text} {year} {adjusted_pitch_name} Locations",ha='center',y=1, fontsize=18)
     date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
     fig.text(0.5,0.88,f"({date_text}From Pitcher's Perspective; Relative to MLB)\n\n", ha='center', va='bottom')
     # fig.text(0.5,0.88,"(From Pitcher's Perspective; Relative to MLB)\n\n",ha='center',va='bottom')
