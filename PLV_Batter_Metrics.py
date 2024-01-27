@@ -155,7 +155,7 @@ season_df = (plv_df
                               'decision_value_o':'oDV'})
              .astype({'Name':'str'})
              .groupby('Name')
-             [['Pitches','zDec Value','oDec Value']+list(season_names.values())]
+             [['Pitches','zDV','oDV']+list(season_names.values())]
              .agg({
                  'Pitches':'count',
                  'Swing Agg (%)':'mean',
