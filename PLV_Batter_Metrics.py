@@ -151,8 +151,8 @@ season_df = (plv_df
              .rename(columns=season_names)
              .rename(columns={'hittername':'Name',
                               'pitch_id':'Pitches',
-                              'decision_value_z':'zDec Value',
-                              'decision_value_o':'oDec Value'})
+                              'decision_value_z':'zDV',
+                              'decision_value_o':'oDV'})
              .astype({'Name':'str'})
              .groupby('Name')
              [['Pitches','zDec Value','oDec Value']+list(season_names.values())]
@@ -161,8 +161,8 @@ season_df = (plv_df
                  'Swing Agg (%)':'mean',
                  'SZ Judge':'mean',
                  'Dec Value':'mean',
-                 'zDec Value':np.nanmean,
-                 'oDec Value':np.nanmean,
+                 'zDV':np.nanmean,
+                 'oDV':np.nanmean,
                  'Contact':'mean',
                  'Power':'mean',
                  'HP':'mean'
@@ -171,17 +171,17 @@ season_df = (plv_df
              .sort_values('HP', ascending=False)
             )
 
-for stat in ['SZ Judge','Contact','Dec Value','zDec Value','oDec Value','Power','HP']:
+for stat in ['SZ Judge','Contact','Dec Value','zDV','oDV','Power','HP']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
     season_df[stat] = np.clip(season_df[stat].fillna(50), a_min=20, a_max=80).astype('int')
 
 st.write(f'Metrics on a 20-80 scale. Table is sortable.')
 
-st.dataframe(season_df[['Pitches','Swing Agg (%)','SZ Judge','Dec Value','zDec Value','oDec Value','Contact','Power','HP']]
+st.dataframe(season_df[['Pitches','Swing Agg (%)','SZ Judge','Dec Value','zDV','oDV','Contact','Power','HP']]
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
-                                  subset=['SZ Judge','Dec Value','zDec Value','oDec Value',
+                                  subset=['SZ Judge','Dec Value','zDV','oDV',
                                           'Contact','Power','HP']
                                  ) 
             )
