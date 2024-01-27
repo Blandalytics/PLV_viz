@@ -177,7 +177,7 @@ for stat in ['SZ Judge','Contact','Dec Value','zDec Value','oDec Value','Power',
 
 st.write(f'Metrics on a 20-80 scale. Table is sortable.')
 
-st.dataframe(season_df[['Pitches','SZ Judge','Dec Value','zDec Value','oDec Value','Contact','Power','HP']]
+st.dataframe(season_df[['Pitches','Swing Agg (%)','SZ Judge','Dec Value','zDec Value','oDec Value','Contact','Power','HP']]
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
