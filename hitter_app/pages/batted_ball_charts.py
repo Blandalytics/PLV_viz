@@ -161,7 +161,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
                ylabel='',
                aspect=1)
         ax.axhline(y=10, color='k',linewidth=1,alpha=0.25)
-        ax.axhline(y=20, color='k',linewidth=1,alpha=0.25)
+        ax.axhline(y=25, color='k',linewidth=1,alpha=0.25)
         ax.axhline(y=50, color='k',linewidth=1,alpha=0.25)
         ax.axvline(x=30, color='k',linewidth=1,alpha=0.25)
         ax.axvline(x=60, color='k',linewidth=1,alpha=0.25)
@@ -198,7 +198,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
         ax.text((pos0 + pos1) / 2, -0.04, label, ha='center', va='top', 
                 fontsize=15, clip_on=False, transform=ax.get_xaxis_transform())
 
-    y_ticks = [-30,10,20,50,60] if color_scale_type=='Discrete' else [0,40,50,80,90]
+    y_ticks = [-30,10,25,50,60] if color_scale_type=='Discrete' else [0,40,50,80,90]
     y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
     # labels at the center of their range
     for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
