@@ -132,7 +132,7 @@ pitch_thresh = 10
 # Has at least 1 pitch with at least 50 thrown
 pitcher_list = list(base_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query(f'pitch_id >={pitch_thresh}')['pitchername'].sort_values().unique())
 
-col1, col2, col3 = st.columns([0.35,0.35,0.3])
+col1, col2, col3 = st.columns([0.4,0.35,0.25])
 
 with col1:
     # Player
@@ -160,7 +160,7 @@ with col2:
 with col3:
     # Chart Type
     charts = ['Bar','Violin']
-    chart_type = st.selectbox('Choose a chart style:', charts)
+    chart_type = st.selectbox('Chart style:', charts)
 
 season_start = base_df.loc[base_df['pitchername']==card_player,'game_played'].min()
 season_end = base_df.loc[base_df['pitchername']==card_player,'game_played'].max()
