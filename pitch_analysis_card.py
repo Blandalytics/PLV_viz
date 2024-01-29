@@ -132,7 +132,7 @@ pitch_thresh = 10
 # Has at least 1 pitch with at least 50 thrown
 pitcher_list = list(base_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query(f'pitch_id >={pitch_thresh}')['pitchername'].sort_values().unique())
 
-col1, col2, col3 = st.columns([0.4,0.4,0.2])
+col1, col2, col3 = st.columns([0.35,0.35,0.3])
 
 with col1:
     # Player
