@@ -172,15 +172,15 @@ season_df = (plv_df
             )
 
 for stat in ['SZ Judge','Contact','Dec Value','zDV','oDV','Power','HP']:
-    season_df[stat] = round(z_score_scaler(season_df[stat])*2+10,0)*5
-    season_df[stat] = np.clip(season_df[stat].fillna(50), a_min=20, a_max=80).astype('int')
+    season_df[stat] = round(z_score_scaler(season_df[stat])*15+100,0)
+    season_df[stat] = season_df[stat].fillna(100).astype('int')
 
-st.write(f'Metrics on a 20-80 scale. Table is sortable.')
+st.write(f'Metrics on the "Plus" scale. Table is sortable.')
 
 st.dataframe(season_df[['Pitches','Swing Agg (%)','SZ Judge','Dec Value','zDV','oDV','Contact','Power','HP']]
              .style
              .format(precision=1, thousands=',')
-             .background_gradient(axis=None, vmin=20, vmax=80, cmap="vlag",
+             .background_gradient(axis=None, vmin=70, vmax=130, cmap="vlag",
                                   subset=['SZ Judge','Dec Value','zDV','oDV',
                                           'Contact','Power','HP']
                                  ) 
