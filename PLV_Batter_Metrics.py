@@ -121,7 +121,7 @@ def load_season_data(year):
                                                  4.5)
 
     for stat in ['swing_agg','strike_zone_judgement','contact_over_expected','in_play_input']:
-        df[stat] = df[stat].mul(100).astype('float')
+        df[stat] = df[stat].astype('float').mul(100)
     
     # Convert to runs added
     df['decision_value'] = df['decision_value'].div(seasonal_constants.loc[year]['run_constant']).mul(100)
@@ -176,7 +176,7 @@ season_df = (plv_df
 
 for stat in ['SZ Judge','Contact','Dec Value','zDV','oDV','Power','HP']:
     season_df[stat] = round(z_score_scaler(season_df[stat])*15+100,0)
-    season_df[stat] = season_df[stat].fillna(100).astype('int')
+    season_df[stat] = season_df[stat].astype('int').fillna(100)
 
 st.write(f'Metrics on the "Plus" scale. Table is sortable.')
 
