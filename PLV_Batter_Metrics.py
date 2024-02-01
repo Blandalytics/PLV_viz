@@ -12,7 +12,8 @@ from matplotlib import colors
 from PIL import Image
 from scipy import stats
 
-st.write(st.__version__)
+import sys
+print(sys.version)
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
