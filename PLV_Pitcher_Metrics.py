@@ -187,6 +187,7 @@ def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R
                                           aggfunc='sum'
                                         ).replace({0:None})
 
+    
     # Merge season-long PLA with pitchtype PLAs
     df = (season_df
           .drop_duplicates('pitcher_mlb_id')
@@ -198,17 +199,19 @@ def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R
           .drop(columns=['pitcher_mlb_id'])
           .fillna(np.nan)
           .set_index('Pitcher')
-          [['Num_Pitches','PLV','PLA','FF','SI','SL','ST','CH','CU','FC','FS']]
+          [cols]
           .copy()
           )
-    return df
+    
+    cols = [x for x in ['Num_Pitches','PLV','PLA','FF','SI','SL','ST','CH','CU','FC','FS'] if x in df.columns.values]
+    return df[cols]
 
 # Season data
 pla_df = get_pla(year,pitch_threshold)
 
 mean_plv = pla_df['PLV'].mul(pla_df['Num_Pitches']).sum() / pla_df['Num_Pitches'].sum()
 
-format_cols = ['PLA','FF','SI','SL','ST','CH','CU','FC','FS']
+format_cols = [x for x in ['PLA','FF','SI','SL','ST','CH','CU','FC','FS'] if x in pla_df.columns.values]
 
 fill_val = pla_df[format_cols].max().max()+0.01
 
