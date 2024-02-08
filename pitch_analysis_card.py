@@ -45,7 +45,8 @@ marker_colors = {
     'SI':'#c57a02',
     'FS':'#00a1c5',  
     'FC':'#933f2c', 
-    'SL':'#9300c7', 
+    'SL':'#9300c7',  
+    'ST':'#DB4B93',
     'CU':'#3c44cd',
     'CH':'#07b526', 
     'KN':'#999999',
@@ -58,7 +59,8 @@ cb_colors = {
     'SI':'#ffdf4d',
     'FS':'#006ddb',  
     'FC':'#ff6db6', 
-    'SL':'#b66dff', 
+    'SL':'#b66dff',  
+    'ST':'#DB4B93',
     'CU':'#009999',
     'CH':'#22cf22', 
     'KN':'#999999',
@@ -75,6 +77,7 @@ pitch_names = {
     'FS':'Splitter',  
     'FC':'Cutter', 
     'SL':'Slider', 
+    'ST':'Sweeper',
     'CU':'Curveball',
     'CH':'Changeup', 
     'KN':'Knuckleball',
@@ -110,8 +113,6 @@ def load_data(year):
                                                     'p_hand','b_hand','IHB','IVB','called_strike_pred',
                                                     'ball_pred','PLV','velo','pitch_extension',
                                                     'adj_vaa','p_x','p_z']
-        # if year == 2023:
-        #     load_cols += ['b_hand']
         df = pd.concat([df,
                         pd.read_parquet(file_name)[load_cols]
                        ])
