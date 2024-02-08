@@ -40,6 +40,7 @@ marker_colors = {
     'FS':'#00a1c5',  
     'FC':'#933f2c', 
     'SL':'#9300c7', 
+    'ST':'#DB4B93',
     'CU':'#3c44cd',
     'CH':'#07b526', 
     'KN':'#999999',
@@ -53,6 +54,7 @@ cb_colors = {
     'FS':'#006ddb',  
     'FC':'#ff6db6', 
     'SL':'#b66dff', 
+    'ST':'#DB4B93',
     'CU':'#009999',
     'CH':'#22cf22', 
     'KN':'#999999',
@@ -69,6 +71,7 @@ pitch_names = {
     'FS':'Splitter',  
     'FC':'Cutter', 
     'SL':'Slider', 
+    'ST':'Sweeper',
     'CU':'Curveball',
     'CH':'Changeup', 
     'KN':'Knuckleball',
@@ -205,7 +208,7 @@ pla_df = get_pla(year,pitch_threshold)
 
 mean_plv = pla_df['PLV'].mul(pla_df['Num_Pitches']).sum() / pla_df['Num_Pitches'].sum()
 
-format_cols = ['PLA','FF','SI','SL','CH','CU','FC','FS']
+format_cols = ['PLA','FF','SI','SL','ST','CH','CU','FC','FS']
 
 fill_val = pla_df[format_cols].max().max()+0.01
 
