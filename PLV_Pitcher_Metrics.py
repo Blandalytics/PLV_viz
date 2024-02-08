@@ -199,7 +199,6 @@ def get_pla(year,pitch_threshold=pitch_threshold,p_hand=['L','R'],b_hand=['L','R
           .drop(columns=['pitcher_mlb_id'])
           .fillna(np.nan)
           .set_index('Pitcher')
-          [cols]
           .copy()
           )
     
