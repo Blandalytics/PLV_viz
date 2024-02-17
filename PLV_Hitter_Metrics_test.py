@@ -373,7 +373,7 @@ else:
 rolling_df = rolling_df.loc[rolling_df['pitches_faced']==rolling_df['pitches_faced'].groupby(rolling_df['game_date']).transform('max')].copy()
 
 color_norm = colors.TwoSlopeNorm(vmin=chart_10, 
-                                 vcenter=chart_avg,
+                                 vcenter=chart_mean if (metric in ['Swing Aggression','Pitch Hittability']) else 100,
                                  vmax=chart_90)
 
 def rolling_chart():    
