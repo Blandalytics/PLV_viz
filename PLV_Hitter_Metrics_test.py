@@ -476,7 +476,7 @@ def rolling_chart():
     locator = mdates.AutoDateLocator(minticks=4, maxticks=7)
     formatter = mdates.ConciseDateFormatter(locator,
                                             show_offset=False,
-                                           formats=['%Y', '%#m/1', '%#m/%d', '%H:%M', '%H:%M', '%S.%f'])
+                                           formats=['%Y', '%-m/1', '%-m/%d', '%H:%M', '%H:%M', '%S.%f'])
     ax.xaxis.set_major_locator(locator)
     ax.xaxis.set_major_formatter(formatter)
 
