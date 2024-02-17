@@ -458,9 +458,9 @@ def rolling_chart():
                    ) + y_pad
     
     plus_text = ''  if (metric in ['Swing Aggression','Pitch Hittability']) else '+'
-    
-    ax.set(xlabel='Game Date',
-           ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
+
+    ax.set_xlabel('Game Date', labelpad=2)
+    ax.set(ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
            ylim=(chart_min, 
                  chart_max)           
           )
