@@ -459,26 +459,24 @@ def rolling_chart():
     
     plus_text = ''  if (metric in ['Swing Aggression','Pitch Hittability']) else '+'
 
+    if metric == 'Swing Aggression':
+        ax.yaxis.set_major_formatter(mpl.ticker.PercentFormatter(100,decimals=0))
+
+    if metric == 'Pitch Hittability':
+        ax.yaxis.set_major_formatter(mpl.ticker.PercentFormatter(100,decimals=1))
+        
+    locator = mdates.AutoDateLocator(minticks=4, maxticks=7)
+    formatter = mdates.ConciseDateFormatter(locator,
+                                            show_offset=False,
+                                            formats=['%Y', '%-m/1', '%-m/%d', '%H:%M', '%H:%M', '%S.%f'])
+    ax.xaxis.set_major_locator(locator)
+    ax.xaxis.set_major_formatter(formatter)
+    
     ax.set_xlabel('Game Date', labelpad=8)
     ax.set(ylabel=stat_values[list(stat_names.keys())[list(stat_names.values()).index(metric)]],
            ylim=(chart_min, 
                  chart_max)           
           )
-
-    if metric == 'Swing Aggression':
-        ax.set_yticks(ax.get_yticks())
-        ax.set_yticklabels([f'{int(x)}%' for x in ax.get_yticks()])
-
-    if metric == 'Pitch Hittability':
-        ax.set_yticks(ax.get_yticks())
-        ax.set_yticklabels([f'{x:.1f}%' for x in ax.get_yticks()])
-        
-    locator = mdates.AutoDateLocator(minticks=4, maxticks=7)
-    formatter = mdates.ConciseDateFormatter(locator,
-                                            show_offset=False,
-                                           formats=['%Y', '%-m/1', '%-m/%d', '%H:%M', '%H:%M', '%S.%f'])
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
 
     pitch_text = f'; vs {pitchtype_select[0]}' if pitchtype_base == 'Offspeed' else f'; vs {pitchtype_select[0]}s'
     
