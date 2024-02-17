@@ -343,6 +343,8 @@ rolling_df = (plv_df
               .rename(columns={'index':'pitches_faced'})
              )
 
+season_sample = rolling_df.shape[0]
+
 window_max = max(rolling_threshold[metric],int(round(rolling_df.shape[0]/10)*7))
 
 # Rolling Window
@@ -500,7 +502,7 @@ def rolling_chart():
     
     sns.despine()
     st.pyplot(fig)
-if window > rolling_df.shape[0]:
+if window > season_sample:
     st.write(f'Not enough {rolling_denom[metric]} ({rolling_df.shape[0]})')
 else:
     rolling_chart()
