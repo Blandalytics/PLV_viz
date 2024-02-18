@@ -326,7 +326,7 @@ for stat in stat_list:
                             chart_thresh_list[stat].std(),
                             (rolling_df[metric].mean()-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100,
                             (chart_thresh_list[metric].quantile(0.1)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100,
-                            (chart_thresh_list[metric].quantile(0.9)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100]}
+                            (chart_thresh_list[metric].quantile(0.9)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100]})
 
 plv_df[metric] = plv_df[metric].replace([np.inf, -np.inf], np.nan)
 
