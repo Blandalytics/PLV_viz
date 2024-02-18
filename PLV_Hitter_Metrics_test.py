@@ -358,11 +358,11 @@ window = st.number_input(f'Choose a {rolling_denom[metric]} threshold:',
 rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window).mean()
 fixed_window = window if (rolling_df[metric].mean() < rolling_df['Rolling_Stat'].max()) and (rolling_df[metric].mean() > rolling_df['Rolling_Stat'].min()) else int(window*2/3)
 rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window, min_periods=fixed_window).mean()
-rolling_df['Rolling_Stat+'] = rolling_df['Rolling_Stat'].sub(chart_avg).div(chart_stdev).mul(15).add(100)
+rolling_df['Rolling_Stat+'] = rolling_df['Rolling_Stat'].sub(stat_vals[metric][0]).div(stat_vals[metric][1]).mul(15).add(100)
 
 for stat in big_three:
     rolling_df['Rolling_'+stat] = rolling_df[stat].rolling(rolling_threshold[stat]).mean()
-    rolling_df[f'Rolling_{stat}+'] = rolling_df['Rolling_'+stat].sub(chart_avg).div(chart_stdev).mul(15).add(100)
+    rolling_df[f'Rolling_{stat}+'] = rolling_df['Rolling_'+stat].sub(stat_vals[stat][0]).div(stat_vals[stat][0]).mul(15).add(100)
 
 if metric in ['Strikezone Judgement','Decision Value','Contact Ability','Power','Hitter Performance']:
     season_avg = (rolling_df[metric].mean()-stat_vals[metric][0])/stat_vals[metric][1]*15+100
