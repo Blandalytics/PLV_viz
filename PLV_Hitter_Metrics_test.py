@@ -320,13 +320,6 @@ chart_thresh_list = (plv_df
                     )
 
 chart_mean = plv_df[metric].mean()
-stat_vals = {}
-for stat in stat_list:
-    stat_vals.update({stat:[chart_thresh_list[stat].mean(),
-                            chart_thresh_list[stat].std(),
-                            (rolling_df[metric].mean()-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100,
-                            (chart_thresh_list[metric].quantile(0.1)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100,
-                            (chart_thresh_list[metric].quantile(0.9)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100]})
 
 plv_df[metric] = plv_df[metric].replace([np.inf, -np.inf], np.nan)
 
@@ -342,6 +335,14 @@ rolling_df = (plv_df
               .reset_index()
               .rename(columns={'index':'pitches_faced'})
              )
+
+stat_vals = {}
+for stat in stat_list:
+    stat_vals.update({stat:[chart_thresh_list[stat].mean(),
+                            chart_thresh_list[stat].std(),
+                            (rolling_df[stat].mean()-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100,
+                            (chart_thresh_list[stat].quantile(0.1)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100,
+                            (chart_thresh_list[stat].quantile(0.9)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100]})
 
 season_sample = rolling_df.shape[0]
 
