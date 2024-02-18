@@ -598,13 +598,12 @@ def big_three_chart():
           )
 
     pitch_text = f'vs {pitchtype_select[0]}' if pitchtype_base == 'Offspeed' else f'vs {pitchtype_select[0]}s'
-    
-    fig.suptitle(f"{player}'s {year} Rolling PLV Metrics\n{}".format('{}{}{}'.format(
+    subheader_text = '{}{}{}'.format(
         'vs All Pitches' if pitchtype_base == 'All' else pitch_text,
         '; in All Counts' if count_select=='All' else f'; in {selected_options} Counts' if count_select=='Custom' else f'; in {count_select} Counts',
         'vs All Pitchers' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
         )
-                                                                     ),
+    fig.suptitle(f"{player}'s {year} Rolling PLV Metrics\n{subheader_text}",
                  fontsize=14
                  )
     
