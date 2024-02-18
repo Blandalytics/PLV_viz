@@ -41,16 +41,8 @@ sns.set_theme(
 
 line_color = sns.color_palette('vlag', n_colors=100)[0]
 
-st.title("Hitter Ability Metrics ")
-st.write('- ***Swing Aggression***: How much more often a hitter swings at pitches, given the swing likelihoods of the pitches they face.')
-st.write('''
-- ***Strikezone Judgment***: The "correctness" of a hitter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
-''')
-st.write("- ***Decision Value***: Modeled value (runs per 100 pitches) of a hitter's decision to swing or take, minus the modeled value of the alternative. These are also broken into 'Zone' and 'Out-of-Zone' components (credit to [Robert Orr](https://twitter.com/NotTheBobbyOrr)'s [SEAGER article](https://www.baseballprospectus.com/news/article/86572/the-crooked-inning-corey-seager-rangers/) and [@TJStats](https://twitter.com/TJStats) for the idea).")
-st.write("- ***Pitch Hittability***: Likelihood of the pitches a hitter faces becoming batted balls.")
-st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
-st.write("- ***Power***: Modeled number of extra bases (xISO on contact) above a pitch's expectation, for each BBE.")
-st.write("- ***Hitter Performance (HP)***: Runs added per 100 pitches seen by the hitter (including swing/take decisions), after accounting for pitch quality.")
+st.title("Scott Chu's Personal PLV Htter Test App")
+st.write('Metrics are shown on the + scale (100 is league average, and 15 points is 1 StDev')
 
 seasonal_constants = pd.read_csv('https://github.com/Blandalytics/PLV_viz/blob/main/data/plv_seasonal_constants.csv?raw=true').set_index('year')
 
@@ -307,6 +299,13 @@ hand_map = {
     'Right':['R']
 }
 
+big_three = ['Decision Value','Contact Ability','Power']
+if metric not in big_three:
+    stat_list = big_three+[metric]
+else:
+    stat_list = big_three
+agg_dict = {x:'mean' for x in stat_list}
+agg_dict.update({'pitch_id':'count'})
 chart_thresh_list = (plv_df
                      .loc[plv_df['count'].astype('str').isin(selected_options) &
                           plv_df['pitch_type_bucket'].isin(pitchtype_select) &
@@ -314,19 +313,20 @@ chart_thresh_list = (plv_df
                           plv_df['p_hand'].isin(hand_map[handedness])
                          ]
                      .groupby('hittername')
-                     [['pitch_id',metric]]
-                     .agg({
-                         'pitch_id':'count',
-                         metric:'mean'
-                     })
+                     [['pitch_id']+stat_list]
+                     .agg(agg_dict)
                      .query(f'pitch_id >= {updated_threshold}')
                      .copy()
                     )
 
 chart_mean = plv_df[metric].mean()
-
-chart_avg = chart_thresh_list[metric].mean()
-chart_stdev = chart_thresh_list[metric].std()
+stat_vals = {}
+for stat in stat_list:
+    stat_vals.update({stat:[chart_thresh_list[stat].mean(),
+                            chart_thresh_list[stat].std(),
+                            (rolling_df[metric].mean()-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100,
+                            (chart_thresh_list[metric].quantile(0.1)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100,
+                            (chart_thresh_list[metric].quantile(0.9)-chart_thresh_list[stat].mean())/chart_thresh_list[stat].std()*15+100]}
 
 plv_df[metric] = plv_df[metric].replace([np.inf, -np.inf], np.nan)
 
@@ -336,7 +336,7 @@ rolling_df = (plv_df
                    plv_df['p_hand'].isin(hand_map[handedness]) &
                    plv_df['count'].isin(selected_options) &
                    plv_df['pitch_type_bucket'].isin(pitchtype_select),
-                   ['hittername','game_date',metric]]
+                   ['hittername','game_date']+stat_list]
               .dropna()
               .reset_index(drop=True)
               .reset_index()
@@ -359,12 +359,16 @@ fixed_window = window if (rolling_df[metric].mean() < rolling_df['Rolling_Stat']
 rolling_df['Rolling_Stat'] = rolling_df[metric].rolling(window, min_periods=fixed_window).mean()
 rolling_df['Rolling_Stat+'] = rolling_df['Rolling_Stat'].sub(chart_avg).div(chart_stdev).mul(15).add(100)
 
+for stat in big_three:
+    rolling_df['Rolling_'+stat] = rolling_df[stat].rolling(rolling_threshold[stat]).mean()
+    rolling_df[f'Rolling_{stat}+'] = rolling_df['Rolling_'+stat].sub(chart_avg).div(chart_stdev).mul(15).add(100)
+
 if metric in ['Strikezone Judgement','Decision Value','Contact Ability','Power','Hitter Performance']:
-    season_avg = (rolling_df[metric].mean()-chart_avg)/chart_stdev*15+100
-    chart_90 = (chart_thresh_list[metric].quantile(0.9)-chart_avg)/chart_stdev*15+100
-    chart_75 = (chart_thresh_list[metric].quantile(0.75)-chart_avg)/chart_stdev*15+100
-    chart_25 = (chart_thresh_list[metric].quantile(0.25)-chart_avg)/chart_stdev*15+100
-    chart_10 = (chart_thresh_list[metric].quantile(0.1)-chart_avg)/chart_stdev*15+100
+    season_avg = (rolling_df[metric].mean()-stat_vals[metric][0])/stat_vals[metric][1]*15+100
+    chart_90 = (chart_thresh_list[metric].quantile(0.9)-stat_vals[metric][0])/stat_vals[metric][1]*15+100
+    chart_75 = (chart_thresh_list[metric].quantile(0.75)-stat_vals[metric][0])/stat_vals[metric][1]*15+100
+    chart_25 = (chart_thresh_list[metric].quantile(0.25)-stat_vals[metric][0])/stat_vals[metric][1]*15+100
+    chart_10 = (chart_thresh_list[metric].quantile(0.1)-stat_vals[metric][0])/stat_vals[metric][1]*15+100
 else: 
     season_avg = rolling_df[metric].mean()
     chart_90 = chart_thresh_list[metric].quantile(0.9)
@@ -504,6 +508,114 @@ if window > season_sample:
     st.write(f'Not enough {rolling_denom[metric]} ({rolling_df.shape[0]})')
 else:
     rolling_chart()
+
+def big_three_chart():    
+    fig, ax = plt.subplots(figsize=(6,6))
+    sns.lineplot(data=rolling_df,
+                 x='game_date',
+                 y='Rolling_Decision Value+',
+                 color=sns.color_palette('vlag',n_colors=1000)[0],
+                 ax=ax
+                 )
+    sns.lineplot(data=rolling_df,
+                 x='game_date',
+                 y='Rolling_Contact Ability+',
+                 color='w',
+                 ax=ax
+                 )
+    sns.lineplot(data=rolling_df,
+                 x='game_date',
+                 y='Rolling_Power+',
+                 color=sns.color_palette('vlag',n_colors=1000)[-1],
+                 ax=ax
+                 )
+    
+    line_text_loc = rolling_df['game_date'].min() + pd.Timedelta(days=(rolling_df['game_date'].max() - rolling_df['game_date'].min()).days * 1.05)
+    
+    ax.axhline(stat_vals['Decision Value'][2], 
+               color=sns.color_palette('vlag',n_colors=1000)[0],
+               linestyle='--')
+    ax.text(line_text_loc,
+            stat_vals['Decision Value'][2],
+            'DecVal',
+            va='center',
+            color=sns.color_palette('vlag',n_colors=1000)[0])
+    
+    ax.axhline(stat_vals['Contact Ability'][2], 
+               color='w',
+               linestyle='--')
+    ax.text(line_text_loc,
+            stat_vals['Contact Ability'][2],
+            'Contact',
+            va='center',
+            color='w')
+    
+    ax.axhline(stat_vals['Power'][2], 
+               color=sns.color_palette('vlag',n_colors=1000)[-1],
+               linestyle='--')
+    ax.text(line_text_loc,
+            stat_vals['Power'][2],
+            'Power',
+            va='center',
+            color=sns.color_palette('vlag',n_colors=1000)[-1])
+
+    offset_check = 0
+    chart_lims = [75,125]
+    for stat in big_three:
+        chart_lims[0] = min([chart_lims[0],stat_vals[stat][3]])
+        chart_lims[1] = max([chart_lims[1],stat_vals[stat][4]])
+        if abs(100 - stat_vals[stat][2]) > (ax.get_ylim()[1] - ax.get_ylim()[0])/25:
+            offset_check = 1
+    
+    ax.axhline(100,
+               color='w',
+               alpha=0.5)
+    ax.text(line_text_loc,
+            100,
+            'MLB Avg' if offset_check==0 else '',
+            va='center',
+            color='w',
+            alpha=0.75)
+    
+    y_pad = (chart_lims[1]-chart_lims[0])/10
+    
+    chart_min = chart_lims[0] - y_pad
+    chart_max = chart_lims[1] + y_pad
+    
+    plus_text = '+'
+
+    locator = mdates.AutoDateLocator(minticks=4, maxticks=7)
+    formatter = mdates.ConciseDateFormatter(locator,
+                                            show_offset=False,
+                                            formats=['%Y', '%-m/1', '%-m/%d', '%H:%M', '%H:%M', '%S.%f'])
+    ax.xaxis.set_major_locator(locator)
+    ax.xaxis.set_major_formatter(formatter)
+    
+    ax.set_xlabel('Game Date', labelpad=8)
+    ax.set(ylabel='',
+           ylim=(chart_min, 
+                 chart_max)           
+          )
+
+    pitch_text = f'vs {pitchtype_select[0]}' if pitchtype_base == 'Offspeed' else f'vs {pitchtype_select[0]}s'
+    
+    fig.suptitle(f"{player}'s {year} Rolling PLV Metrics\n{}".format('{}{}{}'.format(
+        'vs All Pitches' if pitchtype_base == 'All' else pitch_text,
+        '; in All Counts' if count_select=='All' else f'; in {selected_options} Counts' if count_select=='Custom' else f'; in {count_select} Counts',
+        'vs All Pitchers' if (handedness=='All') else f'; {hitter_hand[0]}HH vs {hand_map[handedness][0]}HP'
+        )
+                                                                     ),
+                 fontsize=14
+                 )
+    
+    # Add PL logo
+    pl_ax = fig.add_axes([0.8,-0.01,0.2,0.2], anchor='SE', zorder=1)
+    pl_ax.imshow(logo)
+    pl_ax.axis('off')
+    
+    sns.despine()
+    st.pyplot(fig)
+big_three_chart()
 
 st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
 st.write("Heatmaps can now be found at [plv-hitter-heatmaps.streamlit.app](https://plv-hitter-heatmaps.streamlit.app/)")
