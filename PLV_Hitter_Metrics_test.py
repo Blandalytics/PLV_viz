@@ -47,7 +47,7 @@ st.write('''
 - ***Strikezone Judgment***: The "correctness" of a hitter's swings and takes, using the likelihood of a pitch being a called strike (for swings) or a ball/HBP (for takes).
 ''')
 st.write("- ***Decision Value***: Modeled value (runs per 100 pitches) of a hitter's decision to swing or take, minus the modeled value of the alternative. These are also broken into 'Zone' and 'Out-of-Zone' components (credit to [Robert Orr](https://twitter.com/NotTheBobbyOrr)'s [SEAGER article](https://www.baseballprospectus.com/news/article/86572/the-crooked-inning-corey-seager-rangers/) and [@TJStats](https://twitter.com/TJStats) for the idea).")
-st.write("- ***Pitch Hittability***: Likelihood of the pitches a hitter faces becoming batted balls.")
+st.write("- ***Pitch Hittability***: Batted ball likelihood of the pitches a hitter has seen (based on the pitch's characteristics).")
 st.write("- ***Contact Ability***: A hitter's ability to make contact (foul strike or BIP), above the contact expectation of each pitch.")
 st.write("- ***Power***: Modeled number of extra bases (xISO on contact) above a pitch's expectation, for each BBE.")
 st.write("- ***Hitter Performance (HP)***: Runs added per 100 pitches seen by the hitter (including swing/take decisions), after accounting for pitch quality.")
