@@ -160,7 +160,7 @@ def stuff_chart(df,player):
             'xanchor': 'center',
             'yanchor': 'top'}
     )
-    fig.update_xaxes(showgrid=True, gridwidth=2, gridcolor='w')
-    fig.update_yaxes(showgrid=True, gridwidth=2, gridcolor='w')
+    fig.update_xaxes(showgrid=True, gridwidth=2, gridcolor='white')
+    fig.update_yaxes(showgrid=True, gridwidth=2, gridcolor='white')
     st.plotly_chart(fig)
 stuff_chart(year_data,player)
