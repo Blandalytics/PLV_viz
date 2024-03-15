@@ -71,6 +71,8 @@ logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.p
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
+st.title("PLV Stuff App")
+
 # Year
 years = [2023,2022,2021,2020]
 year = st.radio('Choose a year:', years)
@@ -101,6 +103,12 @@ default_ix = players.index('Zack Wheeler')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
 hand = 'L' if year_data.loc[(year_data['pitchername']==player),'pitcherside_L'].values[0] == 1 else 'R'
+
+st.write('Controls:')
+st.write('- Hover to see pitch details')
+st.write('- Left click drag to rotate the chart')
+st.write('- Scroll to zoom')
+st.write('- Right click drag to move the chart')
 
 def stuff_chart(df,player):
     chart_df = df.loc[(df['pitchername']==player)].copy()
