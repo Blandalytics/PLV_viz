@@ -84,7 +84,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
 @st.cache_data
 def load_data(year):
     file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Stuff_App_Data.parquet?raw=true'
-    df = pd.read_parquet(file_name)
+    return pd.read_parquet(file_name)
 
 year_data = load_data(year)
 
