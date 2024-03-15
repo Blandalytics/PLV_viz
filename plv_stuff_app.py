@@ -148,8 +148,7 @@ def stuff_chart(df,player):
     layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
                                   ),
                        scene = Scene,
-                       height = 500,width = 500,
-                       grid=dict(width=2)                      
+                       height = 500,width = 500                  
                       )
     data = [trace]
     fig = go.Figure(data = data, layout = layout)
@@ -161,5 +160,7 @@ def stuff_chart(df,player):
             'xanchor': 'center',
             'yanchor': 'top'}
     )
+    fig.update_xaxes(showgrid=True, gridwidth=2, gridcolor='w')
+    fig.update_yaxes(showgrid=True, gridwidth=2, gridcolor='w')
     st.plotly_chart(fig)
 stuff_chart(year_data,player)
