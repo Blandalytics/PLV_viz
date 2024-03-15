@@ -104,7 +104,7 @@ player = st.selectbox('Choose a player:', players, index=default_ix)
 
 hand = 'L' if year_data.loc[(year_data['pitchername']==player),'pitcherside_L'].values[0] == 1 else 'R'
 
-st.write('Controls:\n- Hover to see pitch details\n- Left click drag to rotate the chart\n- Scroll to zoom\n- Right click drag to move the chart')
+st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate the chart\n- Scroll to zoom\n- Right click + drag to move the chart')
 
 def stuff_chart(df,player):
     chart_df = df.loc[(df['pitchername']==player)].copy()
