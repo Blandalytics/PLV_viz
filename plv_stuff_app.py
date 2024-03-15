@@ -156,9 +156,10 @@ def stuff_chart(df,player):
                       )
     data = [trace]
     fig = go.Figure(data = data, layout = layout)
+    overall_stuff = chart_df['plv_stuff_plus'].mean()
     fig.update_layout(
         title={
-            'text': f"{player}'s plvStuff+",
+            'text': f"{player}'s\nplvStuff+: {overall_stuff:.1f}",
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
