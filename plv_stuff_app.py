@@ -148,8 +148,8 @@ def stuff_chart(df,player):
     layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
                                   ),
                        scene = Scene,
-                       height = 800,width = 800,
-                       
+                       height = 500,width = 500,
+                       gridwidth=2                       
                       )
     data = [trace]
     fig = go.Figure(data = data, layout = layout)
