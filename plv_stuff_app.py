@@ -159,7 +159,7 @@ def stuff_chart(df,player):
     overall_stuff = chart_df['plv_stuff_plus'].mean()
     fig.update_layout(
         title={
-            'text': f"{player}'s\nplvStuff+: {overall_stuff:.1f}",
+            'text': f"{player}'s<br>plvStuff+: {overall_stuff:.1f}",
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
