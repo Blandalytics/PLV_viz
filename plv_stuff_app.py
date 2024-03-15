@@ -109,6 +109,8 @@ st.write('Controls:\n- Hover to see pitch details\n- Left click drag to rotate t
 def stuff_chart(df,player):
     chart_df = df.loc[(df['pitchername']==player)].copy()
     chart_df['3d_stuff_plus'] = 100
+
+    ax_lim = min(25,chart_df[['IVB','IHB']].max().max())
     for pitchtype in chart_df['pitchtype'].unique():
         knn=KNeighborsRegressor(n_neighbors=min(30,int(chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]/2)))
         model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']],chart_df.loc[chart_df['pitchtype']==pitchtype,'plv_stuff_plus'])
@@ -120,12 +122,12 @@ def stuff_chart(df,player):
         aspectmode='cube',
                  xaxis = dict(title='Glove <-- HB --> Arm' if hand=='R' else 'Arm <-- HB --> Glove',
                              backgroundcolor=pl_background,
-                             range=(-25,25) if hand=='R' else (25,-25)),
+                             range=(-ax_lim,ax_lim) if hand=='R' else (ax_lim,-ax_lim)),
                  yaxis = dict(title='velo',
                              backgroundcolor=pl_background),
                  zaxis = dict(title='IVB',
                              backgroundcolor=pl_background,
-                             range=(-25,25)),
+                             range=(-ax_lim,ax_lim)),
                  )
     
     labels = chart_df['3d_stuff_plus']
