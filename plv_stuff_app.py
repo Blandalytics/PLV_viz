@@ -6,26 +6,15 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 from matplotlib.ticker import PercentFormatter
-
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import r2_score
-from sklearn.model_selection import train_test_split
-
-import scipy as sp
-import seaborn as sns
-import pickle
-import sklearn
-import time
-import xgboost as xgb
-from xgboost import XGBClassifier
-import optuna
-
 from mpl_toolkits.mplot3d import Axes3D
 import plotly.graph_objs as go
 from plotly import tools
 from plotly.subplots import make_subplots
 import plotly.offline as py
+import seaborn as sns
+
+import sklearn
+from sklearn.neighbors import KNeighborsRegressor
 
 pl_white = '#FEFEFE'
 pl_background = '#162B50'
