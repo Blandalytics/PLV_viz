@@ -16,6 +16,9 @@ import seaborn as sns
 import sklearn
 from sklearn.neighbors import KNeighborsRegressor
 
+import urllib
+from PIL import Image
+
 pl_white = '#FEFEFE'
 pl_background = '#162B50'
 pl_text = '#72a3f7'
