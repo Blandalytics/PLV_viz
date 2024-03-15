@@ -162,5 +162,5 @@ def stuff_chart(df,player):
     )
     fig.update_xaxes(showgrid=True, gridwidth=2, gridcolor='white')
     fig.update_yaxes(showgrid=True, gridwidth=2, gridcolor='white')
-    st.plotly_chart(fig)
+    st.plotly_chart(fig,use_container_width=True)
 stuff_chart(year_data,player)
