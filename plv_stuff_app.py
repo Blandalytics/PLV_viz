@@ -130,10 +130,10 @@ hand = 'L' if year_data.loc[(year_data['pitchername']==player),'pitcherside_L'].
 
 st.write(f"{player}'s Repertoire")
 st.dataframe(year_data
-             .loc[(year_data['pitchername']==player)].
-             groupby('pitchtype')
-             [['pitch_id','velo','IHB','IVB','plv_stuff_plus']]
+             .loc[(year_data['pitchername']==player)]
              .assign(IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1))
+             .groupby('pitchtype')
+             [['pitch_id','velo','IHB','IVB','plv_stuff_plus']]
              .agg({
                  'pitch_id':'count',
                  'velo':'mean',
