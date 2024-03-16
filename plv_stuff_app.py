@@ -137,15 +137,15 @@ st.dataframe(year_data
              .agg({
                  'pitch_id':'count',
                  'velo':'mean',
-                 'IHB':'mean',
                  'IVB':'mean',
+                 'IHB':'mean',
                  'plv_stuff_plus':'mean'
                  })
              .astype({
                  'pitch_id':'int',
                  'velo':'float',
-                 'IHB':'float',
                  'IVB':'float',
+                 'IHB':'float',
                  'plv_stuff_plus':'float'
                  })
              .rename(columns={
