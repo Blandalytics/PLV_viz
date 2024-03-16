@@ -112,7 +112,7 @@ def stuff_chart(df,player):
 
     ax_lim = max(25,chart_df[['IVB','IHB']].abs().max().max())
     for pitchtype in chart_df['pitchtype'].unique():
-        knn=KNeighborsRegressor(n_neighbors=min(30,int(chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]/2)))
+        knn=KNeighborsRegressor(n_neighbors=min(30,round(int(chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]/2))))
         model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']],chart_df.loc[chart_df['pitchtype']==pitchtype,'plv_stuff_plus'])
         chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_stuff_plus'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']])
     
