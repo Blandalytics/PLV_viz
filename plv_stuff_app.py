@@ -90,8 +90,8 @@ def load_data(year):
 
 year_data = load_data(year)
 
-st.dataframe(pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS']
-    (pd.pivot_table((year_data
+pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS']
+st.dataframe(pd.pivot_table((year_data
                      .loc[~(year_data['pitchtype'].isin(['KN','SC','UN'])) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
                    values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
@@ -112,7 +112,7 @@ st.dataframe(pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS']
      .background_gradient(axis=0, vmin=50, vmax=150,
                           cmap="vlag", subset=['plvStuff+']+pitch_order)
      .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else '')
-                              )
+             )
 
 players = list(year_data
                .groupby('pitchername')
