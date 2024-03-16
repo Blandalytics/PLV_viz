@@ -213,9 +213,9 @@ def stuff_chart(df,player):
                          hovertemplate =
                          '<b>%{text}</b>'+
                          '<br><b>plvStuff+: %{marker.color:.1f}</b>'+
-                         '<br>Arm-Side Break: %{x:.1f}"'+
+                         '<br>Velo: %{y}mph<extra></extra>'+
                          '<br>IVB: %{z:.1f}"'+
-                         '<br>Velo: %{y}mph<extra></extra>'
+                         '<br>Arm-Side Break: %{x:.1f}"'
                          )
     layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
                                   ),
