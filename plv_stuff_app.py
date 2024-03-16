@@ -112,9 +112,12 @@ def stuff_chart(df,player):
 
     ax_lim = max(25,chart_df[['IVB','IHB']].abs().max().max())
     for pitchtype in chart_df['pitchtype'].unique():
-        knn=KNeighborsRegressor(n_neighbors=min(30,round(int(chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]/2))))
-        model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']],chart_df.loc[chart_df['pitchtype']==pitchtype,'plv_stuff_plus'])
-        chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_stuff_plus'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']])
+        if chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]==1:
+            chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_stuff_plus'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'plv_stuff_plus']
+        else:
+            knn=KNeighborsRegressor(n_neighbors=min(30,int(chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]/2)))
+            model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']],chart_df.loc[chart_df['pitchtype']==pitchtype,'plv_stuff_plus'])
+            chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_stuff_plus'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']])
     
     Scene = dict(camera=dict(eye=dict(x=1.35, y=-1.6, z=0.9),
                             center=dict(x=-0.05,y=0,z=-0.1)
