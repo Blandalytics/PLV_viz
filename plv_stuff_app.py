@@ -128,6 +128,41 @@ player = st.selectbox('Choose a player:', players, index=default_ix)
 
 hand = 'L' if year_data.loc[(year_data['pitchername']==player),'pitcherside_L'].values[0] == 1 else 'R'
 
+st.write(f"{player}'s Repertoire")
+st.dataframe(year_data
+             .loc[(year_data['pitchername']==player)].
+             groupby('pitchtype')
+             [['pitch_id','velo','IHB','IVB','plv_stuff_plus']]
+             .assign(IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1))
+             .agg({
+                 'pitch_id':'count',
+                 'velo':'mean',
+                 'IHB':'mean',
+                 'IVB':'mean',
+                 'plv_stuff_plus':'mean'
+                 })
+             .astype({
+                 'pitch_id':'int',
+                 'velo':'float',
+                 'IHB':'float',
+                 'IVB':'float',
+                 'plv_stuff_plus':'float'
+                 })
+             .rename(columns={
+                 'pitch_id':'Pitches',
+                 'velo':'Velo',
+                 'IVB':'Induced Vertical Break',
+                 'IHB':'Arm-Side Break',
+                 'plv_stuff_plus':'plvStuff+'
+                 })
+             .dropna()
+             .sort_values('Pitches',ascending=False)
+             .style
+             .format(precision=1, thousands=',')
+             .background_gradient(axis=0, vmin=50, vmax=150,
+                                  cmap="vlag", subset=['plvStuff+'])
+            )
+
 st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate the chart\n- Scroll to zoom\n- Right click + drag to move the chart')
 
 def stuff_chart(df,player):
