@@ -133,7 +133,7 @@ st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
              .assign(IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1))
              .groupby('pitchtype')
-             [['pitch_id','velo','IHB','IVB','plv_stuff_plus']]
+             [['pitch_id','velo','IVB','IHB','plv_stuff_plus']]
              .agg({
                  'pitch_id':'count',
                  'velo':'mean',
@@ -151,7 +151,6 @@ st.dataframe(year_data
              .rename(columns={
                  'pitch_id':'Pitches',
                  'velo':'Velo',
-                 'IVB':'Induced Vertical Break',
                  'IHB':'Arm-Side Break',
                  'plv_stuff_plus':'plvStuff+'
                  })
