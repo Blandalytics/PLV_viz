@@ -131,7 +131,6 @@ hand = 'L' if year_data.loc[(year_data['pitchername']==player),'pitcherside_L'].
 st.write(f"{player}'s Repertoire")
 st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
-             .assign(IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1))
              .groupby('pitchtype')
              [['pitch_id','velo','IVB','IHB','plv_stuff_plus']]
              .agg({
@@ -148,12 +147,18 @@ st.dataframe(year_data
                  'IHB':'float',
                  'plv_stuff_plus':'float'
                  })
+             .reset_index()
+             .assign(pitchtype = lambda x: x['pitchtype'].map(pitch_names),
+                     IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1)
+                    )
              .rename(columns={
+                 'pitchtype':'Pitch Type',
                  'pitch_id':'Pitches',
                  'velo':'Velo',
                  'IHB':'Arm-Side Break',
                  'plv_stuff_plus':'plvStuff+'
                  })
+             .set_index('Pitch Type')
              .dropna()
              .sort_values('Pitches',ascending=False)
              .style
