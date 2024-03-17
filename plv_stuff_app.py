@@ -107,6 +107,18 @@ st.dataframe(pd.pivot_table((year_data
              .query(f'Pitches >= {pitch_threshold}')
              .sort_values('plvStuff+',ascending=False)
              .fillna(-100)
+             .astype({
+                 'CH':'float',
+                 'CU':'float',
+                 'FC':'float',
+                 'FF':'float',
+                 'FS':'float',
+                 'SI':'float',
+                 'SL':'float',
+                 'ST':'float',
+                 'Pitches':'int',
+                 'plvStuff+':'float'
+             })
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=0, vmin=50, vmax=150,
