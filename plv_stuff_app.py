@@ -241,6 +241,18 @@ def stuff_chart(df,player,palette):
                          legendgroup=chart_df['pitchtype'].map(pitch_names),
                          hovertemplate=hover_text
                          )
+
+    if palette != 'plvStuff+':
+        for pitch in chart_df['pitchtype'].value_counts.index
+        fig.add_trace(go.Scatter3d(
+            x=[None],
+            y=[None],
+            z=[None],
+            mode="markers",
+            name=pitch_names[pitch],
+            marker=dict(size=7, color=marker_colors[pitch]),
+            ))
+    
     layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
                                   ),
                        scene = Scene,
