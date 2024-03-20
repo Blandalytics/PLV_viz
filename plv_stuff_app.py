@@ -98,7 +98,7 @@ st.dataframe(pd.pivot_table((year_data
                    columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
                      plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
-             .drop(columns=[('pitch_id',y) for y in pitch_order])
+             .drop(columns=[('pitch_id',y) for y in pitch_order+['KN','SC','UN'])
              .droplevel(0, axis=1)
              .reset_index()
              .set_axis(['Pitcher','CH','CU','FC','FF','FS','SI','SL','ST','Pitches','plvStuff+'], axis=1)
