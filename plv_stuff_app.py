@@ -119,11 +119,13 @@ st.dataframe(pd.pivot_table((year_data
                  'Pitches':'int',
                  'plvStuff+':'float'
              })
+             .reset_index()
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvStuff+']+pitch_order)
-             .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else '')
+             .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
+             hide_index=True
              )
 
 players = list(year_data
