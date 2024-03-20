@@ -92,13 +92,13 @@ year_data = load_data(year)
 
 pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS']
 st.dataframe(pd.pivot_table((year_data
-                     .loc[~(year_data['pitchtype'].isin(['KN','SC','UN'])) & 
+                     .loc[(year_data['pitchtype'].isin(pitch_order)) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
                    values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
                      plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
-             .drop(columns=[('pitch_id',y) for y in pitch_order+['KN','SC','UN']])
+             .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
              .set_axis(['Pitcher','CH','CU','FC','FF','FS','SI','SL','ST','Pitches','plvStuff+'], axis=1)
