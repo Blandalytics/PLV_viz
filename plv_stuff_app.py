@@ -269,6 +269,9 @@ def stuff_chart(df,player,palette):
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top'}
+        legend={
+            "x": 0.8,
+            "y": 0.5}
     )
     fig.update_xaxes(showgrid=True, gridwidth=2, gridcolor='white')
     fig.update_yaxes(showgrid=True, gridwidth=2, gridcolor='white')
