@@ -175,10 +175,12 @@ st.dataframe(year_data
              .set_index('Pitch Type')
              .dropna()
              .sort_values('Pitches',ascending=False)
+             .reset_index()
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=0, vmin=50, vmax=150,
-                                  cmap="vlag", subset=['plvStuff+'])
+                                  cmap="vlag", subset=['plvStuff+']),
+             hide_index=True
             )
 
 st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate the chart\n- Scroll to zoom\n- Right click + drag to move the chart')
