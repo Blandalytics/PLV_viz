@@ -238,7 +238,6 @@ def stuff_chart(df,player,palette):
                          mode='markers', marker=marker_dict,
                          text=bonus_text,
                          customdata=chart_df['pitchtype'].map(pitch_names),
-                         legendgroup=chart_df['pitchtype'].map(pitch_names),
                          hovertemplate=hover_text
                          )
 
