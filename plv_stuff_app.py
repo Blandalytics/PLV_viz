@@ -238,7 +238,7 @@ def stuff_chart(df,player,palette):
                          mode='markers', marker=marker_dict,
                          text=bonus_text,
                          customdata=chart_df['pitchtype'].map(pitch_names),
-                         legendgroup=labels,
+                         legendgroup=chart_df['pitchtype'].map(pitch_names),
                          hovertemplate=hover_text
                          )
     layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
