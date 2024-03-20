@@ -251,13 +251,14 @@ def stuff_chart(df,player,palette):
     data = [trace]
     fig = go.Figure(data = data, layout = layout)
     if palette != 'plvStuff+':
-        for pitch in [x for x in chart_df['pitchtype'].value_counts().index if x in chart_df['pitchtype'].unique()]:#set(chart_df['pitchtype'].value_counts().index) & set(pitch_order):
+        for pitch in [x for x in chart_df['pitchtype'].value_counts().index if x in chart_df['pitchtype'].unique()]:
+            stuff_text = chart_df.loc[chart_df['pitchtype']==pitch,'plv_stuff_plus'].mean()
             fig.add_trace(go.Scatter3d(
                 x=[None],
                 y=[None],
                 z=[None],
                 mode="markers",
-                name=pitch_names[pitch],
+                name=pitch_names[pitch]+f'{stuff_text:.1f}',
                 marker=dict(size=7, color=marker_colors[pitch]),
                 ))
     overall_stuff = chart_df['plv_stuff_plus'].mean()
