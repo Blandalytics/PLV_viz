@@ -218,15 +218,15 @@ def stuff_chart(df,player,palette):
     if palette=='plvStuff+':
         labels = chart_df['3d_stuff_plus']
         marker_dict = dict(color = labels, size= 5, line=dict(width = 0), 
-                                                     cmin=50,cmax=150,
-                                                     colorscale=[[x/100,'rgb'+str(tuple([int(y*255) for y in sns.color_palette('vlag',n_colors=101)[x]]))] for x in range(101)], 
-                                                     colorbar=dict(
-                                                         title="plvStuff+\n",
-                                                         titleside="top",
-                                                         tickmode="array",
-                                                         tickvals=[50, 75, 100, 125, 150],
-                                                         ticks="outside"
-                                                     ))
+                           cmin=50,cmax=150,
+                           colorscale=[[x/100,'rgb'+str(tuple([int(y*255) for y in sns.color_palette('vlag',n_colors=101)[x]]))] for x in range(101)], 
+                           colorbar=dict(
+                               title="plvStuff+\n",
+                               titleside="top",
+                               tickmode="array",
+                               tickvals=[50, 75, 100, 125, 150],
+                               ticks="outside"
+                               ))
         bonus_text = chart_df['pitchtype'].map(pitch_names)
         hover_text = '<b>%{text}</b><br><b>plvStuff+: %{marker.color:.1f}</b><br>Velo: %{y}mph<br>IVB: %{z:.1f}"<br>Arm-Side Break: %{x:.1f}"<extra></extra>'
     else:
