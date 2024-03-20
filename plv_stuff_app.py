@@ -240,7 +240,15 @@ def stuff_chart(df,player,palette):
                          customdata=chart_df['pitchtype'].map(pitch_names),
                          hovertemplate=hover_text
                          )
-
+    
+    layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
+                                  ),
+                       scene = Scene,
+                       showlegend = False if palette=='plvStuff+' else True,
+                       height = 500,width = 500                  
+                      )
+    data = [trace]
+    fig = go.Figure(data = data, layout = layout)
     if palette != 'plvStuff+':
         for pitch in chart_df['pitchtype'].value_counts().index:
             fig.add_trace(go.Scatter3d(
@@ -251,15 +259,6 @@ def stuff_chart(df,player,palette):
                 name=pitch_names[pitch],
                 marker=dict(size=7, color=marker_colors[pitch]),
                 ))
-    
-    layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
-                                  ),
-                       scene = Scene,
-                       showlegend = False if palette=='plvStuff+' else True,
-                       height = 500,width = 500                  
-                      )
-    data = [trace]
-    fig = go.Figure(data = data, layout = layout)
     overall_stuff = chart_df['plv_stuff_plus'].mean()
     fig.update_layout(
         title={
