@@ -243,7 +243,7 @@ def stuff_chart(df,player,palette):
     layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
                                   ),
                        scene = Scene,
-                       showlegend=False if palette=='plvStuff+' else True
+                       showlegend=False if palette=='plvStuff+' else True,
                        height = 500,width = 500                  
                       )
     data = [trace]
