@@ -258,7 +258,7 @@ def stuff_chart(df,player,palette):
                 y=[None],
                 z=[None],
                 mode="markers",
-                name=pitch_names[pitch]+f'{stuff_text:.1f}',
+                name=pitch_names[pitch]+f': {stuff_text:.1f}',
                 marker=dict(size=7, color=marker_colors[pitch]),
                 ))
     overall_stuff = chart_df['plv_stuff_plus'].mean()
