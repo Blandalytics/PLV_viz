@@ -242,7 +242,7 @@ def stuff_chart(df,player,palette):
                          )
 
     if palette != 'plvStuff+':
-        for pitch in chart_df['pitchtype'].value_counts.index():
+        for pitch in chart_df['pitchtype'].value_counts().index:
             fig.add_trace(go.Scatter3d(
                 x=[None],
                 y=[None],
