@@ -183,7 +183,7 @@ st.dataframe(year_data
              hide_index=True
             )
 
-st.title('Interactive 3D Stuff Plot')
+st.title("Interactive 3D Stuff Plot")
 st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate the chart\n- Scroll to zoom\n- Right click + drag to move the chart')
 
 palette = st.radio('Choose a color palette:', ['plvStuff+','Pitch Type'])
