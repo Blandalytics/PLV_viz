@@ -232,7 +232,7 @@ def stuff_chart(df,player,palette):
     trace = go.Scatter3d(x=chart_df['IHB'].mul(-1 if hand=='R' else 1), y=chart_df['velo'], z=chart_df['IVB'], 
                          mode='markers', marker=marker_dict,
                          text=bonus_text,
-                         customdata=chart_df['pitchtype'],
+                         customdata=chart_df['pitchtype'].map(pitch_names),
                          hovertemplate=hover_text
                          )
     layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
