@@ -268,7 +268,7 @@ def stuff_chart(df,player,palette):
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
-            'yanchor': 'top'}
+            'yanchor': 'top'},
         legend={
             "x": 0.8,
             "y": 0.5}
