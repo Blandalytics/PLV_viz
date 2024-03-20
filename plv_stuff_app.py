@@ -181,7 +181,9 @@ st.dataframe(year_data
 
 st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate the chart\n- Scroll to zoom\n- Right click + drag to move the chart')
 
-def stuff_chart(df,player):
+palette = st.radio('Choose a color palette:', ['plvStuff+','Pitch Type'])
+
+def stuff_chart(df,player,palette):
     chart_df = df.loc[(df['pitchername']==player)].copy()
     chart_df['3d_stuff_plus'] = 100
 
@@ -207,10 +209,10 @@ def stuff_chart(df,player):
                              backgroundcolor=pl_background,
                              range=(-ax_lim,ax_lim)),
                  )
-    
-    labels = chart_df['3d_stuff_plus']
-    trace = go.Scatter3d(x=chart_df['IHB'].mul(-1 if hand=='R' else 1), y=chart_df['velo'], z=chart_df['IVB'], 
-                         mode='markers', marker=dict(color = labels, size= 5, line=dict(width = 0), 
+
+    if palette=='plvStuff+':
+        labels = chart_df['3d_stuff_plus']
+        marker_dict = dict(color = labels, size= 5, line=dict(width = 0), 
                                                      cmin=50,cmax=150,
                                                      colorscale=[[x/100,'rgb'+str(tuple([int(y*255) for y in sns.color_palette('vlag',n_colors=101)[x]]))] for x in range(101)], 
                                                      colorbar=dict(
@@ -219,8 +221,12 @@ def stuff_chart(df,player):
                                                          tickmode="array",
                                                          tickvals=[50, 75, 100, 125, 150],
                                                          ticks="outside"
-                                                     )
-                                                    ),
+                                                     ))
+    else:
+        labels = chart_df['pitchtype'].map(marker_colors)
+        marker_dict = dict(color=labels,size=5,line=dict(width=0))
+    trace = go.Scatter3d(x=chart_df['IHB'].mul(-1 if hand=='R' else 1), y=chart_df['velo'], z=chart_df['IVB'], 
+                         mode='markers', marker=marker_dict,
                          text=chart_df['pitchtype'].map(pitch_names),
                          hovertemplate =
                          '<b>%{text}</b>'+
