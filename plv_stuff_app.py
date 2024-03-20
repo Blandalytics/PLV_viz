@@ -251,7 +251,7 @@ def stuff_chart(df,player,palette):
     data = [trace]
     fig = go.Figure(data = data, layout = layout)
     if palette != 'plvStuff+':
-        for pitch in chart_df['pitchtype'].value_counts().index:
+        for pitch in [x in chart_df['pitchtype'].value_counts().index if x in pitch_order]:
             fig.add_trace(go.Scatter3d(
                 x=[None],
                 y=[None],
