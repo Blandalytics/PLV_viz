@@ -185,6 +185,8 @@ def location_chart(df,player):
     chart_df['smoothed_csw'] = 0.288
     chart_df['smoothed_wOBAcon'] = 0.3284
 
+    plate_y = -.25
+
     for pitchtype in chart_df['pitchtype'].unique():
         if chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]==1:
             chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_csw'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'csw_pred']
