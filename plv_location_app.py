@@ -314,6 +314,6 @@ def location_chart(df,player,pitch_type):
         )
     fig.show()
     st.plotly_chart(fig,
-                    # theme=None
+                    theme=None
                    )
 location_chart(year_data,player,pitch_type)
