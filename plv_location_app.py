@@ -171,7 +171,7 @@ st.dataframe(year_data
              .sort_values('Pitches',ascending=False)
              .reset_index()
              .style
-             .format(precision=1, thousands=',')
+             .format(precision=3, thousands=',')
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvLocation+']),
              hide_index=True
