@@ -276,4 +276,4 @@ def stuff_chart(df,player,palette):
     fig.update_xaxes(showgrid=True, gridwidth=2, gridcolor='white')
     fig.update_yaxes(showgrid=True, gridwidth=2, gridcolor='white')
     st.plotly_chart(fig,use_container_width=True, theme=None)
-stuff_chart(year_data,player,palette,pitch_type)
+stuff_chart(year_data,player,palette)
