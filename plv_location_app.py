@@ -200,7 +200,7 @@ def location_chart(df,player,pitch_type):
     if pitch_type=='All':
         chart_df = df.loc[(df['pitchername']==player)].copy()
     else:
-        chart_df = df.loc[(df['pitchername']==player) & (df['pitchtype']==pitch_type)].copy()
+        chart_df = df.loc[(df['pitchername']==player) & (df['pitchtype']=={v: k for k, v in pitch_names.items()}[pitch_type])].copy()
     chart_df['smoothed_csw'] = 0.288
     chart_df['smoothed_wOBAcon'] = 0.3284
 
