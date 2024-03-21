@@ -151,12 +151,6 @@ st.dataframe(year_data
                  'wOBAcon_pred':'mean',
                  'PLV_loc_plus':'mean'
                  })
-             .round({
-                 'pitch_id':0,
-                 'csw_pred':3,
-                 'wOBAcon_pred':3,
-                 'PLV_loc_plus':1
-                 })
              .astype({
                  'pitch_id':'int',
                  'csw_pred':'float',
@@ -177,7 +171,7 @@ st.dataframe(year_data
              .sort_values('Pitches',ascending=False)
              .reset_index()
              .style
-             .format(precision=3, thousands=',')
+             .format({'Pitches':'{:,.0f}', 'locCSW': '{:.1%}', 'wOBAcon_pred': '{:.3f}', 'plvLocation+': '{:.1f}'})
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvLocation+']),
              hide_index=True
