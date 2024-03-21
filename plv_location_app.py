@@ -151,6 +151,12 @@ st.dataframe(year_data
                  'wOBAcon_pred':'mean',
                  'PLV_loc_plus':'mean'
                  })
+             .round({
+                 'pitch_id':0,
+                 'csw_pred':3,
+                 'wOBAcon_pred':3,
+                 'PLV_loc_plus':1
+                 })
              .astype({
                  'pitch_id':'int',
                  'csw_pred':'float',
