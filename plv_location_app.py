@@ -206,16 +206,16 @@ def location_chart(df,player,pitch_type):
 
     plate_y = -.25
 
-    for pitchtype in chart_df['pitchtype'].unique():
-        if chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]==1:
-            chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_csw'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'csw_pred']
-            chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_wOBAcon'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'wOBAcon_pred']
-        else:
-            knn=KNeighborsRegressor(n_neighbors=min(10,int(chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]/2)))
-            model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['p_x','p_z','balls','strikes']],chart_df.loc[chart_df['pitchtype']==pitchtype,'csw_pred'])
-            chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_csw'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['p_x','p_z','balls','strikes']])
-            model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['p_x','p_z','balls','strikes']],chart_df.loc[chart_df['pitchtype']==pitchtype,'wOBAcon_pred'])
-            chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_wOBAcon'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['p_x','p_z','balls','strikes']])
+    # for pitchtype in chart_df['pitchtype'].unique():
+    #     if chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]==1:
+    #         chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_csw'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'csw_pred']
+    #         chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_wOBAcon'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'wOBAcon_pred']
+    #     else:
+    #         knn=KNeighborsRegressor(n_neighbors=min(10,int(chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]/2)))
+    #         model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['p_x','p_z','balls','strikes']],chart_df.loc[chart_df['pitchtype']==pitchtype,'csw_pred'])
+    #         chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_csw'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['p_x','p_z','balls','strikes']])
+    #         model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['p_x','p_z','balls','strikes']],chart_df.loc[chart_df['pitchtype']==pitchtype,'wOBAcon_pred'])
+    #         chart_df.loc[chart_df['pitchtype']==pitchtype,'smoothed_wOBAcon'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['p_x','p_z','balls','strikes']])
     
     layout = go.Layout(height = 600,width = 500,xaxis_range=[-2.5,2.5], yaxis_range=[-1,6])
 
@@ -234,7 +234,7 @@ def location_chart(df,player,pitch_type):
                                    ))
     trace = go.Scatter(x=chart_df['p_x'].mul(-1), y=chart_df['p_z'], mode='markers', 
                        marker=marker_dict,text=bonus_text,
-                       customdata=chart_df[['balls','strikes','smoothed_csw','smoothed_wOBAcon']],
+                       customdata=chart_df[['balls','strikes','csw_pred','wOBAcon_pred']],
                        hovertemplate=hover_text,
                         showlegend=False)
     
