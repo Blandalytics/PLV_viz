@@ -304,7 +304,7 @@ def location_chart(df,player,pitch_type):
             template='simple_white',
             title={
                 'text': f"{player}'s{type_text}<br>plvLocation+: {overall_loc:.1f}",
-                'y':0.95,
+                'y':0.85,
                 'x':0.5,
                 'xanchor': 'center',
                 'yanchor': 'top'},
