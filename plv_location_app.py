@@ -200,7 +200,7 @@ def location_chart(df,player):
 
     labels = chart_df['PLV_loc_plus']
     bonus_text = chart_df['pitchtype'].map(pitch_names)
-    hover_text = '<b>%{text}</b><br><b>plvLoc+: %{marker.color:.1f}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<br>CSW Pred: %{customdata[2]:.1%}<br>wOBAcon Pred: %{customdata[3]:.3f}<extra></extra>'
+    hover_text = '<b>%{text}</b><br><b>plvLoc+: %{marker.color:.1f}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<br>locCSW: %{customdata[2]:.1%}<br>loc wOBAcon: %{customdata[3]:.3f}<extra></extra>'
     marker_dict = dict(color = labels, size= 5, line=dict(width=0), 
                                cmin=50,cmax=150,
                                colorscale=[[x/100,'rgb'+str(tuple([int(y*255) for y in sns.color_palette('vlag',n_colors=101)[x]]))] for x in range(101)], 
