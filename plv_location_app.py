@@ -292,5 +292,5 @@ def location_chart(df,player):
                 "y": 0.67}
         )
     fig.show()
-    st.plotly_chart(fig,use_container_width=True, theme=None)
+    st.plotly_chart(fig,theme=None)
 location_chart(year_data,player)
