@@ -180,8 +180,27 @@ st.dataframe(year_data
 st.title("Interactive 3D Location Plot")
 st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate the chart\n- Scroll to zoom\n- Right click + drag to move the chart')
 
-def location_chart(df,player):
-    chart_df = df.loc[(df['pitchername']==player)].copy()
+pitches = {'All':1}
+pitches.update(year_data
+    .loc[year_data['pitchername']==player,'pitchtype']
+    .map(pitch_names)
+    .value_counts(normalize=True)
+    .where(lambda x : x>0.005)
+    .dropna()
+    .to_dict()
+)
+
+select_list = []
+for pitch in pitches.keys():
+    select_list += [f'{pitch} ({pitches[pitch]:.1%})']
+pitch_type = st.selectbox('Choose a pitch (season usage):', select_list)
+pitch_type = pitch_type.split('(')[0][:-1]
+
+def location_chart(df,player,pitch_type):
+    if pitch_type=='All':
+        chart_df = df.loc[(df['pitchername']==player)].copy()
+    else:
+        chart_df = df.loc[(df['pitchername']==player) & (df['pitchtype']==pitch_type)].copy()
     chart_df['smoothed_csw'] = 0.288
     chart_df['smoothed_wOBAcon'] = 0.3284
 
@@ -280,9 +299,10 @@ def location_chart(df,player):
     fig.update_yaxes(visible=False, showticklabels=False)
     
     overall_loc = chart_df['PLV_loc_plus'].mean()
+    type_text = '' if pitch_type=='All' else ' '+pitch_type+'s'
     fig.update_layout(
             title={
-                'text': f"{player}'s<br>plvLocation+: {overall_loc:.1f}",
+                'text': f"{player}'s{type_text}<br>plvLocation+: {overall_loc:.1f}",
                 'y':0.95,
                 'x':0.5,
                 'xanchor': 'center',
