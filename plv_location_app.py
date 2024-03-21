@@ -301,6 +301,7 @@ def location_chart(df,player,pitch_type):
     overall_loc = chart_df['PLV_loc_plus'].mean()
     type_text = '' if pitch_type=='All' else ' '+pitch_type+'s'
     fig.update_layout(
+            template='simply_white',
             title={
                 'text': f"{player}'s{type_text}<br>plvLocation+: {overall_loc:.1f}",
                 'y':0.95,
