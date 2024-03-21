@@ -130,7 +130,7 @@ st.dataframe(pd.pivot_table((year_data
 
 players = list(year_data
                .groupby('pitchername')
-               [['pitch_id','plv_stuff_plus']]
+               [['pitch_id','PLV_loc_plus']]
                .agg({'pitch_id':'count','PLV_loc_plus':'mean'})
                .query(f'pitch_id >={pitch_threshold}')
                .reset_index()
