@@ -185,7 +185,7 @@ pitches.update(year_data
     .loc[year_data['pitchername']==player,'pitchtype']
     .map(pitch_names)
     .value_counts(normalize=True)
-    .where(lambda x : x>0.005)
+    .where(lambda x : x>0)
     .dropna()
     .to_dict()
 )
