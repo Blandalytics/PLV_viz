@@ -103,7 +103,7 @@ st.dataframe(pd.pivot_table((year_data
              .reset_index()
              .set_axis(['Pitcher','CH','CU','FC','FF','FS','SI','SL','ST','Pitches','plvLocation+'], axis=1)
              .set_index('Pitcher')
-             [['Pitches','plvStuff+']+pitch_order]
+             [['Pitches','plvLocation+']+pitch_order]
              .query(f'Pitches >= {pitch_threshold}')
              .sort_values('plvLocation+',ascending=False)
              .fillna(-100)
