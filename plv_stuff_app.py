@@ -190,7 +190,7 @@ st.dataframe(year_data
              .dropna()
              .sort_values('Pitches',ascending=False)
              .reset_index()
-             [['Pitches','Velo (mph)','IVB','Arm-Side Break','xWhiff%','stuff wOBAcon','plvStuff+']]
+             [['Pitch Type','Pitches','Velo (mph)','IVB','Arm-Side Break','xWhiff%','stuff wOBAcon','plvStuff+']]
              .style
              .format({'Pitches':'{:,.0f}', 'Velo (mph)':'{:.1f}', 'IVB': '{:.1f}"', 'Arm-Side Break': '{:.1f}"', 'xWhiff%':'{:.1%}', 'stuff wOBAcon':'{:.3f}', 'plvStuff+': '{:.1f}'})
              .background_gradient(axis=0, vmin=50, vmax=150,
