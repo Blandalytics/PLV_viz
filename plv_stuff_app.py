@@ -72,7 +72,7 @@ logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
 st.title("PLV Stuff App")
-st.write('(Red is good 🔥')
+st.write('(Red is good 🔥)')
 
 # Year
 years = [2023,2022,2021,2020]
