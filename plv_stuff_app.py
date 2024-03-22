@@ -156,7 +156,7 @@ st.dataframe(year_data
                  'velo':'mean',
                  'IVB':'mean',
                  'IHB':'mean',
-                 'swinging_strike_pred',:'mean',
+                 'swinging_strike_pred':'mean',
                  'plv_stuff_plus':'mean'
                  })
              .astype({
@@ -164,7 +164,7 @@ st.dataframe(year_data
                  'velo':'float',
                  'IVB':'float',
                  'IHB':'float',
-                 'swinging_strike_pred',:'float',
+                 'swinging_strike_pred':'float',
                  'plv_stuff_plus':'float'
                  })
              .reset_index()
