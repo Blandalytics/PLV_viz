@@ -72,6 +72,7 @@ logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
 st.title("PLV Location App")
+st.write('(Red is good 🔥)')
 
 # Year
 years = [2023,2022,2021,2020]
@@ -177,7 +178,7 @@ st.dataframe(year_data
              hide_index=True
             )
 
-st.title("Interactive 3D Location Plot")
+st.title("Interactive Location Plot")
 st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to crop the chart\n- Scroll to zoom')
 
 pitches = {'All':1}
