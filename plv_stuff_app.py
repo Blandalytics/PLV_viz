@@ -151,13 +151,15 @@ st.write(f"{player}'s Repertoire")
 st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
              .groupby('pitchtype')
-             [['pitch_id','velo','IVB','IHB','swinging_strike_pred','plv_stuff_plus']]
+             [['pitch_id','velo','IVB','IHB','swinging_strike_pred','plv_stuff_plus','wOBAcon_pred','in_play_input']]
              .agg({
                  'pitch_id':'count',
                  'velo':'mean',
                  'IVB':'mean',
                  'IHB':'mean',
                  'swinging_strike_pred':'mean',
+                 'wOBAcon_pred':'sum',
+                 'in_play_input':'sum',
                  'plv_stuff_plus':'mean'
                  })
              .astype({
@@ -166,11 +168,14 @@ st.dataframe(year_data
                  'IVB':'float',
                  'IHB':'float',
                  'swinging_strike_pred':'float',
+                 'wOBAcon_pred':'float',
+                 'in_play_input':'float',
                  'plv_stuff_plus':'float'
                  })
              .reset_index()
              .assign(pitchtype = lambda x: x['pitchtype'].map(pitch_names),
-                     IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1)
+                     IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1),
+                     wOBAcon = lambda x: x['wOBAcon_pred'].div(x['in_play_input'])
                     )
              .rename(columns={
                  'pitchtype':'Pitch Type',
@@ -178,6 +183,7 @@ st.dataframe(year_data
                  'velo':'Velo (mph)',
                  'IHB':'Arm-Side Break',
                  'swinging_strike_pred':'xWhiff%',
+                 'wOBAcon':'stuff wOBAcon',
                  'plv_stuff_plus':'plvStuff+'
                  })
              .set_index('Pitch Type')
@@ -185,7 +191,7 @@ st.dataframe(year_data
              .sort_values('Pitches',ascending=False)
              .reset_index()
              .style
-             .format({'Pitches':'{:,.0f}', 'Velo (mph)':'{:.1f}', 'IVB': '{:.1f}"', 'Arm-Side Break': '{:.1f}"', 'xWhiff%':'{:.1%}', 'plvStuff+': '{:.1f}'})
+             .format({'Pitches':'{:,.0f}', 'Velo (mph)':'{:.1f}', 'IVB': '{:.1f}"', 'Arm-Side Break': '{:.1f}"', 'xWhiff%':'{:.1%}', 'stuff wOBAcon':'{:.3f}', 'plvStuff+': '{:.1f}'})
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvStuff+']),
              hide_index=True
