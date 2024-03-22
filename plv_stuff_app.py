@@ -94,10 +94,9 @@ def load_data(year):
     return df
 
 year_data = load_data(year)
-st.write(year_data['pitchtype'].unique())
 
 pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
-sort_order = sorted(pitch_order)
+drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
 st.dataframe(pd.pivot_table((year_data
                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
@@ -105,10 +104,10 @@ st.dataframe(pd.pivot_table((year_data
                    columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
                      plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
-             .drop(columns=[('pitch_id',y) for y in pitch_order+['KN','SC','UN']])
+             .drop(columns=[('pitch_id',y) for y in pitch_order+drop_pitches])
              .droplevel(0, axis=1)
              .reset_index()
-             .set_axis(['Pitcher']+sort_order+['Pitches','plvStuff+'], axis=1)
+             .set_axis(['Pitcher']+sorted(pitch_order)+['Pitches','plvStuff+'], axis=1)
              .set_index('Pitcher')
              [['Pitches','plvStuff+']+pitch_order]
              .query(f'Pitches >= {pitch_threshold}')
