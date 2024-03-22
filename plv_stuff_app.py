@@ -168,7 +168,7 @@ st.dataframe(year_data
              .rename(columns={
                  'pitchtype':'Pitch Type',
                  'pitch_id':'Pitches',
-                 'velo':'Velo',
+                 'velo':'Velo (mph)',
                  'IHB':'Arm-Side Break',
                  'plv_stuff_plus':'plvStuff+'
                  })
@@ -177,7 +177,7 @@ st.dataframe(year_data
              .sort_values('Pitches',ascending=False)
              .reset_index()
              .style
-             .format({'Pitches':'{:,.0f}', 'Velo':'{:.1f}mph', 'IVB': '{:.1f}"', 'Arm-Side Break': '{:.1f}"', 'plvStuff+': '{:.1f}'})
+             .format({'Pitches':'{:,.0f}', 'Velo (mph)':'{:.1f}', 'IVB': '{:.1f}"', 'Arm-Side Break': '{:.1f}"', 'plvStuff+': '{:.1f}'})
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvStuff+']),
              hide_index=True
