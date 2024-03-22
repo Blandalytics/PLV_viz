@@ -95,7 +95,7 @@ def load_data(year):
 
 year_data = load_data(year)
 
-pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
+pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS']# if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
 drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
 st.write(pd.pivot_table((year_data
                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
