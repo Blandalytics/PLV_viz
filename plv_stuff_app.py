@@ -97,17 +97,11 @@ year_data = load_data(year)
 
 pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
 drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
-st.write(pd.pivot_table((year_data
-                     .loc[(year_data['pitchtype'].isin(pitch_order)) & 
-                          (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
-                   values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
-                   columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
-             .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
-                     plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
-         .columns.values
-        )
+dtype_map = {x:'float' for x in pitch_order}
+dtype_map.update({'Pitches':'int','plvStuff+':'float'})
+
 st.dataframe(pd.pivot_table((year_data
-                     .loc[(year_data['pitchtype'].isin(pitch_order+['ST'])) & 
+                     .loc[(year_data['pitchtype'].isin(pitch_order)) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
                    values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
@@ -122,18 +116,7 @@ st.dataframe(pd.pivot_table((year_data
              .query(f'Pitches >= {pitch_threshold}')
              .sort_values('plvStuff+',ascending=False)
              .fillna(-100)
-             .astype({
-                 'CH':'float',
-                 'CU':'float',
-                 'FC':'float',
-                 'FF':'float',
-                 'FS':'float',
-                 'SI':'float',
-                 'SL':'float',
-                 'ST':'float',
-                 'Pitches':'int',
-                 'plvStuff+':'float'
-             })
+             .astype(dtype_map)
              .reset_index()
              .style
              .format(precision=1, thousands=',')
