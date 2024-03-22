@@ -94,6 +94,7 @@ def load_data(year):
     return df
 
 year_data = load_data(year)
+st.write(year_data['pitchtype'].unique())
 
 pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
 sort_order = sorted(pitch_order)
