@@ -178,7 +178,7 @@ st.dataframe(year_data
             )
 
 st.title("Interactive 3D Location Plot")
-st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate the chart\n- Scroll to zoom\n- Right click + drag to move the chart')
+st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to crop the chart\n- Scroll to zoom')
 
 pitches = {'All':1}
 pitches.update(year_data
