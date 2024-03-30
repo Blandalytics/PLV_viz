@@ -91,7 +91,22 @@ def load_data(year):
 
 year_data = load_data(year)
 
-pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS']
+pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
+drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
+dtype_map = {x:'float' for x in pitch_order}
+dtype_map.update({'Pitches':'int','plvLocation+':'float'})
+
+# st.dataframe(pd.pivot_table((year_data
+#                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
+#                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
+#                    values=['PLV_loc_plus','pitch_id'], index=['pitchername'],
+#                    columns='pitchtype', aggfunc={'PLV_loc_plus':'mean','pitch_id':'count'})
+#              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
+#                      plvLocation = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
+#              .drop(columns=[('pitch_id',y) for y in pitch_order+['KN','SC','UN']])
+#              .droplevel(0, axis=1)
+#              .reset_index()
+#              .set_axis(['Pitcher','CH','CU','FC','FF','FS','SI','SL','ST','Pitches','plvLocation+'], axis=1)
 st.dataframe(pd.pivot_table((year_data
                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
@@ -99,10 +114,10 @@ st.dataframe(pd.pivot_table((year_data
                    columns='pitchtype', aggfunc={'PLV_loc_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
                      plvLocation = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
-             .drop(columns=[('pitch_id',y) for y in pitch_order+['KN','SC','UN']])
+             .drop(columns=[('pitch_id',y) for y in pitch_order+drop_pitches])
              .droplevel(0, axis=1)
              .reset_index()
-             .set_axis(['Pitcher','CH','CU','FC','FF','FS','SI','SL','ST','Pitches','plvLocation+'], axis=1)
+             .set_axis(['Pitcher']+sorted(pitch_order)+['Pitches','plvLocation+'], axis=1)
              .set_index('Pitcher')
              [['Pitches','plvLocation+']+pitch_order]
              .query(f'Pitches >= {pitch_threshold}')
