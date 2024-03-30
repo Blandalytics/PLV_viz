@@ -123,18 +123,7 @@ st.dataframe(pd.pivot_table((year_data
              .query(f'Pitches >= {pitch_threshold}')
              .sort_values('plvLocation+',ascending=False)
              .fillna(-100)
-             .astype({
-                 'CH':'float',
-                 'CU':'float',
-                 'FC':'float',
-                 'FF':'float',
-                 'FS':'float',
-                 'SI':'float',
-                 'SL':'float',
-                 'ST':'float',
-                 'Pitches':'int',
-                 'plvLocation+':'float'
-             })
+             .astype(dtype_map)
              .reset_index()
              .style
              .format(precision=1, thousands=',')
