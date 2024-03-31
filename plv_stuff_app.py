@@ -76,7 +76,7 @@ st.write('(Red is good 🔥)')
 
 # Year
 years = [2024, 2023,2022,2021,2020]
-year = st.radio('Choose a year:', years)
+year = st.selectbox('Choose a year:', years)
 
 pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   min_value=0, 
