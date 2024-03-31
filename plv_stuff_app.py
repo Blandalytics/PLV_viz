@@ -75,7 +75,7 @@ st.title("PLV Stuff App")
 st.write('(Red is good 🔥)')
 
 # Year
-years = [2023,2022,2021,2020]
+years = [2024, 2023,2022,2021,2020]
 year = st.radio('Choose a year:', years)
 
 pitch_threshold = st.number_input(f'Min # of Pitches:',
