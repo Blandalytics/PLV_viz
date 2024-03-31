@@ -97,7 +97,6 @@ def load_data(year):
     return df
 
 year_data = load_data(year)
-st.dataframe(year_data)
 
 pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
 drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
