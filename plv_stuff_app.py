@@ -1,4 +1,5 @@
 import streamlit as st
+import datetime
 import numpy as np
 import pandas as pd
 
@@ -84,10 +85,12 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   step=50, 
                                   value=500 if year != 2024 else 10)
 
+month_max = datetime.date.today().month if year==datetime.date.today().year else 11
+
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
-    for month in range(3,11):
+    for month in range(3,month_max):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Stuff_App_Data-{month}.parquet?raw=true'
         df = pd.concat([df,pd.read_parquet(file_name)])
     df = df.reset_index(drop=True)
