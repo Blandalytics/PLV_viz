@@ -84,7 +84,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   min_value=0, 
                                   max_value=2000,
                                   step=50, 
-                                  value=500 if year != 2024 else 10)
+                                  value=500 if year != 2024 else 50)
 
 month_max = datetime.date.today().month + 1 if year==datetime.date.today().year else 11
 
