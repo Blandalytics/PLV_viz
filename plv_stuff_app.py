@@ -142,7 +142,7 @@ player = st.selectbox('Choose a player:', players, index=default_ix)
 
 hand = 'L' if year_data.loc[(year_data['pitchername']==player),'pitcherside_L'].values[0] == 1 else 'R'
 
-st.write(f"{player}'s Repertoire")
+st.write(f"{player}'s {year} Repertoire")
 st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
              .groupby('pitchtype')
