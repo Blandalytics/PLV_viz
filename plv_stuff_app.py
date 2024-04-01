@@ -104,7 +104,7 @@ dtype_map.update({'Pitches':'int','plvStuff+':'float'})
 
 st.dataframe(pd.pivot_table((year_data
                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
-                          (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
+                          (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=min(pitch_threshold,10))]), 
                    values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
