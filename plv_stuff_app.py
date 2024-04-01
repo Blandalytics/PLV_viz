@@ -76,7 +76,7 @@ st.title("PLV Stuff App")
 st.write('(Red is good 🔥)')
 
 # Year
-years = [#2024, 
+years = [2024, 
          2023,2022,2021,2020]
 year = st.selectbox('Choose a year:', years)
 
@@ -91,11 +91,12 @@ month_max = datetime.date.today().month + 1 if year==datetime.date.today().year 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
-    for month in range(3,month_max):
+    if datetime.date.today().month == 3:
+        df = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Stuff_App_Data-3.parquet?raw=true')
+    for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Stuff_App_Data-{month}.parquet?raw=true'
         df = pd.concat([df,pd.read_parquet(file_name)], ignore_index=True)
-    df = df.reset_index(drop=True)
-    return df
+    return df.reset_index(drop=True)
 
 year_data = load_data(year)
 
