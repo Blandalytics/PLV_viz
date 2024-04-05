@@ -86,7 +86,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   step=25, 
                                   value=500 if year != 2024 else 0)
 
-@st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
+@st.cache_data(ttl=1800,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
     for month in range(3,11):
