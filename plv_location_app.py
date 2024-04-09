@@ -98,12 +98,12 @@ pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF'
 drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
 drop_pitches = [x for x in drop_pitches if x in year_data['pitchtype'].unique()]
 dtype_map = {x:'float' for x in pitch_order}
-dtype_map.update({'Pitches':'int','plvStuff+':'float'})
+dtype_map.update({'Pitches':'int','plvLoc+':'float'})
 
 st.dataframe(pd.pivot_table((year_data
                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=min(pitch_threshold,10))]), 
-                   values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
+                   values=['PLV_loc_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'PLV_loc_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
                      plvLoc = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
