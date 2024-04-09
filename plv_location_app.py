@@ -96,42 +96,32 @@ year_data = load_data(year)
 
 pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
 drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
+drop_pitches = [x for x in drop_pitches if x in year_data['pitchtype'].unique()]
 dtype_map = {x:'float' for x in pitch_order}
-dtype_map.update({'Pitches':'int','plvLocation+':'float'})
+dtype_map.update({'Pitches':'int','plvStuff+':'float'})
 
-# st.dataframe(pd.pivot_table((year_data
-#                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
-#                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
-#                    values=['PLV_loc_plus','pitch_id'], index=['pitchername'],
-#                    columns='pitchtype', aggfunc={'PLV_loc_plus':'mean','pitch_id':'count'})
-#              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
-#                      plvLocation = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
-#              .drop(columns=[('pitch_id',y) for y in pitch_order+['KN','SC','UN']])
-#              .droplevel(0, axis=1)
-#              .reset_index()
-#              .set_axis(['Pitcher','CH','CU','FC','FF','FS','SI','SL','ST','Pitches','plvLocation+'], axis=1)
 st.dataframe(pd.pivot_table((year_data
                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
-                          (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=10)]), 
-                   values=['PLV_loc_plus','pitch_id'], index=['pitchername'],
+                          (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=min(pitch_threshold,10))]), 
+                   values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'PLV_loc_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
-                     plvLocation = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
-             .drop(columns=[('pitch_id',y) for y in pitch_order+drop_pitches])
+                     plvLoc = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
+             .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
-             .set_axis(['Pitcher']+sorted(pitch_order)+['Pitches','plvLocation+'], axis=1)
+             .set_axis(['Pitcher']+sorted(pitch_order)+['Pitches','plvLoc+'], axis=1)
              .set_index('Pitcher')
-             [['Pitches','plvLocation+']+pitch_order]
+             [['Pitches','plvLoc+']+pitch_order]
              .query(f'Pitches >= {pitch_threshold}')
-             .sort_values('plvLocation+',ascending=False)
+             .sort_values('plvLoc+',ascending=False)
              .fillna(-100)
              .astype(dtype_map)
              .reset_index()
              .style
              .format(precision=1, thousands=',')
              .background_gradient(axis=0, vmin=50, vmax=150,
-                                  cmap="vlag", subset=['plvLocation+']+pitch_order)
+                                  cmap="vlag", subset=['plvLoc+']+pitch_order)
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
              hide_index=True
              )
