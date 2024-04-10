@@ -87,12 +87,9 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
-    if year == 2024:
-        for month in range(3,11):
-            file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Loc_App_Data-{month}.parquet?raw=true'
-            df = pd.concat([df,pd.read_parquet(file_name)], ignore_index=True)
-    else:
-        df = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Loc_App_Data.parquet?raw=true')
+    for month in range(3,11):
+        file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Loc_App_Data-{month}.parquet?raw=true'
+        df = pd.concat([df,pd.read_parquet(file_name)], ignore_index=True)
     return df.reset_index(drop=True)
 
 year_data = load_data(year)
