@@ -75,8 +75,10 @@ st.title("PLV Location App")
 st.write('(Red is good 🔥)')
 
 # Year
-years = [2024,2023,2022,2021,2020]
-year = st.radio('Choose a year:', years)
+# Year
+years = [2024, 
+         2023,2022,2021,2020]
+year = st.selectbox('Choose a year:', years)
 
 pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   min_value=0, 
@@ -84,7 +86,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   step=50, 
                                   value=500 if year != 2024 else 0)
 
-@st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
+@st.cache_data(ttl=1800,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
     for month in range(3,11):
@@ -106,7 +108,7 @@ st.dataframe(pd.pivot_table((year_data
                    values=['PLV_loc_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'PLV_loc_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
-                     plvLoc = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
+                     plvStuff = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
              .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
