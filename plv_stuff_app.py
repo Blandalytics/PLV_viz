@@ -84,7 +84,7 @@ pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   min_value=0, 
                                   max_value=2000,
                                   step=25, 
-                                  value=500 if year != 2024 else 0)
+                                  value=500 if year != 2024 else 50)
 
 @st.cache_data(ttl=1800,show_spinner=f"Loading {year} data")
 def load_data(year):
