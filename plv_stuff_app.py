@@ -76,15 +76,15 @@ st.title("PLV Stuff App")
 st.write('(Red is good 🔥)')
 
 # Year
-years = [2024, 
-         2023,2022,2021,2020]
+years = [2024,2023,2022,2021,2020]
 year = st.selectbox('Choose a year:', years)
 
+default_threshold = int(1000 * (datetime.date.today() - datetime.date(2024,3,28)).days / (datetime.date(2024,9,29) - datetime.date(2024,3,28)).days / 50) * 50
 pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   min_value=0, 
                                   max_value=2000,
                                   step=25, 
-                                  value=500 if year != 2024 else 50)
+                                  value=500 if year != 2024 else default_threshold)
 
 @st.cache_data(ttl=1800,show_spinner=f"Loading {year} data")
 def load_data(year):
