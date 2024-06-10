@@ -96,20 +96,20 @@ logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.p
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
-st.title("Pitchtype Cards")
+st.title("MiLB Pitchtype Cards")
 
 # Year
-years = [2023,
-         2022,2021,2020
-        ]
-year = st.radio('Choose a year:', years)
+# years = [2023,
+#          2022,2021,2020
+#         ]
+year = 2024#st.radio('Choose a year:', years)
 # Load Data
 @st.cache_data
 def load_data(year):
     df = pd.DataFrame()
     for chunk in [1,2,3]:
-        file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_Pitch_Analysis_Data-{chunk}.parquet?raw=true'
-        load_cols = ['pitchername','pitchtype','pitch_id',
+        file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_MiLB_Analysis_Data-{chunk}.parquet?raw=true'
+        load_cols = ['pitchername','pitchtype','pitch_id','game_played',
                                                     'p_hand','b_hand','IHB','IVB','called_strike_pred',
                                                     'ball_pred','PLV','velo','pitch_extension',
                                                     'adj_vaa','p_x','p_z']
@@ -122,7 +122,6 @@ def load_data(year):
           .query(f'pitchtype not in {["KN","SC","UN"]}')
           .reset_index(drop=True)
          )
-    df['game_played'] = df['pitch_id'].map(pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/date_pitch_map.parquet?raw=true').set_index('pitch_id').to_dict()['game_played'])
     df['game_played'] = pd.to_datetime(df['game_played']).dt.date
   
     return df
@@ -137,7 +136,7 @@ col1, col2, col3 = st.columns([0.4,0.35,0.25])
 
 with col1:
     # Player
-    default_ix = pitcher_list.index('Zack Wheeler')
+    default_ix = pitcher_list.index('David Festa')
     card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
 
 with col2:
@@ -463,8 +462,8 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     fig.suptitle(f"{card_player}{apostrophe_text} {year} {adjusted_pitch_name}",y=0.97,fontsize=20,x=0.525)
     date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
     fig.text(0.525,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
-    fig.text(0.77,0.07,"@Blandalytics",ha='center',fontsize=10)
-    fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
+    # fig.text(0.77,0.07,"@Blandalytics",ha='center',fontsize=10)
+    # fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type,chart_type)
