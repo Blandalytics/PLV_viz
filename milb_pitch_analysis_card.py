@@ -432,7 +432,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
             }
             ax.axhline((mlb_stat_averages[pitch_type][stat] - pitch_stats_df[stat].min())/(pitch_stats_df[stat].max()-pitch_stats_df[stat].min()),
                    linestyle='--',
-                   color=strike_zone_color)
+                   color='w')
             ax.axhline(top + (0.25 * plot_height),
                        xmin=0.1,
                        xmax=0.9,
