@@ -396,7 +396,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
   
     adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
     fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
-    fig.text(0.5,0.43,f'(Compared to MLB {adjusted_pitch_name}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
+    fig.text(0.5,0.43,f'(Compared to AAA {adjusted_pitch_name}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
     for stat in chart_stats:
         if chart_type=='Violin':
             val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
@@ -516,7 +516,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     
-    fig.suptitle(f"{card_player}{apostrophe_text} {year} {adjusted_pitch_name}",y=0.97,fontsize=20,x=0.525)
+    fig.suptitle(f"{card_player}{apostrophe_text} {year} MiLB {adjusted_pitch_name} (AAA)",y=0.97,fontsize=20,x=0.525)
     date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
     fig.text(0.525,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
     # fig.text(0.77,0.07,"@Blandalytics",ha='center',fontsize=10)
