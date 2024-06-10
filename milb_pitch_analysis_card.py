@@ -489,9 +489,9 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                        color='w')
             ax.bar(1, 1, color='w',alpha=0.1)
             ax.bar(1, plot_val, color=marker_colors[pitch_type])
-            ax.axhline(0.5,
-                       linestyle='--',
-                       color='w')
+            ax.axhline((mlb_stat_averages[pitch_type][stat] - pitch_stats_df[stat].min())/(pitch_stats_df[stat].max()-pitch_stats_df[stat].min()),
+                   linestyle='--',
+                   color='w')
             ax.text(1, plot_val+0.01,
                     format_dict[stat],
                     va='bottom',
