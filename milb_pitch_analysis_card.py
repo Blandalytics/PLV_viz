@@ -118,7 +118,7 @@ def load_data(year):
                        ])
     df = (df
           .sort_values('pitch_id')
-          .astype({'pitch_id':'float'})
+          .astype({'pitch_id':'str'})
           # .query(f'pitchtype not in {["KN","SC","UN"]}')
           .reset_index(drop=True)
          )
