@@ -67,6 +67,7 @@ round_dict = {
 years = [2024,2023,2022,2021,2020]
 year = st.selectbox('Choose a year:', years)
 
+
 @st.cache_data(ttl=60*15,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
@@ -77,6 +78,12 @@ def load_data(year):
 
 year_data = load_data(year)
 year_data['game_played'] = pd.to_datetime(year_data['game_played']).dt.date
+
+pitch_threshold = st.number_input(f'Min # of Pitches:',
+                                  min_value=0, 
+                                  max_value=year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.8).round(-2),
+                                  step=25, 
+                                  value=year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.2).round(-2))
 
 st.dataframe(pd.pivot_table((year_data
                              .groupby(['pitcher_mlb_id','pitchername','pitchtype'])
@@ -93,6 +100,7 @@ st.dataframe(pd.pivot_table((year_data
                              ), 
                             values='type_plv', index=['pitcher_mlb_id','pitchername','num_pitches','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
+             .query(f'num_pitches >={pitch_threshold}'))
              .sort_values('PLV',ascending=False)
              .fillna(-100)
              .reset_index()
