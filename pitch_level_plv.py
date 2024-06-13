@@ -138,7 +138,6 @@ st.dataframe(pd.pivot_table((year_data
              .query(f'num_pitches >={pitch_threshold}')
              .sort_values('PLV',ascending=False)
              # .fillna(-100)
-             .set_na_rep("")
              .reset_index()
              .rename(columns={'pitcher_mlb_id':'MLBAMID',
                               'pitchername':'Name',
@@ -146,7 +145,7 @@ st.dataframe(pd.pivot_table((year_data
              .set_index('MLBAMID')
              [['Name','# Pitches','PLV','FF','SI','FC','SL','ST','CU','CH','FS','KN']]
              .style
-             .format(precision=szn_round_val,thousands=',')
+             .format(precision=szn_round_val,thousands=',', na_rep="")
              .format(precision=2,subset=['PLV'])
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
                                   cmap="vlag", subset=['PLV'] if szn_metric != 'type_plv' else ['PLV']+list(year_data['pitchtype'].unique()))
