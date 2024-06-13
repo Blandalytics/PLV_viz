@@ -178,6 +178,6 @@ st.dataframe(pd.pivot_table((year_data
              .style
              .format(precision=2,thousands=',')
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
-                                  cmap="vlag", subset=['PLV']+[x for x in list(year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()) if metric=='type_plv' else ['PLV'])
+                                  cmap="vlag", subset=['PLV']+list(year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()) if metric=='type_plv' else ['PLV'])
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else '')
             )
