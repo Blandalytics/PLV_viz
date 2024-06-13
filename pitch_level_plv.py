@@ -158,7 +158,7 @@ with col2:
         metric = 'type_plv'
 
 st.dataframe(pd.pivot_table((year_data
-                             .assign(IHB = lambda x: np.where(x['p_hand']=='R',x['IHB']*-1,x['IHB']))
+                             .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
                              .loc[year_data['pitchername']==player]
                              .groupby(['game_played','pitchername','pitchtype'])
                              [list(agg_dict.keys())]
