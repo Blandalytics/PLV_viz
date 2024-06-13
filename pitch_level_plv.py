@@ -123,6 +123,7 @@ st.dataframe(pd.pivot_table((year_data
                               'pitchername':'Name',
                              'num_pitches':'# Pitches'})
              .set_index('MLBAMID')
+             ['Name','# Pitches','PLV','FF','SI','FC','SL','ST','CU','CH','FS','KN']
              .style
              .format(precision=2,thousands=',')
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
