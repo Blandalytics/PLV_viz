@@ -9,6 +9,26 @@ from datetime import datetime
 from PIL import Image
 from scipy import stats
 
+# Plot Style
+pl_white = '#FEFEFE'
+pl_background = '#162B50'
+pl_text = '#72a3f7'
+pl_line_color = '#293a6b'
+
+sns.set_theme(
+    style={
+        'axes.edgecolor': pl_background,
+        'axes.facecolor': pl_background,
+        'axes.labelcolor': pl_white,
+        'xtick.color': pl_white,
+        'ytick.color': pl_white,
+        'figure.facecolor':pl_background,
+        'grid.color': pl_background,
+        'grid.linestyle': '-',
+        'legend.facecolor':pl_background,
+        'text.color': pl_white
+     }
+    )
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
@@ -85,6 +105,7 @@ marker_colors = {
     'FS':'#00a1c5',  
     'FC':'#933f2c', 
     'SL':'#9300c7',  
+    'SL/ST':'#9300c7',  
     'ST':'#C95EBE',
     'CU':'#3c44cd',
     'CH':'#07b526', 
@@ -174,6 +195,7 @@ sns.kdeplot((year_data
              .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
              .query('pitchtype!="KN"')
              .replace('ST','SL' if szn_metric=='type_plv' else 'ST')
+             .replace('SL','SL/ST' if szn_metric=='type_plv' else 'SL')
              .rename(columns=stat_names)
              .rename(columns={'PLV':'type_plv'})
              .groupby(['MLBAMID','Name','Type'])
@@ -188,7 +210,8 @@ sns.kdeplot((year_data
             hue='Type',
             palette=marker_colors,
             linewidth=3,
-            common_norm=True if szn_metric != 'type_plv' else False)
+            # common_norm=True if szn_metric != 'type_plv' else False
+           )
 fig.suptitle(f'MLB {szn_metric} Distribution')
 ax.get_yaxis().set_visible(False)
 ax.get_legend().set_title('')
