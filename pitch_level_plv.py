@@ -148,7 +148,7 @@ with col1:
 
 with col2:
     metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','IHB','IVB','pfx_x','pfx_z','Plate X','Plate Z']
-    metric = st.selectbox('Choose a metric:', players)
+    metric = st.selectbox('Choose a metric:', metrics)
     if metric=='PLV':
         metric = 'test_plv'
 
