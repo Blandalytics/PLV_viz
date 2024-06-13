@@ -93,7 +93,7 @@ with col2:
                                       min_value=0.0, 
                                       max_value=0.1,
                                       step=0.01, 
-                                      value=0.05,format='%%')
+                                      value=0.05,format='%p')
 
 
 
