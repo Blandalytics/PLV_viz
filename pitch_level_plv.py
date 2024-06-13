@@ -221,5 +221,6 @@ st.dataframe(year_data
                      )
              .round(round_dict)
              .rename(columns=stat_names)
-             .rename(columns={'Pitch ID':'Pitch #'})
+             .rename(columns={'Pitch ID':'Pitch #'}),
+             hide_index=True
 )
