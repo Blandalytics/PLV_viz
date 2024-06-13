@@ -138,7 +138,7 @@ st.dataframe(pd.pivot_table((year_data
                             columns=['pitchtype'], aggfunc="mean")
              .query(f'num_pitches >={pitch_threshold}')
              .sort_values('PLV',ascending=False)
-             # .fillna(-100)
+             .fillna(0)
              .reset_index()
              .rename(columns={'pitcher_mlb_id':'MLBAMID',
                               'pitchername':'Name',
@@ -150,8 +150,7 @@ st.dataframe(pd.pivot_table((year_data
              .format(precision=2,subset=['PLV'])
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
                                   cmap="vlag", subset=['PLV'] if szn_metric != 'type_plv' else ['PLV']+list(year_data['pitchtype'].unique()))
-             .highlight_null(color='transparent')
-             .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
+             .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
             hide_index=True
             )
 
@@ -186,7 +185,7 @@ st.dataframe(pd.pivot_table((year_data
                              ),
                             values=player_metric, index=['pitchername','game_played','num_pitches','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
-             .fillna(-100)
+             .fillna(0)
              .reset_index()
              .rename(columns={'pitchername':'Name',
                              'num_pitches':'# Pitches',
@@ -198,7 +197,7 @@ st.dataframe(pd.pivot_table((year_data
              .format(precision=2,subset=['PLV'])
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
                                   cmap="vlag", subset=['PLV']+list(year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()) if player_metric=='type_plv' else ['PLV'])
-             .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else '')
+             .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else '')
             )
 
 st.header('Pitch-Level Metrics')
