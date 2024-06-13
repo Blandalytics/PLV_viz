@@ -8,6 +8,7 @@ from datetime import datetime
 from PIL import Image
 from scipy import stats
 
+
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
