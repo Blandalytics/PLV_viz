@@ -188,3 +188,34 @@ st.dataframe(pd.pivot_table((year_data
                                   cmap="vlag", subset=['PLV']+list(year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()) if metric=='type_plv' else ['PLV'])
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else '')
             )
+
+st.header('Pitch-Level Metrics')
+games = list(year_data.loc[year_data['pitchername']==player,'game_played'].unique())
+game_date = st.selectbox('Choose a game:', games, index=games[-1])
+
+st.dataframe(year_data
+             .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
+             .loc[(year_data['pitchername']==player) & 
+                  (year_data['game_played']==game_date),
+             ['game_played','pitchername','pitchtype']+list(agg_dict.keys())]
+             .sort_values('pitch_id')
+             .drop(columns=['pitch_id'])
+             .reset_index(drop=True)
+             .reset_index()
+             .assign(index = lambda x: x['index']+1)
+             .astype({
+                 'velo':'float',
+                 'pitch_extension':'float',
+                 'raw_vaa':'float',
+                 'adj_vaa':'float',
+                 'pfx_x':'float',
+                 'pfx_z':'float',
+                 'IHB':'float',
+                 'IVB':'float',
+                 'plv':'float'
+                 }
+                     )
+             .round(round_dict)
+             .rename(columns=stat_names)
+             .rename(columns={'Pitch ID':'Pitch #'})
+)
