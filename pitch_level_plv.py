@@ -91,7 +91,7 @@ with col1:
 with col2:
     usage_threshold = st.number_input(f'Min Usage %:',
                                       min_value=0.0, 
-                                      max_value=10.0,
+                                      max_value=50.0,
                                       step=1.0, 
                                       value=5.0,format='%f')
     usage_threshold = usage_threshold/100
