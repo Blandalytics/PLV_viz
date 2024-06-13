@@ -93,6 +93,7 @@ st.dataframe(pd.pivot_table((year_data
                              ), 
                             values='type_plv', index=['pitcher_mlb_id','pitchername','num_pitches','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
+             .sort_values('PLV',ascending=False)
              .fillna(-100)
              .reset_index()
              .rename(columns={'pitcher_mlb_id':'MLBAMID',
@@ -101,7 +102,7 @@ st.dataframe(pd.pivot_table((year_data
              .set_index('MLBAMID')
              .style
              .format(precision=2,thousands=',')
-             .background_gradient(axis=0, vmin=4, vmax=6,
+             .background_gradient(axis=0, vmin=4.25, vmax=5.75,
                                   cmap="vlag", subset = ['PLV']+list(year_data['pitchtype'].unique()))
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
             hide_index=True
