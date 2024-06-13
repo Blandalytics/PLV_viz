@@ -152,6 +152,7 @@ with col2:
 with col3:
     szn_metric = st.selectbox('Choose a metric:', metrics)
     szn_round_val = round_dict[{v: k for k, v in stat_names.items()}[szn_metric]]
+    szn_metric_title = szn_metric.copy()
     if szn_metric=='PLV':
         szn_metric = 'type_plv'
 
@@ -212,7 +213,7 @@ sns.kdeplot((year_data
             linewidth=3,
             # common_norm=True if szn_metric != 'type_plv' else False
            )
-fig.suptitle(f'MLB {szn_metric.replace('type_plv','PLV')} Distribution')
+fig.suptitle(f'MLB {szn_metric_title} Distribution')
 ax.get_yaxis().set_visible(False)
 ax.get_legend().set_title('')
 
@@ -230,6 +231,7 @@ with col1:
 with col2:
     player_metric = st.selectbox('Choose a metric: ', metrics)
     round_val = round_dict[{v: k for k, v in stat_names.items()}[player_metric]]
+    player_metric_title = player_metric
     if player_metric=='PLV':
         player_metric = 'type_plv'
 
