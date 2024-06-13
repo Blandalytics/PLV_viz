@@ -152,7 +152,7 @@ with col2:
 with col3:
     szn_metric = st.selectbox('Choose a metric:', metrics)
     szn_round_val = round_dict[{v: k for k, v in stat_names.items()}[szn_metric]]
-    szn_metric_title = szn_metric.copy()
+    szn_metric_title = szn_metric
     if szn_metric=='PLV':
         szn_metric = 'type_plv'
 
