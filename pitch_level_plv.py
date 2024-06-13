@@ -89,8 +89,8 @@ with col1:
                                       value=int(year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.2).round(-2)))
 
 with col2:
-    usage_threshold = st.number_input(f'Usage Threshold:',
-                                      min_value=0, 
+    usage_threshold = st.number_input(f'Min Usage %:',
+                                      min_value=0.0, 
                                       max_value=0.1,
                                       step=0.01, 
                                       value=0.05,format='%%')
