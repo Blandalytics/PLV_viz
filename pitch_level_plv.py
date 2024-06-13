@@ -136,7 +136,7 @@ st.dataframe(pd.pivot_table((year_data
             hide_index=True
             )
 
-st.header('League-Wide PLV')
+st.header('Per-Game Metrics')
 players = list(year_data.groupby('pitchername').filter(lambda x: len(x) >= pitch_threshold)['pitchername'].value_counts().index)
 default_player = players.index('Zack Wheeler')
 player = st.selectbox('Choose a pitcher:', players, index=default_player)
