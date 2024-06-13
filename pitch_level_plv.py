@@ -93,7 +93,7 @@ with col2:
                                       min_value=0.0, 
                                       max_value=10.0,
                                       step=1.0, 
-                                      value=5.0,format='%f%%')
+                                      value=5.0,format='%f')
     usage_threshold = usage_threshold/100
 
 
