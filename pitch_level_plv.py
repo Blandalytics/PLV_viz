@@ -4,6 +4,7 @@ import numpy as np
 import seaborn as sns
 import urllib
 
+from datetime import datetime
 from PIL import Image
 from scipy import stats
 
@@ -190,8 +191,11 @@ st.dataframe(pd.pivot_table((year_data
             )
 
 st.header('Pitch-Level Metrics')
-games = list(year_data.loc[year_data['pitchername']==player,'game_played'].unique())
-game_date = st.selectbox('Choose a game:', games, index=games[-1])
+games = list(year_data.loc[year_data['pitchername']==player,'game_played'].astype('str').unique())
+game_date_str = st.selectbox('Choose a game:', games, index=games[-1])
+date_format = '%Y-%m-%d'
+game_date = datetime.strptime(game_date_str, date_format).date()
+
 
 st.dataframe(year_data
              .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
