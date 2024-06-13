@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import seaborn as sns
 import urllib
 
 from PIL import Image
@@ -92,10 +93,12 @@ st.dataframe(pd.pivot_table((year_data
                             values='type_plv', index=['pitcher_mlb_id','pitchername','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
              .fillna(-100)
+             .reset_index()
+             .set_index(['pitcher_mlb_id','pitchername'])
              .style
-             .format(precision=1, thousands=',')
+             .format(precision=2, thousands=',')
              .background_gradient(axis=0, vmin=4, vmax=6,
-                                  cmap="vlag", subset=['PLV'])
+                                  cmap="vlag")
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''))
 
 list(year_data['pitchername'].value_counts().index)
