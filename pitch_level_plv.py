@@ -94,11 +94,15 @@ st.dataframe(pd.pivot_table((year_data
                             columns=['pitchtype'], aggfunc="mean")
              .fillna(-100)
              .reset_index()
-             .set_index(['pitcher_mlb_id','pitchername'])
+             .rename({'pitcher_mlb_id':'MLBAMID',
+                      'pitchername':'Name'})
+             .set_index('MLBAMID')
              .style
              .format(precision=2,thousands='')
              .background_gradient(axis=0, vmin=4, vmax=6,
                                   cmap="vlag")
-             .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''))
+             .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
+            hide_index=True
+            )
 
 list(year_data['pitchername'].value_counts().index)
