@@ -13,7 +13,7 @@ logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.p
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
-st.title("Pitcher List Metrics")
+st.title("Pitcher Characteristics")
 
 agg_dict = {
     'pitch_id':'count',
@@ -95,6 +95,7 @@ year_data['game_played'] = pd.to_datetime(year_data['game_played']).dt.date
 
 metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','Arm-Side Break','IVB','pfx_x','pfx_z','Plate X','Plate Z']
 
+st.header('League-Wide Metrics')
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -118,7 +119,6 @@ with col3:
     if szn_metric=='PLV':
         szn_metric = 'type_plv'
 
-st.header('League-Wide Metrics')
 st.dataframe(pd.pivot_table((year_data
                              .groupby(['pitcher_mlb_id','pitchername','pitchtype'])
                              [list(agg_dict.keys())]
