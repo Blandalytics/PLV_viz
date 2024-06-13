@@ -102,9 +102,7 @@ with col2:
                                       value=5.0,format='%f')
     usage_threshold = usage_threshold/100
 
-
-
-
+st.header('League-Wide PLV')
 st.dataframe(pd.pivot_table((year_data
                              .groupby(['pitcher_mlb_id','pitchername','pitchtype'])
                              [list(agg_dict.keys())]
@@ -138,4 +136,7 @@ st.dataframe(pd.pivot_table((year_data
             hide_index=True
             )
 
-list(year_data['pitchername'].value_counts().index)
+st.header('League-Wide PLV')
+players = list(year_data.groupby('pitchername').filter(lambda x: len(x) >= pitch_threshold)['pitchername'].value_counts().index)
+default_player = players.index('Zack Wheeler')
+player = st.selectbox('Choose a pitcher:', players, index=default_player)
