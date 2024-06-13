@@ -194,7 +194,8 @@ st.dataframe(pd.pivot_table((year_data
 
 fig, ax = plt.subplots(figsize=(6,3))
 sns.kdeplot((year_data
-             .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
+             .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']),
+                     pfx_x = lambda x: np.where(x['pitcherside_L']==0,x['pfx_x']*-1,x['pfx_x']))
              .query('pitchtype!="KN"')
              .replace('ST','SL' if szn_metric=='type_plv' else 'ST')
              .replace('SL','SL/ST' if szn_metric=='type_plv' else 'SL')
