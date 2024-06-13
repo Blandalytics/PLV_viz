@@ -38,6 +38,10 @@ stat_names = {
     'pitch_extension':'Ext',
     'raw_vaa':'VAA',
     'adj_vaa':'HAVAA',
+    'pfx_x':'pfx_x',
+    'pfx_z':'pfx_z',
+    'IHB':'IHB',
+    'IVB':'IVB',
     'p_x':'Plate X',
     'p_z':'Plate Z',
     'plv':'PLV'
@@ -149,6 +153,7 @@ with col1:
 with col2:
     metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','IHB','IVB','pfx_x','pfx_z','Plate X','Plate Z']
     metric = st.selectbox('Choose a metric:', metrics)
+    round_val = round_dict[{v: k for k, v in stat_names.items()}[metric]]
     if metric=='PLV':
         metric = 'type_plv'
 
@@ -176,7 +181,8 @@ st.dataframe(pd.pivot_table((year_data
              .set_index(['Name','Game Date'])
              [['# Pitches','PLV']+[x for x in ['FF','SI','FC','SL','ST','CU','CH','FS','KN'] if x in year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()]]
              .style
-             # .format(precision=2,thousands=',')
+             .format(precision=round_val,thousands=',')
+             .format(precision=2,subset=['PLV'])
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
                                   cmap="vlag", subset=['PLV']+list(year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()) if metric=='type_plv' else ['PLV'])
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else '')
