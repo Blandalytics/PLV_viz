@@ -212,7 +212,7 @@ sns.kdeplot((year_data
             linewidth=3,
             # common_norm=True if szn_metric != 'type_plv' else False
            )
-fig.suptitle(f'MLB {szn_metric} Distribution')
+fig.suptitle(f'MLB {szn_metric.replace('type_plv','PLV')} Distribution')
 ax.get_yaxis().set_visible(False)
 ax.get_legend().set_title('')
 
