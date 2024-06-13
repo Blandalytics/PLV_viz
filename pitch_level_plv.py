@@ -218,6 +218,7 @@ sns.kdeplot((year_data
 fig.suptitle(f'MLB {szn_metric_title} Distribution')
 ax.get_yaxis().set_visible(False)
 ax.get_legend().set_title('')
+ax.get_legend().get_frame().set_alpha(0)
 ax.set(xlabel='')
 
 sns.despine(left=True)
