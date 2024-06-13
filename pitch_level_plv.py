@@ -79,11 +79,24 @@ def load_data(year):
 year_data = load_data(year)
 year_data['game_played'] = pd.to_datetime(year_data['game_played']).dt.date
 
-pitch_threshold = st.number_input(f'Min # of Pitches:',
-                                  min_value=0, 
-                                  max_value=int(year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.8).round(-2)),
-                                  step=25, 
-                                  value=int(year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.2).round(-2)))
+col1, col2 = st.columns([0.5,0.5])
+
+with col1:
+    pitch_threshold = st.number_input(f'Min # of Pitches:',
+                                      min_value=0, 
+                                      max_value=int(year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.8).round(-2)),
+                                      step=25, 
+                                      value=int(year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.2).round(-2)))
+
+with col2:
+    usage_threshold = st.number_input(f'Usage Threshold:',
+                                      min_value=0, 
+                                      max_value=0.1,
+                                      step=0.01, 
+                                      value=0.05,format='%%')
+
+
+
 
 st.dataframe(pd.pivot_table((year_data
                              .groupby(['pitcher_mlb_id','pitchername','pitchtype'])
@@ -98,7 +111,7 @@ st.dataframe(pd.pivot_table((year_data
                              .assign(num_pitches = lambda x: x['# Pitches'].groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum'),
                                      usage = lambda x: x['# Pitches'] / x['num_pitches'],
                                      PLV = lambda x: x['# Pitches'].mul(x['type_plv']).groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum') / x['num_pitches'])
-                             ).query('usage >= 0.05'), 
+                             ).query(f'usage >= {usage_threshold}'), 
                             values='type_plv', index=['pitcher_mlb_id','pitchername','num_pitches','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
              .query(f'num_pitches >={pitch_threshold}')
