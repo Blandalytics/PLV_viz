@@ -223,7 +223,7 @@ st.dataframe(year_data
              .rename(columns=stat_names)
              .rename(columns={'Pitch ID':'Pitch #',
                              'game_played':'Game Date'})
-             [['Name','Game Date','Pitch #','Type','PLV','Velo','Ext','VAA','HAVAA','pfx_x','pfx_z','Arm-Side Break','PLate X','Plate Z','IVB']]
+             [['Name','Game Date','Pitch #','Type','PLV','Velo','Ext','VAA','HAVAA','pfx_x','pfx_z','Arm-Side Break','Plate X','Plate Z','IVB']]
              .style
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
                                   cmap="vlag", subset=['PLV']),
