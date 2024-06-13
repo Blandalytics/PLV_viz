@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import urllib
+import matplotlib.pypot as plt
 
 from datetime import datetime
 from PIL import Image
@@ -76,6 +77,20 @@ round_dict = {
     'p_x':2,
     'p_z':2,
     'plv':2
+}
+
+marker_colors = {
+    'FF':'#d22d49', 
+    'SI':'#c57a02',
+    'FS':'#00a1c5',  
+    'FC':'#933f2c', 
+    'SL':'#9300c7',  
+    'ST':'#C95EBE',
+    'CU':'#3c44cd',
+    'CH':'#07b526', 
+    'KN':'#999999',
+    'SC':'#999999', 
+    'UN':'#999999', 
 }
 
 years = [2024,2023,2022,2021,2020]
@@ -153,6 +168,30 @@ st.dataframe(pd.pivot_table((year_data
              .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
             hide_index=True
             )
+
+fig, ax = plt.subplots(figsize=(6,4))
+sns.kdeplot((year_data
+             .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
+             .query('pitchtype!="KN"')
+             .rename(columns=stat_names)
+             .groupby(['MLBAMID','Name','Type'])
+             [['# Pitches',szn_metric]]
+             .agg({'# Pitches':'count',
+                   szn_metric:'mean'})
+             .reset_index()
+             .assign(num_pitches = lambda x: x['# Pitches'].groupby([x['MLBAMID'],x['Name']]).transform('sum'),
+                     usage = lambda x: x['# Pitches'] / x['num_pitches'])
+             .query(f'usage >= {usage_threshold}')).query(f'num_pitches >={pitch_threshold}'),
+            x=szn_metric,
+            hue='Type',
+            palette=marker_colors,
+            linewidth=3)
+fig.suptitle(f'MLB {szn_metric} Distribution')
+ax.get_yaxis().set_visible(False)
+ax.get_legend().set_title('')
+
+sns.despine(left=True)
+st.pyplot(fig)
 
 st.header('Per-Game Metrics')
 col1, col2 = st.columns([0.5,0.5])
