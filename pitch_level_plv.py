@@ -173,7 +173,9 @@ fig, ax = plt.subplots(figsize=(6,4))
 sns.kdeplot((year_data
              .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
              .query('pitchtype!="KN"')
+             .replace('ST','SL' if szn_metric=='type_plv' else 'ST')
              .rename(columns=stat_names)
+             .rename(columns={'PLV':'type_plv'})
              .groupby(['MLBAMID','Name','Type'])
              [['# Pitches',szn_metric]]
              .agg({'# Pitches':'count',
@@ -185,7 +187,8 @@ sns.kdeplot((year_data
             x=szn_metric,
             hue='Type',
             palette=marker_colors,
-            linewidth=3)
+            linewidth=3,
+            common_norm=True if szn_metric != 'type_plv' else False)
 fig.suptitle(f'MLB {szn_metric} Distribution')
 ax.get_yaxis().set_visible(False)
 ax.get_legend().set_title('')
