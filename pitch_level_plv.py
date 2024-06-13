@@ -98,7 +98,7 @@ st.dataframe(pd.pivot_table((year_data
                              .assign(num_pitches = lambda x: x['# Pitches'].groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum'),
                                      usage = lambda x: x['# Pitches'] / x['num_pitches'],
                                      PLV = lambda x: x['# Pitches'].mul(x['type_plv']).groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum') / x['num_pitches'])
-                             ).query('usage >= 0.05')), 
+                             ).query('usage >= 0.05'), 
                             values='type_plv', index=['pitcher_mlb_id','pitchername','num_pitches','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
              .query(f'num_pitches >={pitch_threshold}')
