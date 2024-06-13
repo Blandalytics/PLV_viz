@@ -211,6 +211,7 @@ sns.kdeplot((year_data
             hue='Type',
             palette=marker_colors,
             linewidth=2,
+            multiple="stack",
             cut=0
            )
 fig.suptitle(f'MLB {szn_metric_title} Distribution')
