@@ -157,7 +157,8 @@ with col3:
         szn_metric = 'type_plv'
 
 st.dataframe(pd.pivot_table((year_data
-                             .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
+                             .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']),
+                                     pfx_x = lambda x: np.where(x['pitcherside_L']==0,x['pfx_x']*-1,x['pfx_x']))
                              .groupby(['pitcher_mlb_id','pitchername','pitchtype'])
                              [list(agg_dict.keys())]
                              .agg(agg_dict)
