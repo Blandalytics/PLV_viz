@@ -11,7 +11,7 @@ logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.p
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
-st.title("Pitcher List Pitch-Level Metrics")
+st.title("Pitcher List Metrics")
 
 agg_dict = {
     'pitch_id':'count',
@@ -172,7 +172,7 @@ st.dataframe(pd.pivot_table((year_data
              .reset_index()
              .rename(columns={'pitchername':'Name',
                              'num_pitches':'# Pitches'})
-             .set_index('MLBAMID')
+             .set_index('game_played')
              [['Name','# Pitches','PLV']+[x for x in ['FF','SI','FC','SL','ST','CU','CH','FS','KN'] if x in year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()]]
              .style
              .format(precision=2,thousands=',')
