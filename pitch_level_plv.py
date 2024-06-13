@@ -96,7 +96,7 @@ st.dataframe(pd.pivot_table((year_data
              .reset_index()
              .set_index(['pitcher_mlb_id','pitchername'])
              .style
-             .format(precision=2)
+             .format(precision=2,thousands='')
              .background_gradient(axis=0, vmin=4, vmax=6,
                                   cmap="vlag")
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''))
