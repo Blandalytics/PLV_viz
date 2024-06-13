@@ -162,7 +162,7 @@ with col1:
     player = st.selectbox('Choose a pitcher:', players, index=default_player)
 
 with col2:
-    player_metric = st.selectbox('Choose a metric:', metrics, index=0)
+    player_metric = st.selectbox('Choose a metric: ', metrics)
     round_val = round_dict[{v: k for k, v in stat_names.items()}[player_metric]]
     if player_metric=='PLV':
         player_metric = 'type_plv'
