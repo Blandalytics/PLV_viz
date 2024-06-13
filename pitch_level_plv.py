@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import urllib
-import matplotlib.pypot as plt
+import matplotlib.pyplot as plt
 
 from datetime import datetime
 from PIL import Image
