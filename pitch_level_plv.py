@@ -102,7 +102,7 @@ st.dataframe(pd.pivot_table((year_data
              .style
              .format(precision=2,thousands=',')
              .background_gradient(axis=0, vmin=4, vmax=6,
-                                  cmap="vlag")
+                                  cmap="vlag", subset = ['PLV']+list(year_data['pitchtype'].unique()))
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
             hide_index=True
             )
