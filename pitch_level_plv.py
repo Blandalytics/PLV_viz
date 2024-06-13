@@ -211,7 +211,7 @@ sns.kdeplot((year_data
             hue='Type',
             palette=marker_colors,
             linewidth=2,
-            cut=-1
+            cut=0
            )
 fig.suptitle(f'MLB {szn_metric_title} Distribution')
 ax.get_yaxis().set_visible(False)
