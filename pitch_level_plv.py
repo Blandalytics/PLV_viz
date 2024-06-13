@@ -92,7 +92,9 @@ def load_data(year):
 year_data = load_data(year)
 year_data['game_played'] = pd.to_datetime(year_data['game_played']).dt.date
 
-col1, col2 = st.columns([0.5,0.5])
+metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','Arm-Side Break','IVB','pfx_x','pfx_z','Plate X','Plate Z']
+
+col1, col2, col3 = st.columns(3)
 
 with col1:
     pitch_threshold = st.number_input(f'Min # of Pitches:',
@@ -108,8 +110,14 @@ with col2:
                                       step=1.0, 
                                       value=5.0,format='%f')
     usage_threshold = usage_threshold/100
+    
+with col3:
+    szn_metric = st.selectbox('Choose a metric:', metrics)
+    szn_round_val = round_dict[{v: k for k, v in stat_names.items()}[szn_metric]]
+    if szn_metric=='PLV':
+        szn_metric = 'type_plv'
 
-st.header('League-Wide PLV')
+st.header('League-Wide Metrics')
 st.dataframe(pd.pivot_table((year_data
                              .groupby(['pitcher_mlb_id','pitchername','pitchtype'])
                              [list(agg_dict.keys())]
@@ -124,7 +132,7 @@ st.dataframe(pd.pivot_table((year_data
                                      usage = lambda x: x['# Pitches'] / x['num_pitches'],
                                      PLV = lambda x: x['# Pitches'].mul(x['type_plv']).groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum') / x['num_pitches'])
                              ).query(f'usage >= {usage_threshold}'), 
-                            values='type_plv', index=['pitcher_mlb_id','pitchername','num_pitches','PLV'],
+                            values=szn_metric, index=['pitcher_mlb_id','pitchername','num_pitches','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
              .query(f'num_pitches >={pitch_threshold}')
              .sort_values('PLV',ascending=False)
@@ -136,7 +144,8 @@ st.dataframe(pd.pivot_table((year_data
              .set_index('MLBAMID')
              [['Name','# Pitches','PLV','FF','SI','FC','SL','ST','CU','CH','FS','KN']]
              .style
-             .format(precision=2,thousands=',')
+             .format(precision=szn_round_val,thousands=',')
+             .format(precision=2,subset=['PLV'])
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
                                   cmap="vlag", subset = ['PLV']+list(year_data['pitchtype'].unique()))
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
@@ -153,10 +162,10 @@ with col1:
 
 with col2:
     metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','Arm-Side Break','IVB','pfx_x','pfx_z','Plate X','Plate Z']
-    metric = st.selectbox('Choose a metric:', metrics)
-    round_val = round_dict[{v: k for k, v in stat_names.items()}[metric]]
-    if metric=='PLV':
-        metric = 'type_plv'
+    player_metric = st.selectbox('Choose a metric:', metrics)
+    round_val = round_dict[{v: k for k, v in stat_names.items()}[player_metric]]
+    if player_metric=='PLV':
+        player_metric = 'type_plv'
 
 st.dataframe(pd.pivot_table((year_data
                              .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
@@ -173,7 +182,7 @@ st.dataframe(pd.pivot_table((year_data
                              .assign(num_pitches = lambda x: x['# Pitches'].groupby([x['pitchername'],x['game_played']]).transform('sum'),
                                      PLV = lambda x: x['# Pitches'].mul(x['type_plv']).groupby([x['pitchername'],x['game_played']]).transform('sum') / x['num_pitches'])
                              ),
-                            values=metric, index=['pitchername','game_played','num_pitches','PLV'],
+                            values=player_metric, index=['pitchername','game_played','num_pitches','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
              .fillna(-100)
              .reset_index()
@@ -223,9 +232,6 @@ st.dataframe(year_data
              .rename(columns=stat_names)
              .rename(columns={'Pitch ID':'Pitch #',
                              'game_played':'Game Date'})
-             [['Name','Game Date','Pitch #','Type','PLV','Velo','Ext','VAA','HAVAA','pfx_x','pfx_z','Arm-Side Break','Plate X','Plate Z','IVB']]
-             .style
-             .background_gradient(axis=0, vmin=4.25, vmax=5.75,
-                                  cmap="vlag", subset=['PLV']),
+             [['Name','Game Date','Pitch #','Type','PLV','Velo','Ext','VAA','HAVAA','pfx_x','pfx_z','Arm-Side Break','Plate X','Plate Z','IVB']],
              hide_index=True
 )
