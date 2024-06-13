@@ -167,4 +167,16 @@ st.dataframe(pd.pivot_table((year_data
                                      PLV = lambda x: x['# Pitches'].mul(x['type_plv']).groupby([x['pitchername'],x['game_played']]).transform('sum') / x['num_pitches'])
                              ),
                             values=metric, index=['pitchername','game_played','num_pitches','PLV'],
-                            columns=['pitchtype'], aggfunc="mean")[[x for x in ['FF','SI','FC','SL','ST','CU','CH','FS','KN'] if x in year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()]])
+                            columns=['pitchtype'], aggfunc="mean")
+             .fillna(-100)
+             .reset_index()
+             .rename(columns={'pitchername':'Name',
+                             'num_pitches':'# Pitches'})
+             .set_index('MLBAMID')
+             [['Name','# Pitches','PLV']+[x for x in ['FF','SI','FC','SL','ST','CU','CH','FS','KN'] if x in year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()]]
+             .style
+             .format(precision=2,thousands=',')
+             # .background_gradient(axis=0, vmin=4.25, vmax=5.75,
+             #                      cmap="vlag", subset = ['PLV']+list(year_data['pitchtype'].unique()))
+             .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else '')
+            )
