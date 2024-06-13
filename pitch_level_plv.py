@@ -40,7 +40,7 @@ stat_names = {
     'adj_vaa':'HAVAA',
     'pfx_x':'pfx_x',
     'pfx_z':'pfx_z',
-    'IHB':'IHB',
+    'IHB':'Arm-Side Break',
     'IVB':'IVB',
     'p_x':'Plate X',
     'p_z':'Plate Z',
@@ -151,13 +151,14 @@ with col1:
     player = st.selectbox('Choose a pitcher:', players, index=default_player)
 
 with col2:
-    metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','IHB','IVB','pfx_x','pfx_z','Plate X','Plate Z']
+    metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','Arm-Side Break','IVB','pfx_x','pfx_z','Plate X','Plate Z']
     metric = st.selectbox('Choose a metric:', metrics)
     round_val = round_dict[{v: k for k, v in stat_names.items()}[metric]]
     if metric=='PLV':
         metric = 'type_plv'
 
 st.dataframe(pd.pivot_table((year_data
+                             .assign(IHB = lambda x: np.where(x['p_hand']=='R',x['IHB']*-1,x['IHB'])
                              .loc[year_data['pitchername']==player]
                              .groupby(['game_played','pitchername','pitchtype'])
                              [list(agg_dict.keys())]
