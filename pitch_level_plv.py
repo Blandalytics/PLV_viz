@@ -88,17 +88,19 @@ st.dataframe(pd.pivot_table((year_data
                              .rename(columns=stat_names)
                              .rename(columns={'PLV':'type_plv'})
                              .reset_index()
-                             .assign(PLV = lambda x: x['# Pitches'].mul(x['type_plv']).groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum') / x['# Pitches'].groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum'))
+                             .assign(num_pitches = lambda x: x['# Pitches'].groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum'),
+                                     PLV = lambda x: x['# Pitches'].mul(x['type_plv']).groupby([x['pitcher_mlb_id'],x['pitchername']]).transform('sum') / x['num_pitches'])
                              ), 
-                            values='type_plv', index=['pitcher_mlb_id','pitchername','PLV'],
+                            values='type_plv', index=['pitcher_mlb_id','pitchername','num_pitches','PLV'],
                             columns=['pitchtype'], aggfunc="mean")
              .fillna(-100)
              .reset_index()
              .rename(columns={'pitcher_mlb_id':'MLBAMID',
-                              'pitchername':'Name'})
+                              'pitchername':'Name',
+                             'num_pitches':'# Pitches'})
              .set_index('MLBAMID')
              .style
-             .format(precision=2,thousands='')
+             .format(precision=2,thousands=',')
              .background_gradient(axis=0, vmin=4, vmax=6,
                                   cmap="vlag")
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
