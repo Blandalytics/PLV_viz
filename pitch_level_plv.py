@@ -171,12 +171,13 @@ st.dataframe(pd.pivot_table((year_data
              .fillna(-100)
              .reset_index()
              .rename(columns={'pitchername':'Name',
-                             'num_pitches':'# Pitches'})
-             .set_index('game_played')
-             [['Name','# Pitches','PLV']+[x for x in ['FF','SI','FC','SL','ST','CU','CH','FS','KN'] if x in year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()]]
+                             'num_pitches':'# Pitches',
+                             'game_played':'Game Date'})
+             .set_index(['Name','Game Date'])
+             [['# Pitches','PLV']+[x for x in ['FF','SI','FC','SL','ST','CU','CH','FS','KN'] if x in year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()]]
              .style
              .format(precision=2,thousands=',')
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
-                                  cmap="vlag", subset=['PLV']+list(year_data['pitchtype'].unique()) if metric=='type_plv' else ['PLV'])
+                                  cmap="vlag", subset=['PLV']+[x for x in list(year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()) if metric=='type_plv' else ['PLV'])
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else '')
             )
