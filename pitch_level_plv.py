@@ -191,7 +191,7 @@ st.dataframe(pd.pivot_table((year_data
             hide_index=True
             )
 
-fig, ax = plt.subplots(figsize=(6,4))
+fig, ax = plt.subplots(figsize=(6,2))
 sns.kdeplot((year_data
              .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
              .query('pitchtype!="KN"')
@@ -216,6 +216,7 @@ sns.kdeplot((year_data
 fig.suptitle(f'MLB {szn_metric_title} Distribution')
 ax.get_yaxis().set_visible(False)
 ax.get_legend().set_title('')
+ax.set(xlabel='')
 
 sns.despine(left=True)
 st.pyplot(fig)
