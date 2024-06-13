@@ -34,7 +34,7 @@ logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.p
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
-st.title("Pitcher Characteristics")
+st.title("Pitch Level Stats")
 
 agg_dict = {
     'pitch_id':'count',
@@ -223,6 +223,8 @@ ax.set(xlabel='')
 
 sns.despine(left=True)
 st.pyplot(fig)
+if szn_metric=='type_plv':
+    st.write('Slider and Sweeper PLV needed to be combined')
 
 st.header('Per-Game Metrics')
 col1, col2 = st.columns([0.5,0.5])
