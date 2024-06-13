@@ -94,8 +94,8 @@ st.dataframe(pd.pivot_table((year_data
                             columns=['pitchtype'], aggfunc="mean")
              .fillna(-100)
              .reset_index()
-             .rename({'pitcher_mlb_id':'MLBAMID',
-                      'pitchername':'Name'})
+             .rename(columns={'pitcher_mlb_id':'MLBAMID',
+                              'pitchername':'Name'})
              .set_index('MLBAMID')
              .style
              .format(precision=2,thousands='')
