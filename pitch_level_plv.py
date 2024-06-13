@@ -38,6 +38,8 @@ stat_names = {
     'pitch_extension':'Ext',
     'raw_vaa':'VAA',
     'adj_vaa':'HAVAA',
+    'p_x':'Plate X',
+    'p_z':'Plate Z',
     'plv':'PLV'
 }
 
@@ -137,17 +139,32 @@ st.dataframe(pd.pivot_table((year_data
             )
 
 st.header('Per-Game Metrics')
-players = list(year_data.groupby('pitchername').filter(lambda x: len(x) >= pitch_threshold)['pitchername'].value_counts().index)
-default_player = players.index('Zack Wheeler')
-player = st.selectbox('Choose a pitcher:', players, index=default_player)
+col1, col2 = st.columns([0.5,0.5])
 
-st.dataframe((year_data
- .loc[year_data['pitchername']==player]
- .groupby(['game_played','pitchername','pitchtype'])
- [list(agg_dict.keys())]
- .agg(agg_dict)
- .dropna()
- .astype(type_dict)
- .round(round_dict)
- .rename(columns=stat_names)
-))
+with col1:
+    players = list(year_data.groupby('pitchername').filter(lambda x: len(x) >= pitch_threshold)['pitchername'].value_counts().index)
+    default_player = players.index('Zack Wheeler')
+    player = st.selectbox('Choose a pitcher:', players, index=default_player)
+
+with col2:
+    metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','IHB','IVB','pfx_x','pfx_z','Plate X','Plate Z']
+    metric = st.selectbox('Choose a metric:', players)
+    if metric=='PLV':
+        metric = 'test_plv'
+
+st.dataframe(pd.pivot_table((year_data
+                             .loc[year_data['pitchername']==player]
+                             .groupby(['game_played','pitchername','pitchtype'])
+                             [list(agg_dict.keys())]
+                             .agg(agg_dict)
+                             .dropna()
+                             .astype(type_dict)
+                             .round(round_dict)
+                             .rename(columns=stat_names)
+                             .rename(columns={'PLV':'type_plv'})
+                             .reset_index()
+                             .assign(num_pitches = lambda x: x['# Pitches'].groupby([x['pitchername'],x['game_played']]).transform('sum'),
+                                     PLV = lambda x: x['# Pitches'].mul(x['type_plv']).groupby([x['pitchername'],x['game_played']]).transform('sum') / x['num_pitches'])
+                             ),
+                            values=metric, index=['pitchername','game_played','num_pitches','PLV'],
+                            columns=['pitchtype'], aggfunc="mean")[[x for x in ['FF','SI','FC','SL','ST','CU','CH','FS','KN'] if x in year_data.loc[year_data['pitchername']==player,'pitchtype'].unique()]])
