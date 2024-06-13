@@ -148,7 +148,7 @@ st.dataframe(pd.pivot_table((year_data
              .format(precision=szn_round_val,thousands=',')
              .format(precision=2,subset=['PLV'])
              .background_gradient(axis=0, vmin=4.25, vmax=5.75,
-                                  cmap="vlag", subset = ['PLV']+list(year_data['pitchtype'].unique()))
+                                  cmap="vlag", subset=['PLV'] if szn_metric != 'type_plv' else ['PLV']+list(year_data['pitchtype'].unique()))
              .map(lambda x: 'color: transparent; background-color: transparent' if x==-100 else ''),
             hide_index=True
             )
