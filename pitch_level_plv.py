@@ -137,7 +137,8 @@ st.dataframe(pd.pivot_table((year_data
                             columns=['pitchtype'], aggfunc="mean")
              .query(f'num_pitches >={pitch_threshold}')
              .sort_values('PLV',ascending=False)
-             .fillna(-100)
+             # .fillna(-100)
+             .set_na_rep("")
              .reset_index()
              .rename(columns={'pitcher_mlb_id':'MLBAMID',
                               'pitchername':'Name',
