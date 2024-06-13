@@ -81,9 +81,9 @@ year_data['game_played'] = pd.to_datetime(year_data['game_played']).dt.date
 
 pitch_threshold = st.number_input(f'Min # of Pitches:',
                                   min_value=0, 
-                                  max_value=year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.8).round(-2),
+                                  max_value=int(year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.8).round(-2)),
                                   step=25, 
-                                  value=year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.2).round(-2))
+                                  value=int(year_data.groupby('pitcher_mlb_id')['pitch_id'].count().quantile(0.2).round(-2)))
 
 st.dataframe(pd.pivot_table((year_data
                              .groupby(['pitcher_mlb_id','pitchername','pitchtype'])
