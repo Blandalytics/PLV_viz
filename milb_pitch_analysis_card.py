@@ -209,10 +209,9 @@ with col2:
     
     select_list = []
     for pitch in pitches.keys():
-        select_list += [f'{pitch} ({pitches[pitch]:.1%})'] if (card_player != 'Kutter Crawford') | (pitch != 'Cutter') else [f'Kutter ({pitches[pitch]:.1%})']
+        select_list += [f'{pitch} ({pitches[pitch]:.1%})']
     pitch_type = st.selectbox('Choose a pitch (season usage):', select_list)
     pitch_type = pitch_type.split('(')[0][:-1]
-    pitch_type = pitch_type if pitch_type != 'Kutter' else 'Cutter'
   
 with col3:
     # Chart Type
@@ -241,7 +240,7 @@ pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 pitch_df = base_df.loc[(base_df['game_played']>=start_date) &
                         (base_df['game_played']<=end_date)].copy()
 
-pitcher_level = ' '+pitch_df['level'].mode()[0] if len(pitch_df['level'].mode())==1 else ''
+pitcher_level = ' '+pitch_df.loc[(pitch_df['pitchername']==card_player),'level'].mode()[0] if len(pitch_df.loc[(pitch_df['pitchername']==card_player),'level'].mode())==1 else ''
 
 def pitch_analysis_card(card_player,pitch_type,chart_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
