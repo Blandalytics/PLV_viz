@@ -166,7 +166,7 @@ def load_data(year):
     df = pd.DataFrame()
     for chunk in [1,2,3]:
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_MiLB_Analysis_Data-{chunk}.parquet?raw=true'
-        load_cols = ['pitchername','pitchtype','pitch_id','game_played',
+        load_cols = ['pitchername','pitchtype','pitch_id','game_played','level',
                                                     'p_hand','b_hand','IHB','IVB','called_strike_pred',
                                                     'ball_pred','PLV','velo','pitch_extension',
                                                     'adj_vaa','p_x','p_z']
@@ -240,6 +240,8 @@ pitch_type = {v: k for k, v in pitch_names.items()}[pitch_type]
 
 pitch_df = base_df.loc[(base_df['game_played']>=start_date) &
                         (base_df['game_played']<=end_date)].copy()
+
+pitcher_level = pitch_df['level'].mode()[0] if len(pitch_df['level'].mode())==1 else 'MiLB'
 
 def pitch_analysis_card(card_player,pitch_type,chart_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
@@ -516,7 +518,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     
-    fig.suptitle(f"{card_player}{apostrophe_text} {year} MiLB {adjusted_pitch_name} (AAA)",y=0.97,fontsize=20,x=0.525)
+    fig.suptitle(f"{card_player}{apostrophe_text} {year} {pitcher_level} {adjusted_pitch_name} (AAA)",y=0.97,fontsize=20,x=0.525)
     date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
     fig.text(0.525,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
     # fig.text(0.77,0.07,"@Blandalytics",ha='center',fontsize=10)
