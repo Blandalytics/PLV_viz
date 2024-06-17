@@ -192,39 +192,39 @@ st.dataframe(pd.pivot_table((year_data
             hide_index=True
             )
 
-fig, ax = plt.subplots(figsize=(6,3))
-sns.kdeplot((year_data
-             .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']),
-                     pfx_x = lambda x: np.where(x['pitcherside_L']==0,x['pfx_x']*-1,x['pfx_x']))
-             .query('pitchtype!="KN"')
-             .replace('ST','SL' if szn_metric=='type_plv' else 'ST')
-             .replace('SL','SL/ST' if szn_metric=='type_plv' else 'SL')
-             .rename(columns=stat_names)
-             .rename(columns={'PLV':'type_plv'})
-             .groupby(['MLBAMID','Name','Type'])
-             [['# Pitches',szn_metric]]
-             .agg({'# Pitches':'count',
-                   szn_metric:'mean'})
-             .reset_index()
-             .assign(num_pitches = lambda x: x['# Pitches'].groupby([x['MLBAMID'],x['Name']]).transform('sum'),
-                     usage = lambda x: x['# Pitches'] / x['num_pitches'])
-             .query(f'usage >= {usage_threshold}')).query(f'num_pitches >={pitch_threshold}'),
-            x=szn_metric,
-            hue='Type',
-            palette=marker_colors,
-            linewidth=2,
-            cut=0,
-           )
-fig.suptitle(f'MLB {szn_metric_title} Distribution')
-ax.get_yaxis().set_visible(False)
-ax.get_legend().set_title('')
-ax.get_legend().get_frame().set_alpha(0)
-ax.set(xlabel='')
+# fig, ax = plt.subplots(figsize=(6,3))
+# sns.kdeplot((year_data
+#              .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']),
+#                      pfx_x = lambda x: np.where(x['pitcherside_L']==0,x['pfx_x']*-1,x['pfx_x']))
+#              .query('pitchtype!="KN"')
+#              .replace('ST','SL' if szn_metric=='type_plv' else 'ST')
+#              .replace('SL','SL/ST' if szn_metric=='type_plv' else 'SL')
+#              .rename(columns=stat_names)
+#              .rename(columns={'PLV':'type_plv'})
+#              .groupby(['MLBAMID','Name','Type'])
+#              [['# Pitches',szn_metric]]
+#              .agg({'# Pitches':'count',
+#                    szn_metric:'mean'})
+#              .reset_index()
+#              .assign(num_pitches = lambda x: x['# Pitches'].groupby([x['MLBAMID'],x['Name']]).transform('sum'),
+#                      usage = lambda x: x['# Pitches'] / x['num_pitches'])
+#              .query(f'usage >= {usage_threshold}')).query(f'num_pitches >={pitch_threshold}'),
+#             x=szn_metric,
+#             hue='Type',
+#             palette=marker_colors,
+#             linewidth=2,
+#             cut=0,
+#            )
+# fig.suptitle(f'MLB {szn_metric_title} Distribution')
+# ax.get_yaxis().set_visible(False)
+# ax.get_legend().set_title('')
+# ax.get_legend().get_frame().set_alpha(0)
+# ax.set(xlabel='')
 
-sns.despine(left=True)
-st.pyplot(fig)
-if szn_metric=='type_plv':
-    st.write('Slider and Sweeper PLV needed to be combined')
+# sns.despine(left=True)
+# st.pyplot(fig)
+# if szn_metric=='type_plv':
+#     st.write('Slider and Sweeper PLV needed to be combined')
 
 st.header('Per-Game Metrics')
 col1, col2 = st.columns([0.5,0.5])
