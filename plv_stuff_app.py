@@ -107,9 +107,9 @@ st.dataframe(pd.pivot_table((year_data
                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=min(pitch_threshold,10))]), 
                    values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
-                   columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
+                   columns=['pitchtype'], aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',pitch) for pitch in pitch_order]].sum(axis=1),
-                     plvStuff = lambda x: x[[('plv_stuff_plus',pitch) for pitch in pitch_order]].mean(axis=1))#.mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
+                     plvStuff = lambda x: x[[('plv_stuff_plus',pitch) for pitch in pitch_order]].mean(axis=1).mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
              .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
