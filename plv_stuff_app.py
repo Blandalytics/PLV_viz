@@ -147,7 +147,7 @@ st.write(f"{player}'s {year} Repertoire")
 st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
              .groupby('pitchtype')
-             [['pitch_id','velo','IVB','IHB','swinging_strike_pred','plv_stuff_plus','adj_vaa','pitch_extension']]
+             [['pitch_id','velo','IVB','IHB','swinging_strike_pred','plv_stuff_plus','adj_vaa','pitch_extension','wOBAcon_pred']]
              .agg({
                  'pitch_id':'count',
                  'velo':'mean',
@@ -156,6 +156,7 @@ st.dataframe(year_data
                  'swinging_strike_pred':'mean',
                  'adj_vaa':'mean',
                  'pitch_extension':'mean',
+                 'wOBAcon_pred':'mean',
                  'plv_stuff_plus':'mean'
                  })
              .astype({
@@ -166,6 +167,7 @@ st.dataframe(year_data
                  'swinging_strike_pred':'float',
                  'adj_vaa':'float',
                  'pitch_extension':'float',
+                 'wOBAcon_pred':'float',
                  'plv_stuff_plus':'float'
                  })
              .reset_index()
@@ -180,13 +182,14 @@ st.dataframe(year_data
                  'IHB':'Arm-Side Break',
                  'swinging_strike_pred':'xWhiff%',
                  'adj_vaa':'HAVAA',
+                 'wOBAcon_pred':'xwOBAcon',
                  'plv_stuff_plus':'plvStuff+'
                  })
              .set_index('Pitch Type')
              .dropna()
              .sort_values('Pitches',ascending=False)
              .reset_index()
-             [['Pitch Type','Pitches','Extension','Velo (mph)','IVB','Arm-Side Break','HAVAA','xWhiff%','plvStuff+']]
+             [['Pitch Type','Pitches','Extension','Velo (mph)','IVB','Arm-Side Break','HAVAA','xWhiff%','xwOBAcon','plvStuff+']]
              .style
              .format({
                  'Pitches':'{:,.0f}', 
@@ -196,6 +199,7 @@ st.dataframe(year_data
                  'Arm-Side Break': '{:.1f}"', 
                  'HAVAA':'{:.1f}°', 
                  'xWhiff%':'{:.1%}', 
+                 'xwOBAcon':'{:.3f}',
                  'plvStuff+': '{:.1f}'
              })
              .background_gradient(axis=0, vmin=50, vmax=150,
