@@ -130,6 +130,9 @@ def load_data(year):
     return df.query('pitchtype != "UN"').reset_index(drop=True)
 
 year_data = load_data(year)
+year_data['pitchername'] = year_data['pitchername'].astype('str')
+year_data['pitchtype'] = year_data['pitchtype'].astype('str')
+year_data['pitcher_mlb_id'] = year_data['pitcher_mlb_id'].astype('int')
 year_data['game_played'] = pd.to_datetime(year_data['game_played']).dt.date
 
 metrics = ['PLV','Velo', 'Ext', 'VAA', 'HAVAA','Arm-Side Break','IVB','pfx_x','pfx_z','Plate X','Plate Z']
