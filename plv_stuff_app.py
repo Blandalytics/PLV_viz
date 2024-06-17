@@ -95,7 +95,6 @@ def load_data(year):
     return df.loc[(~df['pitchtype'].isin(['KN','SC','UN']))].reset_index(drop=True)
 
 year_data = load_data(year)
-# year_data['plv_stuff_plus'] = year_data['pitchtype'].astype('str')
 year_data['pitchtype'] = year_data['pitchtype'].astype('str')
 
 pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
@@ -109,8 +108,8 @@ st.dataframe(pd.pivot_table((year_data
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=min(pitch_threshold,10))]), 
                    values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
                    columns=['pitchtype'], aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
-             .assign(Num_Pitches = lambda x: x[[('pitch_id',pitch) for pitch in pitch_order]].sum(axis=1),
-                     plvStuff = lambda x: x[[('plv_stuff_plus',pitch) for pitch in pitch_order]].mean(axis=1).mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
+             .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
+                     plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
              .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
