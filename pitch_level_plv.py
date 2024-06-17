@@ -123,8 +123,9 @@ def load_data(year):
     df = pd.DataFrame()
     for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Stuff_App_Data-{month}.parquet?raw=true'
-        df = pd.concat([df,pd.read_parquet(file_name)], ignore_index=True).query('pitchtype != "UN"')
-    return df.reset_index(drop=True)
+        df = pd.concat([df,
+                        pd.read_parquet(file_name)], ignore_index=True)
+    return df.query('pitchtype != "UN"').reset_index(drop=True)
 
 year_data = load_data(year)
 year_data['game_played'] = pd.to_datetime(year_data['game_played']).dt.date
