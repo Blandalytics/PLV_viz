@@ -19,7 +19,6 @@ from sklearn.neighbors import KNeighborsRegressor
 
 import urllib
 from PIL import Image
-st.write(pd.__version__)
 
 pl_white = '#FEFEFE'
 pl_background = '#162B50'
@@ -109,7 +108,7 @@ st.dataframe(pd.pivot_table((year_data
                    values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
-                     plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
+                     plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mean(axis=1),#.mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
              .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
