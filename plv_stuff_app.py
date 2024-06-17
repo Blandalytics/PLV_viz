@@ -19,6 +19,7 @@ from sklearn.neighbors import KNeighborsRegressor
 
 import urllib
 from PIL import Image
+st.write(pd.__version__)
 
 pl_white = '#FEFEFE'
 pl_background = '#162B50'
