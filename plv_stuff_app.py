@@ -92,18 +92,18 @@ def load_data(year):
     for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_Stuff_App_Data-{month}.parquet?raw=true'
         df = pd.concat([df,pd.read_parquet(file_name)], ignore_index=True)
-    return df.reset_index(drop=True)
+    return df.loc[(df['pitchtype'].isin(['KN','SC','UN'])).reset_index(drop=True)
 
 year_data = load_data(year)
 
-pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
-drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
-drop_pitches = [x for x in drop_pitches if x in year_data['pitchtype'].unique()]
+pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS']# if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
+# drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
+# drop_pitches = [x for x in drop_pitches if x in year_data['pitchtype'].unique()]
 dtype_map = {x:'float' for x in pitch_order}
 dtype_map.update({'Pitches':'int','plvStuff+':'float'})
 
 st.dataframe(pd.pivot_table((year_data
-                     .loc[(year_data['pitchtype'].isin(pitch_order)) & 
+                     .loc[#(year_data['pitchtype'].isin(pitch_order)) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=min(pitch_threshold,10))]), 
                    values=['plv_stuff_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'plv_stuff_plus':'mean','pitch_id':'count'})
