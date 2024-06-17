@@ -96,7 +96,7 @@ def load_data(year):
 
 year_data = load_data(year)
 
-pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS']# if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
+pitch_order = ['FF','SI','FC','SL','ST','CU','CH','FS'] if year>=2023 else ['FF','SI','FC','SL','CU','CH','FS']
 # drop_pitches = ['KN','SC','UN'] if year>=2023 else  ['ST','KN','SC','UN']
 # drop_pitches = [x for x in drop_pitches if x in year_data['pitchtype'].unique()]
 dtype_map = {x:'float' for x in pitch_order}
