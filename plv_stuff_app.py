@@ -178,7 +178,7 @@ st.dataframe(year_data
                  'pitchtype':'Pitch Type',
                  'pitch_id':'Pitches',
                  'pitch_extension':'Extension',
-                 'velo':'Velo (mph)',
+                 'velo':'Velo',
                  'IHB':'Arm-Side Break',
                  'swinging_strike_pred':'xWhiff%',
                  'adj_vaa':'HAVAA',
@@ -189,18 +189,18 @@ st.dataframe(year_data
              .dropna()
              .sort_values('Pitches',ascending=False)
              .reset_index()
-             [['Pitch Type','Pitches','Extension','Velo (mph)','IVB','Arm-Side Break','HAVAA','xWhiff%','xwOBAcon','plvStuff+']]
+             [['Pitch Type','Pitches','Extension','Velo','IVB','Arm-Side Break','HAVAA','xWhiff%','xwOBAcon','plvStuff+']]
              .style
              .format({
                  'Pitches':'{:,.0f}', 
                  'Extension':'{:.1f}ft', 
-                 'Velo (mph)':'{:.1f}', 
+                 'Velo':'{:.1f}', 
                  'IVB': '{:.1f}"', 
                  'Arm-Side Break': '{:.1f}"', 
                  'HAVAA':'{:.1f}°', 
                  'xWhiff%':'{:.1%}', 
                  'xwOBAcon':'{:.3f}',
-                 'plvStuff+': '{:.1f}'
+                 'plvStuff+': '{:.0f}'
              })
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvStuff+']),
