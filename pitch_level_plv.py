@@ -290,7 +290,7 @@ st.dataframe(year_data
              .assign(IHB = lambda x: np.where(x['pitcherside_L']==0,x['IHB']*-1,x['IHB']))
              .loc[(year_data['pitchername']==player) & 
                   (year_data['game_played']==game_date),
-             ['game_played','pitchername','pitchtype']+list(agg_dict.keys())]
+             ['game_played','pitchername','pitchtype','count','hittername','cleaned_description']+list(agg_dict.keys())]
              .sort_values('pitch_id')
              .drop(columns=['pitch_id'])
              .reset_index(drop=True)
@@ -311,7 +311,10 @@ st.dataframe(year_data
              .round(round_dict)
              .rename(columns=stat_names)
              .rename(columns={'Pitch ID':'Pitch #',
-                             'game_played':'Game Date'})
-             [['Name','Game Date','Pitch #','Type','PLV','Velo','Ext','VAA','HAVAA','pfx_x','pfx_z','Arm-Side Break','Plate X','Plate Z','IVB']],
+                             'game_played':'Game Date',
+                             'count':'Count',
+                              'hittername':'Hitter',
+                              'cleaned_description':'Outcome'})
+             [['Name','Game Date','Pitch #','Hitter','Type','Count','PLV','Outcome','Velo','Ext','VAA','HAVAA','pfx_x','pfx_z','Arm-Side Break','Plate X','Plate Z','IVB']],
              hide_index=True
 )
