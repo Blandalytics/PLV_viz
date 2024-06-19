@@ -299,7 +299,7 @@ st.dataframe(year_data
              .astype({
                  'velo':'float',
                  'pitch_extension':'float',
-                 'raw_vaa':'float',
+                 'vaa':'float',
                  'adj_vaa':'float',
                  'pfx_x':'float',
                  'pfx_z':'float',
