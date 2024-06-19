@@ -280,9 +280,8 @@ st.dataframe(pd.pivot_table((year_data
             )
 
 st.header('Pitch-Level Metrics')
-games = list(year_data.loc[year_data['pitchername']==player,'game_played'].sort_values('game_played').unique())
-game_date = st.selectbox('Choose a game:', games, index=len(games)-1)
-# date_format = '%Y-%m-%d'
+games = list(year_data.loc[year_data['pitchername']==player,'game_played'].sort_values().unique())
+game_date = st.selectbox('Choose a game:', games, index=0
 # game_date = datetime.strptime(game_date_str, date_format).date()
 
 
