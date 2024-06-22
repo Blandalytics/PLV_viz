@@ -109,14 +109,12 @@ st.dataframe(pd.pivot_table((year_data
                    values=['plv_stuff_plus','pitch_id','str_rv','bbe_rv'], index=['pitchername'],
                    columns=['pitchtype'], aggfunc={'plv_stuff_plus':'mean','str_rv':'mean','bbe_rv':'mean','pitch_id':'count'})
              .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
-                     str_val = lambda x: x[[('str_rv',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'],
-                     bbe_val = lambda x: x[[('bbe_rv',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'],
+                     str_val = lambda x: x[[('str_rv',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'] * 100,
+                     bbe_val = lambda x: x[[('bbe_rv',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'] * 100,
                      plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
              .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
-             .assign(str_val = lambda x: x['str_val'].mul(100),
-                     bbe_val = lambda x: x['bbe_val'].mul(100))
              .set_axis(['Pitcher']+sorted(pitch_order)+['Pitches','Str Val','BBE Val','plvStuff+'], axis=1)
              .set_index('Pitcher')
              [['Pitches','Str Val','BBE Val','plvStuff+']+pitch_order]
