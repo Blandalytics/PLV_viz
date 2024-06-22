@@ -184,40 +184,40 @@ st.dataframe(year_data
              .rename(columns={
                  'pitchtype':'Pitch Type',
                  'pitch_id':'Pitches',
-                 'pitch_extension':'Extension',
+                 'pitch_extension':'Ext.',
                  'velo':'Velo',
-                 'IHB':'Arm-Side Break',
+                 'IHB':'ASB',
                  'swinging_strike_pred':'xWhiff%',
-                 'str_rv':'Str Val/100',
+                 'str_rv':'Str Val',
                  'adj_vaa':'HAVAA',
                  # 'wOBAcon_pred':'xwOBAcon',
-                 'bbe_rv':'BBE Val/100',
+                 'bbe_rv':'BBE Val',
                  'plv_stuff_plus':'plvStuff+'
                  })
              .set_index('Pitch Type')
              .dropna()
              .sort_values('Pitches',ascending=False)
              .reset_index()
-             [['Pitch Type','Pitches','Extension','Velo','IVB','Arm-Side Break','HAVAA','xWhiff%','Str Val/100',#'xwOBAcon',
-               'BBE Val/100','plvStuff+']]
+             [['Pitch Type','Pitches','Ext.','Velo','IVB','ASB','HAVAA','xWhiff%','Str Val',#'xwOBAcon',
+               'BBE Val','plvStuff+']]
              .style
              .format({
                  'Pitches':'{:,.0f}', 
-                 'Extension':'{:.1f}ft', 
+                 'Ext.':'{:.1f}ft', 
                  'Velo':'{:.1f}', 
                  'IVB': '{:.1f}"', 
-                 'Arm-Side Break': '{:.1f}"', 
+                 'ASB': '{:.1f}"', 
                  'HAVAA':'{:.1f}°', 
                  'xWhiff%':'{:.1%}', 
-                 'Str Val/100':'{:.1f}',
+                 'Str Val':'{:.1f}',
                  # 'xwOBAcon':'{:.3f}', 
-                 'BBE Val/100':'{:.1f}',
+                 'BBE Val':'{:.1f}',
                  'plvStuff+': '{:.0f}'
              })
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvStuff+'])
              .background_gradient(axis=0, vmin=-2, vmax=2,
-                                  cmap="vlag_r", subset=['Str Val/100','BBE Val/100']),
+                                  cmap="vlag_r", subset=['Str Val','BBE Val']),
              hide_index=True
             )
 
