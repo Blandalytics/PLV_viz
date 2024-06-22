@@ -198,21 +198,21 @@ st.dataframe(year_data
              .dropna()
              .sort_values('Pitches',ascending=False)
              .reset_index()
-             [['Pitch Type','Pitches','Ext.','Velo','IVB','ASB','HAVAA','xWhiff%','Str Val',#'xwOBAcon',
-               'BBE Val','plvStuff+']]
+             [['Pitch Type','Pitches','Str Val','BBE Val','plvStuff+','Ext.','Velo','IVB','ASB','HAVAA','xWhiff%',#'xwOBAcon',
+               ]]
              .style
              .format({
                  'Pitches':'{:,.0f}', 
+                 'Str Val':'{:.1f}',
+                 'BBE Val':'{:.1f}',
+                 'plvStuff+': '{:.0f}',
                  'Ext.':'{:.1f}ft', 
                  'Velo':'{:.1f}', 
                  'IVB': '{:.1f}"', 
                  'ASB': '{:.1f}"', 
                  'HAVAA':'{:.1f}°', 
                  'xWhiff%':'{:.1%}', 
-                 'Str Val':'{:.1f}',
                  # 'xwOBAcon':'{:.3f}', 
-                 'BBE Val':'{:.1f}',
-                 'plvStuff+': '{:.0f}'
              })
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvStuff+'])
