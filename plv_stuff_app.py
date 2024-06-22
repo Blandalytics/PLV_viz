@@ -147,16 +147,19 @@ st.write(f"{player}'s {year} Repertoire")
 st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
              .groupby('pitchtype')
-             [['pitch_id','velo','IVB','IHB','swinging_strike_pred','plv_stuff_plus','adj_vaa','pitch_extension','wOBAcon_pred']]
+             [['pitch_id','velo','IVB','IHB','swinging_strike_pred','plv_stuff_plus','adj_vaa','pitch_extension',#'wOBAcon_pred',
+               'str_rv','bbe_rv']]
              .agg({
                  'pitch_id':'count',
                  'velo':'mean',
                  'IVB':'mean',
                  'IHB':'mean',
                  'swinging_strike_pred':'mean',
+                 'str_rv':'mean',
+                 'bbe_rv':'mean',
                  'adj_vaa':'mean',
                  'pitch_extension':'mean',
-                 'wOBAcon_pred':'mean',
+                 # 'wOBAcon_pred':'mean',
                  'plv_stuff_plus':'mean'
                  })
              .astype({
@@ -165,14 +168,18 @@ st.dataframe(year_data
                  'IVB':'float',
                  'IHB':'float',
                  'swinging_strike_pred':'float',
+                 'str_rv':'float',
+                 'bbe_rv':'float',
                  'adj_vaa':'float',
                  'pitch_extension':'float',
-                 'wOBAcon_pred':'float',
+                 # 'wOBAcon_pred':'float',
                  'plv_stuff_plus':'float'
                  })
              .reset_index()
              .assign(pitchtype = lambda x: x['pitchtype'].map(pitch_names),
-                     IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1)
+                     IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1),
+                     str_rv = lambda x: x['str_rv'].mul(100),
+                     bbe_rv = lambda x: x['bbe_rv'].mul(100)
                     )
              .rename(columns={
                  'pitchtype':'Pitch Type',
@@ -181,15 +188,18 @@ st.dataframe(year_data
                  'velo':'Velo',
                  'IHB':'Arm-Side Break',
                  'swinging_strike_pred':'xWhiff%',
+                 'str_rv':'Str Val/100',
                  'adj_vaa':'HAVAA',
-                 'wOBAcon_pred':'xwOBAcon',
+                 # 'wOBAcon_pred':'xwOBAcon',
+                 'bbe_rv':'BBE Val/100',
                  'plv_stuff_plus':'plvStuff+'
                  })
              .set_index('Pitch Type')
              .dropna()
              .sort_values('Pitches',ascending=False)
              .reset_index()
-             [['Pitch Type','Pitches','Extension','Velo','IVB','Arm-Side Break','HAVAA','xWhiff%','xwOBAcon','plvStuff+']]
+             [['Pitch Type','Pitches','Extension','Velo','IVB','Arm-Side Break','HAVAA','xWhiff%','Str Val/100',#'xwOBAcon',
+               'BBE Val/100','plvStuff+']]
              .style
              .format({
                  'Pitches':'{:,.0f}', 
@@ -199,7 +209,9 @@ st.dataframe(year_data
                  'Arm-Side Break': '{:.1f}"', 
                  'HAVAA':'{:.1f}°', 
                  'xWhiff%':'{:.1%}', 
-                 'xwOBAcon':'{:.3f}',
+                 'Str Val/100':'{:.1f}',
+                 # 'xwOBAcon':'{:.3f}', 
+                 'BBE Val/100':'{:.1f}',
                  'plvStuff+': '{:.0f}'
              })
              .background_gradient(axis=0, vmin=50, vmax=150,
