@@ -112,7 +112,7 @@ st.dataframe(pd.pivot_table((year_data
                      str_val = lambda x: x[[('str_rv',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'] * 100,
                      bbe_val = lambda x: x[[('bbe_rv',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'] * 100,
                      plvStuff = lambda x: x[[('plv_stuff_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
-             .drop(columns=[('pitch_id',y) for y in pitch_order])
+             .drop(columns=[('pitch_id',y) for y in pitch_order] + [('str_rv',y) for y in pitch_order] + [('bbe_rv',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
              .set_axis(['Pitcher']+sorted(pitch_order)+['Pitches','Str Val','BBE Val','plvStuff+'], axis=1)
