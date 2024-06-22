@@ -215,7 +215,9 @@ st.dataframe(year_data
                  'plvStuff+': '{:.0f}'
              })
              .background_gradient(axis=0, vmin=50, vmax=150,
-                                  cmap="vlag", subset=['plvStuff+']),
+                                  cmap="vlag", subset=['plvStuff+'])
+             .background_gradient(axis=0, vmin=-1, vmax=1,
+                                  cmap="vlag_r", subset=['Str Val/100','BBE Val/100']),
              hide_index=True
             )
 
