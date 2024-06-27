@@ -164,8 +164,8 @@ year = 2024#st.radio('Choose a year:', years)
 @st.cache_data
 def load_data(year):
     df = pd.DataFrame()
-    for chunk in [1,2,3]:
-        file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_MiLB_Analysis_Data-{chunk}.parquet?raw=true'
+    for month in range(3,11):
+        file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_MiLB_Analysis_Data-{month}.parquet?raw=true'
         load_cols = ['pitchername','pitchtype','pitch_id','game_played','level',
                                                     'p_hand','b_hand','IHB','IVB','called_strike_pred',
                                                     'ball_pred','PLV','velo','pitch_extension',
