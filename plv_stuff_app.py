@@ -228,20 +228,36 @@ st.dataframe(year_data
 st.title("Interactive 3D Stuff Plot")
 st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate the chart\n- Scroll to zoom\n- Right click + drag to move the chart')
 
-palette = st.radio('Choose a color palette:', ['plvStuff+','Pitch Type'])
+palette = st.radio('Choose a color palette:', ['plvStuff+','Strike Value','Batted Ball Value','Pitch Type'])
+palette_map = {
+    'plvStuff+':'3d_stuff_plus',
+    'Strike Value':'3d_str_rv',
+    'Batted Ball Value':'3d_bbe_rv'
+}
 
 def stuff_chart(df,player,palette):
     chart_df = df.loc[(df['pitchername']==player)].copy()
     chart_df['3d_stuff_plus'] = 100
+    chart_df['3d_str_rv'] = 0
+    chart_df['3d_bbe_rv'] = 0
 
     ax_lim = max(25,chart_df[['IVB','IHB']].abs().max().max())
     for pitchtype in chart_df['pitchtype'].unique():
         if chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]==1:
             chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_stuff_plus'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'plv_stuff_plus']
+            chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_str_rv'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'str_rv']
+            chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_bbe_rv'] = chart_df.loc[chart_df['pitchtype']==pitchtype,'bbe_rv']
         else:
             knn=KNeighborsRegressor(n_neighbors=min(30,int(chart_df.loc[chart_df['pitchtype']==pitchtype].shape[0]/2)))
+            # KNN for Stuff
             model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']],chart_df.loc[chart_df['pitchtype']==pitchtype,'plv_stuff_plus'])
             chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_stuff_plus'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']])
+            # KNN for Strike Value
+            model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']],chart_df.loc[chart_df['pitchtype']==pitchtype,'str_rv'])
+            chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_str_rv'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']])
+            # KNN for Batted Ball Value
+            model_knn=knn.fit(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']],chart_df.loc[chart_df['pitchtype']==pitchtype,'bbe_rv'])
+            chart_df.loc[chart_df['pitchtype']==pitchtype,'3d_bbe_rv'] = model_knn.predict(chart_df.loc[chart_df['pitchtype']==pitchtype,['IHB','IVB','velo']])
     
     Scene = dict(camera=dict(eye=dict(x=1.35, y=-1.6, z=0.9),
                             center=dict(x=-0.05,y=0,z=-0.1)
@@ -257,16 +273,17 @@ def stuff_chart(df,player,palette):
                              range=(-ax_lim,ax_lim)),
                  )
 
-    if palette=='plvStuff+':
-        labels = chart_df['3d_stuff_plus']
+    if palette!='Pitch Type':
+        labels = chart_df[palette_map[palette]]
         marker_dict = dict(color = labels, size= 5, line=dict(width = 0), 
-                           cmin=50,cmax=150,
-                           colorscale=[[x/100,'rgb'+str(tuple([int(y*255) for y in sns.color_palette('vlag',n_colors=101)[x]]))] for x in range(101)], 
+                           cmin=50 if palette == 'plvStuff+' else -1,
+                           cmax=150 if palette == 'plvStuff+' else 1,
+                           colorscale=[[x/100,'rgb'+str(tuple([int(y*255) for y in sns.color_palette('vlag' if palette == 'plvStuff+' else 'vlag_r',n_colors=101)[x]]))] for x in range(101)], 
                            colorbar=dict(
-                               title="plvStuff+\n",
+                               title=f"{palette}\n",
                                titleside="top",
                                tickmode="array",
-                               tickvals=[50, 75, 100, 125, 150],
+                               tickvals=[50, 75, 100, 125, 150] if palette == 'plvStuff+' else [-1, -0.5, 0, 0.5, 1],
                                ticks="outside"
                                ))
         bonus_text = chart_df['pitchtype'].map(pitch_names)
@@ -292,7 +309,7 @@ def stuff_chart(df,player,palette):
                       )
     data = [trace]
     fig = go.Figure(data = data, layout = layout)
-    if palette != 'plvStuff+':
+    if palette == 'Pitch Type':
         for pitch in [x for x in chart_df['pitchtype'].value_counts().index if x in chart_df['pitchtype'].unique()]:
             stuff_text = chart_df.loc[chart_df['pitchtype']==pitch,'plv_stuff_plus'].mean()
             fig.add_trace(go.Scatter3d(
