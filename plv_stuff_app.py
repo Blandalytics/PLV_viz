@@ -232,7 +232,7 @@ palette = st.radio('Choose a color palette:', ['plvStuff+','Strike Value','Batte
 palette_map = {
     'plvStuff+':'3d_stuff_plus',
     'Strike Value':'3d_str_rv',
-    'Batted Ball Value/100':'3d_bbe_rv'
+    'Batted Ball Value':'3d_bbe_rv'
 }
 
 def stuff_chart(df,player,palette):
