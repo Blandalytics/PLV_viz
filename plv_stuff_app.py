@@ -232,7 +232,7 @@ palette = st.radio('Choose a color palette:', ['plvStuff+','Strike Value','Batte
 palette_map = {
     'plvStuff+':['plv_stuff_plus','3d_stuff_plus'],
     'Strike Value':['str_rv','3d_str_rv'],
-    'Batted Ball Value':['bbe_rv','3d_bbe_rv']
+    'Batted Ball Value':['bbe_rv','3d_bbe_rv'],
     'Pitch Type':['plv_stuff_plus','3d_stuff_plus'],
 }
 
