@@ -276,7 +276,7 @@ def stuff_chart(df,player,palette):
                  )
 
     if palette!='Pitch Type':
-        labels = chart_df[palette_map[palette[1]]]
+        labels = chart_df[palette_map[palette][1]]
         chart_df['pitchtype'] = chart_df['pitchtype'].map(pitch_names)
         chart_df['customtext'] = palette
         bonus_text = chart_df[['pitchtype','customtext']]
