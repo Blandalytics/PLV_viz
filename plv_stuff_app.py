@@ -232,12 +232,13 @@ palette = st.radio('Choose a color palette:', ['plvStuff+','Strike Value','Batte
 palette_map = {
     'plvStuff+':'3d_stuff_plus',
     'Strike Value':'3d_str_rv',
-    'Batted Ball Value':'3d_bbe_rv'
+    'Batted Ball Value/100':'3d_bbe_rv'
 }
 
 def stuff_chart(df,player,palette):
     chart_df = df.loc[(df['pitchername']==player)].copy()
     chart_df['3d_stuff_plus'] = 100
+    chart_df[['str_rv','bbe_rv']] = chart_df[['str_rv','bbe_rv']].mul(100)
     chart_df['3d_str_rv'] = 0
     chart_df['3d_bbe_rv'] = 0
 
