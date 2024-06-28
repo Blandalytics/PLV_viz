@@ -288,12 +288,12 @@ def stuff_chart(df,player,palette):
                                ticks="outside"
                                ))
         bonus_text = chart_df['pitchtype'].map(pitch_names)
-        hover_text = '<b>%{text}</b><br><b>plvStuff+: %{marker.color:.1f}</b><br>Velo: %{y}mph<br>IVB: %{z:.1f}"<br>Arm-Side Break: %{x:.1f}"<extra></extra>'
+        hover_text = '<b>%{text}</b><br><b>%{palette}: %{marker.color:.1f}</b><br>Velo: %{y}mph<br>IVB: %{z:.1f}"<br>Arm-Side Break: %{x:.1f}"<extra></extra>'
     else:
         labels = chart_df['pitchtype'].map(marker_colors)
         marker_dict = dict(color=labels,size=5,line=dict(width=0.25,color=pl_line_color))
         bonus_text = chart_df['3d_stuff_plus']
-        hover_text = '<b>%{customdata}</b><br><b>%{palette}: %{text:.1f}</b><br>Velo: %{y}mph<br>IVB: %{z:.1f}"<br>Arm-Side Break: %{x:.1f}"<extra></extra>'
+        hover_text = '<b>%{customdata}</b><br><b>plvStuff+: %{text:.1f}</b><br>Velo: %{y}mph<br>IVB: %{z:.1f}"<br>Arm-Side Break: %{x:.1f}"<extra></extra>'
     trace = go.Scatter3d(x=chart_df['IHB'].mul(-1 if hand=='R' else 1), y=chart_df['velo'], z=chart_df['IVB'], 
                          mode='markers', marker=marker_dict,
                          text=bonus_text,
