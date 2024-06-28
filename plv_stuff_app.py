@@ -230,9 +230,10 @@ st.write('Controls:\n- Hover to see pitch details\n- Left click + drag to rotate
 
 palette = st.radio('Choose a color palette:', ['plvStuff+','Strike Value','Batted Ball Value','Pitch Type'])
 palette_map = {
-    'plvStuff+':'3d_stuff_plus',
-    'Strike Value':'3d_str_rv',
-    'Batted Ball Value':'3d_bbe_rv'
+    'plvStuff+':['plv_stuff_plus','3d_stuff_plus'],
+    'Strike Value':['str_rv','3d_str_rv'],
+    'Batted Ball Value':['bbe_rv','3d_bbe_rv']
+    'Pitch Type':['plv_stuff_plus','3d_stuff_plus'],
 }
 
 def stuff_chart(df,player,palette):
@@ -275,19 +276,19 @@ def stuff_chart(df,player,palette):
                  )
 
     if palette!='Pitch Type':
-        labels = chart_df[palette_map[palette]]
+        labels = chart_df[palette_map[palette[1]]]
         chart_df['pitchtype'] = chart_df['pitchtype'].map(pitch_names)
         chart_df['customtext'] = palette
         bonus_text = chart_df[['pitchtype','customtext']]
         marker_dict = dict(color = labels, size= 5, line=dict(width = 0), 
-                           cmin=50 if palette == 'plvStuff+' else -1,
-                           cmax=150 if palette == 'plvStuff+' else 1,
+                           cmin=50 if palette == 'plvStuff+' else -2,
+                           cmax=150 if palette == 'plvStuff+' else 2,
                            colorscale=[[x/100,'rgb'+str(tuple([int(y*255) for y in sns.color_palette('vlag' if palette == 'plvStuff+' else 'vlag_r',n_colors=101)[x]]))] for x in range(101)], 
                            colorbar=dict(
                                title=f"{palette}\n",
                                titleside="top",
                                tickmode="array",
-                               tickvals=[50, 75, 100, 125, 150] if palette == 'plvStuff+' else [-1, -0.5, 0, 0.5, 1],
+                               tickvals=[50, 75, 100, 125, 150] if palette == 'plvStuff+' else [-2, -1, 0, 1, 2],
                                ticks="outside"
                                ))
         # bonus_text = chart_df['pitchtype'].map(pitch_names)
@@ -324,10 +325,10 @@ def stuff_chart(df,player,palette):
                 name=pitch_names[pitch]+f': {stuff_text:.1f}',
                 marker=dict(size=7, color=marker_colors[pitch]),
                 ))
-    overall_stuff = chart_df['plv_stuff_plus'].mean()
+    overall_stuff = chart_df[palette_map[palette][0]].mean()
     fig.update_layout(
         title={
-            'text': f"{player}'s<br>plvStuff+: {overall_stuff:.1f}",
+            'text': f"{player}'s<br>{'plvStuff+' if palette=='Pitch Type' else palette}: {overall_stuff:.1f}",
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
