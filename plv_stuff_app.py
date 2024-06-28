@@ -328,7 +328,7 @@ def stuff_chart(df,player,palette):
     overall_stuff = chart_df[palette_map[palette][0]].mean()
     fig.update_layout(
         title={
-            'text': f"{player}'s<br>plvStuff+: {overall_stuff:.1f}" if palette in ['plvStuff+','Pitch Type'] else f"{player}'s<br>Stuff {palette}: {overall_stuff:.2f} Runs/100 Pitches",
+            'text': f"{player}'s {year} Stuff<br>plvStuff+: {overall_stuff:.1f}" if palette in ['plvStuff+','Pitch Type'] else f"{player}'s {year} Stuff<br>{palette}: {overall_stuff:.2f} Runs/100",
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
