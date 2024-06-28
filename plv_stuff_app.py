@@ -276,6 +276,8 @@ def stuff_chart(df,player,palette):
 
     if palette!='Pitch Type':
         labels = chart_df[palette_map[palette]]
+        chart_df['customtext'] = palette
+        customdata = chart_df['customtext']
         marker_dict = dict(color = labels, size= 5, line=dict(width = 0), 
                            cmin=50 if palette == 'plvStuff+' else -1,
                            cmax=150 if palette == 'plvStuff+' else 1,
@@ -288,7 +290,7 @@ def stuff_chart(df,player,palette):
                                ticks="outside"
                                ))
         bonus_text = chart_df['pitchtype'].map(pitch_names)
-        hover_text = '<b>%{text}</b><br><b>%{palette}: %{marker.color:.1f}</b><br>Velo: %{y}mph<br>IVB: %{z:.1f}"<br>Arm-Side Break: %{x:.1f}"<extra></extra>'
+        hover_text = '<b>%{text}</b><br><b>%{customdata}: %{marker.color:.1f}</b><br>Velo: %{y}mph<br>IVB: %{z:.1f}"<br>Arm-Side Break: %{x:.1f}"<extra></extra>'
     else:
         labels = chart_df['pitchtype'].map(marker_colors)
         marker_dict = dict(color=labels,size=5,line=dict(width=0.25,color=pl_line_color))
