@@ -169,7 +169,7 @@ type_grade_dict = (year_data
 st.write(f"{player}'s {year} Repertoire")
 st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
-             .groupby('pitchtype')
+             .groupby(['pitchername','pitchtype'])
              [['pitch_id','velo','IVB','IHB','swinging_strike_pred','plv_stuff_plus','adj_vaa','pitch_extension',#'wOBAcon_pred',
                'str_rv','bbe_rv']]
              .agg({
