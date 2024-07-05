@@ -146,7 +146,26 @@ default_ix = players.index('Zack Wheeler')
 player = st.selectbox('Choose a player:', players, index=default_ix)
 
 hand = 'L' if year_data.loc[(year_data['pitchername']==player),'pitcherside_L'].values[0] == 1 else 'R'
+def pitch_grade(x):
+    return (x - x.mean()) / x.std() * 10 + 50
 
+type_grade_dict = (year_data
+ .groupby(['pitchername','pitchtype'])
+ [['pitch_id','plv_stuff_plus']]
+ .agg({
+     'pitch_id':'count',
+     'plv_stuff_plus':'mean'
+ })
+ .reset_index()
+ .assign(season_pitches = lambda x: x['pitch_id'].groupby(x['pitchername']).transform('sum'))
+ .query('season_pitches >= 1000')
+ .assign(type_grade = lambda x: x['plv_stuff_plus'].groupby(x['pitchtype']).transform(pitch_grade))
+ .fillna({'type_grade':50})
+ .set_index(['pitchername','pitchtype'])
+ ['type_grade']
+ .to_dict()
+)
+    
 st.write(f"{player}'s {year} Repertoire")
 st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
@@ -180,10 +199,10 @@ st.dataframe(year_data
                  'plv_stuff_plus':'float'
                  })
              .reset_index()
-             .assign(pitchtype = lambda x: x['pitchtype'].map(pitch_names),
-                     IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1),
+             .assign(IHB = lambda x: x['IHB'].mul(-1 if hand=='R' else 1),
                      str_rv = lambda x: x['str_rv'].mul(100),
-                     bbe_rv = lambda x: x['bbe_rv'].mul(100)
+                     bbe_rv = lambda x: x['bbe_rv'].mul(100),
+                     type_grade = lambda x: x[['pitchername','pitchtype']].apply(tuple, axis=1).map(type_grade_dict)
                     )
              .rename(columns={
                  'pitchtype':'Pitch Type',
@@ -196,13 +215,14 @@ st.dataframe(year_data
                  'adj_vaa':'HAVAA',
                  # 'wOBAcon_pred':'xwOBAcon',
                  'bbe_rv':'BBE Val',
+                 'type_grade':'Type Grade',
                  'plv_stuff_plus':'plvStuff+'
                  })
              .set_index('Pitch Type')
              .dropna()
              .sort_values('Pitches',ascending=False)
              .reset_index()
-             [['Pitch Type','Pitches','Str Val','BBE Val','plvStuff+','Ext.','Velo','IVB','ASB','HAVAA','xWhiff%',#'xwOBAcon',
+             [['Pitch Type','Pitches','Str Val','BBE Val','plvStuff+','Type Grade','Ext.','Velo','IVB','ASB','HAVAA'#,'xWhiff%','xwOBAcon',
                ]]
              .style
              .format({
@@ -210,18 +230,21 @@ st.dataframe(year_data
                  'Str Val':'{:.1f}',
                  'BBE Val':'{:.1f}',
                  'plvStuff+': '{:.0f}',
+                 'Type Grade': '{:.0f}',
                  'Ext.':'{:.1f}ft', 
                  'Velo':'{:.1f}', 
                  'IVB': '{:.1f}"', 
                  'ASB': '{:.1f}"', 
                  'HAVAA':'{:.1f}°', 
-                 'xWhiff%':'{:.1%}', 
+                 # 'xWhiff%':'{:.1%}', 
                  # 'xwOBAcon':'{:.3f}', 
              })
              .background_gradient(axis=0, vmin=50, vmax=150,
                                   cmap="vlag", subset=['plvStuff+'])
              .background_gradient(axis=0, vmin=-2, vmax=2,
-                                  cmap="vlag_r", subset=['Str Val','BBE Val']),
+                                  cmap="vlag_r", subset=['Str Val','BBE Val'])
+             .background_gradient(axis=0, vmin=20, vmax=80,
+                                  cmap="vlag", subset=['Type Grade']),
              hide_index=True
             )
 
