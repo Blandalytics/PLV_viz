@@ -158,7 +158,7 @@ type_grade_dict = (year_data
  })
  .reset_index()
  .assign(season_pitches = lambda x: x['pitch_id'].groupby(x['pitchername']).transform('sum'))
- .query('season_pitches >= 1000')
+ .query(f'season_pitches >= {pitch_threshold}')
  .assign(type_grade = lambda x: x['plv_stuff_plus'].groupby(x['pitchtype']).transform(pitch_grade))
  .fillna({'type_grade':50})
  .set_index(['pitchername','pitchtype'])
