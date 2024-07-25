@@ -127,7 +127,7 @@ def load_data(year):
             continue
         df = pd.concat([df,
                         pd.read_parquet(file_name)], ignore_index=True)
-    return df.query('pitchtype != "UN"').reset_index(drop=True)
+    return df.query('pitchtype != "UN"').query('pitchtype != "SC"').reset_index(drop=True)
 
 year_data = load_data(year)
 year_data['pitchername'] = year_data['pitchername'].astype('str')
