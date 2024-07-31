@@ -47,7 +47,7 @@ sns.set_theme(
      }
     )
 
-years = [2023,2022,2021,2020]
+years = [2024,2023,2022,2021,2020]
 year = st.radio('Choose a year:', years)
 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
@@ -113,7 +113,7 @@ with col1:
                    .sort_values('hittername')
                    ['hittername'].unique()
                   )
-    default_ix = players.index('Ronald Acuña Jr.')
+    default_ix = players.index('Juan Soto')
     player = st.selectbox('Choose a player:', players, index=default_ix)
 with col2:
     # Color Scale
