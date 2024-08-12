@@ -538,7 +538,7 @@ def movement_chart(player):
                     x='IHB',
                     y='IVB',
                     hue='pitchtype',
-                    palette=color_palette)
+                    palette=marker_colors)
     
     ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
     ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
@@ -547,7 +547,7 @@ def movement_chart(player):
                     x='IHB',
                     y='IVB',
                     hue='pitchtype',
-                    palette=color_palette,
+                    palette=marker_colors,
                     s=150,
                     legend=False,
                     linewidth=2
