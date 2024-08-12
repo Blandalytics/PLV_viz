@@ -599,7 +599,7 @@ def movement_chart(player):
     sns.despine()
     st.pyplot(fig)
   
-movement_chart(player)
+movement_chart(card_player)
 
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
