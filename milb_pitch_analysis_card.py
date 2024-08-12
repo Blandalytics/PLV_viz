@@ -526,6 +526,81 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     st.pyplot(fig)
 pitch_analysis_card(card_player,pitch_type,chart_type)
 
+def movement_chart(player):
+    hand = pitch_df.loc[(pitch_df['pitchername']==player),'p_hand'].values[0]
+    move_df = pitch_df.loc[(pitch_df['pitchername']==player)].copy()
+    
+    pitch_list = [x[0] for x in Counter(move_df['pitchtype']).most_common() if (x[0] != 'UN')]
+    
+    fig, ax = plt.subplots(figsize=(8,8))
+    
+    sns.scatterplot(data=move_df,
+                    x='IHB',
+                    y='IVB',
+                    hue='pitchtype',
+                    palette=color_palette)
+    
+    ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
+    ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
+    
+    sns.scatterplot(data=move_df.groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
+                    x='IHB',
+                    y='IVB',
+                    hue='pitchtype',
+                    palette=color_palette,
+                    s=150,
+                    legend=False,
+                    linewidth=2
+                   )
+    
+    ax.set(xlim=(29,-29),
+           ylim=(-29,29))
+    plt.xlabel('Horizontal Break (in)', fontsize=12,labelpad=10)
+    plt.ylabel('Vertical Break (in)', fontsize=12)
+    ax.set_xticks([20,10,0,-10,-20])
+    ax.set_xticklabels([x*-1 for x in ax.get_xticks()])
+    
+    handles, labels = ax.get_legend_handles_labels()
+    pitchtype_order = []
+    pitch_velos = {}
+    for x in pitch_list:
+        pitchtype_order.append(labels.index(x))
+        
+        pitch_velo = move_df.loc[move_df['pitchtype']==x,'velo'].mean()
+        pitch_velos[x] = f' ({pitch_velo:.1f})'
+    ax.legend([handles[idx] for idx in pitchtype_order],
+              [labels[idx]+pitch_velos[labels[idx]] for idx in pitchtype_order],
+              title='Pitchtype (velo)',
+              loc='upper right' if hand =='L' else 'upper left')
+    
+    fig.text(0.83,0.0425,'Glove' if hand == 'L' else 'Arm',ha='left')
+    fig.text(0.185,0.0425,'Arm' if hand == 'L' else 'Glove',ha='right')
+    fig.text(0.05,0.84,'Rise',ha='center')
+    fig.text(0.05,0.11,'Drop',ha='center')
+    
+    ax.annotate('', xy=(0.65, -0.08), xycoords='axes fraction', xytext=(0.9, -0.08), 
+                arrowprops=dict(arrowstyle="<-", color='w'))
+    ax.annotate('', xy=(0.35, -0.08), xycoords='axes fraction', xytext=(0.09, -0.08), 
+                arrowprops=dict(arrowstyle="<-", color='w'))
+    ax.annotate('', xy=(-0.1, 0.64), xycoords='axes fraction', xytext=(-0.1, 0.93), 
+                arrowprops=dict(arrowstyle="<-", color='w'))
+    ax.annotate('', xy=(-0.1, 0.35), xycoords='axes fraction', xytext=(-0.1, 0.05), 
+                arrowprops=dict(arrowstyle="<-", color='w'))
+    
+    fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.45,
+                 y=0.95, 
+                 fontsize=18)
+    
+    # Add PL logo
+    pl_ax = fig.add_axes([0.725,0.76,0.2,0.2], anchor='NE', zorder=1)
+    pl_ax.imshow(logo)
+    pl_ax.axis('off')
+    
+    sns.despine()
+    st.pyplot(fig)
+  
+movement_chart(player)
+
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
 st.write('- ***Release Extension***: Distance towards the plate when the pitcher releases the pitch (in feet).')
