@@ -110,7 +110,7 @@ st.dataframe(pd.pivot_table((year_data
                    values=['plv_loc_plus','pitch_id'], index=['pitchername'],
                    columns='pitchtype', aggfunc={'plv_loc_plus':'mean','pitch_id':'count'})
              .assign(Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
-                     plvLoc = lambda x: x[[('plv_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
+                     plvLoc = lambda x: x[[('plv_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Pitches'])
              .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
