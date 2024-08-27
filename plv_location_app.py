@@ -107,18 +107,18 @@ dtype_map.update({'Pitches':'int','plvLoc+':'float'})
 st.dataframe(pd.pivot_table((year_data
                      .loc[(year_data['pitchtype'].isin(pitch_order)) & 
                           (year_data['pitch_id'].groupby([year_data['pitchername'],year_data['pitchtype']]).transform('count')>=min(pitch_threshold,10))]), 
-                   values=['PLV_loc_plus','pitch_id'], index=['pitchername'],
-                   columns='pitchtype', aggfunc={'PLV_loc_plus':'mean','pitch_id':'count'})
-             .assign(Num_Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
-                     plvStuff = lambda x: x[[('PLV_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
+                   values=['plv_loc_plus','pitch_id'], index=['pitchername'],
+                   columns='pitchtype', aggfunc={'plv_loc_plus':'mean','pitch_id':'count'})
+             .assign(Pitches = lambda x: x[[('pitch_id',y) for y in pitch_order]].sum(axis=1),
+                     plvLoc = lambda x: x[[('plv_loc_plus',y) for y in pitch_order]].mul(x[[('pitch_id',y) for y in pitch_order]].droplevel(0, axis=1)).sum(axis=1) / x['Num_Pitches'])
              .drop(columns=[('pitch_id',y) for y in pitch_order])
              .droplevel(0, axis=1)
              .reset_index()
-             .set_axis(['Pitcher']+sorted(pitch_order)+['Pitches','plvLoc+'], axis=1)
+             .set_axis(['Pitcher']+sorted(pitch_order)+['Pitches','plvLoc'], axis=1)
              .set_index('Pitcher')
-             [['Pitches','plvLoc+']+pitch_order]
+             [['Pitches','plvLoc']+pitch_order]
              .query(f'Pitches >= {pitch_threshold}')
-             .sort_values('plvLoc+',ascending=False)
+             .sort_values('plvLoc',ascending=False)
              .fillna(-100)
              .astype(dtype_map)
              .reset_index()
@@ -132,11 +132,11 @@ st.dataframe(pd.pivot_table((year_data
 
 players = list(year_data
                .groupby('pitchername')
-               [['pitch_id','PLV_loc_plus']]
-               .agg({'pitch_id':'count','PLV_loc_plus':'mean'})
+               [['pitch_id','plv_loc_plus']]
+               .agg({'pitch_id':'count','plv_loc_plus':'mean'})
                .query(f'pitch_id >={pitch_threshold}')
                .reset_index()
-               .sort_values('PLV_loc_plus', ascending=False)
+               .sort_values('plv_loc_plus', ascending=False)
                ['pitchername']
               )
 default_ix = players.index('Zack Wheeler')
@@ -146,18 +146,18 @@ st.write(f"{player}'s Repertoire")
 st.dataframe(year_data
              .loc[(year_data['pitchername']==player)]
              .groupby('pitchtype')
-             [['pitch_id','csw_pred','wOBAcon_pred','PLV_loc_plus']]
+             [['pitch_id','csw_pred','wOBAcon_pred','plv_loc_plus']]
              .agg({
                  'pitch_id':'count',
                  'csw_pred':'mean',
                  'wOBAcon_pred':'mean',
-                 'PLV_loc_plus':'mean'
+                 'plv_loc_plus':'mean'
                  })
              .astype({
                  'pitch_id':'int',
                  'csw_pred':'float',
                  'wOBAcon_pred':'float',
-                 'PLV_loc_plus':'float'
+                 'plv_loc_plus':'float'
                  })
              .reset_index()
              .assign(pitchtype = lambda x: x['pitchtype'].map(pitch_names))
@@ -166,7 +166,7 @@ st.dataframe(year_data
                  'pitch_id':'Pitches',
                  'csw_pred':'locCSW',
                  'wOBAcon_pred':'loc wOBAcon',
-                 'PLV_loc_plus':'plvLocation+'
+                 'plv_loc_plus':'plvLocation+'
                  })
              .set_index('Pitch Type')
              .dropna()
@@ -221,7 +221,7 @@ def location_chart(df,player,pitch_type):
     
     layout = go.Layout(height = 600,width = 500,xaxis_range=[-2.5,2.5], yaxis_range=[-1,6])
 
-    labels = chart_df['PLV_loc_plus']
+    labels = chart_df['plv_loc_plus']
     bonus_text = chart_df['pitchtype'].map(pitch_names)
     hover_text = '<b>%{text}</b><br><b>plvLoc+: %{marker.color:.1f}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<br>locCSW: %{customdata[2]:.1%}<br>loc wOBAcon: %{customdata[3]:.3f}<extra></extra>'
     marker_dict = dict(color = labels, size= 5, line=dict(width=0), 
@@ -300,7 +300,7 @@ def location_chart(df,player,pitch_type):
     fig.update_xaxes(visible=False, showticklabels=False)
     fig.update_yaxes(visible=False, showticklabels=False)
     
-    overall_loc = chart_df['PLV_loc_plus'].mean()
+    overall_loc = chart_df['plv_loc_plus'].mean()
     type_text = '' if pitch_type=='All' else ' '+pitch_type+'s'
     fig.update_layout(
             template='simple_white',
