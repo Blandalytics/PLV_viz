@@ -163,7 +163,7 @@ st.title("MiLB Pitchtype Cards")
 #         ]
 year = 2024#st.radio('Choose a year:', years)
 # Load Data
-@st.cache_data
+@st.cache_data(ttl=60*30,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
     for month in range(3,11):
