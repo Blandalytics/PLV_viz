@@ -1,31 +1,31 @@
-﻿MLB Team Name,Short Code,Color 1,Color 2,Color 3,Color 4,Color 5
-Arizona Diamondbacks,AZ,#A71930,#E3D4AD,#000000,#30CED8,#FFFFFF
-Atlanta Braves,ATL,#CE1141,#13274F,#EAAA00,#FFFFFF,
-Baltimore Orioles,BAL,#DF4601,#000000,#FFFFFF,,
-Boston Red Sox,BOS,#BD3039,#0C2340,#FFFFFF,,
-Chicago Cubs,CHC,#0E3386,#CC3433,#FFFFFF,,
-Chicago White Sox,CWS,#27251F,#C4CED4,#FFFFFF,,
-Cincinnati Reds,CIN,#C6011F,#000000,#FFFFFF,,
-Cleveland Guardians,CLE,#00385D,#E50022,#FFFFFF,,
-Colorado Rockies,COL,#333366,#C4CED4,#131413,#FFFFFF,
-Detroit Tigers,DET,#0C2340,#FA4616,#FFFFFF,,
-Houston Astros,HOU,#EB6E1F,#002D62,#F4911E,#FFFFFF,
-Kansas City Royals,KC,#004687,#BD9B60,#FFFFFF,,
-Los Angeles Angels,LAA,#BA0021,#003263,#862633,#C4CED4,
-Los Angeles Dodgers,LAD,#005A9C,#A5ACAF,#EF3E42,#FFFFFF,
-Miami Marlins,MIA,#00A3E0,#EF3340,#41748D,#000000,#FFFFFF
-Milwaukee Brewers,MIL,#12284B,#FFC52F,#FFFFFF,,
-Minnesota Twins,MIN,#002B5C,#D31145,#B9975B,#FFFFFF,
-New York Mets,NYM,#FF5910,#002D72,#FFFFFF,,
-New York Yankees,NYY,#003087,#E4002C,#0C2340,#C4CED3,#FFFFFF
-Oakland Athletics,OAK,#003831,#EFB21E,#A2AAAD,#FFFFFF,
-Philadelphia Phillies,PHI,#E81828,#002D72,#FFFFFF,,
-Pittsburgh Pirates,PIT,#FDB827,#27251F,#FFFFFF,,
-San Diego Padres,SD,#2F241D,#FFC425,#FFFFFF,,
-San Francisco Giants,SF,#FD5A1E,#27251F,#EFD19F,#AE8F6F,#FFFFFF
-Seattle Mariners,SEA,#005C5C,#C4CED4,#0C2C56,#D50032,#FFFFFF
-St. Louis Cardinals,STL,#C41E3A,#0C2340,#FEDB00,#FFFFFF,
-Tampa Bay Rays,TB,#8FBCE6,#092C5C,#F5D130,#FFFFFF,
-Texas Rangers,TEX,#003278,#C0111F,#FFFFFF,,
-Toronto Blue Jays,TOR,#134A8E,#1D2D5C,#E8291C,#FFFFFF,
-Washington Nationals,WSH,#AB0003,#14225A,,,
+﻿MLB Team Name,Short Code,Logo,Color 1,Color 2,Color 3,Color 4,Color 5
+Arizona Diamondbacks,AZ,https://www.mlbstatic.com/team-logos/team-cap-on-light/109.svg,#A71930,#E3D4AD,#000000,#30CED8,#FFFFFF
+Atlanta Braves,ATL,https://www.mlbstatic.com/team-logos/team-cap-on-light/144.svg,#CE1141,#13274F,#EAAA00,#FFFFFF,
+Baltimore Orioles,BAL,https://www.mlbstatic.com/team-logos/team-cap-on-light/110.svg,#DF4601,#000000,#FFFFFF,,
+Boston Red Sox,BOS,https://www.mlbstatic.com/team-logos/team-cap-on-light/111.svg,#BD3039,#0C2340,#FFFFFF,,
+Chicago Cubs,CHC,https://www.mlbstatic.com/team-logos/team-cap-on-light/112.svg,#0E3386,#CC3433,#FFFFFF,,
+Chicago White Sox,CWS,https://www.mlbstatic.com/team-logos/team-cap-on-light/145.svg,#27251F,#C4CED4,#FFFFFF,,
+Cincinnati Reds,CIN,https://www.mlbstatic.com/team-logos/team-cap-on-light/113.svg,#C6011F,#000000,#FFFFFF,,
+Cleveland Guardians,CLE,https://www.mlbstatic.com/team-logos/team-cap-on-light/114.svg,#00385D,#E50022,#FFFFFF,,
+Colorado Rockies,COL,https://www.mlbstatic.com/team-logos/team-cap-on-light/115.svg,#333366,#C4CED4,#131413,#FFFFFF,
+Detroit Tigers,DET,https://www.mlbstatic.com/team-logos/team-cap-on-light/116.svg,#0C2340,#FA4616,#FFFFFF,,
+Houston Astros,HOU,https://www.mlbstatic.com/team-logos/team-primary-on-light/117.svg,#EB6E1F,#002D62,#F4911E,#FFFFFF,
+Kansas City Royals,KC,https://www.mlbstatic.com/team-logos/team-cap-on-light/118.svg,#004687,#BD9B60,#FFFFFF,,
+Los Angeles Angels,LAA,https://www.mlbstatic.com/team-logos/team-cap-on-light/108.svg,#BA0021,#003263,#862633,#C4CED4,
+Los Angeles Dodgers,LAD,https://www.mlbstatic.com/team-logos/team-cap-on-light/119.svg,#005A9C,#A5ACAF,#EF3E42,#FFFFFF,
+Miami Marlins,MIA,https://www.mlbstatic.com/team-logos/team-cap-on-light/146.svg,#00A3E0,#EF3340,#41748D,#000000,#FFFFFF
+Milwaukee Brewers,MIL,https://www.mlbstatic.com/team-logos/team-cap-on-light/158.svg,#12284B,#FFC52F,#FFFFFF,,
+Minnesota Twins,MIN,https://www.mlbstatic.com/team-logos/team-cap-on-light/142.svg,#002B5C,#D31145,#B9975B,#FFFFFF,
+New York Mets,NYM,https://www.mlbstatic.com/team-logos/team-cap-on-light/121.svg,#FF5910,#002D72,#FFFFFF,,
+New York Yankees,NYY,https://www.mlbstatic.com/team-logos/team-cap-on-light/147.svg,#003087,#E4002C,#0C2340,#C4CED3,#FFFFFF
+Oakland Athletics,OAK,https://www.mlbstatic.com/team-logos/team-cap-on-light/133.svg,#003831,#EFB21E,#A2AAAD,#FFFFFF,
+Philadelphia Phillies,PHI,https://www.mlbstatic.com/team-logos/team-cap-on-light/143.svg,#E81828,#002D72,#FFFFFF,,
+Pittsburgh Pirates,PIT,https://www.mlbstatic.com/team-logos/team-cap-on-light/134.svg,#FDB827,#27251F,#FFFFFF,,
+San Diego Padres,SD,https://www.mlbstatic.com/team-logos/team-cap-on-light/135.svg,#2F241D,#FFC425,#FFFFFF,,
+San Francisco Giants,SF,https://www.mlbstatic.com/team-logos/team-cap-on-light/137.svg,#FD5A1E,#27251F,#EFD19F,#AE8F6F,#FFFFFF
+Seattle Mariners,SEA,https://www.mlbstatic.com/team-logos/team-primary-on-light/136.svg,#005C5C,#C4CED4,#0C2C56,#D50032,#FFFFFF
+St. Louis Cardinals,STL,https://www.mlbstatic.com/team-logos/team-cap-on-light/138.svg,#C41E3A,#0C2340,#FEDB00,#FFFFFF,
+Tampa Bay Rays,TB,https://www.mlbstatic.com/team-logos/team-cap-on-light/139.svg,#8FBCE6,#092C5C,#F5D130,#FFFFFF,
+Texas Rangers,TEX,https://www.mlbstatic.com/team-logos/team-cap-on-light/140.svg,#003278,#C0111F,#FFFFFF,,
+Toronto Blue Jays,TOR,https://www.mlbstatic.com/team-logos/team-cap-on-light/141.svg,#134A8E,#1D2D5C,#E8291C,#FFFFFF,
+Washington Nationals,WSH,https://www.mlbstatic.com/team-logos/team-cap-on-light/120.svg,#AB0003,#14225A,,,
