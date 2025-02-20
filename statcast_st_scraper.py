@@ -1,4 +1,4 @@
-import streamit as st
+import streamlit as st
 import datetime
 import requests
 import numpy as np
