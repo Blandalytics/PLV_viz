@@ -172,17 +172,17 @@ def scrape_savant_data(player_name, game_id):
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
 
     merge_df['Usage'] = np.where(merge_df['Usage Diff'].isna(),
-                                 [f'{x:.1f}%' for x in merge_df['Usage']]
-                                 [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(0))]
+                                 [f'{x:.1f}%' for x in merge_df['Usage']],
+                                 [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(0))])
     merge_df['Velo'] = np.where(merge_df['Velo Diff'].isna(),
-                                 [f'{x:.1f}' for x in merge_df['Velo']]
-                                 [f'{x:.1f} ({y:+.1f})' for x,y in zip(merge_df['Velo'],merge_df['Velo Diff'].fillna(0))]
+                                 [f'{x:.1f}' for x in merge_df['Velo']],
+                                 [f'{x:.1f} ({y:+.1f})' for x,y in zip(merge_df['Velo'],merge_df['Velo Diff'].fillna(0))])
     merge_df['IVB'] = np.where(merge_df['IVB Diff'].isna(),
-                                 [f'{x:.1f}"' for x in merge_df['IVB']]
-                                 [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IVB'],merge_df['IVB Diff'].fillna(0))]
+                                 [f'{x:.1f}"' for x in merge_df['IVB']],
+                                 [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IVB'],merge_df['IVB Diff'].fillna(0))])
     merge_df['IHB'] = np.where(merge_df['IHB Diff'].isna(),
-                                 [f'{x:.1f}"' for x in merge_df['IHB']]
-                                 [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))]
+                                 [f'{x:.1f}"' for x in merge_df['IHB']],
+                                 [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
     
     # if df.loc[df['Pitcher']==player_name,'MLBAMID'].unique()[0] in list(season_avgs['pitcher']):
     #     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(0))]
