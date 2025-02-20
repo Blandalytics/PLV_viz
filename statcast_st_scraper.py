@@ -181,4 +181,5 @@ def scrape_savant_data(player_name, game_id):
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
-    scrape_savant_data(player_select,game_id)
+    table_df = scrape_savant_data(player_select,game_id)
+    st.dataframe(table_df,use_container_width=True,hide_index=True)
