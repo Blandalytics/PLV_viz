@@ -195,7 +195,7 @@ def scrape_savant_data(player_name, game_id):
     #     merge_df['IVB'] = [f'{x:.1f}"' for x in merge_df['IVB']]
     #     merge_df['IHB'] = [f'{x:.1f}"' for x in merge_df['IHB']]
 
-    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Usage','vs R','vs L','Velo','IVB','IHB','CS','Whiffs','CSW']].rename(columns={'Num Pitches':'#'})
+    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Usage','vs R','vs L','Velo','Ext','IVB','IHB','CS','Whiffs','CSW']].rename(columns={'Num Pitches':'#'})
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
