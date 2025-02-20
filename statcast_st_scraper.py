@@ -172,9 +172,8 @@ def scrape_savant_data(player_name, game_id):
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
     merge_df['Ext'] = merge_df['Ext'].round(2)
 
-    merge_df['Usage'] = np.where(merge_df['Usage Diff'].isna(),
-                                 [f'{x:.1f}%' for x in merge_df['Usage']],
-                                 [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(0))])
+    merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
+    
     merge_df['Velo'] = np.where(merge_df['Velo Diff'].isna(),
                                  [f'{x:.1f}' for x in merge_df['Velo']],
                                  [f'{x:.1f} ({y:+.1f})' for x,y in zip(merge_df['Velo'],merge_df['Velo Diff'].fillna(0))])
