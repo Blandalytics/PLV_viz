@@ -5,15 +5,16 @@ import numpy as np
 import pandas as pd
 import urllib
 
+
 from PIL import Image
 
-st.set_page_config(page_title='Pitcher List Spring Training Stats', page_icon='⚾')
+st.set_page_config(page_title='PL Live Spring Training Stats', page_icon='⚾')
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
-st.title('Pitcher List Spring Training Stats')
+st.title('PL Live Spring Training Stats')
 
 today = datetime.date.today()
 date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=datetime.date(2025, 3, 30))
@@ -182,4 +183,4 @@ if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
     table_df = scrape_savant_data(player_select,game_id)
-    st.dataframe(table_df,use_container_width=True,hide_index=True)
+    st.table(table_df)#,use_container_width=True,hide_index=True)
