@@ -42,6 +42,11 @@ for home_away_pitcher in ['home','away']:
 # player_select = 'Aaron Nola'
 player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
 
+def load_season_avgs():
+    return pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true')
+
+season_avgs = load_season_avgs()
+
 def scrape_savant_data(player_name, game_id):
     game_ids = []
     game_date = []
