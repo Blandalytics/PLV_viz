@@ -39,9 +39,6 @@ for home_away_pitcher in ['home','away']:
     for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
         pitcher_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:[pitcher_id,x['scoreboard']['teams']['home' if home_away_pitcher=='away' else 'away']['abbreviation']]})
 
-if pitcher_list == {}:
-    st.write('No pitches thrown yet')
-
 # player_select = 'Aaron Nola'
 player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
 
@@ -176,5 +173,7 @@ def scrape_savant_data(player_name, game_id):
         merge_df['IHB'] = [f'{x:.1f}"' for x in merge_df['IHB']]
 
     return merge_df[['Date','Opponent','Pitcher','Pitch Type','Num Pitches','Usage','vs R','vs L','Velo','IVB','IHB','CS','Whiffs','CSW']]
-if st.button("Generate Player Table"):
-  scrape_savant_data(player_select,game_id)
+if pitcher_list == {}:
+    st.write('No pitches thrown yet')
+elif st.button("Generate Player Table"):
+    scrape_savant_data(player_select,game_id)
