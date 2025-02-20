@@ -153,8 +153,8 @@ def scrape_savant_data(player_name, game_id):
                  left_on=['MLBAMID','pitch_type'],
                  right_on=['pitcher','pitch_type'],
                  suffixes=['','_2024'])
-        .assign(vs_rhh = lambda x: x['vs_rhh'].div(x['vs_rhh'].sum()),
-                vs_lhh = lambda x: x['vs_lhh'].div(x['vs_lhh'].sum()),
+        .assign(vs_rhh = lambda x: x['vs_rhh'].div(x['vs_rhh'].sum()).fillna(0),
+                vs_lhh = lambda x: x['vs_lhh'].div(x['vs_lhh'].sum()).fillna(0),
                 usage_diff = lambda x: x['Usage'].sub(x['Usage_2024']),
                 velo_diff = lambda x: x['Velo'].sub(x['Velo_2024']),
                 ivb_diff = lambda x: x['IVB'].sub(x['IVB_2024']),
