@@ -4,6 +4,8 @@ import requests
 import numpy as np
 import pandas as pd
 
+from PIL import Image
+
 st.set_page_config(page_title='Pitcher List Spring Training Stats', page_icon='⚾')
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
