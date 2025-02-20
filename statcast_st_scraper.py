@@ -15,33 +15,37 @@ logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
 st.title('PL Live Spring Training Stats')
+col1, col2, col3 = st.columns(3)
 
-today = datetime.date.today()
-date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=datetime.date(2025, 3, 30))
+with col1:
+    today = datetime.date.today()
+    date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=datetime.date(2025, 3, 30))
+    
+    r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
+    x = r.json()
+    if x['totalGames']==0:
+        st.write(f'No games on {date}')
+    game_list = {}
+    for game in range(len(x['dates'][0]['games'])):
+        game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
 
-r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
-x = r.json()
-if x['totalGames']==0:
-    st.write(f'No games on {date}')
-game_list = {}
-for game in range(len(x['dates'][0]['games'])):
-    game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
+with col2:
+    # game_select = 'Philadelphia Phillies @ Boston Red Sox'
+    game_select = st.selectbox('Choose a game:',list(game_list.keys()))
+    
+    game_id = game_list[game_select]
+    r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
+    x = r.json()
+    pitcher_list = {}
+    for home_away_pitcher in ['home','away']:
+        if f'{home_away_pitcher}_pitchers' not in x.keys():
+            continue
+        for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
+            pitcher_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:[pitcher_id,x['scoreboard']['teams']['home' if home_away_pitcher=='away' else 'away']['abbreviation']]})
 
-# game_select = 'Philadelphia Phillies @ Boston Red Sox'
-game_select = st.selectbox('Choose a game:',list(game_list.keys()))
-
-game_id = game_list[game_select]
-r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
-x = r.json()
-pitcher_list = {}
-for home_away_pitcher in ['home','away']:
-    if f'{home_away_pitcher}_pitchers' not in x.keys():
-        continue
-    for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
-        pitcher_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:[pitcher_id,x['scoreboard']['teams']['home' if home_away_pitcher=='away' else 'away']['abbreviation']]})
-
-# player_select = 'Aaron Nola'
-player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
+with col3:
+    # player_select = 'Aaron Nola'
+    player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
 
 def load_season_avgs():
     return pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true')
