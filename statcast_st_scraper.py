@@ -15,7 +15,7 @@ st.image(logo, width=200)
 
 st.title('Pitcher List Spring Training Stats')
 
-today = (datetime.datetime.now(pytz.utc)-timedelta(hours=16)).date()
+today = datetime.date.today()
 date = st.date_input("Select a game date:", today, min_value=datetime.date(2025, 2, 19), max_value=datetime.date(2025, 3, 30))
 
 r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
