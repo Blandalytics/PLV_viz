@@ -16,7 +16,7 @@ st.image(logo, width=200)
 st.title('Pitcher List Spring Training Stats')
 
 today = datetime.date.today()
-date = st.date_input("Select a game date:", today, min_value=datetime.date(2025, 2, 19), max_value=datetime.date(2025, 3, 30))
+date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=datetime.date(2025, 3, 30))
 
 r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
 x = r.json()
@@ -62,8 +62,8 @@ def scrape_savant_data(player_name, game_id):
     x = r.json()
 
     if ('game_status_code' in x.keys()):
-        # if (x['game_status_code'] in ['P','S']):
-        if (x['game_status_code'] != 'E'):
+        if (x['game_status_code'] in ['P','S']):
+        # if (x['game_status_code'] != 'E'):
             st.write('Non-Spring Training game_status_code')
     elif ('code' in x.keys()):
         if (x['code']=='UNCERTAIN_STATE'):
