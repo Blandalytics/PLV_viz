@@ -111,7 +111,7 @@ def scrape_savant_data(player_name, game_id):
     df = pd.DataFrame()
     df['game_pk'] = game_ids
     df['game_date'] = game_date
-    df['Opponent'] = pitcher_list[player_select][1]
+    df['Opp'] = pitcher_list[player_select][1]
     df['MLBAMID'] = pitcher_id_list
     df['MLBAMID'] = df['MLBAMID'].astype('int')
     df['Pitcher'] = pitcher_name
@@ -128,7 +128,7 @@ def scrape_savant_data(player_name, game_id):
     df['IHB'] = ihb
     df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opponent','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs']].agg({
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs']].agg({
         'Num Pitches':'count',
         'Velo':'mean',
         'IVB':'mean',
@@ -156,7 +156,7 @@ def scrape_savant_data(player_name, game_id):
                 ivb_diff = lambda x: x['IVB'].sub(x['IVB_2024']),
                 ihb_diff = lambda x: x['IHB'].sub(x['IHB_2024']))
         .rename(columns={'game_date':'Date',
-                         'pitch_type':'Pitch Type',
+                         'pitch_type':'Type',
                          'usage_diff':'Usage Diff',
                          'velo_diff':'Velo Diff',
                          'ivb_diff':'IVB Diff',
@@ -178,12 +178,7 @@ def scrape_savant_data(player_name, game_id):
         merge_df['IVB'] = [f'{x:.1f}"' for x in merge_df['IVB']]
         merge_df['IHB'] = [f'{x:.1f}"' for x in merge_df['IHB']]
 
-    merge_df['Usage'] = merge_df['Usage'].str.wrap(8)
-    merge_df['Velo'] = merge_df['Velo'].str.wrap(8)
-    merge_df['IVB'] = merge_df['IVB'].str.wrap(8)
-    merge_df['IHB'] = merge_df['IHB'].str.wrap(8)
-
-    return merge_df[['Date','Opponent','Pitcher','Pitch Type','Num Pitches','Usage','vs R','vs L','Velo','IVB','IHB','CS','Whiffs','CSW']]
+    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Usage','vs R','vs L','Velo','IVB','IHB','CS','Whiffs','CSW']].rename(columns={'Num Pitches':'#'})
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
