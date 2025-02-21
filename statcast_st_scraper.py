@@ -4,7 +4,8 @@ import requests
 import numpy as np
 import pandas as pd
 import urllib
-
+import pickle
+from sklearn.neighbors import KNeighborsClassifier
 
 from PIL import Image
 
@@ -51,6 +52,8 @@ def load_season_avgs():
     return pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true')
 
 season_avgs = load_season_avgs()
+with open('https://github.com/Blandalytics/PLV_viz/blob/main/2025_3d_xwoba_model.pkl?raw=true', 'rb') as f:
+    xwOBAcon_model = pickle.load(f)
 
 def scrape_savant_data(player_name, game_id):
     game_ids = []
@@ -67,6 +70,10 @@ def scrape_savant_data(player_name, game_id):
     swinging_strikes = []
     ivb = []
     ihb = []
+    hit_x = []
+    hit_y = []
+    hit_speed = []
+    hit_angle = []
     games = 0
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
     x = r.json()
@@ -108,6 +115,16 @@ def scrape_savant_data(player_name, game_id):
                     extension += [None]
                     ivb += [None]
                     ihb += [None]
+                if all(i in list(x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys()) for i in ['hc_x_ft','hc_y_ft','hit_speed','hit_angle']):
+                    hit_x += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hc_x_ft']]
+                    hit_y += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hc_y_ft']]
+                    hit_speed += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hit_speed']]
+                    hit_angle += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hit_angle']]
+                else:
+                    hit_x += [None]
+                    hit_y += [None]
+                    hit_speed += [None]
+                    hit_angle += [None]
     if games == 0:
         print('No Games Played')
         exit()
@@ -131,8 +148,23 @@ def scrape_savant_data(player_name, game_id):
     df['IVB'] = df['vert_break'].add((523/df['Velo'])**2).astype('float')
     df['IHB'] = ihb
     df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
+    df['hit_x'] = hit_x
+    df['hit_y'] = hit_y
+    df['hit_speed'] = hit_speed
+    df['hit_angle'] = hit_angle
+    df['spray_deg_base'] = np.degrees(np.arctan(df['hit_y'].astype('float').div(df['hit_x'].astype('float').abs())))
+    df['spray_deg'] = np.where((((df['hit_x']>0) & (df['hitterside']=='R')) | 
+                                ((df['hit_x']<0) & (df['hitterside']=='L'))),
+                               135-df['spray_deg_base'],
+                               df['spray_deg_base']-45)
+    
+    def xwOBA_model(df_):
+        df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']] = xwOBAcon_model.predict_proba(df_[['spray_deg','hit_angle','hit_speed']])
+        return df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']].mul([0,0.9,1.25,1.6,2]).sum(axis=1)
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs']].agg({
+    df['3D wOBAcon'] = xwOBA_model(df)
+
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon']].agg({
         'Num Pitches':'count',
         'Velo':'mean',
         'IVB':'mean',
@@ -140,7 +172,8 @@ def scrape_savant_data(player_name, game_id):
         'Ext':'mean',
         'vs_rhh':'sum',
         'CS':'sum',
-        'Whiffs':'sum'
+        'Whiffs':'sum',
+        '3D wOBAcon':'mean'
     }).assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
               vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh'])).reset_index()
 
@@ -183,19 +216,8 @@ def scrape_savant_data(player_name, game_id):
     merge_df['IHB'] = np.where(merge_df['IHB Diff'].isna(),
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
-     
-    # if df.loc[df['Pitcher']==player_name,'MLBAMID'].unique()[0] in list(season_avgs['pitcher']):
-    #     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(0))]
-    #     merge_df['Velo'] = [f'{x:.1f} ({y:+.1f})' for x,y in zip(merge_df['Velo'],merge_df['Velo Diff'].fillna(0))]
-    #     merge_df['IVB'] = [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IVB'],merge_df['IVB Diff'].fillna(0))]
-    #     merge_df['IHB'] = [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))]
-    # else:
-    #     merge_df['Usage'] = [f'{x:.1f}%' for x in merge_df['Usage']]
-    #     merge_df['Velo'] = [f'{x:.1f}' for x in merge_df['Velo']]
-    #     merge_df['IVB'] = [f'{x:.1f}"' for x in merge_df['IVB']]
-    #     merge_df['IHB'] = [f'{x:.1f}"' for x in merge_df['IHB']]
 
-    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Usage','vs R','vs L','Velo','Ext','IVB','IHB','CS','Whiffs','CSW']].rename(columns={'Num Pitches':'#'})
+    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Usage','vs R','vs L','Velo','Ext','IVB','IHB','CS','Whiffs','CSW','3D wOBAcon']].rename(columns={'Num Pitches':'#'})
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
