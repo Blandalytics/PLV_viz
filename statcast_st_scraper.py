@@ -31,7 +31,6 @@ with col1:
         game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
 
 with col2:
-    # game_select = 'Philadelphia Phillies @ Boston Red Sox'
     game_select = st.selectbox('Choose a game:',list(game_list.keys()))
     
     game_id = game_list[game_select]
@@ -45,7 +44,6 @@ with col2:
             pitcher_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:[pitcher_id,x['scoreboard']['teams']['home' if home_away_pitcher=='away' else 'away']['abbreviation']]})
 
 with col3:
-    # player_select = 'Aaron Nola'
     player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
 
 def load_season_avgs():
