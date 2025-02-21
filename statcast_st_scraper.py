@@ -150,16 +150,16 @@ def scrape_savant_data(player_name, game_id):
     df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
     df['hit_x'] = hit_x
     df['hit_y'] = hit_y
-    df['hit_speed'] = hit_speed
-    df['hit_angle'] = hit_angle
+    df['Launch Speed'] = hit_speed
+    df['Launch Angle'] = hit_angle
     df['spray_deg_base'] = np.degrees(np.arctan(df['hit_y'].astype('float').div(df['hit_x'].astype('float').abs())))
-    df['spray_deg'] = np.where((((df['hit_x']>0) & (df['hitterside']=='R')) | 
+    df['Spray Angle'] = np.where((((df['hit_x']>0) & (df['hitterside']=='R')) | 
                                 ((df['hit_x']<0) & (df['hitterside']=='L'))),
                                135-df['spray_deg_base'],
                                df['spray_deg_base']-45)
     
     def xwOBA_model(df_):
-        df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']] = xwOBAcon_model.predict_proba(df_[['spray_deg','hit_angle','hit_speed']])
+        df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']] = xwOBAcon_model.predict_proba(df_[['Spray Angle','Launch Angle','Launch Speed']])
         return df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']].mul([0,0.9,1.25,1.6,2]).sum(axis=1)
 
     df['3D wOBAcon'] = xwOBA_model(df)
