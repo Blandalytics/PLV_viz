@@ -52,7 +52,7 @@ def load_season_avgs():
     return pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true')
 
 season_avgs = load_season_avgs()
-with open('https://github.com/Blandalytics/PLV_viz/blob/main/2025_3d_xwoba_model.pkl?raw=true', 'rb') as f:
+with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
 
 def scrape_savant_data(player_name, game_id):
