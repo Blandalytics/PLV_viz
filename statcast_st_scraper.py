@@ -158,13 +158,14 @@ def scrape_savant_data(player_name, game_id):
                                135-df['spray_deg_base'],
                                df['spray_deg_base']-45)
     
-    def xwOBA_model(df_):
-        df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']] = np.where(df_['Spray Angle'].isna(),
-                                                                             None,
-                                                                             xwOBAcon_model.predict_proba(df_[xwOBAcon_model.feature_names_in_].astype('float')))
-        return df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']].mul([0,0.9,1.25,1.6,2]).sum(axis=1)
+    # def xwOBA_model(df_):
+        
+    #     df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']] = np.where(df_['Spray Angle'].isna(),
+    #                                                                          None,
+    #                                                                          xwOBAcon_model.predict_proba(df_[xwOBAcon_model.feature_names_in_].astype('float')))
+    #     return df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']].mul([0,0.9,1.25,1.6,2]).sum(axis=1)
 
-    df['3D wOBAcon'] = xwOBA_model(df)
+    df['3D wOBAcon'] = [sum(np.multiply(xwOBA_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'],df['Launch Angle'],df['Launch Speed']) if x != None else None]
 
     game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon']].agg({
         'Num Pitches':'count',
