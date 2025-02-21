@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import urllib
 import pickle
-# from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 from PIL import Image
 
@@ -50,8 +50,8 @@ def load_season_avgs():
     return pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true')
 
 season_avgs = load_season_avgs()
-# with open('2025_3d_xwoba_model.pkl', 'rb') as f:
-#     xwOBAcon_model = pickle.load(f)
+with open('2025_3d_xwoba_model.pkl', 'rb') as f:
+    xwOBAcon_model = pickle.load(f)
 
 def scrape_savant_data(player_name, game_id):
     game_ids = []
@@ -163,7 +163,7 @@ def scrape_savant_data(player_name, game_id):
     #                                                                          xwOBAcon_model.predict_proba(df_[xwOBAcon_model.feature_names_in_].astype('float')))
     #     return df_[['out_pred','1B_pred','2B_pred','3B_pred','HR_pred']].mul([0,0.9,1.25,1.6,2]).sum(axis=1)
 
-    df['3D wOBAcon'] = None#[sum(np.multiply(xwOBA_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'],df['Launch Angle'],df['Launch Speed']) if x != None else None]
+    df['3D wOBAcon'] = [sum(np.multiply(xwOBA_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'],df['Launch Angle'],df['Launch Speed']) if x != None else None]
 
     game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon']].agg({
         'Num Pitches':'count',
