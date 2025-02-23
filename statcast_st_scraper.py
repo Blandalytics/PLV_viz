@@ -237,7 +237,7 @@ elif st.button("Generate Player Table"):
                          help="% of pitches thrown vs Right-Handed Hitters",
                          ),
                      "vs L": st.column_config.Column(
-                         help="% of pitches thrown vs Right-Handed Hitters",
+                         help="% of pitches thrown vs Left-Handed Hitters",
                          ),
                      },
                  # use_container_width=True,
