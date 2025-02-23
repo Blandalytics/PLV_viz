@@ -224,12 +224,13 @@ elif st.button("Generate Player Table"):
     table_df = scrape_savant_data(player_select,game_id)
     st.dataframe(table_df,#.style.background_gradient(axis=0, vmin=0, vmax=0.755,cmap="vlag_r", subset=['3D wOBAcon']),
                  column_config={
-                     "Num Pitches": st.column_config.NumberColumn(
-                         "#",
-                         width="small",
-                         ),
+                     # "Num Pitches": st.column_config.NumberColumn(
+                     #     "#",
+                     #     width="small",
+                     #     ),
                      "3D wOBAcon": st.column_config.NumberColumn(
                          help="xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle",
                          ),
                      },
-                 use_container_width=True,hide_index=True)
+                 # use_container_width=True,
+                 hide_index=True)
