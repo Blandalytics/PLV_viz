@@ -230,11 +230,9 @@ elif st.button("Generate Player Table"):
                      "3D wOBAcon": st.column_config.NumberColumn(
                          help="xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle\nLeague Average is ~.378",
                          ),
-                     },
                      "vs R": st.column_config.Column(
                          help="% of pitches thrown vs Right-Handed Hitters",
                          ),
-                     },
                      "vs L": st.column_config.Column(
                          help="% of pitches thrown vs Right-Handed Hitters",
                          ),
