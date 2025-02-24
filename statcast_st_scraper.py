@@ -256,7 +256,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['CSW'] = [f'{x:.1f}%' for x in merge_df['CSW']]
     merge_df['vs R'] = [f'{x:.1%}' for x in merge_df['vs_rhh']]
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
-    merge_df['Ext'] = merge_df['Ext'].round(2)
+    merge_df['Ext'] = merge_df['Ext'].round(1)
     merge_df['3D wOBAcon'] = merge_df['3D wOBAcon'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
 
