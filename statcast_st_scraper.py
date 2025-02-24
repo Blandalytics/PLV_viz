@@ -192,6 +192,11 @@ def scrape_savant_data(player_name, game_id):
     df['Velo'] = velo
     df['Ext'] = extension
     df['vert_break'] = ivb
+    df['vy0'] = vy0
+    df['vz0'] = vz0
+    df['ay'] = ay
+    df['az'] = az
+    df['pz'] = pz
     df['IVB'] = df['vert_break'].add((523/df['Velo'])**2).astype('float')
     df['IHB'] = ihb
     df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
