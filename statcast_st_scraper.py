@@ -291,8 +291,8 @@ elif st.button("Generate Player Table"):
                      "HAVAA": st.column_config.Column(
                          help="""
                          Height-Adjusted Vertical Approach Angle
-                          + means flatter than pitches at that location
-                          - means steeper than pitches at that location
+                         >0 means flatter than other pitches at that location
+                         <0 means steeper than pitches at that location
                          """,
                          ),
                      "vs R": st.column_config.Column(
