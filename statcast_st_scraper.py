@@ -10,6 +10,27 @@ from sklearn.neighbors import KNeighborsClassifier
 
 from PIL import Image
 
+# Convenience Functions
+def adjusted_vaa(dataframe):
+    ## Physical characteristics of pitch
+    # Pitch velocity (to plate) at plate
+    dataframe['vyf'] = -1 * (dataframe['vy0']**2 - (2 * dataframe['ay']*(50-17/12)))**0.5
+    # Pitch time in air (50ft to home plate)
+    dataframe['pitch_time_50ft'] = (dataframe['vyf'] - dataframe['vy0'])/dataframe['ay']
+    # Pitch velocity (vertical) at plate
+    dataframe['vzf'] = dataframe['vz0'] + dataframe['az'] * dataframe['pitch_time_50ft']
+
+    ## raw and height-adjusted VAA
+    # Raw VAA 
+    dataframe['raw_vaa'] = -1 * np.arctan(dataframe['vzf']/dataframe['vyf']) * (180/np.pi)
+    # VAA of all pitches at that height
+    dataframe['vaa_z_adj'] = np.where(dataframe['pz']<3.5,
+                                      dataframe['pz'].mul(1.5635).add(-10.092),
+                                      dataframe['pz'].pow(2).mul(-0.1996).add(dataframe['pz'].mul(2.704)).add(-11.69))
+    dataframe['adj_vaa'] = dataframe['raw_vaa'].sub(dataframe['vaa_z_adj'])
+    # Adjusted VAA, based on height
+    return dataframe[['raw_vaa','adj_vaa']]
+
 st.set_page_config(page_title='PL Live Spring Training Stats', page_icon='⚾',layout="wide")
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
@@ -70,6 +91,11 @@ def scrape_savant_data(player_name, game_id):
     swinging_strikes = []
     ivb = []
     ihb = []
+    vy0 = []
+    vz0 = []
+    ay = []
+    az = []
+    pz = []
     hit_x = []
     hit_y = []
     hit_speed = []
@@ -109,12 +135,33 @@ def scrape_savant_data(player_name, game_id):
                     extension += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['extension'] if 'extension' in x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys() else None]
                     ivb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pfxZWithGravity']]
                     ihb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pfxXNoAbs']]
+                    # x0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['x0']]
+                    # z0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['z0']]
+                    # vx0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['vx0']]
+                    vy0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['vy0']]
+                    vz0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['vz0']]
+                    # ax += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['ax']]
+                    ay += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['ay']]
+                    az += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['az']]
+                    # px += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['px']]
+                    pz += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pz']]
+                            
                 except KeyError:
                     pitch_type += ['UN']
                     velo += [None]
                     extension += [None]
                     ivb += [None]
                     ihb += [None]
+                    # x0 += [None]
+                    # z0 += [None]
+                    # vx0 += [None]
+                    vy0 += [None]
+                    vz0 += [None]
+                    # ax += [None]
+                    ay += [None]
+                    az += [None]
+                    # px += [None]
+                    pz += [None]
                 if all(i in list(x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys()) for i in ['hc_x_ft','hc_y_ft','hit_speed','hit_angle']):
                     hit_x += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hc_x_ft']]
                     hit_y += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hc_y_ft']]
@@ -157,13 +204,14 @@ def scrape_savant_data(player_name, game_id):
                                 ((df['hit_x']<0) & (df['hitterside']=='L'))),
                                135-df['spray_deg_base'],
                                df['spray_deg_base']-45)
+    df[['VAA','HAVAA']] = adjusted_vaa(df)
     
     def xwOBA_model(df_):
         return 0
     
     df['3D wOBAcon'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon']].agg({
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon','HAVAA']].agg({
         'Num Pitches':'count',
         'Velo':'mean',
         'IVB':'mean',
@@ -172,7 +220,8 @@ def scrape_savant_data(player_name, game_id):
         'vs_rhh':'sum',
         'CS':'sum',
         'Whiffs':'sum',
-        '3D wOBAcon':'mean'
+        '3D wOBAcon':'mean',
+        'HAVAA':'mean'
     }).assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
               vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh'])).reset_index()
 
@@ -204,6 +253,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
     merge_df['Ext'] = merge_df['Ext'].round(2)
     merge_df['3D wOBAcon'] = merge_df['3D wOBAcon'].round(3)
+    merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
 
     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
     
@@ -217,7 +267,7 @@ def scrape_savant_data(player_name, game_id):
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
 
-    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
+    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
@@ -232,6 +282,9 @@ elif st.button("Generate Player Table"):
                          xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
                          League Average is ~.378
                          """,
+                         ),
+                     "HAVAA": st.column_config.NumberColumn(
+                         help="Height-Adjusted Vertical Approach Angle",
                          ),
                      "vs R": st.column_config.Column(
                          help="% of pitches thrown vs Right-Handed Hitters",
