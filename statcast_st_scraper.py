@@ -288,7 +288,7 @@ elif st.button("Generate Player Table"):
                          League Average is ~.378
                          """,
                          ),
-                     "HAVAA": st.column_config.NumberColumn(
+                     "HAVAA": st.column_config.Column(
                          help="Height-Adjusted Vertical Approach Angle",
                          ),
                      "vs R": st.column_config.Column(
