@@ -329,8 +329,8 @@ def scrape_savant_data(player_name, game_id):
     df['vz0'] = vz0
     df['ay'] = ay
     df['az'] = az
-    df['px'] = px
-    df['pz'] = pz
+    df['p_x'] = px
+    df['p_z'] = pz
     df['sz_top'] = sz_top
     df['sz_bot'] = sz_bot
     df['sz_z'] = strikezone_z(df,'sz_top','sz_bot')
