@@ -7,6 +7,8 @@ import seaborn as sns
 import urllib
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
+import xgboost as xgb
+from xgboost import XGBClassifier
 
 from PIL import Image
 
@@ -30,6 +32,124 @@ def adjusted_vaa(dataframe):
     dataframe['adj_vaa'] = dataframe['raw_vaa'].sub(dataframe['vaa_z_adj'])
     # Adjusted VAA, based on height
     return dataframe[['raw_vaa','adj_vaa']]
+
+### Standardized Strikezone (z-location, in 'strikezones')
+def strikezone_z(dataframe,top_column,bottom_column):
+    dataframe[['p_z',top_column,bottom_column]] = dataframe[['p_z',top_column,bottom_column]].astype('float')
+    
+    # Ratio of 'strikezones' above/below midpoint of strikezone
+    dataframe['sz_mid'] = dataframe[[top_column,bottom_column]].mean(axis=1)
+    dataframe['sz_height'] = dataframe[top_column].sub(dataframe[bottom_column])
+    
+    return dataframe['p_z'].sub(dataframe['sz_mid']).div(dataframe['sz_height'])
+
+def loc_model(df,year=2024):
+    df['balls_before_pitch'] = np.clip(df['balls'], 0, 3)
+    df['strikes_before_pitch'] = np.clip(df['strikes'], 0, 2)
+    df['pitcherside'] = df['P Hand'].copy()
+
+    df = pd.get_dummies(df, columns=['pitcherside','hitterside','balls_before_pitch','strikes_before_pitch'])
+    for hand in ['L','R']:
+        if f'pitcherside_{hand}' not in df.columns.values:
+            df[f'pitcherside_{hand}'] = 0
+
+    df[['take_input','swing_input','called_strike_raw','ball_raw',
+                'hit_by_pitch_raw','swinging_strike_raw','contact_raw',
+                'foul_strike_raw','in_play_raw','10deg_raw','10-20deg_raw',
+                '20-30deg_raw','30-40deg_raw','40-50deg_raw','50+deg_raw',
+                'called_strike_pred','ball_pred','hit_by_pitch_pred','contact_input',
+                'swinging_strike_pred','foul_strike_pred','in_play_input','50+deg_pred',
+                'out_pred', 'single_pred', 'double_pred', 'triple_pred', 'home_run_pred']] = None
+
+    for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
+        df[[launch_angle+'_input',launch_angle+': <90mph_raw',
+                 launch_angle+': 90-95mph_raw',launch_angle+': 95-100mph_raw',
+                 launch_angle+': 100-105mph_raw',launch_angle+': 105+mph_raw',
+                 launch_angle+': <90mph_pred',launch_angle+': 90-95mph_pred',
+                 launch_angle+': 95-100mph_pred',launch_angle+': 100-105mph_pred',
+                 launch_angle+': 105+mph_pred']] = None
+
+    # Swing Decision
+    with open('model_files/2024_pl_swing_model_Fastball_loc.pkl', 'rb') as f:
+        decision_model = pickle.load(f)
+
+    df[['take_input','swing_input']] = decision_model.predict_proba(df[decision_model.feature_names_in_])
+
+    # Take Result
+    with open('model_files/2024_pl_take_model_Fastball_loc.pkl', 'rb') as f:
+        take_model = pickle.load(f)
+
+    df[['called_strike_raw','ball_raw','hit_by_pitch_raw']] = take_model.predict_proba(df[take_model.feature_names_in_])
+    df['called_strike_pred'] = df['called_strike_raw'].mul(df['take_input'])
+    df['ball_pred'] = df['ball_raw'].mul(df['take_input'])
+    df['hit_by_pitch_pred'] = df['hit_by_pitch_raw'].mul(df['take_input'])
+
+    # Swing Result
+    with open('model_files/2024_pl_contact_model_Fastball_loc.pkl', 'rb') as f:
+        swing_result_model = pickle.load(f)
+
+    df[['swinging_strike_raw','contact_raw']] = swing_result_model.predict_proba(df[swing_result_model.feature_names_in_])
+    df['contact_input'] = df['contact_raw'].mul(df['swing_input'])
+    df['swinging_strike_pred'] = df['swinging_strike_raw'].mul(df['swing_input'])
+
+    # Contact Result
+    with open('model_files/2024_pl_in_play_model_Fastball_loc.pkl', 'rb') as f:
+        contact_model = pickle.load(f)
+
+    df[['foul_strike_raw','in_play_raw']] = contact_model.predict_proba(df[contact_model.feature_names_in_])
+    df['foul_strike_pred'] = df['foul_strike_raw'].mul(df['contact_input'])
+    df['in_play_input'] = df['in_play_raw'].mul(df['contact_input'])
+
+    # Launch Angle Result
+    with open('model_files/2024_pl_launch_angle_model_Fastball_loc.pkl', 'rb') as f:
+        launch_angle_model = pickle.load(f)
+
+    df[['10deg_raw','10-20deg_raw','20-30deg_raw','30-40deg_raw','40-50deg_raw','50+deg_raw']] = launch_angle_model.predict_proba(df[launch_angle_model.feature_names_in_])
+    for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
+        df[launch_angle+'_input'] = df[launch_angle+'_raw'].mul(df['in_play_input'])
+    df['50+deg_pred'] = df['50+deg_raw'].mul(df['in_play_input'])
+
+    # Launch Velo Result
+    for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
+        with open('model_files/2024_pl_{}_model_Fastball_loc.pkl'.format(launch_angle), 'rb') as f:
+            launch_velo_model = pickle.load(f)
+
+        df[[launch_angle+': <90mph_raw',launch_angle+': 90-95mph_raw',launch_angle+': 95-100mph_raw',launch_angle+': 100-105mph_raw',launch_angle+': 105+mph_raw']] = launch_velo_model.predict_proba(df[launch_velo_model.feature_names_in_])
+        for bucket in [launch_angle+': '+x for x in ['<90mph','90-95mph','95-100mph','100-105mph','105+mph']]:
+            df[bucket+'_pred'] = df[bucket+'_raw'].mul(df[launch_angle+'_input'])
+
+    bip_result_dict = (
+        pd.read_csv('model_files/data_bip_result.csv')
+        .set_index(['year_played','bb_bucket'])
+        .to_dict(orient='index')
+    )
+
+    # Apply averages to each predicted grouping
+    for outcome in ['out', 'single', 'double', 'triple', 'home_run']:
+        # Start with 50+ degrees (popups)
+        df[outcome+'_pred'] = df['50+deg_pred']*bip_result_dict[(year,'50+deg')][outcome]
+
+        for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
+            for bucket in [launch_angle+': '+x for x in ['<90mph','90-95mph','95-100mph','100-105mph','105+mph']]:
+                df[outcome+'_pred'] += df[bucket+'_pred']*bip_result_dict[(year,bucket)][outcome]
+
+    ### Find the estimated change in wOBA/runs for each pitch
+    # wOBA value of an outcome, based on the count that it came in
+    outcome_wOBAs = pd.read_csv('model_files/data_woba_outcome.csv').set_index(['year_played','balls','strikes'])
+
+    df = df.merge(outcome_wOBAs,
+                  how='left',
+                  on=['year_played','balls','strikes'])
+
+    # wOBA_effect is how the pitch is expected to affect wOBA
+    # (either by moving the count, or by ending the PA)
+    df['wOBA_effect'] = 0
+
+    for stat in [x[:-5] for x in list(outcome_wOBAs.columns)]:
+        df['wOBA_effect'] = df['wOBA_effect'].add(df[stat+'_pred'].fillna(df[stat+'_pred'].median()).mul(df[stat+'_wOBA'].fillna(df[stat+'_wOBA'].median())))
+
+    return df['wOBA_effect'].sub(-0.004253050593194383).div(0.05179234832326223).mul(-50).add(100)
+
 
 st.set_page_config(page_title='PL Live Spring Training Stats', page_icon='⚾',layout="wide")
 
@@ -83,6 +203,8 @@ def scrape_savant_data(player_name, game_id):
     pitcher_name = []
     throws = []
     stands = []
+    balls = []
+    strikes = []
     pitch_id = []
     pitch_type = []
     velo = []
@@ -95,7 +217,10 @@ def scrape_savant_data(player_name, game_id):
     vz0 = []
     ay = []
     az = []
+    px = []
     pz = []
+    sz_top = []
+    sz_bot = []
     hit_x = []
     hit_y = []
     hit_speed = []
@@ -128,6 +253,8 @@ def scrape_savant_data(player_name, game_id):
                 stands += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['stand']]
                 called_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='called_strike' else 0]
                 swinging_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked'] else 0]
+                balls += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['balls']]
+                strikes += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['strikes']]
                 pitch_id += [pitch]
                 try:
                     pitch_type += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_type']]
@@ -143,8 +270,10 @@ def scrape_savant_data(player_name, game_id):
                     # ax += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['ax']]
                     ay += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['ay']]
                     az += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['az']]
-                    # px += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['px']]
+                    px += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['px']]
                     pz += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pz']]
+                    sz_top += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['sz_top']]
+                    sz_bot += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['sz_bot']]
                             
                 except KeyError:
                     pitch_type += ['UN']
@@ -160,8 +289,10 @@ def scrape_savant_data(player_name, game_id):
                     # ax += [None]
                     ay += [None]
                     az += [None]
-                    # px += [None]
+                    px += [None]
                     pz += [None]
+                    sz_top += [None]
+                    sz_bot += [None]
                 if all(i in list(x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys()) for i in ['hc_x_ft','hc_y_ft','hit_speed','hit_angle']):
                     hit_x += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hc_x_ft']]
                     hit_y += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hc_y_ft']]
@@ -182,6 +313,8 @@ def scrape_savant_data(player_name, game_id):
     df['Opp'] = pitcher_list[player_select][1]
     df['MLBAMID'] = pitcher_id_list
     df['MLBAMID'] = df['MLBAMID'].astype('int')
+    df['balls'] = balls
+    df['strikes'] = strikes
     df['Pitcher'] = pitcher_name
     df['P Hand'] = throws
     df['hitterside'] = stands
@@ -196,7 +329,15 @@ def scrape_savant_data(player_name, game_id):
     df['vz0'] = vz0
     df['ay'] = ay
     df['az'] = az
+    df['px'] = px
     df['pz'] = pz
+    df['sz_top'] = sz_top
+    df['sz_bot'] = sz_bot
+    df['sz_z'] = strikezone_z(df,'sz_top','sz_bot')
+    if df.shape[0]==0:
+        df['plvLoc+'] = None
+    else:
+        df['plvLoc+'] = loc_model(df)
     df['IVB'] = df['vert_break'].add((523/df['Velo'])**2).astype('float')
     df['IHB'] = ihb
     df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
@@ -211,12 +352,9 @@ def scrape_savant_data(player_name, game_id):
                                df['spray_deg_base']-45)
     df[['VAA','HAVAA']] = adjusted_vaa(df)
     
-    def xwOBA_model(df_):
-        return 0
-    
     df['3D wOBAcon'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon','HAVAA']].agg({
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon','HAVAA','plvLoc+']].agg({
         'Num Pitches':'count',
         'Velo':'mean',
         'IVB':'mean',
@@ -226,7 +364,8 @@ def scrape_savant_data(player_name, game_id):
         'CS':'sum',
         'Whiffs':'sum',
         '3D wOBAcon':'mean',
-        'HAVAA':'mean'
+        'HAVAA':'mean',
+        'plvLoc+':'mean'
     }).assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
               vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh'])).reset_index()
 
@@ -259,6 +398,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['Ext'] = merge_df['Ext'].round(1)
     merge_df['3D wOBAcon'] = merge_df['3D wOBAcon'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
+    merge_df['plvLoc+'] = merge_df['plvLoc+'].round(0).astype('int')
 
     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
     
@@ -272,7 +412,7 @@ def scrape_savant_data(player_name, game_id):
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
 
-    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
+    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','plvLoc+','CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
@@ -286,6 +426,12 @@ elif st.button("Generate Player Table"):
                          help="""
                          xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
                          League Average is ~.378
+                         """,
+                         ),
+                     "plvLoc+": st.column_config.NumberColumn(
+                         help="""
+                         Value of each Pitch's location, based on the count it was thrown in
+                         League Average is 100
                          """,
                          ),
                      "HAVAA": st.column_config.Column(
