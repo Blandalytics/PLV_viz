@@ -334,10 +334,10 @@ def scrape_savant_data(player_name, game_id):
     df['sz_top'] = sz_top
     df['sz_bot'] = sz_bot
     df['sz_z'] = strikezone_z(df,'sz_top','sz_bot')
-    if df.shape[0]==0:
-        df['plvLoc+'] = None
-    else:
-        df['plvLoc+'] = loc_model(df)
+    # if df.shape[0]==0:
+        # df['plvLoc+'] = None
+    # else:
+        # df['plvLoc+'] = loc_model(df)
     df['IVB'] = df['vert_break'].add((523/df['Velo'])**2).astype('float')
     df['IHB'] = ihb
     df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
@@ -354,7 +354,9 @@ def scrape_savant_data(player_name, game_id):
     
     df['3D wOBAcon'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon','HAVAA','plvLoc+']].agg({
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon','HAVAA',
+                                                                                                                                              # 'plvLoc+'
+                                                                                                                                             ]].agg({
         'Num Pitches':'count',
         'Velo':'mean',
         'IVB':'mean',
@@ -365,7 +367,7 @@ def scrape_savant_data(player_name, game_id):
         'Whiffs':'sum',
         '3D wOBAcon':'mean',
         'HAVAA':'mean',
-        'plvLoc+':'mean'
+        # 'plvLoc+':'mean'
     }).assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
               vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh'])).reset_index()
 
@@ -398,7 +400,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['Ext'] = merge_df['Ext'].round(1)
     merge_df['3D wOBAcon'] = merge_df['3D wOBAcon'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
-    merge_df['plvLoc+'] = merge_df['plvLoc+'].round(0).astype('int')
+    # merge_df['plvLoc+'] = merge_df['plvLoc+'].round(0).astype('int')
 
     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
     
@@ -412,7 +414,8 @@ def scrape_savant_data(player_name, game_id):
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
 
-    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','plvLoc+','CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
+    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA',#'plvLoc+',
+                     'CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
@@ -428,12 +431,12 @@ elif st.button("Generate Player Table"):
                          League Average is ~.378
                          """,
                          ),
-                     "plvLoc+": st.column_config.NumberColumn(
-                         help="""
-                         Value of each Pitch's location, based on the count it was thrown in
-                         League Average is 100
-                         """,
-                         ),
+                     # "plvLoc+": st.column_config.NumberColumn(
+                     #     help="""
+                     #     Value of each Pitch's location, based on the count it was thrown in
+                     #     League Average is 100
+                     #     """,
+                     #     ),
                      "HAVAA": st.column_config.Column(
                          help="""
                          Height-Adjusted Vertical Approach Angle
