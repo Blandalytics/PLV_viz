@@ -640,12 +640,12 @@ def game_charts(move_df):
     
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
     logo = Image.open(urllib.request.urlopen(logo_loc))
-    pl_ax = fig.add_axes([0.4,0.15,0.2,0.1], anchor='NE', zorder=1)
+    pl_ax = fig.add_axes([0.4,0.175,0.2,0.1], anchor='NE', zorder=1)
     width, height = logo.size
     pl_ax.imshow(logo.crop((0, 0, width, height-150)))
     pl_ax.axis('off')
 
-    fig.suptitle(f"{player_select}'s Pitch Charts ({date.strftime('%m/%d/%y')})",y=0.775)
+    fig.suptitle(f"{player_select}'s Pitch Charts ({date.strftime('%m/%d/%y')})",y=0.75)
     sns.despine()
     st.pyplot(fig,use_container_width=False)
     
