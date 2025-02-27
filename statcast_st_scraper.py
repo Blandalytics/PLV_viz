@@ -484,6 +484,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['Velo'] = np.where(merge_df['Velo Diff'].isna(),
                                  [f'{x:.1f}' for x in merge_df['Velo']],
                                  [f'{x:.1f} ({y:+.1f})' for x,y in zip(merge_df['Velo'],merge_df['Velo Diff'].fillna(0))])
+    merge_df['Velo'] = merge_df['Velo'].str.wrap(6)
     merge_df['IVB'] = np.where(merge_df['IVB Diff'].isna(),
                                  [f'{x:.1f}"' for x in merge_df['IVB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IVB'],merge_df['IVB Diff'].fillna(0))])
