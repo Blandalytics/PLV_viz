@@ -641,7 +641,13 @@ if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
     table_df, chart_df = scrape_savant_data(player_select,game_id)
-    st.dataframe(table_df,
+    st.dataframe(table_df.style.set_properties(
+        **{
+            'inline-size': '10px',
+            'overflow-wrap': 'break-word',
+            }, 
+        subset='Velo'
+    ),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
                          "#",
