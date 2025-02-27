@@ -510,10 +510,10 @@ def game_charts(move_df):
     
     for dist in [12,24]:
         label_dist = dist-0.25
-        ax1.text(label_dist,-0.3,f'{dist}"',ha='right',va='top',fontsize=8,color=pl_white,alpha=0.5,zorder=1)
-        ax1.text(-label_dist,-0.3,f'{dist}"',ha='left',va='top',fontsize=8,color=pl_white,alpha=0.5,zorder=1)
-        ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=8,color=pl_white,alpha=0.5,zorder=1)
-        ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=8,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(label_dist,-0.3,f'{dist}"',ha='right',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(-label_dist,-0.3,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
     
     if move_df['P Hand'].value_counts().index[0]=='R':
         ax1.text(28.25,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
