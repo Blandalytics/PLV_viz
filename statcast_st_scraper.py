@@ -644,8 +644,8 @@ def game_charts(move_df):
     width, height = logo.size
     pl_ax.imshow(logo.crop((0, 0, width, height-150)))
     pl_ax.axis('off')
-    
-    fig.suptitle(f"{player_select}'s Pitch Charts ({date[5:7]+'/'+date[-2:]+'/'+date[2:4]})",y=0.775)
+
+    fig.suptitle(f"{player_select}'s Pitch Charts ({date.strftime('%m/%d/%y')})",y=0.775)
     sns.despine()
     st.pyplot(fig)
     
