@@ -495,7 +495,7 @@ def scrape_savant_data(player_name, game_id):
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
-    grid = plt.GridSpec(1, 3, width_ratios=[1,2,1],wspace=0.05)
+    grid = plt.GridSpec(1, 3, width_ratios=[1,2,1],wspace=0.2)
     ax1 = plt.subplot(grid[1])
     circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
     ax1.add_patch(circle1)
