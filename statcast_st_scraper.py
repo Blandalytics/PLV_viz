@@ -550,7 +550,7 @@ def game_charts(move_df):
     # pitch_type_names = [pitch_names[x].ljust(15, " ") for x in labels]
     ax1.legend(handles,[pitch_names[x] for x in labels], ncols=len(labels),
              loc='lower center', 
-               fontsize=52/len(labels),
+               fontsize=min(52/len(labels),14),
               framealpha=0,bbox_to_anchor=(0.5, -0.2,0,0))
     
     # kw = dict(ncol=4, loc="lower center", frameon=False, labelspacing=2, alignment='left')    
