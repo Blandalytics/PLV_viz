@@ -551,7 +551,7 @@ def game_charts(move_df):
     ax1.legend(handles,[pitch_names[x] for x in labels], ncols=len(labels),
              loc='lower center', 
                fontsize=52/len(labels),
-              framealpha=0,bbox_to_anchor=(0.5, -0.15,0,0))
+              framealpha=0,bbox_to_anchor=(0.5, -0.3,0,0))
     
     # kw = dict(ncol=4, loc="lower center", frameon=False, labelspacing=2, alignment='left')    
     # leg1 = ax1.legend(handles[:4],pitch_type_names[:4], bbox_to_anchor=[1, -0.13,0,0],**kw)
@@ -640,7 +640,7 @@ def game_charts(move_df):
     
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
     logo = Image.open(urllib.request.urlopen(logo_loc))
-    pl_ax = fig.add_axes([0.4,0.2,0.2,0.1], anchor='NE', zorder=1)
+    pl_ax = fig.add_axes([0.4,0.175,0.2,0.1], anchor='NE', zorder=1)
     width, height = logo.size
     pl_ax.imshow(logo.crop((0, 0, width, height-150)))
     pl_ax.axis('off')
