@@ -583,9 +583,9 @@ def game_charts(move_df):
     ax2.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
     ax2.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
     
-    sns.scatterplot(data=move_df.loc[move_df['hitterside']=='L'].assign(p_x = lambda x: x['px']*-1),
-                    x='px',
-                    y='pz',
+    sns.scatterplot(data=move_df.loc[move_df['hitterside']=='L'].assign(p_x = lambda x: x['p_x']*-1),
+                    x='p_x',
+                    y='p_z',
                     hue='pitch_type',
                     palette=marker_colors,
                     edgecolor=pl_white,
@@ -619,9 +619,9 @@ def game_charts(move_df):
     ax3.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
     ax3.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
     
-    sns.scatterplot(data=move_df.loc[move_df['hitterside']=='R'].assign(p_x = lambda x: x['px']*-1),
-                    x='px',
-                    y='pz',
+    sns.scatterplot(data=move_df.loc[move_df['hitterside']=='R'].assign(p_x = lambda x: x['p_x']*-1),
+                    x='p_x',
+                    y='p_z',
                     hue='pitch_type',
                     palette=marker_colors,
                     edgecolor=pl_white,
