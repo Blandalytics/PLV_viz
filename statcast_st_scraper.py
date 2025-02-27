@@ -474,7 +474,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['Strike%'] = [f'{x:.1f}%' for x in merge_df['strike_rate']]
     merge_df['vs R'] = [f'{x:.1%}' for x in merge_df['vs_rhh']]
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
-    merge_df['Ext'] = merge_df['Ext'].round(1)
+    merge_df['Ext'] = [f'{x:.1f}ft' for x in merge_df['Ext']]
     merge_df['3D wOBAcon'] = merge_df['3D wOBAcon'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
     # merge_df['plvLoc+'] = merge_df['plvLoc+'].round(0).astype('int')
@@ -535,15 +535,7 @@ def game_charts(move_df):
                     linewidth=0.3,
                     alpha=1,
                     zorder=10,
-                   ax=ax1)
-    
-    # logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-    # logo = Image.open(urllib.request.urlopen(logo_loc))
-    # pl_ax = fig.add_axes([0.9,0.1,0.2,0.1], anchor='NE', zorder=1)
-    # width, height = logo.size
-    # pl_ax.imshow(logo.crop((0, 0, width, height-150)))
-    # pl_ax.axis('off')
-    
+                   ax=ax1)    
     
     handles, labels = ax1.get_legend_handles_labels()
     pitch_type_names = [pitch_names[x] for x in labels]
@@ -553,20 +545,14 @@ def game_charts(move_df):
                fontsize=min(52/len(labels),14),
               framealpha=0,bbox_to_anchor=(0.5, -0.2,0,0))
     
-    # kw = dict(ncol=4, loc="lower center", frameon=False, labelspacing=2, alignment='left')    
-    # leg1 = ax1.legend(handles[:4],pitch_type_names[:4], bbox_to_anchor=[1, -0.13,0,0],**kw)
-    # leg2 = ax1.legend(handles[4:],pitch_type_names[4:], bbox_to_anchor=[1, -0.2,0,0],**kw)
-    # ax1.add_artist(leg1)
-    
     ax1.set(xlim=(-29,29),
            ylim=(-29,29),
            aspect=1,
            title='Movement')
     ax1.axis('off')
-    # fig.suptitle(f"{player_select}'s Movement Chart ({date})",x=0.625,y=0.925)
-    
     
     ax2 = plt.subplot(grid[0])
+    # Outer Strike Zone
     zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
     ax2.add_patch(zone_outline)
     
@@ -603,6 +589,7 @@ def game_charts(move_df):
     ax2.axis('off')
     
     ax3 = plt.subplot(grid[2])
+    # Outer Strike Zone
     zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
     ax3.add_patch(zone_outline)
     
@@ -653,7 +640,7 @@ if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
     table_df, chart_df = scrape_savant_data(player_select,game_id)
-    st.dataframe(table_df,#.style.background_gradient(axis=0, vmin=0, vmax=0.755,cmap="vlag_r", subset=['3D wOBAcon']),
+    st.dataframe(table_df,
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
                          "#",
@@ -664,17 +651,11 @@ elif st.button("Generate Player Table"):
                          League Average is ~.378
                          """,
                          ),
-                     # "plvLoc+": st.column_config.NumberColumn(
-                     #     help="""
-                     #     Value of each Pitch's location, based on the count it was thrown in
-                     #     League Average is 100
-                     #     """,
-                     #     ),
                      "HAVAA": st.column_config.Column(
                          help="""
                          Height-Adjusted Vertical Approach Angle
                          >0 means flatter than other pitches at that location
-                         <0 means steeper than pitches at that location
+                         <0 means steeper than other pitches at that location
                          """,
                          ),
                      "vs R": st.column_config.Column(
