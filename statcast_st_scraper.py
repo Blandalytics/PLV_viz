@@ -647,7 +647,7 @@ def game_charts(move_df):
 
     fig.suptitle(f"{player_select}'s Pitch Charts ({date.strftime('%m/%d/%y')})",y=0.775)
     sns.despine()
-    st.pyplot(fig)
+    st.pyplot(fig,use_container_width=False)
     
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
