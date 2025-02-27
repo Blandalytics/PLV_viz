@@ -551,7 +551,7 @@ def game_charts(move_df):
     ax1.legend(handles,[pitch_names[x] for x in labels], ncols=len(labels),
              loc='lower center', 
                fontsize=52/len(labels),
-              framealpha=0,bbox_to_anchor=(0, -0.15,0,0))
+              framealpha=0,bbox_to_anchor=(0.5, -0.15,0,0))
     
     # kw = dict(ncol=4, loc="lower center", frameon=False, labelspacing=2, alignment='left')    
     # leg1 = ax1.legend(handles[:4],pitch_type_names[:4], bbox_to_anchor=[1, -0.13,0,0],**kw)
