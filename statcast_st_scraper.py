@@ -4,6 +4,7 @@ import requests
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
 import urllib
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
@@ -196,6 +197,67 @@ season_avgs = load_season_avgs()
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
 
+pitchtype_map = {
+    'FF':'FF','FA':'FF',
+    'SI':'SI','FT':'SI',
+    'FC':'FC',
+    'SL':'SL',
+    'ST':'ST',
+    'CH':'CH',
+    'CU':'CU','KC':'CU','CS':'CU','SV':'CU',
+    'FS':'FS','FO':'FS',
+    'KN':'KN',
+    'UN':'UN','EP':'UN'
+}
+
+pl_white = '#FEFEFE'
+pl_background = '#162B50'
+pl_text = '#72a3f7'
+pl_line_color = '#293a6b'
+
+sns.set_theme(
+    style={
+        'axes.edgecolor': pl_line_color,
+        'axes.facecolor': pl_background,
+        'axes.labelcolor': pl_white,
+        'xtick.color': pl_white,
+        'ytick.color': pl_white,
+        'figure.facecolor':pl_background,
+        'grid.color': pl_background,
+        'grid.linestyle': '-',
+        'legend.facecolor':pl_background,
+        'text.color': pl_white
+     }
+    )
+
+marker_colors = {
+    'FF':'#d22d49', 
+    'SI':'#c57a02',
+    'FS':'#00a1c5',  
+    'FC':'#933f2c', 
+    'SL':'#9300c7',  
+    'ST':'#C95EBE',
+    'CU':'#3c44cd',
+    'CH':'#07b526', 
+    'KN':'#999999',
+    'SC':'#999999', 
+    'UN':'#999999', 
+}
+
+pitch_names = {
+    'FF':'Four-Seam', 
+    'SI':'Sinker',
+    'FS':'Splitter',  
+    'FC':'Cutter', 
+    'SL':'Slider', 
+    'ST':'Sweeper',
+    'CU':'Curveball',
+    'CH':'Changeup', 
+    'KN':'Knuckleball',
+    'SC':'Screwball', 
+    'UN':'Unknown', 
+}
+
 def scrape_savant_data(player_name, game_id):
     game_ids = []
     game_date = []
@@ -325,6 +387,7 @@ def scrape_savant_data(player_name, game_id):
     df['total_strikes'] = total_strikes
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = pitch_type
+    df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
     df['Velo'] = velo
     df['Ext'] = extension
     df['vert_break'] = ivb
@@ -421,11 +484,169 @@ def scrape_savant_data(player_name, game_id):
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
 
     return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA',#'plvLoc+',
-                     'Strike%','CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
+                     'Strike%','CS','Whiffs','CSW','3D wOBAcon']],df
+
+def game_charts(move_df):
+    fig = plt.figure(figsize=(8,8))
+    grid = plt.GridSpec(1, 3, width_ratios=[2,1,1],wspace=0.05)
+    ax1 = plt.subplot(grid[0])
+    circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    ax1.add_patch(circle1)
+    circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
+    ax1.add_patch(circle2)
+    circle3 = plt.Circle((0, 0), 18, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    ax1.add_patch(circle3)
+    circle4 = plt.Circle((0, 0), 24, color=pl_white,fill=False,alpha=0.5)
+    ax1.add_patch(circle4)
+    ax1.axvline(0,ymin=4/58,ymax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    ax1.axhline(0,xmin=4/58,xmax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    
+    for dist in [12,24]:
+        label_dist = dist-0.25
+        ax1.text(label_dist,-0.3,f'{dist}"',ha='right',va='top',fontsize=8,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(-label_dist,-0.3,f'{dist}"',ha='left',va='top',fontsize=8,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=8,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=8,color=pl_white,alpha=0.5,zorder=1)
+    
+    if move_df['P Hand'].value_counts().index[0]=='R':
+        ax1.text(28.25,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.25,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    else:
+        ax1.text(28.25,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.25,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    
+    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    
+    sns.scatterplot(move_df.assign(IHB = lambda x: np.where(x['P Hand']=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
+                    x='IHB',
+                    y='IVB',
+                   hue='pitch_type',
+                   palette=marker_colors,
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
+                    zorder=10,
+                   ax=ax1)
+    
+    # logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+    # logo = Image.open(urllib.request.urlopen(logo_loc))
+    # pl_ax = fig.add_axes([0.9,0.1,0.2,0.1], anchor='NE', zorder=1)
+    # width, height = logo.size
+    # pl_ax.imshow(logo.crop((0, 0, width, height-150)))
+    # pl_ax.axis('off')
+    
+    
+    handles, labels = ax1.get_legend_handles_labels()
+    pitch_type_names = [pitch_names[x] for x in labels]
+    # pitch_type_names = [pitch_names[x].ljust(15, " ") for x in labels]
+    ax1.legend(handles,[pitch_names[x] for x in labels], ncols=len(labels),
+             loc='lower center', 
+               fontsize=52/len(labels),
+              framealpha=0,bbox_to_anchor=(1, -0.15,0,0))
+    
+    # kw = dict(ncol=4, loc="lower center", frameon=False, labelspacing=2, alignment='left')    
+    # leg1 = ax1.legend(handles[:4],pitch_type_names[:4], bbox_to_anchor=[1, -0.13,0,0],**kw)
+    # leg2 = ax1.legend(handles[4:],pitch_type_names[4:], bbox_to_anchor=[1, -0.2,0,0],**kw)
+    # ax1.add_artist(leg1)
+    
+    ax1.set(xlim=(-29,29),
+           ylim=(-29,29),
+           aspect=1,
+           title='Movement')
+    ax1.axis('off')
+    # fig.suptitle(f"{player_select}'s Movement Chart ({date})",x=0.625,y=0.925)
+    
+    
+    ax2 = plt.subplot(grid[1])
+    zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
+    ax2.add_patch(zone_outline)
+    
+    # Inner Strike zone
+    ax2.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    # Plate
+    ax2.plot([-8.5/12,8.5/12], [plate_y,plate_y], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    sns.scatterplot(data=move_df.loc[move_df['hitterside']=='L'].assign(p_x = lambda x: x['px']*-1),
+                    x='px',
+                    y='pz',
+                    hue='pitch_type',
+                    palette=marker_colors,
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
+                    legend=False,
+                   zorder=10,
+                   ax=ax2)
+    
+    ax2.set(xlim=(-1.5,1.5),
+           ylim=(y_bot,y_lim-1),
+           aspect=1,
+           title='Locations\nvs LHH')
+    ax2.axis('off')
+    
+    ax3 = plt.subplot(grid[2])
+    zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
+    ax3.add_patch(zone_outline)
+    
+    # Inner Strike zone
+    ax3.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    # Plate
+    ax3.plot([-8.5/12,8.5/12], [plate_y,plate_y], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    sns.scatterplot(data=move_df.loc[move_df['hitterside']=='R'].assign(p_x = lambda x: x['px']*-1),
+                    x='px',
+                    y='pz',
+                    hue='pitch_type',
+                    palette=marker_colors,
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
+                    legend=False,
+                   zorder=10,
+                   ax=ax3)
+    
+    ax3.set(xlim=(-1.5,1.5),
+           ylim=(y_bot,y_lim-1),
+           aspect=1,
+           title='Locations\nvs RHH')
+    ax3.axis('off')
+    
+    logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+    logo = Image.open(urllib.request.urlopen(logo_loc))
+    pl_ax = fig.add_axes([0.4,0.15,0.2,0.1], anchor='NE', zorder=1)
+    width, height = logo.size
+    pl_ax.imshow(logo.crop((0, 0, width, height-150)))
+    pl_ax.axis('off')
+    
+    fig.suptitle(f"{player_select}'s Pitch Charts ({date[5:7]+'/'+date[-2:]+'/'+date[2:4]})",y=0.775)
+    sns.despine()
+    st.pyplot(fig)
+    
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
-    table_df = scrape_savant_data(player_select,game_id)
+    table_df, chart_df = scrape_savant_data(player_select,game_id)
+    
     st.dataframe(table_df,#.style.background_gradient(axis=0, vmin=0, vmax=0.755,cmap="vlag_r", subset=['3D wOBAcon']),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
@@ -459,3 +680,4 @@ elif st.button("Generate Player Table"):
                      },
                  # use_container_width=True,
                  hide_index=True)
+game_charts(chart_df)
