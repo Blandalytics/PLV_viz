@@ -679,4 +679,4 @@ elif st.button("Generate Player Table"):
                  # use_container_width=True,
                  hide_index=True)
 
-game_charts(chart_df)
+    game_charts(chart_df)
