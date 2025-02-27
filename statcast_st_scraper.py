@@ -483,8 +483,7 @@ def scrape_savant_data(player_name, game_id):
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
 
-    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA',#'plvLoc+',
-                     'Strike%','CS','Whiffs','CSW','3D wOBAcon']],df
+    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
@@ -642,11 +641,10 @@ def game_charts(move_df):
     sns.despine()
     st.pyplot(fig)
     
-if pitcher_list == {}:
+if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
     table_df, chart_df = scrape_savant_data(player_select,game_id)
-    
     st.dataframe(table_df,#.style.background_gradient(axis=0, vmin=0, vmax=0.755,cmap="vlag_r", subset=['3D wOBAcon']),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
@@ -680,4 +678,5 @@ elif st.button("Generate Player Table"):
                      },
                  # use_container_width=True,
                  hide_index=True)
+
 game_charts(chart_df)
