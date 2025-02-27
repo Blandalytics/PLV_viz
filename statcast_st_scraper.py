@@ -197,6 +197,13 @@ season_avgs = load_season_avgs()
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
 
+sz_bot = 1.5
+sz_top = 3.5
+x_ft = 2.5
+y_bot = -0.5
+y_lim = 6
+plate_y = -.25
+
 pitchtype_map = {
     'FF':'FF','FA':'FF',
     'SI':'SI','FT':'SI',
