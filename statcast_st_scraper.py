@@ -211,6 +211,7 @@ def scrape_savant_data(player_name, game_id):
     extension = []
     called_strikes = []
     swinging_strikes = []
+    total_strikes = []
     ivb = []
     ihb = []
     vy0 = []
@@ -253,6 +254,7 @@ def scrape_savant_data(player_name, game_id):
                 stands += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['stand']]
                 called_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='called_strike' else 0]
                 swinging_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked'] else 0]
+                total_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked','called_strike','foul','hit_into_play'] else 0]
                 balls += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['balls']]
                 strikes += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['strikes']]
                 pitch_id += [pitch]
@@ -320,6 +322,7 @@ def scrape_savant_data(player_name, game_id):
     df['hitterside'] = stands
     df['CS'] = called_strikes
     df['Whiffs'] = swinging_strikes
+    df['total_strikes'] = total_strikes
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = pitch_type
     df['Velo'] = velo
@@ -354,7 +357,7 @@ def scrape_savant_data(player_name, game_id):
     
     df['3D wOBAcon'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','3D wOBAcon','HAVAA',
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','total_strikes','3D wOBAcon','HAVAA',
                                                                                                                                               # 'plvLoc+'
                                                                                                                                              ]].agg({
         'Num Pitches':'count',
@@ -365,10 +368,12 @@ def scrape_savant_data(player_name, game_id):
         'vs_rhh':'sum',
         'CS':'sum',
         'Whiffs':'sum',
+        'total_strikes':'sum',
         '3D wOBAcon':'mean',
         'HAVAA':'mean',
         # 'plvLoc+':'mean'
     }).assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
+              strike_rate = lambda x: x['total_strikes'].div(x['Num Pitches']).mul(100),
               vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh'])).reset_index()
 
     merge_df = (
@@ -391,10 +396,12 @@ def scrape_savant_data(player_name, game_id):
                          'usage_diff':'Usage Diff',
                          'velo_diff':'Velo Diff',
                          'ivb_diff':'IVB Diff',
-                         'ihb_diff':'IHB Diff'})
+                         'ihb_diff':'IHB Diff',
+                         'total_strikes':'Strike%'})
         .sort_values('Num Pitches',ascending=False)
         )
     merge_df['CSW'] = [f'{x:.1f}%' for x in merge_df['CSW']]
+    merge_df['Strike%'] = [f'{x:.1f}%' for x in merge_df['Strike']]
     merge_df['vs R'] = [f'{x:.1%}' for x in merge_df['vs_rhh']]
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
     merge_df['Ext'] = merge_df['Ext'].round(1)
@@ -415,7 +422,7 @@ def scrape_savant_data(player_name, game_id):
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
 
     return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA',#'plvLoc+',
-                     'CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
+                     'Strike%','CS','Whiffs','CSW','3D wOBAcon']]#.rename(columns={'Num Pitches':'#'})
 if pitcher_list == {}:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
