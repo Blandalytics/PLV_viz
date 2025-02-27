@@ -543,7 +543,7 @@ def game_charts(move_df):
     ax1.legend(handles,[pitch_names[x] for x in labels], ncols=len(labels),
              loc='lower center', 
                fontsize=min(52/len(labels),14),
-              framealpha=0,bbox_to_anchor=(0.5, -0.225#-0.15,
+              framealpha=0,bbox_to_anchor=(0.5, -0.225,#-0.15,
                                            0,0))
     
     ax1.set(xlim=(-29,29),
