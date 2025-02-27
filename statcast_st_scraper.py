@@ -643,7 +643,7 @@ elif st.button("Generate Player Table"):
     table_df, chart_df = scrape_savant_data(player_select,game_id)
     st.dataframe(table_df.style.set_properties(
         **{
-            'inline-size': '10px',
+            'inline-size': '5px',
             'overflow-wrap': 'break-word',
             }, 
         subset='Velo'
