@@ -495,8 +495,8 @@ def scrape_savant_data(player_name, game_id):
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
-    grid = plt.GridSpec(1, 3, width_ratios=[2,1,1],wspace=0.05)
-    ax1 = plt.subplot(grid[0])
+    grid = plt.GridSpec(1, 3, width_ratios=[1,2,1],wspace=0.05)
+    ax1 = plt.subplot(grid[1])
     circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
     ax1.add_patch(circle1)
     circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
@@ -551,7 +551,7 @@ def game_charts(move_df):
     ax1.legend(handles,[pitch_names[x] for x in labels], ncols=len(labels),
              loc='lower center', 
                fontsize=52/len(labels),
-              framealpha=0,bbox_to_anchor=(1, -0.15,0,0))
+              framealpha=0,bbox_to_anchor=(0, -0.15,0,0))
     
     # kw = dict(ncol=4, loc="lower center", frameon=False, labelspacing=2, alignment='left')    
     # leg1 = ax1.legend(handles[:4],pitch_type_names[:4], bbox_to_anchor=[1, -0.13,0,0],**kw)
@@ -566,7 +566,7 @@ def game_charts(move_df):
     # fig.suptitle(f"{player_select}'s Movement Chart ({date})",x=0.625,y=0.925)
     
     
-    ax2 = plt.subplot(grid[1])
+    ax2 = plt.subplot(grid[0])
     zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
     ax2.add_patch(zone_outline)
     
