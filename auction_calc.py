@@ -159,7 +159,7 @@ st.dataframe(combined_value_df[['Player','Auction $']+hitter_cats+pitcher_cats].
              hide_index=True,
              column_config={
                      "Auction $": st.column_config.NumberColumn(
-                         format="$ %.2f,
+                         format="$ %.2f",
                          ),
              }
              )
