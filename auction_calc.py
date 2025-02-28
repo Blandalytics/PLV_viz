@@ -6,18 +6,18 @@ import numpy as np
 st.header('Team Settings')
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    num_hitters = st.number_input('Number of hitters:',min_value=4,max_value=20,value=10)
+    num_hitters = st.number_input('# of hitters:',min_value=4,max_value=20,value=10)
 with col2:
-    num_pitchers = st.number_input('Number of pitchers:',min_value=4,max_value=20,value=8)
+    num_pitchers = st.number_input('# of pitchers:',min_value=4,max_value=20,value=8)
 with col3:
-    num_bench = st.number_input('Number of bench spots:',min_value=0,max_value=20,value=5)
+    num_bench = st.number_input('# of bench spots:',min_value=0,max_value=20,value=5)
 with col4:
-    num_catchers = st.number_input('Number of starting catchers:',min_value=0,max_value=3,value=1)
+    num_catchers = st.number_input('# of starting catchers:',min_value=0,max_value=3,value=1)
 
 st.header('League Settings')
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    num_teams = st.number_input('Number of teams:',min_value=4,max_value=30,value=12)
+    num_teams = st.number_input('# of teams:',min_value=4,max_value=30,value=12)
 with col2:
     min_bid = st.number_input('Minimum bid:',min_value=0,value=1)
 with col3:
@@ -153,4 +153,13 @@ projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']
 fudge_factor = (num_teams * team_budget) / projected_auction_dollars
 combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
 
-st.dataframe(combined_value_df[['Player','Auction $']+hitter_cats+pitcher_cats])
+st.header('Auction Values')
+st.dataframe(combined_value_df[['Player','Auction $']+hitter_cats+pitcher_cats].sort_values('Auction $',ascending=False),
+             use_container_width=True,
+             hide_index=True,
+             column_config={
+                     "Auction $": st.column_config.NumberColumn(
+                         format="$ %.2f,
+                         ),
+             }
+             )
