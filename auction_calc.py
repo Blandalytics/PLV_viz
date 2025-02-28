@@ -29,8 +29,9 @@ col1, col2, col3, col4 = st.columns(4)
 with col3:
     bench_suppress = st.checkbox("Minimize bench value",value=True,
                                  help="""
-                                 Does not consider bench players 
-                                 when calculating replacement level""")
+                                 Does not consider bench players  
+                                 when calculating replacement level
+                                 """)
     num_bench = 0 if bench_suppress else num_bench
 
 
