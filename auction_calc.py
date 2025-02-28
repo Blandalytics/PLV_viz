@@ -2,6 +2,17 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+import urllib
+from PIL import Image
+
+st.set_page_config(page_title='PL Auction Draft Calculator', page_icon='📊',layout="wide")
+
+logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+logo = Image.open(urllib.request.urlopen(logo_loc))
+st.image(logo, width=400)
+
+st.title('PL Live Spring Training Stats')
+
 # Settings
 st.header('Team Settings')
 col1, col2, col3, col4 = st.columns(4)
