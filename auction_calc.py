@@ -183,7 +183,7 @@ st.dataframe(combined_value_df[['Rank','Player','Y! Pos','Auction $','PA']+[x fo
              # .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
              use_container_width=True,
              hide_index=True,
-             height=(25 + 1) * 35 + 3),
+             height=(25 + 1) * 35 + 3,
              column_config={
                      "Auction $": st.column_config.NumberColumn(
                          format="$ %.2f",
