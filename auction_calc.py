@@ -23,7 +23,8 @@ with col2:
 with col3:
     team_budget = st.number_input('Per-Team Budget:',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
 with col4:
-    hitter_split = st.number_input('Hitter Split of budget (%):',min_value=0.,max_value=100.,value=0.65, format="%0.1%")
+    hitter_split = st.number_input('Hitter Split of budget (%):',min_value=0.,max_value=100.,value=65, format="%0.1f")
+    hitter_split = hitter_split/100
 
 st.header('Scoring Categories')
 col1, col2 = st.columns(2)
