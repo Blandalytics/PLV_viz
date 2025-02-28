@@ -177,10 +177,10 @@ combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
 
 st.header('Auction Values')
 st.dataframe(combined_value_df[['Rank','Player','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
-             .sort_values('Auction $',ascending=False)
-             .fillna(0)
-             .style
-             .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
+             .sort_values('Auction $',ascending=False),
+             # .fillna(0)
+             # .style
+             # .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
              use_container_width=True,
              hide_index=True,
              column_config={
