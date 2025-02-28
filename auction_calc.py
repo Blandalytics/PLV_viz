@@ -169,9 +169,10 @@ combined_value_df['Auction $'] = min_bid + np.where(
 projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']>0,'Auction $'].sum()
 fudge_factor = (num_teams * team_budget) / projected_auction_dollars
 combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
+combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
 
 st.header('Auction Values')
-st.dataframe(combined_value_df[['Player','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False),
+st.dataframe(combined_value_df[['Rank','Player','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False),
              use_container_width=True,
              hide_index=True,
              column_config={
