@@ -6,18 +6,18 @@ import numpy as np
 st.header('Team Settings')
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    num_hitters = st.number_input('# of hitters:',min_value=4,max_value=20,value=10)
+    num_hitters = st.number_input('Starting hitters:',min_value=4,max_value=20,value=10)
 with col2:
-    num_pitchers = st.number_input('# of pitchers:',min_value=4,max_value=20,value=8)
+    num_pitchers = st.number_input('Starting pitchers:',min_value=4,max_value=20,value=8)
 with col3:
-    num_bench = st.number_input('# of bench spots:',min_value=0,max_value=20,value=5)
+    num_bench = st.number_input('Number of bench spots:',min_value=0,max_value=20,value=5)
 with col4:
-    num_catchers = st.number_input('# of starting catchers:',min_value=0,max_value=3,value=1)
+    num_catchers = st.number_input('Starting catchers:',min_value=0,max_value=3,value=1)
 
 st.header('League Settings')
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    num_teams = st.number_input('# of teams:',min_value=4,max_value=30,value=12)
+    num_teams = st.number_input('Number of teams:',min_value=4,max_value=30,value=12)
 with col2:
     min_bid = st.number_input('Minimum bid:',min_value=0,value=1)
 with col3:
