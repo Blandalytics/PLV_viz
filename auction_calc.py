@@ -165,7 +165,7 @@ fudge_factor = (num_teams * team_budget) / projected_auction_dollars
 combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
 
 st.header('Auction Values')
-st.dataframe(combined_value_df[['Player','Auction $']+hitter_cats+pitcher_cats].sort_values('Auction $',ascending=False),
+st.dataframe(combined_value_df[['Player','Y! Pos','Auction $']+hitter_cats+pitcher_cats].sort_values('Auction $',ascending=False),
              use_container_width=True,
              hide_index=True,
              column_config={
