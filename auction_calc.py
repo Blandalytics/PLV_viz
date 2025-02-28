@@ -25,6 +25,12 @@ with col3:
 with col4:
     num_catchers = st.number_input('Starting catchers:',min_value=0,max_value=3,value=1)
 
+col1, col2, col3, col4 = st.columns(4)
+with col3:
+    bench_suppress = st.checkbox("Minimize bench value",value=True)
+    num_bench = 0 if bench_suppress else num_bench
+
+
 st.header('League Settings')
 col1, col2, col3, col4 = st.columns(4)
 with col1:
