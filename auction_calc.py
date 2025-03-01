@@ -113,70 +113,69 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
     # Total unadjusted Value: sum of all scoring category Z-Scores
     return position_df[[x+'_val' for x in rate_stats+volume_stats]].sum(axis=1)
 
-## Hitters
 # Load projections
 projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=1029181665&format=csv')
-sample_hitters  = projections_hitters.nlargest(hitters_above_replacement, 'PA')
-projections_hitters['unadjusted_value'] = unadjusted_value(projections_hitters,
-                                                           rate_scoring_cats_h,
-                                                           volume_scoring_cats_h,
-                                                           inverted_categories_h,
-                                                           sample_hitters,num_hitters)
-
-projections_hitters['is_C'] = projections_hitters['Y! Pos'].fillna('UT').str.replace('CF','').str.contains('C')
-c_adj = projections_hitters.loc[projections_hitters['is_C'],'unadjusted_value'].nlargest(num_teams * num_catchers).min()
-non_c_adj = projections_hitters.loc[~projections_hitters['is_C'],'unadjusted_value'].nlargest(int(num_teams * (num_hitters - num_catchers + num_bench/2))).min()
-projections_hitters['ADJ'] = np.where(projections_hitters['is_C'],c_adj,non_c_adj)
-projections_hitters['adjusted_value'] = projections_hitters['unadjusted_value'].sub(projections_hitters['ADJ'])
-# Convert hitter value to Dollars 
-total_hitter_value = projections_hitters.loc[projections_hitters['adjusted_value']>0,'adjusted_value'].sum()
-hitter_dollars_per_value = total_hitter_dollars / total_hitter_value
-
-
-## Pitchers
-# Load projections
 projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=354379391&format=csv')
-ip_thresh = min(50,projections_pitchers['IP'].nlargest(num_teams * num_pitchers).min())
-sample_pitchers  = projections_pitchers.loc[projections_pitchers['IP'] >= ip_thresh]
-projections_pitchers['unadjusted_value'] = unadjusted_value(projections_pitchers,
-                                                            rate_scoring_cats_p,
-                                                            volume_scoring_cats_p,
-                                                            inverted_categories_p,
-                                                            sample_pitchers,
-                                                            num_pitchers,
-                                                            pos='p')
 
-projections_pitchers['ADJ'] = projections_pitchers['unadjusted_value'].nlargest(int(num_teams * (num_pitchers + num_bench/2))).min()
-projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'].sub(projections_pitchers['ADJ'])
-# Convert hitter value to Dollars 
-total_pitcher_value = projections_pitchers.loc[projections_pitchers['adjusted_value']>0,'adjusted_value'].sum()
-pitcher_dollars_per_value = total_pitcher_dollars / total_pitcher_value
-
-# Merge position dfs
-combined_value_df = (
-    pd.concat(
-        [
-            projections_hitters[['Player','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']],
-            projections_pitchers.rename(columns={'Name':'Player'})[['Player','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']]
-            ],
-        ignore_index=True)
-    [['Player','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
-)
-combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
-combined_value_df['Auction $'] = min_bid + np.where(
-    combined_value_df['Y! Pos']=='P',
-    combined_value_df['adjusted_value'].mul(pitcher_dollars_per_value),
-    combined_value_df['adjusted_value'].mul(hitter_dollars_per_value)
-)
-
-# Level the dollars out
-projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']>0,'Auction $'].sum()
-fudge_factor = (num_teams * team_budget) / projected_auction_dollars
-combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
-combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
-
-if st.button("Generate Auction Values", icon="💲"):
+if st.button("Generate Auction Values 📊 -> 💲"):
     st.header('Auction Values')
+    ## Hitters
+    sample_hitters  = projections_hitters.nlargest(hitters_above_replacement, 'PA')
+    projections_hitters['unadjusted_value'] = unadjusted_value(projections_hitters,
+                                                               rate_scoring_cats_h,
+                                                               volume_scoring_cats_h,
+                                                               inverted_categories_h,
+                                                               sample_hitters,num_hitters)
+    
+    projections_hitters['is_C'] = projections_hitters['Y! Pos'].fillna('UT').str.replace('CF','').str.contains('C')
+    c_adj = projections_hitters.loc[projections_hitters['is_C'],'unadjusted_value'].nlargest(num_teams * num_catchers).min()
+    non_c_adj = projections_hitters.loc[~projections_hitters['is_C'],'unadjusted_value'].nlargest(int(num_teams * (num_hitters - num_catchers + num_bench/2))).min()
+    projections_hitters['ADJ'] = np.where(projections_hitters['is_C'],c_adj,non_c_adj)
+    projections_hitters['adjusted_value'] = projections_hitters['unadjusted_value'].sub(projections_hitters['ADJ'])
+    # Convert hitter value to Dollars 
+    total_hitter_value = projections_hitters.loc[projections_hitters['adjusted_value']>0,'adjusted_value'].sum()
+    hitter_dollars_per_value = total_hitter_dollars / total_hitter_value
+    
+    
+    ## Pitchers
+    ip_thresh = min(50,projections_pitchers['IP'].nlargest(num_teams * num_pitchers).min())
+    sample_pitchers  = projections_pitchers.loc[projections_pitchers['IP'] >= ip_thresh]
+    projections_pitchers['unadjusted_value'] = unadjusted_value(projections_pitchers,
+                                                                rate_scoring_cats_p,
+                                                                volume_scoring_cats_p,
+                                                                inverted_categories_p,
+                                                                sample_pitchers,
+                                                                num_pitchers,
+                                                                pos='p')
+    
+    projections_pitchers['ADJ'] = projections_pitchers['unadjusted_value'].nlargest(int(num_teams * (num_pitchers + num_bench/2))).min()
+    projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'].sub(projections_pitchers['ADJ'])
+    # Convert hitter value to Dollars 
+    total_pitcher_value = projections_pitchers.loc[projections_pitchers['adjusted_value']>0,'adjusted_value'].sum()
+    pitcher_dollars_per_value = total_pitcher_dollars / total_pitcher_value
+    
+    # Merge position dfs
+    combined_value_df = (
+        pd.concat(
+            [
+                projections_hitters[['Player','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']],
+                projections_pitchers.rename(columns={'Name':'Player'})[['Player','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']]
+                ],
+            ignore_index=True)
+        [['Player','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
+    )
+    combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
+    combined_value_df['Auction $'] = min_bid + np.where(
+        combined_value_df['Y! Pos']=='P',
+        combined_value_df['adjusted_value'].mul(pitcher_dollars_per_value),
+        combined_value_df['adjusted_value'].mul(hitter_dollars_per_value)
+    )
+    
+    # Level the dollars out
+    projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']>0,'Auction $'].sum()
+    fudge_factor = (num_teams * team_budget) / projected_auction_dollars
+    combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
+    combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
     st.dataframe(combined_value_df[['Rank','Player','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
                  .sort_values('Auction $',ascending=False),
                  # .fillna('')
