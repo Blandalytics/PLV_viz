@@ -63,7 +63,7 @@ with col2:
     pitcher_cats = st.multiselect('Pitcher categories',
                                   ['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA', 
                                    'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
-                                   'HR', 'BB', 'BS'],
+                                   'HR', 'BB', 'BS','K/BB'],
                                   default=['W','SV','K','ERA','WHIP'])
     rate_cats_p = ['ERA', 'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9']
     rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
@@ -116,6 +116,7 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
 # Load projections
 projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=1029181665&format=csv')
 projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=354379391&format=csv')
+projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],1,1000))
 
 if st.button("Generate Auction Values:  📊 -> 💲"):
     st.header('Auction Values')
