@@ -117,7 +117,7 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
 projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=1029181665&format=csv')
 projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=354379391&format=csv')
 
-if st.button("Generate Auction Values 📊 -> 💲"):
+if st.button("Generate Auction Values:  📊 -> 💲"):
     st.header('Auction Values')
     ## Hitters
     sample_hitters  = projections_hitters.nlargest(hitters_above_replacement, 'PA')
