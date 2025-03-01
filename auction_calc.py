@@ -32,7 +32,7 @@ with col3:
                                  Does not consider bench players  
                                  when calculating replacement level
                                  """)
-    num_bench = 0 if bench_suppress else raw_bench
+    num_bench = 1 if bench_suppress else raw_bench
 
 
 st.header('League Settings')
