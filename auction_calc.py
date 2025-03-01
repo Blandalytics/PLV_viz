@@ -21,7 +21,7 @@ with col1:
 with col2:
     num_pitchers = st.number_input('Starting pitchers:',min_value=4,max_value=20,value=8)
 with col3:
-    num_bench = st.number_input('Number of bench spots:',min_value=0,max_value=20,value=5)
+    raw_bench = st.number_input('Number of bench spots:',min_value=0,max_value=20,value=5)
 with col4:
     num_catchers = st.number_input('Starting catchers:',min_value=0,max_value=3,value=1)
 
@@ -32,7 +32,7 @@ with col3:
                                  Does not consider bench players  
                                  when calculating replacement level
                                  """)
-    num_bench = 0 if bench_suppress else num_bench
+    num_bench = 0 if bench_suppress else raw_bench
 
 
 st.header('League Settings')
@@ -73,7 +73,7 @@ with col2:
 # Values derived from settings
 hitters_above_replacement = int(round(num_teams * (num_hitters + num_bench/2) * 1.1,0))
 pitchers_above_replacement = int(round(num_teams * (num_pitchers + num_bench/2) * 1.1,0))
-non_replacement_dollars = (num_teams * team_budget) - (num_teams * (num_hitters + num_pitchers + num_bench) * min_bid)
+non_replacement_dollars = (num_teams * team_budget) - (num_teams * (num_hitters + num_pitchers + raw_bench) * min_bid)
 total_hitter_dollars = non_replacement_dollars * hitter_split
 total_pitcher_dollars = non_replacement_dollars * (1-hitter_split)
 
