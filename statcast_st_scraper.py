@@ -652,10 +652,15 @@ def loc_charts(df):
     y_top = y_mid+(x_dist/aspect_ratio)
 
     fig, ax = plt.subplots(figsize=(5,5))
-    ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2,zorder=0, alpha=0.5)
-    ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
-    ax.plot([-10/12,-10/12], [sz_bot,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
-    ax.plot([10/12,10/12], [sz_bot,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
+    # ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2,zorder=0, alpha=0.5)
+    # ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
+    # ax.plot([-10/12,-10/12], [sz_bot,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
+    # ax.plot([10/12,10/12], [sz_bot,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
+    zone_outline = plt.Rectangle((-10/12, sz_bot), 
+                                 20/12, sz_top-sz_bot, 
+                                 color=pl_white, fill=False,
+                                 linewidth=2,,alpha=0.5)
+    ax.add_patch(zone_outline)
     
     sns.scatterplot(df.loc[(df['p_x'].abs()<=x_dist) & (df['p_z'].sub(y_mid)<=x_dist/aspect_ratio)].assign(p_x = lambda x: x['p_x'].mul(-1)),
                     x='p_x',
