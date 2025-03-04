@@ -651,8 +651,6 @@ def loc_charts(df):
     y_bot = y_mid-(x_dist/aspect_ratio)
     y_top = y_mid+(x_dist/aspect_ratio)
 
-    norm = mpl.colors.CenteredNorm(5,3)
-    
     fig, ax = plt.subplots(figsize=(5,5))
     ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2,zorder=0, alpha=0.5)
     ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
