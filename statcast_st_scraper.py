@@ -636,6 +636,47 @@ def game_charts(move_df):
     fig.suptitle(f"{player_select}'s Pitch Charts ({date.strftime('%m/%d/%y')})",y=0.75)
     sns.despine()
     st.pyplot(fig,use_container_width=False)
+
+def loc_charts(df):
+    sz_bot = 1.5
+    sz_top = 3.5
+    y_mid = 2.5
+    
+    aspect_ratio = 20/24
+    
+    x_dist = 1.75
+    y_bot = y_mid-(x_dist/aspect_ratio)
+    y_top = y_mid+(x_dist/aspect_ratio)
+
+    norm = mpl.colors.CenteredNorm(5,3)
+    
+    fig, ax = plt.subplots(figsize=(5,5))
+    ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2,zorder=0, alpha=0.5)
+    ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
+    ax.plot([-10/12,-10/12], [sz_bot,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
+    ax.plot([10/12,10/12], [sz_bot,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
+    
+    sns.scatterplot(df.loc[(df['p_x'].abs()<=x_dist) & (df['p_z'].sub(y_mid)<=x_dist/aspect_ratio)].assign(p_x = lambda x: x['p_x'].mul(-1)),
+                    x='p_x',
+                    y='p_z',
+                   hue='pitchtype',
+                   palette=marker_colors,
+                    s=225,
+                   hue_norm=norm,
+                    linewidth=0,
+                    alpha=1,
+                   legend=False
+                   )
+    
+    
+    ax.set(xlim=(-x_dist,x_dist),
+           ylim=(y_bot,y_top),
+           aspect=aspect_ratio)
+    
+    ax.axis('off')
+    fig.patch.set_alpha(0)
+    sns.despine()
+    st.pyplot(fig)
     
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
@@ -670,3 +711,4 @@ elif st.button("Generate Player Table"):
                  hide_index=True)
 
     game_charts(chart_df)
+    loc_charts(chart_df)
