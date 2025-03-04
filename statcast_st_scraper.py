@@ -662,7 +662,7 @@ def loc_charts(df):
     sns.scatterplot(df.loc[(df['p_x'].abs()<=x_dist) & (df['p_z'].sub(y_mid)<=x_dist/aspect_ratio)].assign(p_x = lambda x: x['p_x'].mul(-1)),
                     x='p_x',
                     y='p_z',
-                   hue='pitchtype',
+                   hue='pitch_type',
                    palette=marker_colors,
                     s=225,
                    hue_norm=norm,
