@@ -1,13 +1,16 @@
 import streamlit as st
 import datetime
-import requests
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import urllib
 import pickle
+import requests
+import seaborn as sns
+import urllib
+
 from sklearn.neighbors import KNeighborsClassifier
+
 import xgboost as xgb
 from xgboost import XGBClassifier
 
