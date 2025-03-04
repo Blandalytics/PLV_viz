@@ -162,6 +162,7 @@ logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
 st.title('PL Live Spring Training Stats')
+st.write('Data (especially pitch types) are subject to change')
 col1, col2, col3 = st.columns(3)
 
 with col1:
