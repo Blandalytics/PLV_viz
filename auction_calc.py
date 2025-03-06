@@ -13,6 +13,41 @@ st.image(logo, width=400)
 
 st.title('PL Auction Draft Calculator')
 
+team_leagues = {
+    'LAA':'AL',
+    'NYY':'AL',
+    'SDP':'NL',
+    'CLE':'AL',
+    'LAD':'NL',
+    'TOR':'AL',
+    'ATL':'NL',
+    'HOU':'AL',
+    'NYM':'NL',
+    'PHI':'NL',
+    'STL':'NL',
+    'SEA':'AL',
+    'BOS':'AL',
+    'TEX':'AL',
+    'KCR':'AL',
+    'PIT':'NL',
+    'TBR':'AL',
+    'CHC':'NL',
+    'MIL':'NL',
+    'BAL':'AL',
+    'ARI':'NL',
+    'MIN':'AL',
+    'MIA':'NL',
+    'COL':'NL',
+    'CHW':'AL',
+    'DET':'AL',
+    'SFG':'NL',
+    'CIN':'NL',
+    'ATH':'AL',
+    'OAK':'AL',
+    'WAS':'NL',
+    'WSN':'NL',
+}
+
 # Settings
 st.header('Team Settings')
 col1, col2, col3, col4 = st.columns(4)
@@ -36,7 +71,7 @@ with col3:
 
 
 st.header('League Settings')
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     num_teams = st.number_input('Number of teams:',min_value=4,max_value=30,value=12)
 with col2:
@@ -46,6 +81,17 @@ with col3:
 with col4:
     hitter_split = st.number_input('Hitter Split of budget (%):',min_value=0.,max_value=100.,value=65.0, format="%0.1f")
     hitter_split = hitter_split/100
+with col5:
+    league_select = st.selectbox('Player pool:',['All','NL-Only','AL-Only'])
+    league_pool = ['NL','AL'] if league_select=='All' else [league_pool[:2]]
+
+col1, col2, col3, col4, col5 = st.columns(5)
+with col5:
+    include_fa = st.checkbox("Include FA?",value=True,
+                             help=" Include free agents in layer pool")
+    if include_fa:
+        team_leagues.update({'FA':league_select[:2].upper()})
+        
 
 st.header('Scoring Categories')
 col1, col2 = st.columns(2)
@@ -115,7 +161,12 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
 
 # Load projections
 projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=1029181665&format=csv')
+projections_hitters['League'] = projections_hitters['Team'].fillna('FA').map(team_leagues)
+projections_hitters = projections_hitters.loc[projections_hitters['League'].isin(league_pool)].reset_index(drop=True).copy()
+
 projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=354379391&format=csv')
+projections_pitchers['League'] = projections_pitchers['Team'].fillna('FA').map(team_leagues)
+projections_pitchers = projections_pitchers.loc[projections_pitchers['League'].isin(league_pool)].reset_index(drop=True).copy()
 projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],1,1000))
 
 if st.button("Generate Auction Values:  📊 -> 💲"):
