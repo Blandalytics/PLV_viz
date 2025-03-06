@@ -83,7 +83,7 @@ with col4:
     hitter_split = hitter_split/100
 with col5:
     league_select = st.selectbox('Player pool:',['All','NL-Only','AL-Only'])
-    league_pool = ['NL','AL'] if league_select=='All' else [league_pool[:2]]
+    league_pool = ['NL','AL'] if league_select=='All' else [league_select[:2]]
 
 col1, col2, col3, col4, col5 = st.columns(5)
 with col5:
