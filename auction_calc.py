@@ -246,4 +246,5 @@ if st.button("Generate Auction Values:  📊 -> 💲"):
                       data=display_df.to_csv(index=False),
                       file_name='pitcher_list_auction_values.csv',
                        mime='text/csv',
-                       icon=":material/download:")
+                       icon=":material/download:",
+                       on_click='ignore')
