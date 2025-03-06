@@ -637,7 +637,7 @@ def game_charts(move_df):
     pl_ax.imshow(logo.crop((0, 0, width, height-150)))
     pl_ax.axis('off')
 
-    fig.suptitle(f"{player_select}'s Pitch Charts ({date.strftime('%#m/%#d/%y')})",y=0.75)
+    fig.suptitle(f"{player_select}'s Pitch Charts ({date.strftime('%-m/%-d/%y')})",y=0.75)
     sns.despine()
     st.pyplot(fig,use_container_width=False)
 
