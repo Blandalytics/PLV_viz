@@ -228,8 +228,8 @@ if st.button("Generate Auction Values:  📊 -> 💲"):
     fudge_factor = (num_teams * team_budget) / projected_auction_dollars
     combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
     combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
-    st.dataframe(combined_value_df[['Rank','Player','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
-                 .sort_values('Auction $',ascending=False),
+    display_df = combined_value_df[['Rank','Player','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False).copy()
+    st.dataframe(display_df,
                  # .fillna('')
                  # .style
                  # .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
@@ -242,3 +242,8 @@ if st.button("Generate Auction Values:  📊 -> 💲"):
                              ),
                  }
                  )
+    st.download_button(label='Download CSV',
+                      data=display_df.to_csv(),
+                      file_name='pitcher_list_auction_values.csv',
+                       mime='text/csv',
+                       icon=":material/download:")
