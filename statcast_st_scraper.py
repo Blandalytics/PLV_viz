@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pickle
+import pytz
 import requests
 import seaborn as sns
 import urllib
@@ -166,7 +167,7 @@ st.write('Data (especially pitch types) are subject to change')
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    today = datetime.date.today()
+    today = (datetime.datetime.now(pytz.utc)-timedelta(hours=16)).date()
     date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=datetime.date(2025, 3, 30))
     
     r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
