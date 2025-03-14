@@ -210,11 +210,11 @@ if st.button("Generate Auction Values:  📊 -> 💲"):
     combined_value_df = (
         pd.concat(
             [
-                projections_hitters[['Player','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']],
-                projections_pitchers.rename(columns={'Name':'Player'})[['Player','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']]
+                projections_hitters[['Name','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']],
+                projections_pitchers[['Name','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']]
                 ],
             ignore_index=True)
-        [['Player','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
+        [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
     )
     combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
     combined_value_df['Auction $'] = min_bid + np.where(
@@ -228,7 +228,7 @@ if st.button("Generate Auction Values:  📊 -> 💲"):
     fudge_factor = (num_teams * team_budget) / projected_auction_dollars
     combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
     combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
-    display_df = combined_value_df[['Rank','Player','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False).copy()
+    display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False).copy()
     st.dataframe(display_df,
                  # .fillna('')
                  # .style
