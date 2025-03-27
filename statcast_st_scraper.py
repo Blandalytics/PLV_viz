@@ -307,7 +307,7 @@ def scrape_savant_data(player_name, game_id):
     x = r.json()
 
     if ('game_status_code' in x.keys()):
-        if (x['game_status_code'] in ['P','S']):
+        if (x['game_status_code'] in ['S']):
         # if (x['game_status_code'] != 'E'):
             st.write('Non-Spring Training game_status_code')
     elif ('code' in x.keys()):
