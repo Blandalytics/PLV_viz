@@ -177,7 +177,7 @@ with col1:
         st.write(f'No games on {date}')
     game_list = {}
     for game in range(len(x['dates'][0]['games'])):
-        if x['dates'][0]['games'][game]['gamedayType'] in ['E','P']:
+        if x['dates'][0]['games'][game]['gamedayType'] == 'E':
             game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
 
 with col2:
