@@ -642,8 +642,7 @@ def movement_chart(player):
     pitch_list = [x[0] for x in Counter(move_df['pitchtype']).most_common() if (x[0] != 'UN')]
     
     fig, ax1 = plt.subplots(figsize=(8,8))
-    
-    ax1 = plt.subplot(grid[1])
+
     circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
     ax1.add_patch(circle1)
     circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
