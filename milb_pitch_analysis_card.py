@@ -705,16 +705,7 @@ def movement_chart(player):
     fig.text(0.185,0.0425,'Arm' if hand == 'L' else 'Glove',ha='right')
     fig.text(0.05,0.84,'Rise',ha='center')
     fig.text(0.05,0.11,'Drop',ha='center')
-    
-    ax.annotate('', xy=(0.65, -0.08), xycoords='axes fraction', xytext=(0.9, -0.08), 
-                arrowprops=dict(arrowstyle="<-", color='w'))
-    ax.annotate('', xy=(0.35, -0.08), xycoords='axes fraction', xytext=(0.09, -0.08), 
-                arrowprops=dict(arrowstyle="<-", color='w'))
-    ax.annotate('', xy=(-0.1, 0.64), xycoords='axes fraction', xytext=(-0.1, 0.93), 
-                arrowprops=dict(arrowstyle="<-", color='w'))
-    ax.annotate('', xy=(-0.1, 0.35), xycoords='axes fraction', xytext=(-0.1, 0.05), 
-                arrowprops=dict(arrowstyle="<-", color='w'))
-    
+        
     fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.45,
                  y=0.95, 
                  fontsize=18)
