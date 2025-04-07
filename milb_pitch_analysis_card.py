@@ -422,7 +422,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     y_lim = 6.5
     plate_y = -.25
     alpha_val = 0.5
-    title_y = 0.925
+    title_y = 0.95
     
     ax2 = plt.subplot(grid[0, :2])
     # Outer Strike Zone
