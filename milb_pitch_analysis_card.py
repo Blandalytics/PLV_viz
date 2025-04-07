@@ -372,7 +372,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
         ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
         ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
     
-    if move_df['P Hand'].value_counts().index[0]=='R':
+    if pitch_stats_df['P Hand'].value_counts().index[0]=='R':
         ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
         ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
     else:
