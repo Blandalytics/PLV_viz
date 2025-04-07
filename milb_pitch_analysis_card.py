@@ -656,20 +656,20 @@ def movement_chart(player):
     
     for dist in [12,24]:
         label_dist = dist-0.25
-        ax1.text(label_dist,-0.3,f'{dist}"',ha='right',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
-        ax1.text(-label_dist,-0.3,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
-        ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
-        ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(label_dist,-0.3,f'{dist}"',ha='right',va='top',fontsize=12,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(-label_dist,-0.3,f'{dist}"',ha='left',va='top',fontsize=12,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=12,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=12,color=pl_white,alpha=0.5,zorder=1)
     
     if hand=='R':
-        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
     else:
-        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
     
-    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
     
     sns.scatterplot(move_df.assign(IHB = lambda x: np.where(hand=='R',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
                     x='IHB',
@@ -700,12 +700,7 @@ def movement_chart(player):
               [pitch_names[labels[idx]]+pitch_velos[labels[idx]] for idx in pitchtype_order],
               title='Pitchtype (velo)',
               loc='upper right' if hand =='L' else 'upper left')
-    
-    fig.text(0.83,0.0425,'Glove' if hand == 'L' else 'Arm',ha='left')
-    fig.text(0.185,0.0425,'Arm' if hand == 'L' else 'Glove',ha='right')
-    fig.text(0.05,0.84,'Rise',ha='center')
-    fig.text(0.05,0.11,'Drop',ha='center')
-        
+            
     fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.45,
                  y=0.95, 
                  fontsize=18)
