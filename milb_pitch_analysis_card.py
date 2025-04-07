@@ -417,7 +417,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     sz_bot = 1.5
     sz_top = 3.5
-    x_ft = 2.5
+    x_ft = 3
     y_bot = -0.5
     y_lim = 6.5
     plate_y = -.25
@@ -621,7 +621,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     
 
     # Add PL logo
-    pl_ax = fig.add_axes([0.41,0.5,0.2,0.2], anchor='S', zorder=1)
+    pl_ax = fig.add_axes([0.41,0.475,0.2,0.2], anchor='S', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
