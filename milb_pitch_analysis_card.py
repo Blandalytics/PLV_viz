@@ -701,12 +701,12 @@ def movement_chart(player):
               title='Pitchtype (velo)',
               loc='upper right' if hand =='L' else 'upper left')
             
-    fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.45,
+    fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.5,
                  y=0.95, 
                  fontsize=18)
     
     # Add PL logo
-    pl_ax = fig.add_axes([0.725,0.76,0.2,0.2], anchor='NE', zorder=1)
+    pl_ax = fig.add_axes([0.7,0.025,0.2,0.2], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
     
