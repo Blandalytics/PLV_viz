@@ -417,7 +417,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     sz_bot = 1.5
     sz_top = 3.5
-    x_ft = 3
+    x_ft = 2.5
     y_bot = -0.5
     y_lim = 6.5
     plate_y = -.25
@@ -457,7 +457,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                    zorder=10,
                    ax=ax2)
     
-    ax2.set(xlim=(-1.5,1.5),
+    ax2.set(xlim=(-2,2),
            ylim=(y_bot,y_lim-1),
            aspect=1,
            title='Locations\nvs LHH')
@@ -497,7 +497,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
                    zorder=10,
                    ax=ax3)
     
-    ax3.set(xlim=(-1.5,1.5),
+    ax3.set(xlim=(-2,2),
            ylim=(y_bot,y_lim-1),
            aspect=1)
     ax3.set_title('Locations\nvs RHH',fontsize=18,y=title_y)
