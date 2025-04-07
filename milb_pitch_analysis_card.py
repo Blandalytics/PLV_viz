@@ -385,7 +385,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     sns.scatterplot((pitch_df
                      .loc[(pitch_df['pitchername']==card_player) &
                            (pitch_df['pitchtype']==pitch_type)]
-                     .assign(IHB = lambda x: np.where(hand=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float')))
+                     .assign(IHB = lambda x: np.where(hand=='R',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float')))
                     ),
                     x='IHB',
                     y='IVB',
