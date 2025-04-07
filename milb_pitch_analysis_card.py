@@ -195,7 +195,7 @@ col1, col2, col3 = st.columns([0.4,0.35,0.25])
 
 with col1:
     # Player
-    default_ix = pitcher_list.index('David Festa')
+    default_ix = pitcher_list.index('Jacob Misiorowski')
     card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
 
 with col2:
