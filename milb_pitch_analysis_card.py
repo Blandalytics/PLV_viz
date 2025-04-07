@@ -699,7 +699,9 @@ def movement_chart(player):
     ax1.legend([handles[idx] for idx in pitchtype_order],
               [pitch_names[labels[idx]]+pitch_velos[labels[idx]] for idx in pitchtype_order],
               title='Pitchtype (velo)',
-              loc='upper right' if hand =='L' else 'upper left')
+               edgecolor=pl_background,
+              loc='upper right' if hand =='L' else 'upper left',
+              bbox_to_anchor=(1,0.75) if hand =='L' else (0,0.75))
             
     fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.5,
                  y=0.95, 
