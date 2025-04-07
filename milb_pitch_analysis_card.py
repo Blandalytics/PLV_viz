@@ -704,7 +704,7 @@ def movement_chart(player):
               loc='upper right' if hand =='L' else 'upper left',
               bbox_to_anchor=(1 if hand =='L' else 0,0.9))
             
-    fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.5,
+    fig.suptitle(f"{player}'s {year} MiLB\nInduced Movement Profile",x=0.5,
                  y=0.95, 
                  fontsize=18)
     
