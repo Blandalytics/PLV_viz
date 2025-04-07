@@ -701,7 +701,7 @@ def movement_chart(player):
               title='Pitchtype (velo)',
                edgecolor=pl_background,
               loc='upper right' if hand =='L' else 'upper left',
-              bbox_to_anchor=(1,0.875) if hand =='L' else (0,0.875))
+              bbox_to_anchor=(1 if hand =='L' else 0,0.875))
             
     fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.5,
                  y=0.95, 
