@@ -677,7 +677,7 @@ def movement_chart(player):
                    hue='pitchtype',
                    palette=marker_colors,
                     edgecolor=pl_white,
-                    s=85,
+                    s=100,
                     linewidth=0.3,
                     alpha=1,
                     zorder=10,
