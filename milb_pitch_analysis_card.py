@@ -641,34 +641,54 @@ def movement_chart(player):
     
     pitch_list = [x[0] for x in Counter(move_df['pitchtype']).most_common() if (x[0] != 'UN')]
     
-    fig, ax = plt.subplots(figsize=(8,8))
+    fig, ax1 = plt.subplots(figsize=(8,8))
     
-    sns.scatterplot(data=move_df,
+    ax1 = plt.subplot(grid[1])
+    circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    ax1.add_patch(circle1)
+    circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
+    ax1.add_patch(circle2)
+    circle3 = plt.Circle((0, 0), 18, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    ax1.add_patch(circle3)
+    circle4 = plt.Circle((0, 0), 24, color=pl_white,fill=False,alpha=0.5)
+    ax1.add_patch(circle4)
+    ax1.axvline(0,ymin=4/58,ymax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    ax1.axhline(0,xmin=4/58,xmax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    
+    for dist in [12,24]:
+        label_dist = dist-0.25
+        ax1.text(label_dist,-0.3,f'{dist}"',ha='right',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(-label_dist,-0.3,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+    
+    if move_df['P Hand'].value_counts().index[0]=='R':
+        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    else:
+        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    
+    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    
+    sns.scatterplot(move_df.assign(IHB = lambda x: np.where(hand=='R',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
                     x='IHB',
                     y='IVB',
-                    hue='pitchtype',
-                    palette=marker_colors)
-    
-    ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
-    ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
-    
-    sns.scatterplot(data=move_df.groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
-                    x='IHB',
-                    y='IVB',
-                    hue='pitchtype',
-                    palette=marker_colors,
-                    s=150,
-                    legend=False,
-                    linewidth=2
-                   )
-    
-    ax.set(xlim=(29,-29),
-           ylim=(-29,29))
-    plt.xlabel('Horizontal Break (in)', fontsize=12,labelpad=10)
-    plt.ylabel('Vertical Break (in)', fontsize=12)
-    ax.set_xticks([20,10,0,-10,-20])
-    ax.set_xticklabels([x*-1 for x in ax.get_xticks()])
-    
+                   hue='pitchtype',
+                   palette=marker_colors,
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
+                    zorder=10,
+                   ax=ax1)    
+       
+    ax1.set(xlim=(-29,29),
+           ylim=(-29,29),
+           aspect=1)
+    ax1.axis('off')
+
     handles, labels = ax.get_legend_handles_labels()
     pitchtype_order = []
     pitch_velos = {}
@@ -678,7 +698,7 @@ def movement_chart(player):
         pitch_velo = move_df.loc[move_df['pitchtype']==x,'velo'].mean()
         pitch_velos[x] = f' ({pitch_velo:.1f})'
     ax.legend([handles[idx] for idx in pitchtype_order],
-              [labels[idx]+pitch_velos[labels[idx]] for idx in pitchtype_order],
+              [pitch_names[labels[idx]]+pitch_velos[labels[idx]] for idx in pitchtype_order],
               title='Pitchtype (velo)',
               loc='upper right' if hand =='L' else 'upper left')
     
