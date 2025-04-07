@@ -382,7 +382,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
     ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
     
-    sns.scatterplot(pitch_stats_df.loc[(pitch_df['pitchername']==card_player)].assign(IHB = lambda x: np.where(x['p_hand']=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
+    sns.scatterplot(pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player)].assign(IHB = lambda x: np.where(x['p_hand']=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
                     x='IHB',
                     y='IVB',
                    color=marker_colors[pitch_type],
@@ -406,8 +406,8 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     
     ax1.set(xlim=(-29,29),
            ylim=(-29,29),
-           aspect=1,
-           title='Movement')
+           aspect=1)
+    ax1.set_title('Movement',fontsize=18)
     ax1.axis('off')
     sns.despine(left=True,bottom=True)
   
