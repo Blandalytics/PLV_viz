@@ -441,7 +441,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     ax2.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
     ax2.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
     
-    sns.scatterplot(data=pitch_df.loc[pitch_df['stand']=='L'].assign(p_x = lambda x: x['p_x']*-1),
+    sns.scatterplot(data=pitch_df.loc[pitch_df['b_hand']=='L'].assign(p_x = lambda x: x['p_x']*-1),
                     x='p_x',
                     y='p_z',
                     color=marker_colors[pitch_type],
@@ -478,7 +478,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     ax3.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
     ax3.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
     
-    sns.scatterplot(data=pitch_df.loc[pitch_df['stand']=='R'].assign(p_x = lambda x: x['p_x']*-1),
+    sns.scatterplot(data=pitch_df.loc[pitch_df['b_hand']=='R'].assign(p_x = lambda x: x['p_x']*-1),
                     x='p_x',
                     y='p_z',
                     color=marker_colors[pitch_type],
