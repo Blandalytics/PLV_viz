@@ -616,8 +616,8 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
             ax.tick_params(left=False, bottom=False)
 
     adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
-    fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
-    fig.text(0.5,0.43,f'(Compared to AAA {adjusted_pitch_name}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
+    fig.text(0.525,0.45,'Pitch Characteristics',ha='center',fontsize=18)
+    fig.text(0.525,0.43,f'(Compared to AAA {adjusted_pitch_name}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
     
     # Add PL logo
     pl_ax = fig.add_axes([0.41,0.475,0.2,0.2], anchor='S', zorder=1)
@@ -626,9 +626,9 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     
-    fig.suptitle(f"{card_player}{apostrophe_text} {year} MiLB {adjusted_pitch_name}{pitcher_level}",y=0.97,fontsize=20,x=0.525)
+    fig.suptitle(f"{card_player}{apostrophe_text} {year} MiLB {adjusted_pitch_name}{pitcher_level}",y=0.97,fontsize=20,x=0.5)
     date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
-    fig.text(0.525,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
+    fig.text(0.5,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
     # fig.text(0.77,0.07,"@Blandalytics",ha='center',fontsize=10)
     # fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
     sns.despine(left=True,bottom=True)
