@@ -484,7 +484,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     sns.scatterplot(data=(pitch_df
                           .loc[(pitch_df['pitchername']==card_player) &
                                (pitch_df['pitchtype']==pitch_type) &
-                                (pitch_df['b_hand']=='R')].assign(p_x = lambda x: x['p_x']*-1))),
+                                (pitch_df['b_hand']=='R')].assign(p_x = lambda x: x['p_x']*-1)),
                     x='p_x',
                     y='p_z',
                     color=marker_colors[pitch_type],
