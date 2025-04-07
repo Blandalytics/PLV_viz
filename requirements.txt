@@ -2,8 +2,12 @@ streamlit
 matplotlib
 numpy
 pandas
-seaborn
-scipy
-statsmodels
 plotly
-scikit-learn
+scikit-learn == 1.5.1
+seaborn
+statsmodels
+xgboost
+scipy
+lxml
+pytz
+CairoSVG

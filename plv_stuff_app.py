@@ -309,7 +309,7 @@ def stuff_chart(df,player,palette):
                            colorscale=[[x/100,'rgb'+str(tuple([int(y*255) for y in sns.color_palette('vlag' if palette == 'plvStuff+' else 'vlag_r',n_colors=101)[x]]))] for x in range(101)], 
                            colorbar=dict(
                                title=f"{palette}\n",
-                               titleside="top",
+                               # titleside="top",
                                tickmode="array",
                                tickvals=[50, 75, 100, 125, 150] if palette == 'plvStuff+' else [-2, -1, 0, 1, 2],
                                ticks="outside"
@@ -332,7 +332,7 @@ def stuff_chart(df,player,palette):
     layout = go.Layout(margin=dict(l=30,r=0,t=45, b=30
                                   ),
                        scene = Scene,
-                       showlegend = False if palette=='plvStuff+' else True,
+                       showlegend = False,# if palette=='plvStuff+' else True,
                        height = 500,width = 500                  
                       )
     data = [trace]
