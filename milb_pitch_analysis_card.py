@@ -157,11 +157,11 @@ st.image(logo, width=200)
 
 st.title("MiLB Pitchtype Cards")
 
-Year
+#Year
 years = [2025,
          2024
         ]
-st.radio('Choose a year:', years)
+year = st.radio('Choose a year:', years)
 # Load Data
 @st.cache_data(ttl=60*30,show_spinner=f"Loading {year} data")
 def load_data(year):
