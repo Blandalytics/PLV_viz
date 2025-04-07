@@ -621,7 +621,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     
 
     # Add PL logo
-    pl_ax = fig.add_axes([0.41,0.025,0.2,0.2], anchor='S', zorder=1)
+    pl_ax = fig.add_axes([0.41,0.5,0.2,0.2], anchor='S', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
