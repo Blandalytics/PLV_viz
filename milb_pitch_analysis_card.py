@@ -671,7 +671,7 @@ def movement_chart(player):
     ax1.text(0,27,'Rise',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
     ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
     
-    sns.scatterplot(move_df.assign(IHB = lambda x: np.where(hand=='R',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
+    sns.scatterplot(move_df.assign(IHB = lambda x: x['IHB'].mul(-1)),
                     x='IHB',
                     y='IVB',
                    hue='pitchtype',
