@@ -688,7 +688,7 @@ def movement_chart(player):
            aspect=1)
     ax1.axis('off')
 
-    handles, labels = ax.get_legend_handles_labels()
+    handles, labels = ax1.get_legend_handles_labels()
     pitchtype_order = []
     pitch_velos = {}
     for x in pitch_list:
@@ -696,7 +696,7 @@ def movement_chart(player):
         
         pitch_velo = move_df.loc[move_df['pitchtype']==x,'velo'].mean()
         pitch_velos[x] = f' ({pitch_velo:.1f})'
-    ax.legend([handles[idx] for idx in pitchtype_order],
+    ax1.legend([handles[idx] for idx in pitchtype_order],
               [pitch_names[labels[idx]]+pitch_velos[labels[idx]] for idx in pitchtype_order],
               title='Pitchtype (velo)',
               loc='upper right' if hand =='L' else 'upper left')
