@@ -706,7 +706,7 @@ def movement_chart(player):
                  fontsize=18)
     
     # Add PL logo
-    pl_ax = fig.add_axes([0.7,0.01,0.2,0.2], anchor='NE', zorder=1)
+    pl_ax = fig.add_axes([0.7,0,0.2,0.2], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
     
