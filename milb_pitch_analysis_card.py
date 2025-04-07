@@ -316,44 +316,44 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     # Divide card into tiles
     grid = plt.GridSpec(2, len(chart_stats),height_ratios=[5,5],hspace=0.2)
-    ax = plt.subplot(grid[0, :3])
-    sns.scatterplot(data=(pitch_df
-                          .loc[(pitch_df['pitchername']==card_player) &
-                               (pitch_df['pitchtype']==pitch_type)]
-                          .assign(p_x = lambda x: x['p_x']*-1)),
-                    x='p_x',
-                    y='p_z',
-                    color=marker_colors[pitch_type],
-                    alpha=1)
+    # ax = plt.subplot(grid[0, :3])
+    # sns.scatterplot(data=(pitch_df
+    #                       .loc[(pitch_df['pitchername']==card_player) &
+    #                            (pitch_df['pitchtype']==pitch_type)]
+    #                       .assign(p_x = lambda x: x['p_x']*-1)),
+    #                 x='p_x',
+    #                 y='p_z',
+    #                 color=marker_colors[pitch_type],
+    #                 alpha=1)
 
-    # Strike zone outline
-    ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2)
-    ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2)
-    ax.plot([-10/12,-10/12], [sz_bot,sz_top], color='w', linewidth=2)
-    ax.plot([10/12,10/12], [sz_bot,sz_top], color='w', linewidth=2)
+    # # Strike zone outline
+    # ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2)
+    # ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2)
+    # ax.plot([-10/12,-10/12], [sz_bot,sz_top], color='w', linewidth=2)
+    # ax.plot([10/12,10/12], [sz_bot,sz_top], color='w', linewidth=2)
 
-    # Inner Strike zone
-    ax.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color='w', linewidth=1)
-    ax.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color='w', linewidth=1)
-    ax.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
-    ax.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
+    # # Inner Strike zone
+    # ax.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color='w', linewidth=1)
+    # ax.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color='w', linewidth=1)
+    # ax.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
+    # ax.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
 
-    # Plate
-    ax.plot([-8.5/12,8.5/12], [plate_y,plate_y], color='w', linewidth=2)
-    ax.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color='w', linewidth=2)
-    ax.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color='w', linewidth=2)
-    ax.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
-    ax.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
+    # # Plate
+    # ax.plot([-8.5/12,8.5/12], [plate_y,plate_y], color='w', linewidth=2)
+    # ax.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color='w', linewidth=2)
+    # ax.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color='w', linewidth=2)
+    # ax.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
+    # ax.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
 
-    ax.set(xlim=(-x_ft,x_ft),
-           ylim=(y_bot,y_lim),
-           aspect=1)
-    fig.text(0.23,0.89,'Locations',fontsize=18,bbox=dict(facecolor=pl_background, alpha=0.75, edgecolor=pl_background))
-    ax.axis('off')
-    sns.despine()
+    # ax.set(xlim=(-x_ft,x_ft),
+    #        ylim=(y_bot,y_lim),
+    #        aspect=1)
+    # fig.text(0.23,0.89,'Locations',fontsize=18,bbox=dict(facecolor=pl_background, alpha=0.75, edgecolor=pl_background))
+    # ax.axis('off')
+    # sns.despine()
 
     hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].values[0]
-    ax1 = plt.subplot(grid[0, 3:])
+    ax1 = plt.subplot(grid[0, 2:5])
     circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
     ax1.add_patch(circle1)
     circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
@@ -414,6 +414,87 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     ax1.set_title('Movement',fontsize=18)
     ax1.axis('off')
     sns.despine(left=True,bottom=True)
+
+    sz_bot = 1.5
+    sz_top = 3.5
+    x_ft = 2.5
+    y_bot = -0.5
+    y_lim = 6
+    plate_y = -.25
+    alpha_val = 0.5
+    
+    ax2 = plt.subplot(grid[0, :2])
+    # Outer Strike Zone
+    zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
+    ax2.add_patch(zone_outline)
+
+    # Inner Strike zone
+    ax2.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    # Plate
+    ax2.plot([-8.5/12,8.5/12], [plate_y,plate_y], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    sns.scatterplot(data=pitch_df.loc[pitch_df['stand']=='L'].assign(p_x = lambda x: x['p_x']*-1),
+                    x='p_x',
+                    y='p_z',
+                    color=marker_colors[pitch_type],
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
+                    legend=False,
+                   zorder=10,
+                   ax=ax2)
+    
+    ax2.set(xlim=(-1.5,1.5),
+           ylim=(y_bot,y_lim-1),
+           aspect=1,
+           title='Locations\nvs LHH')
+    ax2.set_title('Locations\nvs LHH',fontsize=18)
+    ax2.axis('off')
+    
+    ax3 = plt.subplot(grid[0,5:])
+    # Outer Strike Zone
+    zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
+    ax3.add_patch(zone_outline)
+    
+    # Inner Strike zone
+    ax3.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    # Plate
+    ax3.plot([-8.5/12,8.5/12], [plate_y,plate_y], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    sns.scatterplot(data=pitch_df.loc[pitch_df['stand']=='R'].assign(p_x = lambda x: x['p_x']*-1),
+                    x='p_x',
+                    y='p_z',
+                    color=marker_colors[pitch_type],
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
+                    legend=False,
+                   zorder=10,
+                   ax=ax3)
+    
+    ax3.set(xlim=(-1.5,1.5),
+           ylim=(y_bot,y_lim-1),
+           aspect=1)
+    ax3.set_title('Locations\nvs RHH',fontsize=18)
+    ax3.axis('off')
   
     adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
     fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
@@ -529,6 +610,8 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
             ax.set_yticklabels([])
             ax.set(ylim=(0,1.9))
             ax.tick_params(left=False, bottom=False)
+
+    
 
     # Add PL logo
     pl_ax = fig.add_axes([0.41,0.025,0.2,0.2], anchor='S', zorder=1)
