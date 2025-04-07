@@ -422,6 +422,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     y_lim = 6
     plate_y = -.25
     alpha_val = 0.5
+    title_y = 0.98
     
     ax2 = plt.subplot(grid[0, :2])
     # Outer Strike Zone
@@ -460,7 +461,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
            ylim=(y_bot,y_lim-1),
            aspect=1,
            title='Locations\nvs LHH')
-    ax2.set_title('Locations\nvs LHH',fontsize=18)
+    ax2.set_title('Locations\nvs LHH',fontsize=18,y=title_y)
     ax2.axis('off')
     
     ax3 = plt.subplot(grid[0,5:])
@@ -499,7 +500,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     ax3.set(xlim=(-1.5,1.5),
            ylim=(y_bot,y_lim-1),
            aspect=1)
-    ax3.set_title('Locations\nvs RHH',fontsize=18)
+    ax3.set_title('Locations\nvs RHH',fontsize=18,y=title_y)
     ax3.axis('off')
   
     adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
