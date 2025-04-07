@@ -503,9 +503,6 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     ax3.set_title('Locations\nvs RHH',fontsize=18,y=title_y)
     ax3.axis('off')
   
-    adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
-    fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
-    fig.text(0.5,0.43,f'(Compared to AAA {adjusted_pitch_name}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
     for stat in chart_stats:
         if chart_type=='Violin':
             val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
@@ -618,8 +615,10 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
             ax.set(ylim=(0,1.9))
             ax.tick_params(left=False, bottom=False)
 
+    adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
+    fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
+    fig.text(0.5,0.43,f'(Compared to AAA {adjusted_pitch_name}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
     
-
     # Add PL logo
     pl_ax = fig.add_axes([0.41,0.475,0.2,0.2], anchor='S', zorder=1)
     pl_ax.imshow(logo)
