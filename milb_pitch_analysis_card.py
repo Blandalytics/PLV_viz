@@ -157,11 +157,11 @@ st.image(logo, width=200)
 
 st.title("MiLB Pitchtype Cards")
 
-# Year
-# years = [2023,
-#          2022,2021,2020
-#         ]
-year = 2024#st.radio('Choose a year:', years)
+#Year
+years = [2025,
+         2024
+        ]
+year = st.radio('Choose a year:', years)
 # Load Data
 @st.cache_data(ttl=60*30,show_spinner=f"Loading {year} data")
 def load_data(year):
@@ -186,7 +186,7 @@ def load_data(year):
     return df
 
 base_df = load_data(year)
-pitch_thresh = 1
+pitch_thresh = 5
 
 # Has at least 1 pitch with at least 50 thrown
 pitcher_list = list(base_df.groupby(['pitchername','pitchtype'])['pitch_id'].count().reset_index().query(f'pitch_id >={pitch_thresh}')['pitchername'].sort_values().unique())
@@ -195,7 +195,7 @@ col1, col2, col3 = st.columns([0.4,0.35,0.25])
 
 with col1:
     # Player
-    default_ix = pitcher_list.index('David Festa')
+    default_ix = pitcher_list.index('Jacob Misiorowski')
     card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
 
 with col2:
@@ -316,90 +316,193 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
 
     # Divide card into tiles
     grid = plt.GridSpec(2, len(chart_stats),height_ratios=[5,5],hspace=0.2)
-    ax = plt.subplot(grid[0, :3])
+    # ax = plt.subplot(grid[0, :3])
+    # sns.scatterplot(data=(pitch_df
+    #                       .loc[(pitch_df['pitchername']==card_player) &
+    #                            (pitch_df['pitchtype']==pitch_type)]
+    #                       .assign(p_x = lambda x: x['p_x']*-1)),
+    #                 x='p_x',
+    #                 y='p_z',
+    #                 color=marker_colors[pitch_type],
+    #                 alpha=1)
+
+    # # Strike zone outline
+    # ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2)
+    # ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2)
+    # ax.plot([-10/12,-10/12], [sz_bot,sz_top], color='w', linewidth=2)
+    # ax.plot([10/12,10/12], [sz_bot,sz_top], color='w', linewidth=2)
+
+    # # Inner Strike zone
+    # ax.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color='w', linewidth=1)
+    # ax.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color='w', linewidth=1)
+    # ax.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
+    # ax.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
+
+    # # Plate
+    # ax.plot([-8.5/12,8.5/12], [plate_y,plate_y], color='w', linewidth=2)
+    # ax.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color='w', linewidth=2)
+    # ax.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color='w', linewidth=2)
+    # ax.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
+    # ax.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
+
+    # ax.set(xlim=(-x_ft,x_ft),
+    #        ylim=(y_bot,y_lim),
+    #        aspect=1)
+    # fig.text(0.23,0.89,'Locations',fontsize=18,bbox=dict(facecolor=pl_background, alpha=0.75, edgecolor=pl_background))
+    # ax.axis('off')
+    # sns.despine()
+
+    hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].values[0]
+    ax1 = plt.subplot(grid[0, 2:5])
+    circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    ax1.add_patch(circle1)
+    circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
+    ax1.add_patch(circle2)
+    circle3 = plt.Circle((0, 0), 18, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    ax1.add_patch(circle3)
+    circle4 = plt.Circle((0, 0), 24, color=pl_white,fill=False,alpha=0.5)
+    ax1.add_patch(circle4)
+    ax1.axvline(0,ymin=4/58,ymax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    ax1.axhline(0,xmin=4/58,xmax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    
+    for dist in [12,24]:
+        label_dist = dist-0.25
+        ax1.text(label_dist,-0.3,f'{dist}"',ha='right',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(-label_dist,-0.3,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
+    
+    if hand=='R':
+        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    else:
+        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    
+    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    
+    sns.scatterplot((pitch_df
+                     .loc[(pitch_df['pitchername']==card_player) &
+                           (pitch_df['pitchtype']==pitch_type)]
+                     .assign(IHB = lambda x: x['IHB'].mul(-1))
+                    ),
+                    x='IHB',
+                    y='IVB',
+                   color=marker_colors[pitch_type],
+                   # palette=marker_colors,
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
+                    zorder=10,
+                   ax=ax1,
+                   legend=False)    
+    
+    # handles, labels = ax1.get_legend_handles_labels()
+    # pitch_type_names = [pitch_names[x] for x in labels]
+    # # pitch_type_names = [pitch_names[x].ljust(15, " ") for x in labels]
+    # ax1.legend(handles,[pitch_names[x] for x in labels], ncols=len(labels),
+    #          loc='lower center', 
+    #            fontsize=min(52/len(labels),14),
+    #           framealpha=0,bbox_to_anchor=(0.5, -0.23+len(labels)/100,
+    #                                        0,0))
+    
+    ax1.set(xlim=(-29,29),
+           ylim=(-29,29),
+           aspect=1)
+    ax1.set_title('Movement',fontsize=18)
+    ax1.axis('off')
+    sns.despine(left=True,bottom=True)
+
+    sz_bot = 1.5
+    sz_top = 3.5
+    x_ft = 2.5
+    y_bot = -0.5
+    y_lim = 6.5
+    plate_y = -.25
+    alpha_val = 0.5
+    title_y = 0.95
+    
+    ax2 = plt.subplot(grid[0, :2])
+    # Outer Strike Zone
+    zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
+    ax2.add_patch(zone_outline)
+
+    # Inner Strike zone
+    ax2.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    
+    # Plate
+    ax2.plot([-8.5/12,8.5/12], [plate_y,plate_y], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax2.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    
     sns.scatterplot(data=(pitch_df
                           .loc[(pitch_df['pitchername']==card_player) &
-                               (pitch_df['pitchtype']==pitch_type)]
-                          .assign(p_x = lambda x: x['p_x']*-1)),
+                               (pitch_df['pitchtype']==pitch_type) &
+                                (pitch_df['b_hand']=='L')].assign(p_x = lambda x: x['p_x']*-1)),
                     x='p_x',
                     y='p_z',
                     color=marker_colors[pitch_type],
-                    alpha=1)
-
-    # Strike zone outline
-    ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2)
-    ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2)
-    ax.plot([-10/12,-10/12], [sz_bot,sz_top], color='w', linewidth=2)
-    ax.plot([10/12,10/12], [sz_bot,sz_top], color='w', linewidth=2)
-
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
+                    legend=False,
+                   zorder=10,
+                   ax=ax2)
+    
+    ax2.set(xlim=(-2,2),
+           ylim=(y_bot,y_lim-1),
+           aspect=1,
+           title='Locations\nvs LHH')
+    ax2.set_title('Locations\nvs LHH',fontsize=18,y=title_y)
+    ax2.axis('off')
+    
+    ax3 = plt.subplot(grid[0,5:])
+    # Outer Strike Zone
+    zone_outline = plt.Rectangle((-10/12, sz_bot), 20/12, 2, color=pl_white,fill=False,alpha=alpha_val)
+    ax3.add_patch(zone_outline)
+    
     # Inner Strike zone
-    ax.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color='w', linewidth=1)
-    ax.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color='w', linewidth=1)
-    ax.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
-    ax.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-y_bot), ymax=(sz_top-y_bot)/(y_lim-y_bot), color='w', linewidth=1)
-
+    ax3.plot([-10/12,10/12], [1.5+2/3,1.5+2/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-10/12,10/12], [1.5+4/3,1.5+4/3], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.axvline(10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.axvline(-10/36, ymin=(sz_bot-y_bot)/(y_lim-1-y_bot), ymax=(sz_top-y_bot)/(y_lim-1-y_bot), color=pl_white, linewidth=1, alpha=alpha_val)
+    
     # Plate
-    ax.plot([-8.5/12,8.5/12], [plate_y,plate_y], color='w', linewidth=2)
-    ax.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color='w', linewidth=2)
-    ax.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color='w', linewidth=2)
-    ax.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
-    ax.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color='w', linewidth=2)
-
-    ax.set(xlim=(-x_ft,x_ft),
-           ylim=(y_bot,y_lim),
-           aspect=1)
-    fig.text(0.23,0.89,'Locations',fontsize=18,bbox=dict(facecolor=pl_background, alpha=0.75, edgecolor=pl_background))
-    ax.axis('off')
-    sns.despine()
-
-    hand = pitch_df.loc[(pitch_df['pitchername']==card_player),'p_hand'].values[0]
-    ax = plt.subplot(grid[0, 3:])
-    sns.scatterplot(data=pitch_df.loc[(pitch_df['pitchername']==card_player) &
-                                      (pitch_df['pitchtype']==pitch_type)],
-                    x='IHB',
-                    y='IVB',
-                    color=marker_colors[pitch_type],
-                    s=25,
-                    alpha=1)
-
-    ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
-    ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
-    ax.set(aspect=1)
-
+    ax3.plot([-8.5/12,8.5/12], [plate_y,plate_y], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-8.5/12,-8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([8.5/12,8.25/12], [plate_y,plate_y+0.15], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    ax3.plot([-8.28/12,0], [plate_y+0.15,plate_y+0.25], color=pl_white, linewidth=1, alpha=alpha_val)
+    
     sns.scatterplot(data=(pitch_df
                           .loc[(pitch_df['pitchername']==card_player) &
-                               (pitch_df['pitchtype']==pitch_type)]
-                          .groupby('pitchtype')
-                          [['IVB','IHB']]
-                          .mean()
-                          .reset_index()
-                         ),
-                    x='IHB',
-                    y='IVB',
+                               (pitch_df['pitchtype']==pitch_type) &
+                                (pitch_df['b_hand']=='R')].assign(p_x = lambda x: x['p_x']*-1)),
+                    x='p_x',
+                    y='p_z',
                     color=marker_colors[pitch_type],
-                    s=200,
+                    edgecolor=pl_white,
+                    s=85,
+                    linewidth=0.3,
+                    alpha=1,
                     legend=False,
-                    linewidth=2
-                   )
-
-    ax_lim = max(25,
-                 pitch_df.loc[(pitch_df['pitchername']==card_player) &
-                              (pitch_df['pitchtype']==pitch_type),
-                              ['IHB','IVB']].abs().quantile(0.999).max()+1
-                )
-    ax.set(xlim=(ax_lim,-ax_lim),
-           ylim=(-ax_lim,ax_lim))
-    plt.xlabel('Arm-Side Break', fontsize=12)
-    plt.ylabel('Induced Vertical Break', fontsize=12,labelpad=-1)
-    ax.set_xticks([x*10 for x in range(-int(ax_lim/10),int(ax_lim/10)+1)][::-1])
-    if hand=='R':
-        ax.set_xticklabels([x*-1 for x in ax.get_xticks()])
-    fig.text(0.62,0.89,'Movement',fontsize=18)
-    sns.despine(left=True,bottom=True)
+                   zorder=10,
+                   ax=ax3)
+    
+    ax3.set(xlim=(-2,2),
+           ylim=(y_bot,y_lim-1),
+           aspect=1)
+    ax3.set_title('Locations\nvs RHH',fontsize=18,y=title_y)
+    ax3.axis('off')
   
-    adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
-    fig.text(0.5,0.45,'Pitch Characteristics',ha='center',fontsize=18)
-    fig.text(0.5,0.43,f'(Compared to AAA {adjusted_pitch_name}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
     for stat in chart_stats:
         if chart_type=='Violin':
             val = pitch_stats_df.loc[(pitch_stats_df['pitchername']==card_player),
@@ -512,21 +615,25 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
             ax.set(ylim=(0,1.9))
             ax.tick_params(left=False, bottom=False)
 
+    adjusted_pitch_name = pitch_names[pitch_type] if (card_player != 'Kutter Crawford') | (pitch_names[pitch_type] != 'Cutter') else 'Kutter'
+    fig.text(0.525,0.45,'Pitch Characteristics',ha='center',fontsize=18)
+    fig.text(0.525,0.43,f'(Compared to AAA {adjusted_pitch_name}s; Min {pitch_num_thresh} Thrown; - - - is MLB Median)',ha='center',fontsize=12)
+    
     # Add PL logo
-    pl_ax = fig.add_axes([0.41,0.025,0.2,0.2], anchor='S', zorder=1)
+    pl_ax = fig.add_axes([0.41,0.475,0.2,0.2], anchor='S', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
 
     apostrophe_text = "'" if card_player[-1]=='s' else "'s"
     
-    fig.suptitle(f"{card_player}{apostrophe_text} {year} MiLB {adjusted_pitch_name}{pitcher_level}",y=0.97,fontsize=20,x=0.525)
+    fig.suptitle(f"{card_player}{apostrophe_text} {year} MiLB {adjusted_pitch_name}{pitcher_level}",y=0.97,fontsize=20,x=0.5)
     date_text = '' if (start_date==season_start) & (end_date==season_end) else f'{start_date:%b %-d} - {end_date:%b %-d}; '
-    fig.text(0.525,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
+    fig.text(0.5,0.925,f"({date_text}From Pitcher's Perspective)",ha='center',fontsize=12)
     # fig.text(0.77,0.07,"@Blandalytics",ha='center',fontsize=10)
     # fig.text(0.77,0.05,"pitch-analysis-card.streamlit.app",ha='center',fontsize=10)
     sns.despine(left=True,bottom=True)
     st.pyplot(fig)
-pitch_analysis_card(card_player,pitch_type,chart_type)
+
 
 def movement_chart(player):
     hand = pitch_df.loc[(pitch_df['pitchername']==player),'p_hand'].values[0]
@@ -534,35 +641,54 @@ def movement_chart(player):
     
     pitch_list = [x[0] for x in Counter(move_df['pitchtype']).most_common() if (x[0] != 'UN')]
     
-    fig, ax = plt.subplots(figsize=(8,8))
+    fig, ax1 = plt.subplots(figsize=(8,8))
+
+    circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    ax1.add_patch(circle1)
+    circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
+    ax1.add_patch(circle2)
+    circle3 = plt.Circle((0, 0), 18, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    ax1.add_patch(circle3)
+    circle4 = plt.Circle((0, 0), 24, color=pl_white,fill=False,alpha=0.5)
+    ax1.add_patch(circle4)
+    ax1.axvline(0,ymin=4/58,ymax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    ax1.axhline(0,xmin=4/58,xmax=54/58,color=pl_white,alpha=0.5,zorder=1)
     
-    sns.scatterplot(data=move_df,
+    for dist in [12,24]:
+        label_dist = dist-0.25
+        ax1.text(label_dist,-0.3,f'{dist}"',ha='right',va='top',fontsize=12,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(-label_dist,-0.3,f'{dist}"',ha='left',va='top',fontsize=12,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,label_dist-0.25,f'{dist}"',ha='left',va='top',fontsize=12,color=pl_white,alpha=0.5,zorder=1)
+        ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=12,color=pl_white,alpha=0.5,zorder=1)
+    
+    if hand=='R':
+        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+    else:
+        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+    
+    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=18,color=pl_white,alpha=0.75,zorder=1)
+    
+    sns.scatterplot(move_df.assign(IHB = lambda x: x['IHB'].mul(-1)),
                     x='IHB',
                     y='IVB',
-                    hue='pitchtype',
-                    palette=marker_colors)
-    
-    ax.axhline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
-    ax.axvline(0, color='w', linestyle='--', linewidth=1, alpha=0.5)
-    
-    sns.scatterplot(data=move_df.groupby('pitchtype')[['IVB','IHB']].mean().reset_index(),
-                    x='IHB',
-                    y='IVB',
-                    hue='pitchtype',
-                    palette=marker_colors,
-                    s=150,
-                    legend=False,
-                    linewidth=2
-                   )
-    
-    ax.set(xlim=(29,-29),
-           ylim=(-29,29))
-    plt.xlabel('Horizontal Break (in)', fontsize=12,labelpad=10)
-    plt.ylabel('Vertical Break (in)', fontsize=12)
-    ax.set_xticks([20,10,0,-10,-20])
-    ax.set_xticklabels([x*-1 for x in ax.get_xticks()])
-    
-    handles, labels = ax.get_legend_handles_labels()
+                   hue='pitchtype',
+                   palette=marker_colors,
+                    edgecolor=pl_white,
+                    s=100,
+                    linewidth=0.3,
+                    alpha=1,
+                    zorder=10,
+                   ax=ax1)    
+       
+    ax1.set(xlim=(-29,29),
+           ylim=(-29,29),
+           aspect=1)
+    ax1.axis('off')
+
+    handles, labels = ax1.get_legend_handles_labels()
     pitchtype_order = []
     pitch_velos = {}
     for x in pitch_list:
@@ -570,38 +696,29 @@ def movement_chart(player):
         
         pitch_velo = move_df.loc[move_df['pitchtype']==x,'velo'].mean()
         pitch_velos[x] = f' ({pitch_velo:.1f})'
-    ax.legend([handles[idx] for idx in pitchtype_order],
-              [labels[idx]+pitch_velos[labels[idx]] for idx in pitchtype_order],
+    ax1.legend([handles[idx] for idx in pitchtype_order],
+              [pitch_names[labels[idx]]+pitch_velos[labels[idx]] for idx in pitchtype_order],
               title='Pitchtype (velo)',
-              loc='upper right' if hand =='L' else 'upper left')
-    
-    fig.text(0.83,0.0425,'Glove' if hand == 'L' else 'Arm',ha='left')
-    fig.text(0.185,0.0425,'Arm' if hand == 'L' else 'Glove',ha='right')
-    fig.text(0.05,0.84,'Rise',ha='center')
-    fig.text(0.05,0.11,'Drop',ha='center')
-    
-    ax.annotate('', xy=(0.65, -0.08), xycoords='axes fraction', xytext=(0.9, -0.08), 
-                arrowprops=dict(arrowstyle="<-", color='w'))
-    ax.annotate('', xy=(0.35, -0.08), xycoords='axes fraction', xytext=(0.09, -0.08), 
-                arrowprops=dict(arrowstyle="<-", color='w'))
-    ax.annotate('', xy=(-0.1, 0.64), xycoords='axes fraction', xytext=(-0.1, 0.93), 
-                arrowprops=dict(arrowstyle="<-", color='w'))
-    ax.annotate('', xy=(-0.1, 0.35), xycoords='axes fraction', xytext=(-0.1, 0.05), 
-                arrowprops=dict(arrowstyle="<-", color='w'))
-    
-    fig.suptitle(f"{player}'s {year}\nInduced Movement Profile",x=0.45,
+               framealpha=0.9,
+               # edgecolor=pl_background,
+              loc='upper right' if hand =='L' else 'upper left',
+              bbox_to_anchor=(1 if hand =='L' else 0,0.9))
+            
+    fig.suptitle(f"{player}'s {year} MiLB\nInduced Movement Profile",x=0.5,
                  y=0.95, 
                  fontsize=18)
     
     # Add PL logo
-    pl_ax = fig.add_axes([0.725,0.76,0.2,0.2], anchor='NE', zorder=1)
+    pl_ax = fig.add_axes([0.7,0,0.2,0.2], anchor='NE', zorder=1)
     pl_ax.imshow(logo)
     pl_ax.axis('off')
     
     sns.despine()
     st.pyplot(fig)
   
-movement_chart(card_player)
+if st.button("Generate Data Viz"):
+    pitch_analysis_card(card_player,pitch_type,chart_type)
+    movement_chart(card_player)
 
 st.title("Metric Definitions")
 st.write("- ***Velocity***: Release speed of the pitch, out of the pitcher's hand (in miles per hour).")
