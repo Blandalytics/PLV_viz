@@ -645,6 +645,7 @@ def game_charts(move_df):
     st.pyplot(fig,use_container_width=False)
 
 def loc_charts(df):
+    df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
     sz_bot = 1.5
     sz_top = 3.5
     y_mid = 2.5
