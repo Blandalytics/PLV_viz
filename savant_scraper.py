@@ -401,7 +401,7 @@ def scrape_savant_data(player_name, game_id):
     df['total_strikes'] = total_strikes
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = pitch_type
-    df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
+    # df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
     df['Velo'] = velo
     df['Ext'] = extension
     df['vert_break'] = ivb
@@ -500,6 +500,7 @@ def scrape_savant_data(player_name, game_id):
     return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
 
 def game_charts(move_df):
+    move_df['pitchtype'] = move_df['pitch_type'].map(pitchtype_map)
     fig = plt.figure(figsize=(8,8))
     grid = plt.GridSpec(1, 3, width_ratios=[1,2,1],wspace=0.15)
     ax1 = plt.subplot(grid[1])
