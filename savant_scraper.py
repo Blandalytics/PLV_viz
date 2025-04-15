@@ -212,16 +212,23 @@ plate_y = -.25
 alpha_val = 0.5
 
 pitchtype_map = {
-    'FF':'FF','FA':'FF',
-    'SI':'SI','FT':'SI',
+    'FF':'FF',
+    'FA':'FF',
+    'SI':'SI',
+    'FT':'SI',
     'FC':'FC',
     'SL':'SL',
     'ST':'ST',
     'CH':'CH',
-    'CU':'CU','KC':'CU','CS':'CU','SV':'CU',
-    'FS':'FS','FO':'FS',
+    'CU':'CU',
+    'KC':'CU',
+    'CS':'CU',
+    'SV':'CU',
+    'FS':'FS',
+    'FO':'FS',
     'KN':'KN',
-    'UN':'UN','EP':'UN'
+    'UN':'UN',
+    'EP':'UN'
 }
 
 pl_white = '#FEFEFE'
@@ -692,7 +699,7 @@ if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
     table_df, chart_df = scrape_savant_data(player_select,game_id)
-    chart_df['pitchtype'] = chart_df['pitch_type'].map(pitchtype_map)
+    chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
     st.dataframe(table_df,
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
