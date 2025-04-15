@@ -502,7 +502,6 @@ def scrape_savant_data(player_name, game_id):
     return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
 
 def game_charts(move_df):
-    move_df['pitchtype'] = move_df['pitch_type'].map(pitchtype_map)
     fig = plt.figure(figsize=(8,8))
     grid = plt.GridSpec(1, 3, width_ratios=[1,2,1],wspace=0.15)
     ax1 = plt.subplot(grid[1])
@@ -647,7 +646,6 @@ def game_charts(move_df):
     st.pyplot(fig,use_container_width=False)
 
 def loc_charts(df):
-    df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
     sz_bot = 1.5
     sz_top = 3.5
     y_mid = 2.5
@@ -694,6 +692,7 @@ if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
     table_df, chart_df = scrape_savant_data(player_select,game_id)
+    chart_df['pitchtype'] = chart_df['pitch_type'].map(pitchtype_map)
     st.dataframe(table_df,
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
