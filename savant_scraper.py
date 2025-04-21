@@ -212,16 +212,23 @@ plate_y = -.25
 alpha_val = 0.5
 
 pitchtype_map = {
-    'FF':'FF','FA':'FF',
-    'SI':'SI','FT':'SI',
+    'FF':'FF',
+    'FA':'FF',
+    'SI':'SI',
+    'FT':'SI',
     'FC':'FC',
     'SL':'SL',
     'ST':'ST',
     'CH':'CH',
-    'CU':'CU','KC':'CU','CS':'CU','SV':'CU',
-    'FS':'FS','FO':'FS',
+    'CU':'CU',
+    'KC':'CU',
+    'CS':'CU',
+    'SV':'CU',
+    'FS':'FS',
+    'FO':'FS',
     'KN':'KN',
-    'UN':'UN','EP':'UN'
+    'UN':'UN',
+    'EP':'UN'
 }
 
 pl_white = '#FEFEFE'
@@ -252,6 +259,8 @@ marker_colors = {
     'SL':'#9300c7',  
     'ST':'#C95EBE',
     'CU':'#3c44cd',
+    'CS':'#3c44cd',
+    'SV':'#3c44cd',
     'CH':'#07b526', 
     'KN':'#999999',
     'SC':'#999999', 
@@ -401,7 +410,7 @@ def scrape_savant_data(player_name, game_id):
     df['total_strikes'] = total_strikes
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = pitch_type
-    df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
+    # df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
     df['Velo'] = velo
     df['Ext'] = extension
     df['vert_break'] = ivb
@@ -690,6 +699,7 @@ if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 elif st.button("Generate Player Table"):
     table_df, chart_df = scrape_savant_data(player_select,game_id)
+    chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
     st.dataframe(table_df,
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
