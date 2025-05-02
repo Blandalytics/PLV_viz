@@ -159,8 +159,12 @@ def loc_model(df,year=2024):
 
 st.set_page_config(page_title='PL Live Pitching Stats', page_icon='⚾',layout="wide")
 
-logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-logo = Image.open(urllib.request.urlopen(logo_loc))
+@st.cache_resource()
+def load_logo():
+    logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+    return Image.open(urllib.request.urlopen(logo_loc))
+    
+logo = load_logo()
 st.image(logo, width=200)
 
 st.title('PL Live Pitching Stats')
