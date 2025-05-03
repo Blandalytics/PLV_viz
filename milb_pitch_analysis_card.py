@@ -180,7 +180,7 @@ def load_data(year):
                                                     'adj_vaa','p_x','p_z']
         df = pd.concat([df,
                         pd.read_parquet(file_name)[load_cols]
-                       ])
+                       ]).copy()
     df = (df
           .sort_values('pitch_id')
           .astype({'pitch_id':'str'})
