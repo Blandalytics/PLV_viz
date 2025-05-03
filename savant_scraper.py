@@ -159,8 +159,14 @@ def loc_model(df,year=2024):
 
 st.set_page_config(page_title='PL Live Pitching Stats', page_icon='⚾',layout="wide")
 
-logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-logo = Image.open(urllib.request.urlopen(logo_loc))
+@st.cache_resource()
+def load_logo():
+    logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+    img_url = urllib.request.urlopen(logo_loc)
+    logo = Image.open(img_url)
+    return logo
+    
+logo = load_logo()
 st.image(logo, width=200)
 
 st.title('PL Live Pitching Stats')
@@ -641,8 +647,8 @@ def game_charts(move_df):
            title='Locations\nvs RHH')
     ax3.axis('off')
     
-    logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-    logo = Image.open(urllib.request.urlopen(logo_loc))
+    # logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+    # logo = Image.open(urllib.request.urlopen(logo_loc))
     pl_ax = fig.add_axes([0.4,0.175,0.2,0.1], anchor='NE', zorder=1)
     width, height = logo.size
     pl_ax.imshow(logo.crop((0, 0, width, height-150)))
