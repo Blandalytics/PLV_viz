@@ -151,8 +151,14 @@ y_bot = -0.5
 y_lim = 6
 plate_y = -.25
 
-logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-logo = Image.open(urllib.request.urlopen(logo_loc))
+@st.cache_resource()
+def load_logo():
+    logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+    img_url = urllib.request.urlopen(logo_loc)
+    logo = Image.open(img_url)
+    return logo
+    
+logo = load_logo()
 st.image(logo, width=200)
 
 st.title("MiLB Pitchtype Cards")
@@ -163,7 +169,7 @@ years = [2025,
         ]
 year = st.radio('Choose a year:', years)
 # Load Data
-@st.cache_data(ttl=60*30,show_spinner=f"Loading {year} data")
+@st.cache_data(ttl=60*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
     for month in range(3,11):
@@ -174,7 +180,7 @@ def load_data(year):
                                                     'adj_vaa','p_x','p_z']
         df = pd.concat([df,
                         pd.read_parquet(file_name)[load_cols]
-                       ])
+                       ]).copy()
     df = (df
           .sort_values('pitch_id')
           .astype({'pitch_id':'str'})
