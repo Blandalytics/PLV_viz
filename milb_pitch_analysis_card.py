@@ -151,7 +151,7 @@ y_bot = -0.5
 y_lim = 6
 plate_y = -.25
 
-@st.cache_resource()
+@st.cache_resource(ttl=60*3600)
 def load_logo():
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
     img_url = urllib.request.urlopen(logo_loc)
