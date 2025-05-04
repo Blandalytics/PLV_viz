@@ -172,15 +172,18 @@ year = st.radio('Choose a year:', years)
 @st.cache_data(ttl=60*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
+    df_list = [df]
     for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_MiLB_Analysis_Data-{month}.parquet?raw=true'
         load_cols = ['pitchername','pitchtype','pitch_id','game_played','level',
                                                     'p_hand','b_hand','IHB','IVB','called_strike_pred',
                                                     'ball_pred','PLV','velo','pitch_extension',
                                                     'adj_vaa','p_x','p_z']
-        df = pd.concat([df,
-                        pd.read_parquet(file_name)[load_cols]
-                       ]).copy()
+        # df = pd.concat([df,
+        #                 pd.read_parquet(file_name)[load_cols]
+        #                ]).copy()
+        df_list += [pd.read_parquet(file_name)[load_cols]]
+    df = pd.concat(df_list).copy()
     df = (df
           .sort_values('pitch_id')
           .astype({'pitch_id':'str'})
