@@ -191,7 +191,7 @@ def load_data(year):
   
     return df
 
-base_df = load_data(year)
+base_df = load_data(year).copy()
 pitch_thresh = 5
 
 # Has at least 1 pitch with at least 50 thrown
