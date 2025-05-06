@@ -156,6 +156,7 @@ def loc_model(df,year=2024):
 
     return df['wOBA_effect'].sub(-0.004253050593194383).div(0.05179234832326223).mul(-50).add(100)
 
+st.write()
 def generate_games(games_today):
     game_dict = {}
     code_dict = {
