@@ -191,9 +191,9 @@ def generate_games(games_today):
             inning_state = top_bot[0]+x['scoreboard']['linescore']['currentInningOrdinal']
             if game_status_code == 'F':
                 if home_runs>away_runs:
-                    game_info = f'FINAL: {away_team} {away_runs} @ *{home_team} {home_runs}*'
+                    game_info = f'FINAL: {away_team} {away_runs} @ {home_team} {home_runs}*'
                 else:
-                    game_info = f'FINAL: *{away_team} {away_runs}* @ {home_team} {home_runs}'
+                    game_info = f'FINAL: {away_team} {away_runs}* @ {home_team} {home_runs}'
             else:
                 game_info = f'{inning_state}: {away_team} {away_runs} @ {home_team} {home_runs}'
         game_dict.update({game_info:[game,game_time,raw_time,inning_sort,code_map]})
