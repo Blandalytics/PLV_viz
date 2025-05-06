@@ -186,16 +186,15 @@ def generate_games(games_today):
             home_runs = x['scoreboard']['linescore']['teams']['home']['runs']
             away_runs = x['scoreboard']['linescore']['teams']['away']['runs']
             inning = x['scoreboard']['linescore']['currentInning']
-            top_bot = x['scoreboard']['linescore']['inningHalf']
+            top_bot = x['scoreboard']['linescore']['inningHalf'][0
             inning_sort = int(inning)*2 - (0 if top_bot=='Bottom' else 1)
-            inning_state = top_bot[0]+inning
             if game_status_code == 'F':
                 if home_runs>away_runs:
                     game_info = f'FINAL: {away_team} {away_runs} @ {home_team} {home_runs}*'
                 else:
                     game_info = f'FINAL: {away_team} {away_runs}* @ {home_team} {home_runs}'
             else:
-                game_info = f'{inning_state}: {away_team} {away_runs} @ {home_team} {home_runs}'
+                game_info = f'{top_bot}{inning}: {away_team} {away_runs} @ {home_team} {home_runs}'
         game_dict.update({game_info:[game,game_time,raw_time,inning_sort,code_map]})
     game_df = pd.DataFrame.from_dict(game_dict, orient='index',columns=['Game ID','Time','Sort Time','Sort Inning','Sort Code'])
     return game_df.sort_values(['Sort Code','Sort Time','Game ID','Sort Inning'])['Game ID'].to_dict()
