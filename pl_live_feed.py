@@ -160,6 +160,7 @@ def generate_games(games_today):
     game_dict = {}
     code_dict = {
         'F':0,
+        'I':1,
         'P':2,
         'S':2
     }
