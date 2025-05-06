@@ -160,7 +160,7 @@ def generate_games(games_today):
     game_dict = {}
     code_dict = {
         'F':0,
-        'P':1,
+        'P':2,
         'S':2
     }
     for game in games_today:
@@ -178,7 +178,7 @@ def generate_games(games_today):
         home_team = x['scoreboard']['teams']['home']['abbreviation']
         game_status_code = x['game_status_code']
         code_map = code_dict[game_status_code]
-        if game_status_code == 'S':
+        if game_status_code in ['S','P']:
             game_info = f'{away_team} @ {home_team}: {game_time}'
             inning_sort = None
         else:
