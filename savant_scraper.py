@@ -700,10 +700,11 @@ def loc_charts(df):
     fig.patch.set_alpha(0)
     sns.despine()
     st.pyplot(fig)
-    
+
+left, middle, right = st.columns(3)
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
-elif st.button("Generate Player Table"):
+elif right.button("Generate Player Table"):
     table_df, chart_df = scrape_savant_data(player_select,game_id)
     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
     st.dataframe(table_df,
