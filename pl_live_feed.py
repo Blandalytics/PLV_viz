@@ -262,7 +262,7 @@ x_ft = 2.5
 y_bot = -0.5
 y_lim = 6
 plate_y = -.25
-alpha_val = 0.5
+alpha_val = 1
 
 pitchtype_map = {
     'FF':'FF',
@@ -565,16 +565,16 @@ def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
     grid = plt.GridSpec(1, 3, width_ratios=[1,2,1],wspace=0.15)
     ax1 = plt.subplot(grid[1])
-    circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=alpha_val/2,linestyle='--')
     ax1.add_patch(circle1)
-    circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
+    circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=alpha_val)
     ax1.add_patch(circle2)
-    circle3 = plt.Circle((0, 0), 18, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    circle3 = plt.Circle((0, 0), 18, color=pl_white,fill=False,alpha=alpha_val/2,linestyle='--')
     ax1.add_patch(circle3)
-    circle4 = plt.Circle((0, 0), 24, color=pl_white,fill=False,alpha=0.5)
+    circle4 = plt.Circle((0, 0), 24, color=pl_white,fill=False,alpha=alpha_val)
     ax1.add_patch(circle4)
-    ax1.axvline(0,ymin=4/58,ymax=54/58,color=pl_white,alpha=0.5,zorder=1)
-    ax1.axhline(0,xmin=4/58,xmax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    ax1.axvline(0,ymin=4/58,ymax=54/58,color=pl_white,alpha=alpha_val,zorder=1)
+    ax1.axhline(0,xmin=4/58,xmax=54/58,color=pl_white,alpha=alpha_val,zorder=1)
     
     for dist in [12,24]:
         label_dist = dist-0.25
@@ -584,14 +584,14 @@ def game_charts(move_df):
         ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
     
     if move_df['P Hand'].value_counts().index[0]=='R':
-        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
+        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
     else:
-        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
+        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
     
-    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
+    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
     
     sns.scatterplot(move_df.assign(IHB = lambda x: np.where(x['P Hand']=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
                     x='IHB',
