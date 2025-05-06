@@ -248,6 +248,7 @@ with col2:
 with col3:
     player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
 
+@st.cache_data()
 def load_season_avgs():
     return pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true')
 
