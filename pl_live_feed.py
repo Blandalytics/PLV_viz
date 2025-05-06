@@ -163,7 +163,7 @@ def generate_games(games_today):
         'P':1,
         'S':2
     }
-    for game in game_list:
+    for game in games_today:
         r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game}')
         x = r.json()
         game_hour = int(x['scoreboard']['datetime']['dateTime'][11:13])
