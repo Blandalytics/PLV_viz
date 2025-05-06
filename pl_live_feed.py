@@ -156,6 +156,49 @@ def loc_model(df,year=2024):
 
     return df['wOBA_effect'].sub(-0.004253050593194383).div(0.05179234832326223).mul(-50).add(100)
 
+def generate_games(games_today):
+    game_dict = {}
+    code_dict = {
+        'F':0,
+        'P':1,
+        'S':2
+    }
+    for game in game_list:
+        r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game}')
+        x = r.json()
+        game_hour = int(x['scoreboard']['datetime']['dateTime'][11:13])
+        game_hour = game_hour-4 if game_hour >3 else game_hour+20
+        game_minutes = int(x['scoreboard']['datetime']['dateTime'][14:16])
+        raw_time = game_hour*60+game_minutes
+        am_pm = 'AM' if game_hour <12 else 'PM'
+        game_time = f'{game_hour-12}:{game_minutes:>02}{am_pm}' if am_pm=='PM' else f'{game_hour}:{game_minutes:>02}{am_pm}'
+        ppd = 0 if x['scoreboard']['datetime']['originalDate']==x['scoreboard']['datetime']['officialDate'] else 1
+        
+        away_team = x['scoreboard']['teams']['away']['abbreviation']
+        home_team = x['scoreboard']['teams']['home']['abbreviation']
+        game_status_code = x['game_status_code']
+        code_map = code_dict[game_status_code]
+        if game_status_code == 'S':
+            game_info = f'{away_team} @ {home_team}: {game_time}'
+            inning_sort = None
+        else:
+            game_info = f'{away_team} @ {home_team}'
+            # home_runs = x['scoreboard']['linescore']['teams']['home']['runs']
+            # away_runs = x['scoreboard']['linescore']['teams']['away']['runs']
+            # inning = x['scoreboard']['linescore']['currentInning']
+            # top_bot = x['scoreboard']['linescore']['inningHalf']
+            # inning_sort = int(inning)*2 - (0 if top_bot=='Bottom' else 1)
+            # inning_state = top_bot[0]+x['scoreboard']['linescore']['currentInningOrdinal']
+            # if game_status_code == 'F':
+            #     if home_runs>away_runs:
+            #         game_info = f'FINAL: {away_team} {away_runs} @ *{home_team} {home_runs}*'
+            #     else:
+            #         game_info = f'FINAL: *{away_team} {away_runs}* @ {home_team} {home_runs}'
+            # else:
+            #     game_info = f'{inning_state}: {away_team} {away_runs} @ {home_team} {home_runs}'
+        game_dict.update({game_info:[game,game_time,raw_time,inning_sort,code_map]})
+    game_df = pd.DataFrame.from_dict(game_dict, orient='index',columns=['Game ID','Time','Sort Time','Sort Inning','Sort Code'])
+    return game_df.sort_values(['Sort Code','Sort Time','Game ID','Sort Inning'])['Game ID'].to_dict()
 
 st.set_page_config(page_title='PL Live Pitching Stats', page_icon='⚾',layout="wide")
 
@@ -181,11 +224,15 @@ with col1:
     x = r.json()
     if x['totalGames']==0:
         st.write(f'No games on {date}')
-    game_list = {}
+    # game_list = {}
+    # for game in range(len(x['dates'][0]['games'])):
+    #     if x['dates'][0]['games'][game]['gamedayType'] in ['E','P']:
+    #         game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
+    games_today = []
     for game in range(len(x['dates'][0]['games'])):
         if x['dates'][0]['games'][game]['gamedayType'] in ['E','P']:
-            game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
-
+            games_today += [x['dates'][0]['games'][game]['gamePk']]
+    game_list = generate_games(games_today)
 with col2:
     game_select = st.selectbox('Choose a game:',list(game_list.keys()))
     
