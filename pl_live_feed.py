@@ -186,7 +186,7 @@ def generate_games(games_today):
             home_runs = x['scoreboard']['linescore']['teams']['home']['runs']
             away_runs = x['scoreboard']['linescore']['teams']['away']['runs']
             inning = x['scoreboard']['linescore']['currentInning']
-            top_bot = x['scoreboard']['linescore']['inningHalf'][0
+            top_bot = x['scoreboard']['linescore']['inningHalf'][0]
             inning_sort = int(inning)*2 - (0 if top_bot=='Bottom' else 1)
             if game_status_code == 'F':
                 if home_runs>away_runs:
