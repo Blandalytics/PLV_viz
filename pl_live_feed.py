@@ -559,7 +559,7 @@ def scrape_savant_data(player_name, game_id):
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
 
-    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
+    return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
