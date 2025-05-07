@@ -235,7 +235,7 @@ with col1:
             games_today += [x['dates'][0]['games'][game]['gamePk']]
     game_list = generate_games(games_today)
 with col2:
-    game_select = st.pills('Choose a game:',list(game_list.keys()),default=list(game_list.keys())[0],width='medium')
+    game_select = st.pills('Choose a game:',list(game_list.keys()),default=list(game_list.keys())[0])
     
     game_id = game_list[game_select]
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
