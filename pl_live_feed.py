@@ -576,7 +576,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','vs_lhh'] = game_df['vs_lhh'].sum() / game_df['Num Pitches'].sum()
     v_rhh_val = merge_df.loc['Total','vs_rhh']
     merge_df.loc['Total','vs R'] = f'{v_rhh_val:.1%}'
-    v_lhh_val = merge_df.loc['Total','vs_lhh']
+    v_lhh_val = game_df['Num Pitches'].sum()-v_rhh_val
     merge_df.loc['Total','vs L'] = f'{v_lhh_val:.1%}'
     strike_val = df['total_strikes'].sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','Strike%'] = f'{strike_val:.1%}'
