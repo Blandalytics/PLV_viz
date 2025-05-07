@@ -249,13 +249,7 @@ with col2:
             test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
     test_list = {v: k for k, v in test_list.items()}
     pitcher_list = {test_list[str(x)]:x for x in pitcher_lineup}
-    # pitcher_list = {}
-    # for home_away_pitcher in ['home','away']:
-    #     if f'{home_away_pitcher}_pitchers' not in x.keys():
-    #         continue
-    #     for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
-    #         pitcher_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:[pitcher_id,x['scoreboard']['teams']['home' if home_away_pitcher=='away' else 'away']['abbreviation']]})
-
+    
 with col3:
     player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
 
@@ -391,7 +385,7 @@ def scrape_savant_data(player_name, game_id):
         if f'{home_away_pitcher}_pitchers' not in x.keys():
             continue
         for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
-            if pitcher_id != pitcher_list[player_select][0]:
+            if pitcher_id != pitcher_list[player_select]:
                 continue
             for pitch in range(len(x[f'{home_away_pitcher}_pitchers'][pitcher_id])):
                 game_ids += [game_id]
