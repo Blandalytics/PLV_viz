@@ -274,7 +274,7 @@ with col3:
     home_away = 'vs' if home==1 else '@'
     decision = '(ND)' if (win+loss==0) and (starter==1) else '(W)' if win==1 else '(L)' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else ''
 
-st.subheader(f'{date.strftime('%#m/%#d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks.')
+st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks.')
 
 @st.cache_data()
 def load_season_avgs():
