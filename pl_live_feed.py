@@ -772,9 +772,11 @@ if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 # elif right.button("Generate Player Table"):
 else:
+    idx = pd.IndexSlice
+    slice_ = idx['Total',:]
     table_df, chart_df = scrape_savant_data(player_select,game_id)
     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
-    st.dataframe(table_df,
+    st.dataframe(table_df.style.set_properties(**{'background-color': '#666666'}, subset=slice_),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
                          "#",
