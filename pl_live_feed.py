@@ -804,7 +804,7 @@ else:
                          help="% of pitches thrown vs Left-Handed Hitters",
                          ),
                      },
-                 # use_container_width=True,
+                 use_container_width=False,
                  hide_index=True)
 
     game_charts(chart_df)
