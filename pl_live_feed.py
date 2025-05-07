@@ -776,7 +776,14 @@ else:
     slice_ = idx['Total',:]
     table_df, chart_df = scrape_savant_data(player_select,game_id)
     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
-    st.dataframe(table_df.style.format(precision=3).set_properties(**{'background-color': '#222222'}, subset=slice_),
+    st.dataframe((table_df
+                  .style
+                  .format(precision=3)
+                  .set_properties(**{'background-color': '#222222'}, subset=slice_)
+                  .background_gradient(axis=None, vmin=.18, vmax=.58, cmap="vlag_r",
+                                  subset=['3D wOBAcon']
+                                 )
+                 ),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
                          "#",
