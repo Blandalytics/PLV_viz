@@ -578,7 +578,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','Whiffs'] = game_df['Whiffs'].sum()
     csw_val = df[['CS','Whiffs']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','CSW'] = f'{csw_val:.1%}'
-    merge_df.loc['Total','3D wOBAcon'] = df['3D wOBAcon'].mean().round(3)
+    merge_df.loc['Total','3D wOBAcon'] = round(df['3D wOBAcon'].mean(),3)
 
     return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
 
