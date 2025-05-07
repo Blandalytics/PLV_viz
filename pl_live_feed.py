@@ -767,10 +767,8 @@ def loc_charts(df):
     sns.despine()
     st.pyplot(fig)
 
-left, middle, right = st.columns(3)
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
-# elif right.button("Generate Player Table"):
 else:
     idx = pd.IndexSlice
     slice_ = idx['Total',:]
@@ -783,7 +781,7 @@ else:
                  ),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
-                         "#",
+                         "#"
                          ),
                      "3D wOBAcon": st.column_config.NumberColumn(
                          "xDamage",
