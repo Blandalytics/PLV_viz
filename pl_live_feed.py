@@ -561,6 +561,23 @@ def scrape_savant_data(player_name, game_id):
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
 
+    merge_df.loc['Total'] = ['']*len(merge_df.columns)
+    merge_df.loc['Total','Type'] = 'Total'
+    merge_df.loc['Total','Num Pitches'] = game_df['Num Pitches'].sum()
+    merge_df.loc['Total','vs_rhh'] = game_df['vs_rhh'].sum() / game_df['Num Pitches'].sum()
+    merge_df.loc['Total','vs_lhh'] = game_df['vs_lhh'].sum() / game_df['Num Pitches'].sum()
+    v_rhh_val = merge_df.loc['Total','vs_rhh']
+    merge_df.loc['Total','vs R'] = f'{v_rhh_val:.1%}'
+    v_lhh_val = merge_df.loc['Total','vs_lhh']
+    merge_df.loc['Total','vs L'] = f'{v_lhh_val:.1%}'
+    strike_val = df['total_strikes'].sum() / game_df['Num Pitches'].sum()
+    merge_df.loc['Total','Strike%'] = f'{strike_val:.1%}'
+    merge_df.loc['Total','CS'] = game_df['CS'].sum()
+    merge_df.loc['Total','Whiffs'] = game_df['Whiffs'].sum()
+    csw_val = df[['CS','Whiffs']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
+    merge_df.loc['Total','CSW'] = f'{csw_val:.1%}'
+    merge_df.loc['Total','3D wOBAcon'] = df['3D wOBAcon'].mean().round(3)
+
     return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
 
 def game_charts(move_df):
