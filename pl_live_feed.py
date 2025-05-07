@@ -780,6 +780,7 @@ else:
                          "#",
                          ),
                      "3D wOBAcon": st.column_config.NumberColumn(
+                         "xDamage",
                          help="""
                          xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
                          League Average is ~.378
