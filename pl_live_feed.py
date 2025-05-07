@@ -197,6 +197,7 @@ def generate_games(games_today):
                     game_info = f'FINAL: **:green[{away_team} {away_runs}]** @ {home_team} {home_runs}'
             else:
                 game_info = f'{top_bot}{inning}: {away_team} {away_runs} @ {home_team} {home_runs}'
+        game_info = f'{game_info:<22}'
         game_dict.update({game_info:[game,game_time,raw_time,inning_sort,code_map]})
     game_df = pd.DataFrame.from_dict(game_dict, orient='index',columns=['Game ID','Time','Sort Time','Sort Inning','Sort Code'])
     return game_df.sort_values(['Sort Code','Sort Time','Game ID','Sort Inning'])['Game ID'].to_dict()
