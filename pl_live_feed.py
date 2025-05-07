@@ -780,9 +780,6 @@ else:
                   .style
                   .format(precision=3)
                   .set_properties(**{'background-color': '#222222'}, subset=slice_)
-                  .background_gradient(axis=None, vmin=.18, vmax=.58, cmap="vlag_r",
-                                  subset=['3D wOBAcon']
-                                 )
                  ),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
