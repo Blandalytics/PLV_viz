@@ -193,13 +193,10 @@ def generate_games(games_today):
             if game_status_code == 'F':
                 if home_runs>away_runs:
                     game_info = f'FINAL: {away_team} {away_runs} @ **:green[{home_team} {home_runs}]**'
-                    game_info = game_info.ljust(34, " ")
                 else:
                     game_info = f'FINAL: **:green[{away_team} {away_runs}]** @ {home_team} {home_runs}'
-                    game_info = game_info.ljust(34, " ")
             else:
                 game_info = f'{top_bot}{inning}: {away_team} {away_runs} @ {home_team} {home_runs}'
-                game_info = game_info.ljust(19, " ")#f'{game_info:<22}'
         game_dict.update({game_info:[game,game_time,raw_time,inning_sort,code_map]})
     game_df = pd.DataFrame.from_dict(game_dict, orient='index',columns=['Game ID','Time','Sort Time','Sort Inning','Sort Code'])
     return game_df.sort_values(['Sort Code','Sort Time','Game ID','Sort Inning'])['Game ID'].to_dict()
@@ -238,7 +235,7 @@ with col1:
             games_today += [x['dates'][0]['games'][game]['gamePk']]
     game_list = generate_games(games_today)
 with col2:
-    game_select = st.pills('Choose a game:',list(game_list.keys()),default=list(game_list.keys())[0])
+    game_select = st.pills('Choose a game:',list(game_list.keys()),default=list(game_list.keys())[0],width='small')
     
     game_id = game_list[game_select]
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
