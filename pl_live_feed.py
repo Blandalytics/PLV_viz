@@ -779,7 +779,7 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
-                  .set_properties(**{'background-color': '#222222'}, subset=slice_)
+                  .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
