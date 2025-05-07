@@ -192,9 +192,9 @@ def generate_games(games_today):
             inning_sort = int(inning)*2 - (0 if top_bot=='Bottom' else 1)
             if game_status_code == 'F':
                 if home_runs>away_runs:
-                    game_info = f'FINAL: {away_team} {away_runs} @ **{home_team} :green[{home_runs}]**'
+                    game_info = f'FINAL: {away_team} {away_runs} @ **:green[{home_team} {home_runs}]**'
                 else:
-                    game_info = f'FINAL: **{away_team} :green[{away_runs}]** @ {home_team} {home_runs}'
+                    game_info = f'FINAL: **:green[{away_team} {away_runs}]** @ {home_team} {home_runs}'
             else:
                 game_info = f'{top_bot}{inning}: {away_team} {away_runs} @ {home_team} {home_runs}'
         game_dict.update({game_info:[game,game_time,raw_time,inning_sort,code_map]})
@@ -215,7 +215,7 @@ st.image(logo, width=200)
 
 st.title('PL Live Pitching Stats')
 st.write('Data (especially pitch types) are subject to change')
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([0.25,0.5,0.25])
 
 with col1:
     today = (datetime.datetime.now(pytz.utc)-timedelta(hours=16)).date()
@@ -753,7 +753,8 @@ def loc_charts(df):
 left, middle, right = st.columns(3)
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
-elif right.button("Generate Player Table"):
+# elif right.button("Generate Player Table"):
+else:
     table_df, chart_df = scrape_savant_data(player_select,game_id)
     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
     st.dataframe(table_df,
