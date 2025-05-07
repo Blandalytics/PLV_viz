@@ -251,6 +251,8 @@ with col2:
     test_list = {v: k for k, v in test_list.items()}
     pitcher_list = {test_list[str(x)]:[str(x),y] for x,y in zip(pitcher_lineup,home_team)}
 
+with col3:
+    player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
     # Game Line
     home=pitcher_list[player_select][1]
     stat_base = x['boxscore']['teams']['home' if home==1 else 'away']['players'][f'ID{pitcher_list[player_select][0]}']['stats']['pitching']
@@ -271,9 +273,6 @@ with col2:
     hold = stat_base['holds']
     home_away = 'vs' if home==1 else '@'
     decision = '(ND)' if (win+loss==0) and (starter==1) else '(W)' if win==1 else '(L)' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else ''
-    
-with col3:
-    player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
 
 st.subheader(f'{date.strftime('%#m/%#d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks.')
 
