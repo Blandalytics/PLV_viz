@@ -241,6 +241,7 @@ with col2:
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
     x = r.json()
     pitcher_lineup = [x['home_pitcher_lineup'][0]]+[x['away_pitcher_lineup'][0]]+([] if len(x['home_pitcher_lineup'])==1 else x['home_pitcher_lineup'][1:])+([] if len(x['away_pitcher_lineup'])==1 else x['away_pitcher_lineup'][1:])
+    home_team = [1]+[0]+([] if len(x['home_pitcher_lineup'])==1 else [1]*(len(x['home_pitcher_lineup'])-1))+([] if len(x['away_pitcher_lineup'])==1 else [0]*(len(x['away_pitcher_lineup'])-1))
     test_list = {}
     for home_away_pitcher in ['home','away']:
         if f'{home_away_pitcher}_pitchers' not in x.keys():
@@ -248,10 +249,33 @@ with col2:
         for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
             test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
     test_list = {v: k for k, v in test_list.items()}
-    pitcher_list = {test_list[str(x)]:str(x) for x in pitcher_lineup}
+    pitcher_list = {test_list[str(x)]:[x,y] for x,y in zip(pitcher_lineup,home_team)}
+
+    # Game Line
+    home=pitcher_list[player_select][1]
+    stat_base = x['boxscore']['teams']['home' if home==1 else 'away']['players'][f'ID{pitcher_list[player_select][0]}']['stats']['pitching']
+    game_summary = stat_base['summary']
+    team = x['scoreboard']['teams']['home' if home==1 else 'away']['abbreviation']
+    opp = x['scoreboard']['teams']['home' if home==0 else 'away']['abbreviation']
+    starter = stat_base['gamesStarted']
+    innings = stat_base['inningsPitched']
+    outs = stat_base['outs']
+    earned_runs = stat_base['earnedRuns']
+    tbf = stat_base['battersFaced']
+    hits = stat_base['hits']
+    strikeouts = stat_base['strikeOuts']
+    walks = stat_base['baseOnBalls']
+    win = stat_base['wins']
+    loss = stat_base['losses']
+    save = stat_base['saves']
+    hold = stat_base['holds']
+    home_away = 'vs' if home==1 else '@'
+    decision = '(ND)' if (win+loss==0) and (starter==1) else '(W)' if win==1 else '(L)' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else ''
     
 with col3:
     player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
+
+st.subheader(f'{date.strftime('%#m/%#d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks.')
 
 @st.cache_data()
 def load_season_avgs():
@@ -385,7 +409,7 @@ def scrape_savant_data(player_name, game_id):
         if f'{home_away_pitcher}_pitchers' not in x.keys():
             continue
         for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
-            if pitcher_id != pitcher_list[player_select]:
+            if pitcher_id != pitcher_list[player_select][0]:
                 continue
             for pitch in range(len(x[f'{home_away_pitcher}_pitchers'][pitcher_id])):
                 game_ids += [game_id]
