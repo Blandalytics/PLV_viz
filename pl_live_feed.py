@@ -240,12 +240,21 @@ with col2:
     game_id = game_list[game_select]
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
     x = r.json()
-    pitcher_list = {}
+    pitcher_lineup = [x['home_pitcher_lineup'][0]]+[x['away_pitcher_lineup'][0]]+([] if len(x['home_pitcher_lineup'])==1 else x['home_pitcher_lineup'][1:])+([] if len(x['away_pitcher_lineup'])==1 else x['away_pitcher_lineup'][1:])
+    test_list = {}
     for home_away_pitcher in ['home','away']:
         if f'{home_away_pitcher}_pitchers' not in x.keys():
             continue
         for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
-            pitcher_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:[pitcher_id,x['scoreboard']['teams']['home' if home_away_pitcher=='away' else 'away']['abbreviation']]})
+            test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
+    test_list = {v: k for k, v in test_list.items()}
+    pitcher_list = {test_list[str(x)]:x for x in pitcher_lineup}
+    # pitcher_list = {}
+    # for home_away_pitcher in ['home','away']:
+    #     if f'{home_away_pitcher}_pitchers' not in x.keys():
+    #         continue
+    #     for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
+    #         pitcher_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:[pitcher_id,x['scoreboard']['teams']['home' if home_away_pitcher=='away' else 'away']['abbreviation']]})
 
 with col3:
     player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
@@ -452,7 +461,6 @@ def scrape_savant_data(player_name, game_id):
     df = pd.DataFrame()
     df['game_pk'] = game_ids
     df['game_date'] = game_date
-    df['Opp'] = pitcher_list[player_select][1]
     df['MLBAMID'] = pitcher_id_list
     df['MLBAMID'] = df['MLBAMID'].astype('int')
     df['balls'] = balls
@@ -498,7 +506,7 @@ def scrape_savant_data(player_name, game_id):
     
     df['3D wOBAcon'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','total_strikes','3D wOBAcon','HAVAA',
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','total_strikes','3D wOBAcon','HAVAA',
                                                                                                                                               # 'plvLoc+'
                                                                                                                                              ]].agg({
         'Num Pitches':'count',
