@@ -272,7 +272,8 @@ with col3:
     save = stat_base['saves']
     hold = stat_base['holds']
     home_away = 'vs' if home==1 else '@'
-    decision = '(ND)' if (win+loss==0) and (starter==1) else '(W)' if win==1 else '(L)' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else ''
+    qs  = ',QS' if (int(innings[0])>=6) and (int(earned_runs)<=3) else ''
+    decision = f'(ND{qs})' if (win+loss==0) and (starter==1) else f'(W{qs})' if win==1 else f'(L{qs})' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else ''
 
 st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks.')
 
