@@ -248,7 +248,7 @@ with col2:
         for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
             test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
     test_list = {v: k for k, v in test_list.items()}
-    pitcher_list = {test_list[str(x)]:x for x in pitcher_lineup}
+    pitcher_list = {test_list[str(x)]:str(x) for x in pitcher_lineup}
     
 with col3:
     player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
