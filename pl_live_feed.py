@@ -780,7 +780,7 @@ else:
                   .style
                   .format(precision=3)
                   .set_properties(**{'background-color': '#222222'}, subset=slice_)
-                  .highlight_null(props="color: transparent;")
+                  .highlight_null(color='transparent')
                  ),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
