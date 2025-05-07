@@ -249,7 +249,7 @@ with col2:
         for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
             test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
     test_list = {v: k for k, v in test_list.items()}
-    pitcher_list = {test_list[str(x)]:[x,y] for x,y in zip(pitcher_lineup,home_team)}
+    pitcher_list = {test_list[str(x)]:[str(x),y] for x,y in zip(pitcher_lineup,home_team)}
 
     # Game Line
     home=pitcher_list[player_select][1]
