@@ -240,6 +240,7 @@ with col2:
     game_id = game_list[game_select]
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
     x = r.json()
+    game_code = x['game_status_code']
     if (len(x['home_pitcher_lineup'])>0) | (len(x['away_pitcher_lineup'])>0):
         pitcher_lineup = [x['home_pitcher_lineup'][0]]+[x['away_pitcher_lineup'][0]]+([] if len(x['home_pitcher_lineup'])==1 else x['home_pitcher_lineup'][1:])+([] if len(x['away_pitcher_lineup'])==1 else x['away_pitcher_lineup'][1:])
         home_team = [1]+[0]+([] if len(x['home_pitcher_lineup'])==1 else [1]*(len(x['home_pitcher_lineup'])-1))+([] if len(x['away_pitcher_lineup'])==1 else [0]*(len(x['away_pitcher_lineup'])-1))
@@ -282,6 +283,7 @@ with col3:
         home_away = 'vs' if home==1 else '@'
         qs  = ', QS' if (int(innings[0])>=6) and (int(earned_runs)<=3) else ''
         decision = f'(ND{qs})' if (win+loss==0) and (starter==1) else f'(W{qs})' if win==1 else f'(L{qs})' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else '(BS)' if blown_save==1 else ''
+        decision = decision if game_code == 'F' else ''
     else:
         away_pitcher = x['scoreboard']['probablePitchers']['away']['fullName']
         home_pitcher = x['scoreboard']['probablePitchers']['home']['fullName']
