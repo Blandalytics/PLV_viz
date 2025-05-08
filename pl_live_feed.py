@@ -240,17 +240,20 @@ with col2:
     game_id = game_list[game_select]
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
     x = r.json()
-    pitcher_lineup = [x['home_pitcher_lineup'][0]]+[x['away_pitcher_lineup'][0]]+([] if len(x['home_pitcher_lineup'])==1 else x['home_pitcher_lineup'][1:])+([] if len(x['away_pitcher_lineup'])==1 else x['away_pitcher_lineup'][1:])
-    home_team = [1]+[0]+([] if len(x['home_pitcher_lineup'])==1 else [1]*(len(x['home_pitcher_lineup'])-1))+([] if len(x['away_pitcher_lineup'])==1 else [0]*(len(x['away_pitcher_lineup'])-1))
-    test_list = {}
-    for home_away_pitcher in ['home','away']:
-        if f'{home_away_pitcher}_pitchers' not in x.keys():
-            continue
-        for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
-            test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
-    test_list = {v: k for k, v in test_list.items()}
-    if len(test_list.keys())>0:
-        pitcher_list = {test_list[str(x)]:[str(x),y] for x,y in zip(pitcher_lineup,home_team)}
+    if (len(x['home_pitcher_lineup'])>0) | (len(x['away_pitcher_lineup'])>0):
+        pitcher_lineup = [x['home_pitcher_lineup'][0]]+[x['away_pitcher_lineup'][0]]+([] if len(x['home_pitcher_lineup'])==1 else x['home_pitcher_lineup'][1:])+([] if len(x['away_pitcher_lineup'])==1 else x['away_pitcher_lineup'][1:])
+        home_team = [1]+[0]+([] if len(x['home_pitcher_lineup'])==1 else [1]*(len(x['home_pitcher_lineup'])-1))+([] if len(x['away_pitcher_lineup'])==1 else [0]*(len(x['away_pitcher_lineup'])-1))
+        test_list = {}
+        for home_away_pitcher in ['home','away']:
+            if f'{home_away_pitcher}_pitchers' not in x.keys():
+                continue
+            for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
+                test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
+        test_list = {v: k for k, v in test_list.items()}
+        if len(test_list.keys())>0:
+            pitcher_list = {test_list[str(x)]:[str(x),y] for x,y in zip(pitcher_lineup,home_team)}
+        else:
+            pitcher_list = {}
     else:
         pitcher_list = {}
 
