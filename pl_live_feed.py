@@ -17,7 +17,6 @@ import xgboost as xgb
 from xgboost import XGBClassifier
 
 from PIL import Image
-st.write()
 # Convenience Functions
 def adjusted_vaa(dataframe):
     ## Physical characteristics of pitch
@@ -289,7 +288,7 @@ with col3:
         home_pitcher = x['scoreboard']['probablePitchers']['home']['fullName']
 
 if len(list(pitcher_list.keys()))>0:
-    st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks.')
+    st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
 
 @st.cache_data()
 def load_season_avgs():
