@@ -257,29 +257,31 @@ with col2:
 with col3:
     player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
     # Game Line
-    home=pitcher_list[player_select][1]
-    stat_base = x['boxscore']['teams']['home' if home==1 else 'away']['players'][f'ID{pitcher_list[player_select][0]}']['stats']['pitching']
-    game_summary = stat_base['summary']
-    team = x['scoreboard']['teams']['home' if home==1 else 'away']['abbreviation']
-    opp = x['scoreboard']['teams']['home' if home==0 else 'away']['abbreviation']
-    starter = stat_base['gamesStarted']
-    innings = stat_base['inningsPitched']
-    outs = stat_base['outs']
-    earned_runs = stat_base['earnedRuns']
-    tbf = stat_base['battersFaced']
-    hits = stat_base['hits']
-    strikeouts = stat_base['strikeOuts']
-    walks = stat_base['baseOnBalls']
-    win = stat_base['wins']
-    loss = stat_base['losses']
-    save = stat_base['saves']
-    hold = stat_base['holds']
-    blown_save = stat_base['blownSaves']
-    home_away = 'vs' if home==1 else '@'
-    qs  = ', QS' if (int(innings[0])>=6) and (int(earned_runs)<=3) else ''
-    decision = f'(ND{qs})' if (win+loss==0) and (starter==1) else f'(W{qs})' if win==1 else f'(L{qs})' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else '(BS)' if blown_save==1 else ''
+    if len(list(pitcher_list.keys()))>0:
+        home=pitcher_list[player_select][1]
+        stat_base = x['boxscore']['teams']['home' if home==1 else 'away']['players'][f'ID{pitcher_list[player_select][0]}']['stats']['pitching']
+        game_summary = stat_base['summary']
+        team = x['scoreboard']['teams']['home' if home==1 else 'away']['abbreviation']
+        opp = x['scoreboard']['teams']['home' if home==0 else 'away']['abbreviation']
+        starter = stat_base['gamesStarted']
+        innings = stat_base['inningsPitched']
+        outs = stat_base['outs']
+        earned_runs = stat_base['earnedRuns']
+        tbf = stat_base['battersFaced']
+        hits = stat_base['hits']
+        strikeouts = stat_base['strikeOuts']
+        walks = stat_base['baseOnBalls']
+        win = stat_base['wins']
+        loss = stat_base['losses']
+        save = stat_base['saves']
+        hold = stat_base['holds']
+        blown_save = stat_base['blownSaves']
+        home_away = 'vs' if home==1 else '@'
+        qs  = ', QS' if (int(innings[0])>=6) and (int(earned_runs)<=3) else ''
+        decision = f'(ND{qs})' if (win+loss==0) and (starter==1) else f'(W{qs})' if win==1 else f'(L{qs})' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else '(BS)' if blown_save==1 else ''
 
-st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks.')
+if len(list(pitcher_list.keys()))>0:
+    st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks.')
 
 @st.cache_data()
 def load_season_avgs():
