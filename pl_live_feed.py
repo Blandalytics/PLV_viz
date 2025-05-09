@@ -218,7 +218,7 @@ col1, col2, col3 = st.columns([0.25,0.5,0.25])
 
 with col1:
     today = (datetime.datetime.now(pytz.utc)-timedelta(hours=16)).date()
-    date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=today+timedelta(days=7))
+    date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=today+timedelta(days=2))
     
     r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
     x = r.json()
