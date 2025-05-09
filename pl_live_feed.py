@@ -602,8 +602,9 @@ def scrape_savant_data(player_name, game_id):
     merge_df['IHB'] = np.where(merge_df['IHB Diff'].isna(),
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
-
+    
     merge_df.loc['Total'] = ['-']*len(merge_df.columns)
+    merge_df.loc['Total','P Hand'] = '-'
     merge_df.loc['Total','Type'] = 'Total'
     merge_df.loc['Total','Num Pitches'] = game_df['Num Pitches'].sum()
     v_rhh_val = game_df['vs_rhh'].sum() / game_df['Num Pitches'].sum()
