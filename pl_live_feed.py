@@ -586,7 +586,6 @@ def scrape_savant_data(player_name, game_id):
     merge_df['vs R'] = [f'{x:.1%}' for x in merge_df['vs_rhh']]
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
-    merge_df['xHits'] = merge_df['xHits'].round(1)
     merge_df['3D wOBAcon'] = merge_df['3D wOBAcon'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
     # merge_df['plvLoc+'] = merge_df['plvLoc+'].round(0).astype('int')
@@ -616,7 +615,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','Whiffs'] = game_df['Whiffs'].sum()
     csw_val = df[['CS','Whiffs']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','CSW'] = f'{csw_val:.1%}'
-    merge_df.loc['Total','xHits'] = round(df['xHits'].sum(),1)
+    merge_df.loc['Total','xHits'] = df['xHits'].sum()
     merge_df.loc['Total','3D wOBAcon'] = round(df['3D wOBAcon'].mean(),3)
 
     return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','xHits','3D wOBAcon']], df
