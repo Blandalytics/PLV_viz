@@ -258,9 +258,9 @@ with col2:
         pitcher_list = {}
 
 with col3:
-    player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
     # Game Line
     if len(list(pitcher_list.keys()))>0:
+        player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
         home=pitcher_list[player_select][1]
         stat_base = x['boxscore']['teams']['home' if home==1 else 'away']['players'][f'ID{pitcher_list[player_select][0]}']['stats']['pitching']
         game_summary = stat_base['summary']
@@ -286,6 +286,7 @@ with col3:
     else:
         away_pitcher = x['scoreboard']['probablePitchers']['away']['fullName']
         home_pitcher = x['scoreboard']['probablePitchers']['home']['fullName']
+        st.write(f'Probable Pitchers: {away_pitcher} @ {home_pitcher}')
 
 if len(list(pitcher_list.keys()))>0:
     st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
@@ -809,7 +810,6 @@ def loc_charts(df):
 
 if len(list(pitcher_list.keys()))==0:
     # st.write('No pitches thrown yet')
-    st.write(f'Probable Pitchers: {away_pitcher} @ {home_pitcher}')
 else:
     idx = pd.IndexSlice
     slice_ = idx['Total',:]
