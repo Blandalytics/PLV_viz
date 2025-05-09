@@ -618,7 +618,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','xHits'] = df['xHits'].sum()
     merge_df.loc['Total','3D wOBAcon'] = round(df['3D wOBAcon'].mean(),3)
 
-    return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','xHits','3D wOBAcon']], df
+    return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
