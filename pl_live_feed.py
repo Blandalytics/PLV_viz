@@ -809,7 +809,7 @@ def loc_charts(df):
     st.pyplot(fig)
 
 if len(list(pitcher_list.keys()))==0:
-    # st.write('No pitches thrown yet')
+    st.write('No pitches thrown yet')
 else:
     idx = pd.IndexSlice
     slice_ = idx['Total',:]
