@@ -17,6 +17,8 @@ import xgboost as xgb
 from xgboost import XGBClassifier
 
 from PIL import Image
+
+st.write()
 # Convenience Functions
 def adjusted_vaa(dataframe):
     ## Physical characteristics of pitch
