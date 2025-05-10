@@ -151,7 +151,7 @@ y_bot = -0.5
 y_lim = 6
 plate_y = -.25
 
-@st.cache_resource()
+@st.cache_resource(ttl=60*3600)
 def load_logo():
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
     img_url = urllib.request.urlopen(logo_loc)
@@ -172,15 +172,18 @@ year = st.radio('Choose a year:', years)
 @st.cache_data(ttl=60*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
     df = pd.DataFrame()
+    df_list = [df]
     for month in range(3,11):
         file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_MiLB_Analysis_Data-{month}.parquet?raw=true'
         load_cols = ['pitchername','pitchtype','pitch_id','game_played','level',
                                                     'p_hand','b_hand','IHB','IVB','called_strike_pred',
                                                     'ball_pred','PLV','velo','pitch_extension',
                                                     'adj_vaa','p_x','p_z']
-        df = pd.concat([df,
-                        pd.read_parquet(file_name)[load_cols]
-                       ]).copy()
+        # df = pd.concat([df,
+        #                 pd.read_parquet(file_name)[load_cols]
+        #                ]).copy()
+        df_list += [pd.read_parquet(file_name)[load_cols]]
+    df = pd.concat(df_list).copy()
     df = (df
           .sort_values('pitch_id')
           .astype({'pitch_id':'str'})
@@ -191,7 +194,7 @@ def load_data(year):
   
     return df
 
-base_df = load_data(year)
+base_df = load_data(year).copy()
 pitch_thresh = 5
 
 # Has at least 1 pitch with at least 50 thrown

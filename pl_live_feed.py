@@ -17,7 +17,6 @@ import xgboost as xgb
 from xgboost import XGBClassifier
 
 from PIL import Image
-
 # Convenience Functions
 def adjusted_vaa(dataframe):
     ## Physical characteristics of pitch
@@ -156,6 +155,50 @@ def loc_model(df,year=2024):
 
     return df['wOBA_effect'].sub(-0.004253050593194383).div(0.05179234832326223).mul(-50).add(100)
 
+def generate_games(games_today):
+    game_dict = {}
+    code_dict = {
+        'F':0,
+        'O':1,
+        'I':1,
+        'P':2,
+        'S':2
+    }
+    for game in games_today:
+        r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game}')
+        x = r.json()
+        game_hour = int(x['scoreboard']['datetime']['dateTime'][11:13])
+        game_hour = game_hour-4 if game_hour >3 else game_hour+20
+        game_minutes = int(x['scoreboard']['datetime']['dateTime'][14:16])
+        raw_time = game_hour*60+game_minutes
+        am_pm = 'AM' if game_hour <12 else 'PM'
+        game_time = f'{game_hour-12}:{game_minutes:>02}{am_pm}' if am_pm=='PM' else f'{game_hour}:{game_minutes:>02}{am_pm}'
+        ppd = 0 if x['scoreboard']['datetime']['originalDate']==x['scoreboard']['datetime']['officialDate'] else 1
+        
+        away_team = x['scoreboard']['teams']['away']['abbreviation']
+        home_team = x['scoreboard']['teams']['home']['abbreviation']
+        game_status_code = x['game_status_code']
+        code_map = code_dict[game_status_code]
+        if game_status_code in ['S','P']:
+            game_info = f'{away_team} @ {home_team}: {game_time}'
+            inning_sort = None
+        else:
+            game_info = f'{away_team} @ {home_team}'
+            home_runs = x['scoreboard']['linescore']['teams']['home']['runs']
+            away_runs = x['scoreboard']['linescore']['teams']['away']['runs']
+            inning = x['scoreboard']['linescore']['currentInning']
+            top_bot = x['scoreboard']['linescore']['inningHalf'][0]
+            inning_sort = int(inning)*2 - (0 if top_bot=='Bottom' else 1)
+            if game_status_code == 'F':
+                if home_runs>away_runs:
+                    game_info = f'FINAL: {away_team} {away_runs} @ **:green[{home_team} {home_runs}]**'
+                else:
+                    game_info = f'FINAL: **:green[{away_team} {away_runs}]** @ {home_team} {home_runs}'
+            else:
+                game_info = f'{top_bot}{inning}: {away_team} {away_runs} @ {home_team} {home_runs}'
+        game_dict.update({game_info:[game,game_time,raw_time,inning_sort,code_map]})
+    game_df = pd.DataFrame.from_dict(game_dict, orient='index',columns=['Game ID','Time','Sort Time','Sort Inning','Sort Code'])
+    return game_df.sort_values(['Sort Code','Sort Time','Game ID','Sort Inning'])['Game ID'].to_dict()
 
 st.set_page_config(page_title='PL Live Pitching Stats', page_icon='⚾',layout="wide")
 
@@ -171,37 +214,84 @@ st.image(logo, width=200)
 
 st.title('PL Live Pitching Stats')
 st.write('Data (especially pitch types) are subject to change')
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([0.25,0.5,0.25])
 
 with col1:
     today = (datetime.datetime.now(pytz.utc)-timedelta(hours=16)).date()
-    date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=today)
+    date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=today+timedelta(days=2))
     
     r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
     x = r.json()
     if x['totalGames']==0:
         st.write(f'No games on {date}')
-    game_list = {}
+    # game_list = {}
+    # for game in range(len(x['dates'][0]['games'])):
+    #     if x['dates'][0]['games'][game]['gamedayType'] in ['E','P']:
+    #         game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
+    games_today = []
     for game in range(len(x['dates'][0]['games'])):
         if x['dates'][0]['games'][game]['gamedayType'] in ['E','P']:
-            game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
-
+            games_today += [x['dates'][0]['games'][game]['gamePk']]
+    game_list = generate_games(games_today)
 with col2:
-    game_select = st.selectbox('Choose a game:',list(game_list.keys()))
+    game_select = st.pills('Choose a game:',list(game_list.keys()),default=list(game_list.keys())[0])
     
     game_id = game_list[game_select]
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
     x = r.json()
-    pitcher_list = {}
-    for home_away_pitcher in ['home','away']:
-        if f'{home_away_pitcher}_pitchers' not in x.keys():
-            continue
-        for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
-            pitcher_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:[pitcher_id,x['scoreboard']['teams']['home' if home_away_pitcher=='away' else 'away']['abbreviation']]})
+    game_code = x['game_status_code']
+    if (len(x['home_pitcher_lineup'])>0) | (len(x['away_pitcher_lineup'])>0):
+        pitcher_lineup = [x['home_pitcher_lineup'][0]]+[x['away_pitcher_lineup'][0]]+([] if len(x['home_pitcher_lineup'])==1 else x['home_pitcher_lineup'][1:])+([] if len(x['away_pitcher_lineup'])==1 else x['away_pitcher_lineup'][1:])
+        home_team = [1]+[0]+([] if len(x['home_pitcher_lineup'])==1 else [1]*(len(x['home_pitcher_lineup'])-1))+([] if len(x['away_pitcher_lineup'])==1 else [0]*(len(x['away_pitcher_lineup'])-1))
+        test_list = {}
+        for home_away_pitcher in ['home','away']:
+            if f'{home_away_pitcher}_pitchers' not in x.keys():
+                continue
+            for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
+                test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
+        test_list = {v: k for k, v in test_list.items()}
+        if len(test_list.keys())>0:
+            pitcher_list = {test_list[str(x)]:[str(x),y] for x,y in zip(pitcher_lineup,home_team)}
+        else:
+            pitcher_list = {}
+    else:
+        pitcher_list = {}
 
 with col3:
-    player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
+    # Game Line
+    if len(list(pitcher_list.keys()))>0:
+        player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
+        home=pitcher_list[player_select][1]
+        stat_base = x['boxscore']['teams']['home' if home==1 else 'away']['players'][f'ID{pitcher_list[player_select][0]}']['stats']['pitching']
+        game_summary = stat_base['summary']
+        team = x['scoreboard']['teams']['home' if home==1 else 'away']['abbreviation']
+        opp = x['scoreboard']['teams']['home' if home==0 else 'away']['abbreviation']
+        starter = stat_base['gamesStarted']
+        innings = stat_base['inningsPitched']
+        outs = stat_base['outs']
+        earned_runs = stat_base['earnedRuns']
+        tbf = stat_base['battersFaced']
+        hits = stat_base['hits']
+        strikeouts = stat_base['strikeOuts']
+        walks = stat_base['baseOnBalls']
+        win = stat_base['wins']
+        loss = stat_base['losses']
+        save = stat_base['saves']
+        hold = stat_base['holds']
+        blown_save = stat_base['blownSaves']
+        home_away = 'vs' if home==1 else '@'
+        supplemental_decision  = ', QS' if (int(innings[0])>=6) and (int(earned_runs)<=3) else ', BS' if blown_save==1 else ''
+        decision = f'(ND{supplemental_decision})' if (win+loss==0) and (starter==1) else f'(W{supplemental_decision})' if win==1 else f'(L{supplemental_decision})' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else ''
+        decision = decision if game_code == 'F' else ''
+    else:
+        away_pitcher = x['scoreboard']['probablePitchers']['away']['fullName']
+        home_pitcher = x['scoreboard']['probablePitchers']['home']['fullName']
+        st.write(f'Probable Pitchers: {away_pitcher} @ {home_pitcher}')
 
+if len(list(pitcher_list.keys()))>0:
+    st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
+
+@st.cache_data()
 def load_season_avgs():
     return pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true')
 
@@ -215,7 +305,7 @@ x_ft = 2.5
 y_bot = -0.5
 y_lim = 6
 plate_y = -.25
-alpha_val = 0.5
+alpha_val = 1
 
 pitchtype_map = {
     'FF':'FF',
@@ -403,7 +493,6 @@ def scrape_savant_data(player_name, game_id):
     df = pd.DataFrame()
     df['game_pk'] = game_ids
     df['game_date'] = game_date
-    df['Opp'] = pitcher_list[player_select][1]
     df['MLBAMID'] = pitcher_id_list
     df['MLBAMID'] = df['MLBAMID'].astype('int')
     df['balls'] = balls
@@ -447,9 +536,10 @@ def scrape_savant_data(player_name, game_id):
                                df['spray_deg_base']-45)
     df[['VAA','HAVAA']] = adjusted_vaa(df)
     
+    df['xHits'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,1,1,1,1]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
     df['3D wOBAcon'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','Opp','MLBAMID','Pitcher','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','total_strikes','3D wOBAcon','HAVAA',
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','total_strikes','xHits','3D wOBAcon','HAVAA',
                                                                                                                                               # 'plvLoc+'
                                                                                                                                              ]].agg({
         'Num Pitches':'count',
@@ -461,6 +551,7 @@ def scrape_savant_data(player_name, game_id):
         'CS':'sum',
         'Whiffs':'sum',
         'total_strikes':'sum',
+        'xHits':'sum',
         '3D wOBAcon':'mean',
         'HAVAA':'mean',
         # 'plvLoc+':'mean'
@@ -511,23 +602,40 @@ def scrape_savant_data(player_name, game_id):
     merge_df['IHB'] = np.where(merge_df['IHB Diff'].isna(),
                                  [f'{x:.1f}"' for x in merge_df['IHB']],
                                  [f'{x:.1f}" ({y:+.1f}")' for x,y in zip(merge_df['IHB'],merge_df['IHB Diff'].fillna(0))])
+    
+    merge_df.loc['Total'] = ['-']*len(merge_df.columns)
+    merge_df.loc['Total','P Hand'] = '-'
+    merge_df.loc['Total','Type'] = 'Total'
+    merge_df.loc['Total','Num Pitches'] = game_df['Num Pitches'].sum()
+    v_rhh_val = game_df['vs_rhh'].sum() / game_df['Num Pitches'].sum()
+    merge_df.loc['Total','vs R'] = f'{v_rhh_val:.1%}'
+    v_lhh_val = 1-v_rhh_val
+    merge_df.loc['Total','vs L'] = f'{v_lhh_val:.1%}'
+    strike_val = df['total_strikes'].sum() / game_df['Num Pitches'].sum()
+    merge_df.loc['Total','Strike%'] = f'{strike_val:.1%}'
+    merge_df.loc['Total','CS'] = game_df['CS'].sum()
+    merge_df.loc['Total','Whiffs'] = game_df['Whiffs'].sum()
+    csw_val = df[['CS','Whiffs']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
+    merge_df.loc['Total','CSW'] = f'{csw_val:.1%}'
+    merge_df.loc['Total','xHits'] = df['xHits'].sum()
+    merge_df.loc['Total','3D wOBAcon'] = round(df['3D wOBAcon'].mean(),3)
 
-    return merge_df[['Date','Opp','Pitcher','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
+    return merge_df[['P Hand','Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
     grid = plt.GridSpec(1, 3, width_ratios=[1,2,1],wspace=0.15)
     ax1 = plt.subplot(grid[1])
-    circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    circle1 = plt.Circle((0, 0), 6, color=pl_white,fill=False,alpha=alpha_val/2,linestyle='--')
     ax1.add_patch(circle1)
-    circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=0.5)
+    circle2 = plt.Circle((0, 0), 12, color=pl_white,fill=False,alpha=alpha_val)
     ax1.add_patch(circle2)
-    circle3 = plt.Circle((0, 0), 18, color=pl_white,fill=False,alpha=0.2,linestyle='--')
+    circle3 = plt.Circle((0, 0), 18, color=pl_white,fill=False,alpha=alpha_val/2,linestyle='--')
     ax1.add_patch(circle3)
-    circle4 = plt.Circle((0, 0), 24, color=pl_white,fill=False,alpha=0.5)
+    circle4 = plt.Circle((0, 0), 24, color=pl_white,fill=False,alpha=alpha_val)
     ax1.add_patch(circle4)
-    ax1.axvline(0,ymin=4/58,ymax=54/58,color=pl_white,alpha=0.5,zorder=1)
-    ax1.axhline(0,xmin=4/58,xmax=54/58,color=pl_white,alpha=0.5,zorder=1)
+    ax1.axvline(0,ymin=4/58,ymax=54/58,color=pl_white,alpha=alpha_val,zorder=1)
+    ax1.axhline(0,xmin=4/58,xmax=54/58,color=pl_white,alpha=alpha_val,zorder=1)
     
     for dist in [12,24]:
         label_dist = dist-0.25
@@ -537,14 +645,14 @@ def game_charts(move_df):
         ax1.text(0.25,-label_dist,f'{dist}"',ha='left',va='bottom',fontsize=6,color=pl_white,alpha=0.5,zorder=1)
     
     if move_df['P Hand'].value_counts().index[0]=='R':
-        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
+        ax1.text(-28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
     else:
-        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+        ax1.text(28.5,0,'Glove\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
+        ax1.text(-28.5,0,'Arm\nSide',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
     
-    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
-    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
+    ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
+    ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=alpha_val,zorder=1)
     
     sns.scatterplot(move_df.assign(IHB = lambda x: np.where(x['P Hand']=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
                     x='IHB',
@@ -700,18 +808,25 @@ def loc_charts(df):
     fig.patch.set_alpha(0)
     sns.despine()
     st.pyplot(fig)
-    
+
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
-elif st.button("Generate Player Table"):
+else:
+    idx = pd.IndexSlice
+    slice_ = idx['Total',:]
     table_df, chart_df = scrape_savant_data(player_select,game_id)
     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
-    st.dataframe(table_df,
+    st.dataframe((table_df
+                  .style
+                  .format(precision=3)
+                  .set_properties(**{'background-color': '#20232c'}, subset=slice_)
+                 ),
                  column_config={
                      "Num Pitches": st.column_config.NumberColumn(
-                         "#",
+                         "#"
                          ),
                      "3D wOBAcon": st.column_config.NumberColumn(
+                         "xDamage",
                          help="""
                          xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
                          League Average is ~.378
@@ -731,7 +846,7 @@ elif st.button("Generate Player Table"):
                          help="% of pitches thrown vs Left-Handed Hitters",
                          ),
                      },
-                 # use_container_width=True,
+                 use_container_width=False,
                  hide_index=True)
 
     game_charts(chart_df)
