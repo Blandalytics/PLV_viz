@@ -218,7 +218,13 @@ col1, col2, col3 = st.columns([0.25,0.5,0.25])
 
 with col1:
     today = (datetime.datetime.now(pytz.utc)-timedelta(hours=16)).date()
-    date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=today+timedelta(days=2))
+    input_date = st.date_input("Select a game date:", today, 
+                         min_value=datetime.date(2024, 2, 19), max_value=today+timedelta(days=2))
+
+    if 'date' not in st.session_state:
+        st.session_state['date'] = input_date
+
+    date = st.session_state['date']
     
     r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
     x = r.json()
@@ -234,7 +240,13 @@ with col1:
             games_today += [x['dates'][0]['games'][game]['gamePk']]
     game_list = generate_games(games_today)
 with col2:
-    game_select = st.pills('Choose a game:',list(game_list.keys()),default=list(game_list.keys())[0])
+    input_game = st.pills('Choose a game:',list(game_list.keys()),default=list(game_list.keys())[0],
+                           key='game')
+    
+    if 'game' not in st.session_state:
+        st.session_state['game'] = input_game
+
+    game_select = st.session_state['game']
     
     game_id = game_list[game_select]
     r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game_id}')
@@ -260,7 +272,12 @@ with col2:
 with col3:
     # Game Line
     if len(list(pitcher_list.keys()))>0:
-        player_select = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()))
+        input_player = st.selectbox('Choose a pitcher:',list(pitcher_list.keys()),
+                                     key='pitcher')
+        if 'pitcher' not in st.session_state:
+            st.session_state['pitcher'] = input_player
+    
+        player_select = st.session_state['game']
         home=pitcher_list[player_select][1]
         stat_base = x['boxscore']['teams']['home' if home==1 else 'away']['players'][f'ID{pitcher_list[player_select][0]}']['stats']['pitching']
         game_summary = stat_base['summary']
