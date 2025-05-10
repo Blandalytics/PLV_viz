@@ -213,7 +213,7 @@ logo = load_logo()
 st.image(logo, width=200)
 
 st.title('PL Live Pitching Stats')
-st.write('Data (especially pitch types) are subject to change')
+st.write('Type `R` on your keyboard to reload the page with your selection. Data (especially pitch types) are subject to change.')
 col1, col2, col3 = st.columns([0.25,0.5,0.25])
 
 with col1:
@@ -305,7 +305,7 @@ with col3:
         home_pitcher = x['scoreboard']['probablePitchers']['home']['fullName']
         st.write(f'Probable Pitchers: {away_pitcher} @ {home_pitcher}')
 
-st.write(st.session_state)
+# st.write(st.session_state)
 
 if len(list(pitcher_list.keys()))>0:
     st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
