@@ -277,7 +277,7 @@ with col3:
         if 'pitcher' not in st.session_state:
             st.session_state['pitcher'] = input_player
     
-        player_select = st.session_state['game']
+        player_select = st.session_state['pitcher']
         home=pitcher_list[player_select][1]
         stat_base = x['boxscore']['teams']['home' if home==1 else 'away']['players'][f'ID{pitcher_list[player_select][0]}']['stats']['pitching']
         game_summary = stat_base['summary']
