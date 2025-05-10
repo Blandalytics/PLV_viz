@@ -305,6 +305,8 @@ with col3:
         home_pitcher = x['scoreboard']['probablePitchers']['home']['fullName']
         st.write(f'Probable Pitchers: {away_pitcher} @ {home_pitcher}')
 
+st.write(st.session_state)
+
 if len(list(pitcher_list.keys()))>0:
     st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
 
