@@ -224,7 +224,7 @@ with col1:
     if 'date' not in st.session_state:
         st.session_state['date'] = input_date
 
-    date = st.session_state['date']
+    date = input_date#st.session_state['date']
     
     r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
     x = r.json()
