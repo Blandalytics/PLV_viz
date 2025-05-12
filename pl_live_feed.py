@@ -335,8 +335,6 @@ if len(list(pitcher_list.keys()))>0:
             .reset_index()
             )
         season_avgs['Usage'] = season_avgs['game_pk'].div(season_avgs['game_pk'].groupby(season_avgs['MLBAMID']).transform('sum')).mul(100)
-        st.write(len(comp_data))
-        st.write(len(comp_data.loc[comp_data['game_date']!=datetime.datetime(date.year, date.month, date.day)]))
     else:
         season_avgs = comp_data
         
