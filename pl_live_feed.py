@@ -268,7 +268,18 @@ with col2:
             pitcher_list = {}
     else:
         pitcher_list = {}
-
+@st.cache_data()
+def load_season_avgs(timeframe):
+    if timeframe=='Rest of Season':
+        df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_to_date.parquet?raw=true')
+    else:
+        df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true').rename(columns={
+            'pitcher':'MLBAMID',
+            'release_speed':'Velo',
+            'pfx_x':'IHB'
+            })
+    return df
+    
 with col3:
     # Game Line
     if len(list(pitcher_list.keys()))>0:
@@ -301,26 +312,11 @@ with col3:
         decision = f'(ND{supplemental_decision})' if (win+loss==0) and (starter==1) else f'(W{supplemental_decision})' if win==1 else f'(L{supplemental_decision})' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else ''
         decision = decision if game_code == 'F' else ''
         timeframe = st.radio('Select a timeframe for comparison:',['Rest of Season','2024'],horizontal=True)
+        comp_data = load_season_avgs(timeframe)
     else:
         away_pitcher = x['scoreboard']['probablePitchers']['away']['fullName']
         home_pitcher = x['scoreboard']['probablePitchers']['home']['fullName']
         st.write(f'Probable Pitchers: {away_pitcher} @ {home_pitcher}')
-
-# st.write(st.session_state)
-
-
-@st.cache_data()
-def load_season_avgs(timeframe):
-    if timeframe=='Rest of Season':
-        df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_to_date.parquet?raw=true')
-    else:
-        df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true').rename(columns={
-            'pitcher':'MLBAMID',
-            'release_speed':'Velo',
-            'pfx_x':'IHB'
-            })
-    return df
-comp_data = load_season_avgs(timeframe)
 
 if len(list(pitcher_list.keys()))>0:
     if timeframe=='Rest of Season':
