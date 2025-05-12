@@ -239,6 +239,7 @@ with col1:
         if x['dates'][0]['games'][game]['gamedayType'] in ['E','P']:
             games_today += [x['dates'][0]['games'][game]['gamePk']]
     game_list = generate_games(games_today)
+    timeframe = st.radio('Select a timeframe comparison:',['Rest of Season','2024'],horizontal=True)
 with col2:
     input_game = st.pills('Choose a game (all times EST):',list(game_list.keys()),default=list(game_list.keys())[0],
                            key='game')
@@ -311,10 +312,32 @@ if len(list(pitcher_list.keys()))>0:
     st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
 
 @st.cache_data()
-def load_season_avgs():
-    return pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true')
+def load_season_avgs(timeframe):
+    if timeframe=='Rest of Season':
+        to_date_df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_to_date.parquet?raw=true')
+        to_date_df['game_date'] = pd.to_datetime(to_date_df['game_date'])
+        df = (
+            to_date_df.loc[to_date_df['game_date']!=date]
+            .groupby(['MLBAMID','Pitcher','pitch_type'])
+            [['game_pk','Velo','IVB','IHB']]
+            .agg({
+                'game_pk':'count',
+                'Velo':'mean',
+                'IVB':'mean',
+                'IHB':'mean'
+                })
+            .reset_index()
+        )
+        df['Usage'] = df['game_pk'].div(df['game_pk'].groupby(df['MLBAMID']).transform('sum')).mul(100)
+    else:
+        df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true').rename(columns={
+            'pitcher':'MLBAMID',
+            'release_speed':'Velo',
+            'pfx_x':'IHB'
+            })
+    return df
+season_avgs = load_season_avgs(timeframe)
 
-season_avgs = load_season_avgs()
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
 
@@ -580,19 +603,16 @@ def scrape_savant_data(player_name, game_id):
 
     merge_df = (
         pd.merge(game_df.loc[game_df['Pitcher']==player_name].assign(Usage = lambda x: x['Num Pitches'].div(x['Num Pitches'].sum()).mul(100)).copy(),
-                 season_avgs.rename(columns={
-                     'release_speed':'Velo','pfx_x':'IHB'
-                     }),
+                 season_avgs,
                  how='left',
-                 left_on=['MLBAMID','pitch_type'],
-                 right_on=['pitcher','pitch_type'],
-                 suffixes=['','_2024'])
+                 on=['MLBAMID','pitch_type'],
+                 suffixes=['','_comp'])
         .assign(vs_rhh = lambda x: x['vs_rhh'].div(x['vs_rhh'].sum()).fillna(0),
                 vs_lhh = lambda x: x['vs_lhh'].div(x['vs_lhh'].sum()).fillna(0),
-                usage_diff = lambda x: x['Usage'].sub(x['Usage_2024']),
-                velo_diff = lambda x: x['Velo'].sub(x['Velo_2024']),
-                ivb_diff = lambda x: x['IVB'].sub(x['IVB_2024']),
-                ihb_diff = lambda x: x['IHB'].sub(x['IHB_2024']))
+                usage_diff = lambda x: x['Usage'].sub(x['Usage_comp']),
+                velo_diff = lambda x: x['Velo'].sub(x['Velo_comp']),
+                ivb_diff = lambda x: x['IVB'].sub(x['IVB_comp']),
+                ihb_diff = lambda x: x['IHB'].sub(x['IHB_comp']))
         .rename(columns={'game_date':'Date',
                          'pitch_type':'Type',
                          'usage_diff':'Usage Diff',
