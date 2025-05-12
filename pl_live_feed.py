@@ -239,7 +239,6 @@ with col1:
         if x['dates'][0]['games'][game]['gamedayType'] in ['E','P']:
             games_today += [x['dates'][0]['games'][game]['gamePk']]
     game_list = generate_games(games_today)
-    timeframe = st.radio('Select a timeframe comparison:',['Rest of Season','2024'],horizontal=True)
 with col2:
     input_game = st.pills('Choose a game (all times EST):',list(game_list.keys()),default=list(game_list.keys())[0],
                            key='game')
@@ -301,6 +300,7 @@ with col3:
         supplemental_decision  = ', QS' if (int(innings[0])>=6) and (int(earned_runs)<=3) else ', BS' if blown_save==1 else ''
         decision = f'(ND{supplemental_decision})' if (win+loss==0) and (starter==1) else f'(W{supplemental_decision})' if win==1 else f'(L{supplemental_decision})' if loss==1 else '(SV)' if save==1 else '(HD)' if hold==1 else ''
         decision = decision if game_code == 'F' else ''
+        timeframe = st.radio('Select a timeframe comparison:',['Rest of Season','2024'],horizontal=True)
     else:
         away_pitcher = x['scoreboard']['probablePitchers']['away']['fullName']
         home_pitcher = x['scoreboard']['probablePitchers']['home']['fullName']
