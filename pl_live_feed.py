@@ -268,6 +268,7 @@ with col2:
             pitcher_list = {}
     else:
         pitcher_list = {}
+        
 @st.cache_data()
 def load_season_avgs(timeframe):
     if timeframe=='Rest of Season':
@@ -322,7 +323,7 @@ if len(list(pitcher_list.keys()))>0:
     if timeframe=='Rest of Season':
         comp_data['game_date'] = pd.to_datetime(comp_data['game_date'])
         season_avgs = (
-            comp_data.loc[pd.to_datetime(comp_data['game_date'])!=datetime.datetime(date.year, date.month, date.day)]
+            comp_data.loc[comp_data['game_date']!=datetime.datetime(date.year, date.month, date.day)]
             .groupby(['MLBAMID','Pitcher','pitch_type'])
             [['game_pk','Velo','IVB','IHB']]
             .agg({
@@ -335,7 +336,7 @@ if len(list(pitcher_list.keys()))>0:
             )
         season_avgs['Usage'] = season_avgs['game_pk'].div(season_avgs['game_pk'].groupby(season_avgs['MLBAMID']).transform('sum')).mul(100)
         st.write(len(comp_data))
-        st.write(len(comp_data.loc[comp_data['game_date']!=date]))
+        st.write(len(comp_data.loc[comp_data['game_date']!=datetime.datetime(date.year, date.month, date.day)]))
     else:
         season_avgs = comp_data
         
