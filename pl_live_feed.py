@@ -314,21 +314,7 @@ if len(list(pitcher_list.keys()))>0:
 @st.cache_data()
 def load_season_avgs(timeframe):
     if timeframe=='Rest of Season':
-        to_date_df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_to_date.parquet?raw=true')
-        to_date_df['game_date'] = pd.to_datetime(to_date_df['game_date'])
-        df = (
-            to_date_df.loc[to_date_df['game_date']!=date]
-            .groupby(['MLBAMID','Pitcher','pitch_type'])
-            [['game_pk','Velo','IVB','IHB']]
-            .agg({
-                'game_pk':'count',
-                'Velo':'mean',
-                'IVB':'mean',
-                'IHB':'mean'
-                })
-            .reset_index()
-        )
-        df['Usage'] = df['game_pk'].div(df['game_pk'].groupby(df['MLBAMID']).transform('sum')).mul(100)
+        df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_to_date.parquet?raw=true')
     else:
         df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_avgs_2024.parquet?raw=true').rename(columns={
             'pitcher':'MLBAMID',
@@ -336,7 +322,27 @@ def load_season_avgs(timeframe):
             'pfx_x':'IHB'
             })
     return df
-season_avgs = load_season_avgs(timeframe)
+comp_data = load_season_avgs(timeframe)
+
+if timeframe=='Rest of Season':
+    comp_data['game_date'] = pd.to_datetime(comp_data['game_date'])
+    season_avgs = (
+        comp_data.loc[comp_data['game_date']!=date]
+        .groupby(['MLBAMID','Pitcher','pitch_type'])
+        [['game_pk','Velo','IVB','IHB']]
+        .agg({
+            'game_pk':'count',
+            'Velo':'mean',
+            'IVB':'mean',
+            'IHB':'mean'
+            })
+        .reset_index()
+        )
+    season_avgs['Usage'] = season_avgs['game_pk'].div(season_avgs['game_pk'].groupby(season_avgs['MLBAMID']).transform('sum')).mul(100)
+    st.write(len(comp_data))
+    st.write(len(comp_data.loc[comp_data['game_date']!=date]))
+else:
+    season_avgs = comp_data
 
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
