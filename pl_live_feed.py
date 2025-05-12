@@ -240,7 +240,7 @@ with col1:
             games_today += [x['dates'][0]['games'][game]['gamePk']]
     game_list = generate_games(games_today)
 with col2:
-    input_game = st.pills('Choose a game:',list(game_list.keys()),default=list(game_list.keys())[0],
+    input_game = st.pills('Choose a game (all times EST):',list(game_list.keys()),default=list(game_list.keys())[0],
                            key='game')
     
     if 'game' not in st.session_state:
