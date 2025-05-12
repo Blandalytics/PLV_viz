@@ -308,8 +308,6 @@ with col3:
 
 # st.write(st.session_state)
 
-if len(list(pitcher_list.keys()))>0:
-    st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
 
 @st.cache_data()
 def load_season_avgs(timeframe):
@@ -324,25 +322,29 @@ def load_season_avgs(timeframe):
     return df
 comp_data = load_season_avgs(timeframe)
 
-if timeframe=='Rest of Season':
-    comp_data['game_date'] = pd.to_datetime(comp_data['game_date'])
-    season_avgs = (
-        comp_data.loc[pd.to_datetime(comp_data['game_date'])!=datetime.datetime(date.year, date.month, date.day)]
-        .groupby(['MLBAMID','Pitcher','pitch_type'])
-        [['game_pk','Velo','IVB','IHB']]
-        .agg({
-            'game_pk':'count',
-            'Velo':'mean',
-            'IVB':'mean',
-            'IHB':'mean'
-            })
-        .reset_index()
-        )
-    season_avgs['Usage'] = season_avgs['game_pk'].div(season_avgs['game_pk'].groupby(season_avgs['MLBAMID']).transform('sum')).mul(100)
-    st.write(len(comp_data))
-    st.write(len(comp_data.loc[comp_data['game_date']!=date]))
-else:
-    season_avgs = comp_data
+if len(list(pitcher_list.keys()))>0:
+    if timeframe=='Rest of Season':
+        comp_data['game_date'] = pd.to_datetime(comp_data['game_date'])
+        season_avgs = (
+            comp_data.loc[pd.to_datetime(comp_data['game_date'])!=datetime.datetime(date.year, date.month, date.day)]
+            .groupby(['MLBAMID','Pitcher','pitch_type'])
+            [['game_pk','Velo','IVB','IHB']]
+            .agg({
+                'game_pk':'count',
+                'Velo':'mean',
+                'IVB':'mean',
+                'IHB':'mean'
+                })
+            .reset_index()
+            )
+        season_avgs['Usage'] = season_avgs['game_pk'].div(season_avgs['game_pk'].groupby(season_avgs['MLBAMID']).transform('sum')).mul(100)
+        st.write(len(comp_data))
+        st.write(len(comp_data.loc[comp_data['game_date']!=date]))
+    else:
+        season_avgs = comp_data
+        
+    st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
+    
 
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
