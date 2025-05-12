@@ -327,7 +327,7 @@ comp_data = load_season_avgs(timeframe)
 if timeframe=='Rest of Season':
     comp_data['game_date'] = pd.to_datetime(comp_data['game_date'])
     season_avgs = (
-        comp_data.loc[comp_data['game_date']!=date]
+        comp_data.loc[pd.to_datetime(comp_data['game_date'])!=datetime.datetime(date.year, date.month, date.day)]
         .groupby(['MLBAMID','Pitcher','pitch_type'])
         [['game_pk','Velo','IVB','IHB']]
         .agg({
