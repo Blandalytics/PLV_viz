@@ -154,9 +154,9 @@ with col2:
                 continue
             for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
                 test_list.update({x[f'{home_away_pitcher}_pitchers'][pitcher_id][0]['pitcher_name']:pitcher_id})
-        test_list = {v: k for k, v in test_list.items()}
+        test_list = {v: k for k, v in test_list.items() if str(v) in pitcher_lineup}
         if len(test_list.keys())>0:
-            pitcher_list = {test_list[str(x)]:[str(x),y] for x,y in zip(pitcher_lineup,home_team) if x in pitcher_lineup}
+            pitcher_list = {test_list[str(x)]:[str(x),y] for x,y in zip(pitcher_lineup,home_team)}
         else:
             pitcher_list = {}
     else:
