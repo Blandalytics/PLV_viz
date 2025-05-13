@@ -52,7 +52,7 @@ def generate_games(games_today):
         'O':1,
         'I':1,
         'P':2,
-        'S':2
+        'S':3
     }
     for game in games_today:
         r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game}')
@@ -69,8 +69,11 @@ def generate_games(games_today):
         home_team = x['scoreboard']['teams']['home']['abbreviation']
         game_status_code = x['game_status_code']
         code_map = code_dict[game_status_code]
-        if game_status_code in ['S','P']:
+        if game_status_code =='P':
             game_info = f'{away_team} @ {home_team}: {game_time}'
+            inning_sort = None
+        elif game_status_code =='S':
+            game_info = f'PPD: {away_team} @ {home_team}'
             inning_sort = None
         else:
             game_info = f'{away_team} @ {home_team}'
