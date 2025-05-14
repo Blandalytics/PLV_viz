@@ -62,7 +62,7 @@ def generate_games(games_today):
         game_minutes = int(x['scoreboard']['datetime']['dateTime'][14:16])
         raw_time = game_hour*60+game_minutes
         am_pm = 'AM' if game_hour <12 else 'PM'
-        game_time = f'{game_hour-12}:{game_minutes:>02}{am_pm}' if am_pm=='PM' else f'{game_hour}:{game_minutes:>02}{am_pm}'
+        game_time = f'{game_hour-12}:{game_minutes:>02}{am_pm}' if (am_pm=='PM') & (game_hour!=12) else f'{game_hour}:{game_minutes:>02}{am_pm}'
         ppd = 0 if x['scoreboard']['datetime']['originalDate']==x['scoreboard']['datetime']['officialDate'] else 1
         
         away_team = x['scoreboard']['teams']['away']['abbreviation']
