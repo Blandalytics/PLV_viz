@@ -51,6 +51,7 @@ def generate_games(games_today):
         'F':0,
         'O':1,
         'I':1,
+        'N':1,
         'P':2,
         'S':2
     }
