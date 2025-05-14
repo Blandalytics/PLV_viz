@@ -52,7 +52,7 @@ def generate_games(games_today):
         'O':1,
         'I':1,
         'P':2,
-        'S':3
+        'S':2
     }
     for game in games_today:
         r = requests.get(f'https://baseballsavant.mlb.com/gf?game_pk={game}')
