@@ -39,5 +39,5 @@ st.dataframe(
         'ER_mull':'mER', 
         'ERA_mull':'mERA'})
     .reset_index(),
-    index=False
+    hide_index=True
 )
