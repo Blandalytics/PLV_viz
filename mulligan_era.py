@@ -41,9 +41,9 @@ def load_data(last_starts,worst_drop):
                 'IP_mull':'mIP',
                 'ER_mull':'mER', 
                 'ERA_mull':'mERA'})
-            .reset_index(),
-            hide_index=True
+            .reset_index()
         )
 
 mulligan_df = load_data(last_starts,worst_drop)
-st.dataframe(mulligan_df)
+st.dataframe(mulligan_df,
+             hide_index=True)
