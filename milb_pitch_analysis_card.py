@@ -707,7 +707,7 @@ def movement_chart(player):
         pitch_velos[x] = f' ({pitch_velo:.1f})'
     ax1.legend([handles[idx] for idx in pitchtype_order],
               [pitch_names[labels[idx]]+pitch_velos[labels[idx]] for idx in pitchtype_order],
-              title='Pitchtype (velo)',
+              title='Pitchtype (mph)',
                framealpha=0.9,
                # edgecolor=pl_background,
               loc='upper right' if hand =='L' else 'upper left',
