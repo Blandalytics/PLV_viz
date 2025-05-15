@@ -38,5 +38,6 @@ st.dataframe(
         'IP_mull':'mIP',
         'ER_mull':'mER', 
         'ERA_mull':'mERA'})
-    .reset_index()
+    .reset_index(),
+    index=False
 )
