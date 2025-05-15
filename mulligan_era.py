@@ -4,7 +4,7 @@ import pandas as pd
 st.title('Mulligan ERA')
 st.write(
     "Using starts from the 2024 and 2025 (through 5/13) seasons, choose a timeframe of most recent starts to analyze, \
-    and the number of each pitcher's worst ERA starts to drop, and this will highlight the difference in ERA between the two samples. All data via (Fangraphs)[https://www.fangraphs.com/]."
+    and the number of each pitcher's worst ERA starts to drop, and this will highlight the difference in ERA between the two samples. All data via [Fangraphs](https://www.fangraphs.com/)."
 )
 start_data = pd.read_csv('https://docs.google.com/spreadsheets/d/1klECnPdLB1GmSZ5dND9-At0Z76DPdlS3x0zLhrdIoT4/export?gid=1317572214&format=csv')
 start_data['Date'] = pd.to_datetime(start_data['Date'])
