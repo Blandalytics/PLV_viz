@@ -1,15 +1,22 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-
+st.title('Mulligan ERA')
+st.subheader(
+    "Using starts from the 2024 and 2025 (through 5/13) seasons, choose a timeframe of most recent starts to analyze, \
+    and the number of each pitcher's worst ERA starts to drop, and this will highlight the difference in ERA between the two samples."
+)
 start_data = pd.read_csv('https://docs.google.com/spreadsheets/d/1klECnPdLB1GmSZ5dND9-At0Z76DPdlS3x0zLhrdIoT4/export?gid=1317572214&format=csv')
 start_data['Date'] = pd.to_datetime(start_data['Date'])
 start_data['num_starts'] = start_data['Date'].groupby(start_data['playerId']).transform('count')
 start_data['start_recency'] = start_data.groupby("playerId")["Date"].rank(method="first") 
 start_data['start_recency'] = start_data['start_recency'].groupby(start_data['playerId']).transform('max') - start_data['start_recency']
 
-last_starts = st.slider('Last X Starts (across 2024 & 2025)',min_value=10,max_value=30,value=20)
-worst_drop = st.number_input('# of worst ERA starts to drop:',min_value=1,max_value=5)
+col1, col2 = st.columns(2)
+with col1:
+    last_starts = st.slider('Last X Starts (across 2024 & 2025)',min_value=10,max_value=30,value=20)
+with col2:
+    worst_drop = st.number_input('# of worst ERA starts to drop:',min_value=1,max_value=5)
 
 filter_df = start_data.loc[(start_data['num_starts']>=last_starts) & (start_data['start_recency']<=last_starts)].reset_index(drop=True)
 filter_df['worst_era'] = filter_df.groupby("playerId")["ERA"].rank(ascending=False, method='min')
