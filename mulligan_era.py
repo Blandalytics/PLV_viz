@@ -16,7 +16,7 @@ col1, col2 = st.columns(2)
 with col1:
     last_starts = st.slider('Last X Starts (across 2024 & 2025)',min_value=10,max_value=30,value=20)
 with col2:
-    worst_drop = st.number_input('# of worst ERA starts to drop:',min_value=1,max_value=5)
+    worst_drop = st.number_input('Number of worst ERA starts to drop:',min_value=1,max_value=5)
 
 filter_df = start_data.loc[(start_data['num_starts']>=last_starts) & (start_data['start_recency']<=last_starts)].reset_index(drop=True)
 filter_df['worst_era'] = filter_df.groupby("playerId")["ERA"].rank(ascending=False, method='min')
