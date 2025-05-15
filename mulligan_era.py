@@ -12,10 +12,10 @@ start_data['num_starts'] = start_data['Date'].groupby(start_data['playerId']).tr
 start_data['start_recency'] = start_data.groupby("playerId")["Date"].rank(method="first") 
 start_data['start_recency'] = start_data['start_recency'].groupby(start_data['playerId']).transform('max') - start_data['start_recency']
 
-col1, col2 = st.columns(2)
-with col1:
-    last_starts = st.slider('Last X Starts (across 2024 & 2025)',min_value=10,max_value=30,value=20)
+col1, col2, col3, col4, col5 = st.columns([1/7,2/7,1/7,2/7,1/7)
 with col2:
+    last_starts = st.slider('Last X Starts (across 2024 & 2025)',min_value=10,max_value=30,value=20)
+with col4:
     worst_drop = st.number_input('Number of worst ERA starts to drop:',min_value=1,max_value=5)
 
 filter_df = start_data.loc[(start_data['num_starts']>=last_starts) & (start_data['start_recency']<=last_starts)].reset_index(drop=True)
