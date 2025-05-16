@@ -545,10 +545,28 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','Whiffs'] = game_df['Whiffs'].sum()
     csw_val = df[['CS','Whiffs']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','CSW'] = f'{csw_val:.1%}'
-    merge_df.loc['Total','xHits'] = df['xHits'].sum()
     merge_df.loc['Total','3D wOBAcon'] = round(df['3D wOBAcon'].mean(),3)
 
-    return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
+    stat_groups = {
+        '':['Type','Num Pitches'],
+        'Metrics':['Velo','Ext','IVB','IHB','HAVAA'],
+        'Usage':['Usage','vs R','vs L'],
+        'Strikes':['Strike%',
+                   # 'Fouls',
+                   'CS','Whiffs','CSW',
+                   # 'K'
+                  ],
+        'Batted Ball':[#'BIP','In Play Out','Hit','HR',
+                       '3D wOBAcon'
+                      ]
+    }
+
+    col_names = [(k,v) for k, l in stat_groups.items() for v in l ]
+
+    merge_df = merge_df[sum(list(stat_groups.values()),[])]
+    merge_df.columns = pd.MultiIndex.from_tuples(col_names)
+    # return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
+    return merge_df, df
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
@@ -749,31 +767,31 @@ else:
                   .format(precision=3)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
-                 column_config={
-                     "Num Pitches": st.column_config.NumberColumn(
-                         "#"
-                         ),
-                     "3D wOBAcon": st.column_config.NumberColumn(
-                         "xDamage",
-                         help="""
-                         xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
-                         League Average is ~.378
-                         """,
-                         ),
-                     "HAVAA": st.column_config.Column(
-                         help="""
-                         Height-Adjusted Vertical Approach Angle
-                         >0 means flatter than other pitches at that location
-                         <0 means steeper than other pitches at that location
-                         """,
-                         ),
-                     "vs R": st.column_config.Column(
-                         help="% of pitches thrown vs Right-Handed Hitters",
-                         ),
-                     "vs L": st.column_config.Column(
-                         help="% of pitches thrown vs Left-Handed Hitters",
-                         ),
-                     },
+                 # column_config={
+                 #     "Num Pitches": st.column_config.NumberColumn(
+                 #         "#"
+                 #         ),
+                 #     "3D wOBAcon": st.column_config.NumberColumn(
+                 #         "xDamage",
+                 #         help="""
+                 #         xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
+                 #         League Average is ~.378
+                 #         """,
+                 #         ),
+                 #     "HAVAA": st.column_config.Column(
+                 #         help="""
+                 #         Height-Adjusted Vertical Approach Angle
+                 #         >0 means flatter than other pitches at that location
+                 #         <0 means steeper than other pitches at that location
+                 #         """,
+                 #         ),
+                 #     "vs R": st.column_config.Column(
+                 #         help="% of pitches thrown vs Right-Handed Hitters",
+                 #         ),
+                 #     "vs L": st.column_config.Column(
+                 #         help="% of pitches thrown vs Left-Handed Hitters",
+                 #         ),
+                 #     },
                  use_container_width=False,
                  hide_index=True)
 
