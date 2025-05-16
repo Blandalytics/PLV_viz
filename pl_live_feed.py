@@ -564,7 +564,7 @@ def scrape_savant_data(player_name, game_id):
     col_names = [(k,v) for k, l in stat_groups.items() for v in l ]
 
     merge_df = merge_df[sum(list(stat_groups.values()),[])]
-    merge_df.columns = pd.MultiIndex.from_tuples(col_names)
+    # merge_df.columns = pd.MultiIndex.from_tuples(col_names)
     # return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
     return merge_df, df
 
@@ -765,34 +765,33 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
-                  .set_table_styles([dict(selector='th', props=[('text-align', 'center')])])
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
-                 # column_config={
-                 #     "Num Pitches": st.column_config.NumberColumn(
-                 #         "#"
-                 #         ),
-                     # "3D wOBAcon": st.column_config.NumberColumn(
-                     #     "xDamage",
-                     #     help="""
-                     #     xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
-                     #     League Average is ~.378
-                     #     """,
-                     #     ),
-                     # "HAVAA": st.column_config.Column(
-                     #     help="""
-                     #     Height-Adjusted Vertical Approach Angle
-                     #     >0 means flatter than other pitches at that location
-                     #     <0 means steeper than other pitches at that location
-                     #     """,
-                     #     ),
-                     # "vs R": st.column_config.Column(
-                     #     help="% of pitches thrown vs Right-Handed Hitters",
-                     #     ),
-                     # "vs L": st.column_config.Column(
-                     #     help="% of pitches thrown vs Left-Handed Hitters",
-                     #     ),
-                     # },
+                 column_config={
+                     "Num Pitches": st.column_config.NumberColumn(
+                         "#"
+                         ),
+                     "3D wOBAcon": st.column_config.NumberColumn(
+                         "xDamage",
+                         help="""
+                         xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
+                         League Average is ~.378
+                         """,
+                         ),
+                     "HAVAA": st.column_config.Column(
+                         help="""
+                         Height-Adjusted Vertical Approach Angle
+                         >0 means flatter than other pitches at that location
+                         <0 means steeper than other pitches at that location
+                         """,
+                         ),
+                     "vs R": st.column_config.Column(
+                         help="% of pitches thrown vs Right-Handed Hitters",
+                         ),
+                     "vs L": st.column_config.Column(
+                         help="% of pitches thrown vs Left-Handed Hitters",
+                         ),
+                     },
                  use_container_width=False,
                  hide_index=True)
 
