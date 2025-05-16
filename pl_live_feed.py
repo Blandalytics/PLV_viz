@@ -802,7 +802,7 @@ else:
                       ('Usage', 'Usage'): [{'selector': 'th', 'props': 'border-left: 5px solid white'},
                                            {'selector': 'td', 'props': 'border-left: 5px solid white'}]
                       }, 
-                                    overwrite=False, axis=0)
+                                    overwrite=True, axis=0)
                  ),
                  # column_config={
                  #     "Num Pitches": st.column_config.NumberColumn(
