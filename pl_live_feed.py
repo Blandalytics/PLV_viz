@@ -797,6 +797,11 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
+                  .set_table_styles({
+                      ('Usage', 'Usage'): [{'selector': 'th', 'props': 'border-left: 2px solid white'},
+                                           {'selector': 'td', 'props': 'border-left: 2px solid white'}]
+                      }, 
+                                    overwrite=False, axis=0)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
                  # column_config={
