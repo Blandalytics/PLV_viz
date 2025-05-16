@@ -331,6 +331,7 @@ def scrape_savant_data(player_name, game_id):
     extension = []
     called_strikes = []
     swinging_strikes = []
+    foul_strikes = []
     total_strikes = []
     ivb = []
     ihb = []
@@ -372,8 +373,12 @@ def scrape_savant_data(player_name, game_id):
                 pitcher_name += [p_name]
                 throws += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['p_throws']]
                 stands += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['stand']]
+                pitch_call += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']]
+                events += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['events']]
+                result_code += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['result_code']]
                 called_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='called_strike' else 0]
                 swinging_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked'] else 0]
+                foul_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='foul' else 0]
                 total_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked','called_strike','foul','hit_into_play'] else 0]
                 balls += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['balls']]
                 strikes += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['strikes']]
@@ -439,9 +444,14 @@ def scrape_savant_data(player_name, game_id):
     df['Pitcher'] = pitcher_name
     df['P Hand'] = throws
     df['hitterside'] = stands
+    df['pitch_call'] = pitch_call
+    df['event'] = events
+    df['result_code'] = result_code
     df['CS'] = called_strikes
     df['Whiffs'] = swinging_strikes
+    df['Fouls'] = foul_strikes
     df['total_strikes'] = total_strikes
+    df['K'] = np.where(df['pitch_call'].isin(['called_strike','foul_tip','swinging_strike']) & (df['strikes']==2),1,0)
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = pitch_type
     # df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
@@ -471,25 +481,42 @@ def scrape_savant_data(player_name, game_id):
                                df['spray_deg_base']-45)
     df[['VAA','HAVAA']] = adjusted_vaa(df)
     
-    df['xHits'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,1,1,1,1]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
+    df['BIP'] = np.where((df['pitch_call']=='hit_into_play'),1,0)
+    df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['result_code']=='X'),1,0)
+    df['Hit'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
+    df['HR'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Home Run'),1,0)
     df['xDamage'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','total_strikes','xHits','xDamage','HAVAA']].agg({
+    agg_dict = {
         'Num Pitches':'count',
+        'vs_rhh':'sum',
         'Velo':'mean',
         'IVB':'mean',
         'IHB':'mean',
         'Ext':'mean',
-        'vs_rhh':'sum',
+        'HAVAA':'mean',
         'CS':'sum',
         'Whiffs':'sum',
+        'Fouls':'sum',
         'total_strikes':'sum',
-        'xHits':'sum',
-        'xDamage':'mean',
-        'HAVAA':'mean'
-    }).assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
-              strike_rate = lambda x: x['total_strikes'].div(x['Num Pitches']).mul(100),
-              vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh'])).reset_index()
+        'K':'sum',
+        'BIP':'sum',
+        'In Play Out':'sum',
+        'Hit':'sum',
+        'HR':'sum',
+        'xDamage':'mean'
+    }
+    game_df = (
+        df
+        .assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0))
+        .groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])
+        [agg_dict.keys()]
+        .agg(agg_dict)
+        .assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
+                strike_rate = lambda x: x['total_strikes'].div(x['Num Pitches']).mul(100),
+                vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh']))
+        .reset_index()
+    )
 
     merge_df = (
         pd.merge(game_df.loc[game_df['Pitcher']==player_name].assign(Usage = lambda x: x['Num Pitches'].div(x['Num Pitches'].sum()).mul(100)).copy(),
@@ -534,31 +561,34 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total'] = ['-']*len(merge_df.columns)
     merge_df.loc['Total','P Hand'] = '-'
     merge_df.loc['Total','Type'] = 'Total'
+    # Usage
     merge_df.loc['Total','Num Pitches'] = game_df['Num Pitches'].sum()
     v_rhh_val = game_df['vs_rhh'].sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','vs R'] = f'{v_rhh_val:.1%}'
     v_lhh_val = 1-v_rhh_val
     merge_df.loc['Total','vs L'] = f'{v_lhh_val:.1%}'
+    # Strikes
     strike_val = df['total_strikes'].sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','Strike%'] = f'{strike_val:.1%}'
     merge_df.loc['Total','CS'] = game_df['CS'].sum()
     merge_df.loc['Total','Whiffs'] = game_df['Whiffs'].sum()
+    merge_df.loc['Total','Fouls'] = game_df['CS'].sum()
     csw_val = df[['CS','Whiffs']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','CSW'] = f'{csw_val:.1%}'
+    merge_df.loc['Total','K'] = game_df['K'].sum()
+    # Batted Ball
+    merge_df.loc['Total','BIP'] = game_df['BIP'].sum()
+    merge_df.loc['Total','In Play Out'] = game_df['In Play Out'].sum()
+    merge_df.loc['Total','Hit'] = game_df['Hit'].sum()
+    merge_df.loc['Total','HR'] = game_df['HR'].sum()
     merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
     stat_groups = {
         '':['Type','#'],
         'Usage':['Usage','vs R','vs L'],
         'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
-        'Strikes':['Strike%',
-                   # 'Fouls',
-                   'CS','Whiffs','CSW',
-                   # 'K'
-                  ],
-        'Batted Ball':[#'BIP','In Play Out','Hit','HR',
-                       'xDamage'
-                      ]
+        'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
+        'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
     }
 
     col_names = [(k,v) for k, l in stat_groups.items() for v in l ]
