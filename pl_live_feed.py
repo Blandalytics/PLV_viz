@@ -798,12 +798,10 @@ else:
                   .style
                   .format(precision=3)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
-                  .set_table_styles({
-                      ('Usage', 'Usage'): [{'selector': 'th', 'props': 'border-left: 5px solid white'},
-                                           {'selector': 'td', 'props': 'border-left: 5px solid white'}]
-                      }, 
-                                    overwrite=True, axis=0)
-                 ),
+                  .set_table_styles([
+                      {'selector': 'th.col_heading', 'props': 'text-align: center;'},
+                      {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.5em;'}
+                  ], overwrite=True)
                  # column_config={
                  #     "Num Pitches": st.column_config.NumberColumn(
                  #         "#"
