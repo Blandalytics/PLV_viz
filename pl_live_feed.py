@@ -513,7 +513,7 @@ def scrape_savant_data(player_name, game_id):
         df
         .assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0))
         .groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])
-        [agg_dict.keys()]
+        [list(agg_dict.keys())]
         .agg(agg_dict)
         .assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
                 strike_rate = lambda x: x['total_strikes'].div(x['Num Pitches']).mul(100),
