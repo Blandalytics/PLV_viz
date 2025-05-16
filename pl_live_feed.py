@@ -767,31 +767,31 @@ else:
                   .format(precision=3)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
-                 column_config={
-                     "Num Pitches": st.column_config.NumberColumn(
-                         "#"
-                         ),
-                     "3D wOBAcon": st.column_config.NumberColumn(
-                         "xDamage",
-                         help="""
-                         xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
-                         League Average is ~.378
-                         """,
-                         ),
-                     "HAVAA": st.column_config.Column(
-                         help="""
-                         Height-Adjusted Vertical Approach Angle
-                         >0 means flatter than other pitches at that location
-                         <0 means steeper than other pitches at that location
-                         """,
-                         ),
-                     "vs R": st.column_config.Column(
-                         help="% of pitches thrown vs Right-Handed Hitters",
-                         ),
-                     "vs L": st.column_config.Column(
-                         help="% of pitches thrown vs Left-Handed Hitters",
-                         ),
-                     },
+                 # column_config={
+                 #     "Num Pitches": st.column_config.NumberColumn(
+                 #         "#"
+                 #         ),
+                 #     "3D wOBAcon": st.column_config.NumberColumn(
+                 #         "xDamage",
+                 #         help="""
+                 #         xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
+                 #         League Average is ~.378
+                 #         """,
+                 #         ),
+                 #     "HAVAA": st.column_config.Column(
+                 #         help="""
+                 #         Height-Adjusted Vertical Approach Angle
+                 #         >0 means flatter than other pitches at that location
+                 #         <0 means steeper than other pitches at that location
+                 #         """,
+                 #         ),
+                 #     "vs R": st.column_config.Column(
+                 #         help="% of pitches thrown vs Right-Handed Hitters",
+                 #         ),
+                 #     "vs L": st.column_config.Column(
+                 #         help="% of pitches thrown vs Left-Handed Hitters",
+                 #         ),
+                 #     },
                  use_container_width=False,
                  hide_index=True)
 
