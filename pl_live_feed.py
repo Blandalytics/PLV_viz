@@ -549,7 +549,7 @@ def scrape_savant_data(player_name, game_id):
 
     stat_groups = {
         '':['Type','Num Pitches'],
-        'Metrics':['Velo','Ext','IVB','IHB','HAVAA'],
+        'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
         'Usage':['Usage','vs R','vs L'],
         'Strikes':['Strike%',
                    # 'Fouls',
