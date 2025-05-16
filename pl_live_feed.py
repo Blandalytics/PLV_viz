@@ -765,7 +765,7 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
-                  .set_properties(**{'text-align': 'center'})
+                  .set_table_styles([dict(selector='th', props=[('text-align', 'center')])])
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
                  # column_config={
