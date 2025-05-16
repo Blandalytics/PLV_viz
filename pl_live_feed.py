@@ -323,6 +323,9 @@ def scrape_savant_data(player_name, game_id):
     pitcher_name = []
     throws = []
     stands = []
+    pitch_call = []
+    events = []
+    result_code = []
     balls = []
     strikes = []
     pitch_id = []
@@ -595,7 +598,6 @@ def scrape_savant_data(player_name, game_id):
 
     merge_df = merge_df.rename(columns={'Num Pitches':'#'})[sum(list(stat_groups.values()),[])]
     merge_df.columns = pd.MultiIndex.from_tuples(col_names)
-    # return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
     return merge_df, df
 
 def game_charts(move_df):
