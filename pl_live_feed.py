@@ -377,7 +377,10 @@ def scrape_savant_data(player_name, game_id):
                 throws += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['p_throws']]
                 stands += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['stand']]
                 pitch_call += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']]
-                events += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['events']]
+                try:
+                    events += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['events']]
+                except KeyError:
+                    events += [None]
                 result_code += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['result_code']]
                 called_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='called_strike' else 0]
                 swinging_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked'] else 0]
