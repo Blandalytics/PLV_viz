@@ -767,10 +767,10 @@ else:
                   .format(precision=3)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
-                 column_config={
-                     ('',"Num Pitches"): st.column_config.NumberColumn(
-                         ('',"#")
-                         ),
+                 # column_config={
+                 #     "Num Pitches": st.column_config.NumberColumn(
+                 #         "#"
+                 #         ),
                      # "3D wOBAcon": st.column_config.NumberColumn(
                      #     "xDamage",
                      #     help="""
@@ -791,7 +791,7 @@ else:
                      # "vs L": st.column_config.Column(
                      #     help="% of pitches thrown vs Left-Handed Hitters",
                      #     ),
-                     },
+                     # },
                  use_container_width=False,
                  hide_index=True)
 
