@@ -798,7 +798,6 @@ else:
                   .style
                   .format(precision=3)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
-                  .set_properties(**{'text-align': 'center'}).set_table_styles([{'selector': 'th', 'props': [('text-align', 'center')]}])
                  ),
                  # column_config={
                  #     "Num Pitches": st.column_config.NumberColumn(
