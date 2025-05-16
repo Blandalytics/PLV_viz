@@ -474,7 +474,7 @@ def scrape_savant_data(player_name, game_id):
     df['xHits'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,1,1,1,1]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
     df['3D wOBAcon'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
-    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','total_strikes','xHits','3D wOBAcon','HAVAA']].agg({
+    game_df = df.assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0)).groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])[['Num Pitches','Velo','IVB','IHB','Ext','vs_rhh','CS','Whiffs','total_strikes','xHits','xDamage','HAVAA']].agg({
         'Num Pitches':'count',
         'Velo':'mean',
         'IVB':'mean',
@@ -485,7 +485,7 @@ def scrape_savant_data(player_name, game_id):
         'Whiffs':'sum',
         'total_strikes':'sum',
         'xHits':'sum',
-        '3D wOBAcon':'mean',
+        'xDamage':'mean',
         'HAVAA':'mean'
     }).assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
               strike_rate = lambda x: x['total_strikes'].div(x['Num Pitches']).mul(100),
@@ -516,7 +516,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['vs R'] = [f'{x:.1%}' for x in merge_df['vs_rhh']]
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
-    merge_df['3D wOBAcon'] = merge_df['3D wOBAcon'].round(3)
+    merge_df['xDamage'] = merge_df['xDamage'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
 
     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
@@ -545,10 +545,10 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','Whiffs'] = game_df['Whiffs'].sum()
     csw_val = df[['CS','Whiffs']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','CSW'] = f'{csw_val:.1%}'
-    merge_df.loc['Total','3D wOBAcon'] = round(df['3D wOBAcon'].mean(),3)
+    merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
     stat_groups = {
-        '':['Type','Num Pitches'],
+        '':['Type','#'],
         'Usage':['Usage','vs R','vs L'],
         'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
         'Strikes':['Strike%',
@@ -557,14 +557,14 @@ def scrape_savant_data(player_name, game_id):
                    # 'K'
                   ],
         'Batted Ball':[#'BIP','In Play Out','Hit','HR',
-                       '3D wOBAcon'
+                       'xDamage'
                       ]
     }
 
     col_names = [(k,v) for k, l in stat_groups.items() for v in l ]
 
-    merge_df = merge_df[sum(list(stat_groups.values()),[])]
-    # merge_df.columns = pd.MultiIndex.from_tuples(col_names)
+    merge_df = merge_df.rename(columns={'Num Pitches':'#'})[sum(list(stat_groups.values()),[])]
+    merge_df.columns = pd.MultiIndex.from_tuples(col_names)
     # return merge_df[['Type','Num Pitches','Velo','Usage','vs R','vs L','Ext','IVB','IHB','HAVAA','Strike%','CS','Whiffs','CSW','3D wOBAcon']], df
     return merge_df, df
 
