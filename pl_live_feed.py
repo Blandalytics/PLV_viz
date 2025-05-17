@@ -807,7 +807,7 @@ marker_colors = {
     'UN':'#999999', 
 }
 
-highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[1]) for k, v in marker_colors.items()}
+highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=25)[1]) for k, v in marker_colors.items()}
 
 def highlight_cols(s, coldict):
     return ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
