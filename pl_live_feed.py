@@ -812,7 +812,7 @@ marker_colors = {
     'UN':'#999999', 
 }
 
-highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[5]) for k, v in marker_colors.items()}
+highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[2]) for k, v in marker_colors.items()}
 type_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[5]) for k, v in marker_colors.items()}
 
 def highlight_cols(s, coldict):
