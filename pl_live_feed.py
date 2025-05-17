@@ -813,6 +813,7 @@ marker_colors = {
 }
 
 highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[1]) for k, v in marker_colors.items()}
+type_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[5]) for k, v in marker_colors.items()}
 
 def highlight_cols(s, coldict):
     return ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
@@ -827,7 +828,8 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
-                  .apply(highlight_cols,coldict=highlight_dict)
+                  # .apply(highlight_cols,coldict=highlight_dict)
+                  .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
                  # column_config={
