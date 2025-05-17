@@ -827,7 +827,7 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
-                  .apply(highlight_cols,coldict=highlight_dict)
+                  #.apply(highlight_cols,coldict=highlight_dict)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
                  # column_config={
