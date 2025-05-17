@@ -790,6 +790,28 @@ def loc_charts(df):
     sns.despine()
     st.pyplot(fig)
 
+def hextriplet(color):
+    return f"#{''.join(f'{hex(int(c*255))[2:].upper():0>2}' for c in color)}"
+    
+marker_colors = {
+    'FF':'#d22d49', 
+    'SI':'#c57a02',
+    'FS':'#00a1c5',  
+    'FC':'#933f2c', 
+    'SL':'#9300c7', 
+    'ST':'#C95EBE',
+    'CU':'#3c44cd',
+    'CH':'#07b526', 
+    'KN':'#999999',
+    'SC':'#999999', 
+    'UN':'#999999', 
+}
+
+highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[1]) for k, v in marker_colors.items()}
+
+def highlight_cols(s, coldict):
+    return ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
+
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 else:
@@ -800,6 +822,7 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
+                  .apply(highlight_cols,coldict=highlight_dict)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
                  # column_config={
