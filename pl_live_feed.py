@@ -795,12 +795,17 @@ def hextriplet(color):
     
 marker_colors = {
     'FF':'#d22d49', 
+    'FA':'#d22d49', 
     'SI':'#c57a02',
+    'FT':'#c57a02',
     'FS':'#00a1c5',  
+    'FO':'#00a1c5',  
     'FC':'#933f2c', 
     'SL':'#9300c7', 
     'ST':'#C95EBE',
     'CU':'#3c44cd',
+    'KC':'#3c44cd',
+    'SV':'#3c44cd',
     'CH':'#07b526', 
     'KN':'#999999',
     'SC':'#999999', 
