@@ -595,7 +595,7 @@ def scrape_savant_data(player_name, game_id):
     # Location
     zone_val = df['zone'].sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','Zone%'] = f'{zone_val:.1%}'
-    merge_df.loc['Total','K'] = game_df['BB'].sum()
+    merge_df.loc['Total','BB'] = game_df['BB'].sum()
     # Batted Ball
     merge_df.loc['Total','BIP'] = game_df['BIP'].sum()
     merge_df.loc['Total','In Play Out'] = game_df['In Play Out'].sum()
@@ -808,7 +808,6 @@ def loc_charts(df):
 def hextriplet(color):
     return f"#{''.join(f'{hex(int(c*255))[2:].upper():0>2}' for c in color)}"
 
-#st.write()
 marker_colors = {
     'FF':'#d22d49', 
     'FA':'#d22d49', 
