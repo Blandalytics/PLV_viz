@@ -807,7 +807,8 @@ def loc_charts(df):
 
 def hextriplet(color):
     return f"#{''.join(f'{hex(int(c*255))[2:].upper():0>2}' for c in color)}"
-    
+
+#st.write()
 marker_colors = {
     'FF':'#d22d49', 
     'FA':'#d22d49', 
