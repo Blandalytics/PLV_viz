@@ -1188,14 +1188,14 @@ def plotly_charts(chart_df):
                 l=0,
                 r=0,
                 b=0,
-                t=80,
+                t=150,
                 pad=4
                 ),
         )
-    fig.update_annotations(yshift=-20,
+    fig.update_annotations(yshift=-50,
                            font=dict(size=30, color="white")
                           )
-    fig.update_layout(height=600, width=1200,
+    fig.update_layout(height=600, width=1400,
                       hoverlabel={
                           'font':{'color':'white'}
                           },
