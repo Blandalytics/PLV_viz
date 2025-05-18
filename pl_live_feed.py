@@ -387,7 +387,7 @@ def scrape_savant_data(player_name, game_id):
                 pitcher_id_list += [pitcher_id]
                 p_name = x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitcher_name']
                 pitcher_name += [p_name]
-                hitter_name += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['batter_name']
+                hitter_name += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['batter_name']]
                 throws += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['p_throws']]
                 stands += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['stand']]
                 pitch_call += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']]
