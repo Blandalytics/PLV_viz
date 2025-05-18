@@ -471,6 +471,7 @@ def scrape_savant_data(player_name, game_id):
     df['event'] = events
     df['result_code'] = result_code
     df['PA'] = pa
+    df['PA'] = np.where(df['PA']!=df['PA'].shift(1).fillna(0),1,0)
     df['zone'] = zone
     df['CS'] = called_strikes
     df['Whiffs'] = swinging_strikes
@@ -522,7 +523,7 @@ def scrape_savant_data(player_name, game_id):
 
     agg_dict = {
         'Num Pitches':'count',
-        'PA':'nunique',
+        'PA':'sum',
         'Strikes':'sum',
         'Balls':'sum',
         'zone':'sum',
@@ -615,7 +616,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','vs R'] = f'{v_rhh_val:.1%}'
     v_lhh_val = 1-v_rhh_val
     merge_df.loc['Total','vs L'] = f'{v_lhh_val:.1%}'
-    merge_df.loc['Total','PA'] = game_df['PA'].sum()
+    merge_df.loc['Total','PA'] = df['PA'].sum()
     # Strikes
     merge_df.loc['Total','Strikes'] = game_df['Strikes'].sum()
     strike_val = df['Strikes'].sum() / game_df['Num Pitches'].sum()
