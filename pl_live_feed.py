@@ -169,7 +169,7 @@ with col2:
     else:
         pitcher_list = {}
         
-@st.cache_data()
+#@st.cache_data()
 def load_season_avgs(timeframe):
     if timeframe=='2025':
         df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/season_to_date.parquet?raw=true')
