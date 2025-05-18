@@ -1195,7 +1195,7 @@ def plotly_charts(chart_df):
     fig.update_annotations(yshift=-35,
                            font=dict(size=30, color="white")
                           )
-    fig.update_layout(height=600, width=1300,
+    fig.update_layout(height=600, width=1200,
                       hoverlabel={
                           'font':{'color':'white'}
                           },
