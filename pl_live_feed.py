@@ -934,6 +934,9 @@ else:
 
 def plotly_charts(chart_df):
     chart_df['Pitch Name'] = chart_df['pitch_type'].map(marker_names)
+    chart_df['ev_la_text'] = np.where(chart_df['Launch Angle'].isna() | chart_df['Launch Speed'].isna(),
+                                      '',
+                                      'EV/LA: '+chart_df['Launch Speed'].round(1).astype('str')+'mph @ '+chart_df['Launch Angle'].astype('str')+'°')
     lhh_df = chart_df.loc[chart_df['hitterside']=='L'].copy()
     rhh_df = chart_df.loc[chart_df['hitterside']=='R'].copy()
     pitcher_hand = chart_df['P Hand'][0]
@@ -950,7 +953,7 @@ def plotly_charts(chart_df):
     fig.update_xaxes(title_text="", range=[-2,2], row=1, col=1)
     fig.update_yaxes(title_text="", range=[-1,6], row=1, col=1)
     labels = lhh_df['pitch_type'].map(marker_colors)
-    hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Hitter: %{customdata[5]} (%{text}HH)<br>Count: %{customdata[0]}-%{customdata[1]}<br>Velo: %{customdata[4]:.1f}mph<br>EV/LA: %{customdata[6]:.1f}mph @ %{customdata[7]:.0f}°<extra></extra>'
+    hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Hitter: %{customdata[5]}<br>Count: %{customdata[0]}-%{customdata[1]}<br>Velo: %{customdata[4]:.1f}mph<br>%{customdata[6]}<extra></extra>'
     marker_dict = dict(color=labels,
                        size=25,
                        line=dict(width=1,color='white'))
@@ -1023,7 +1026,7 @@ def plotly_charts(chart_df):
     bonus_text = lhh_df['hitterside']
     fig.add_trace(go.Scatter(x=lhh_df['p_x'].mul(-1), y=lhh_df['p_z'], mode='markers', 
                        marker=marker_dict, text=bonus_text,
-                       customdata=lhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','Launch Speed','Launch Angle']],
+                       customdata=lhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','ev_la_text']],
                        hovertemplate=hover_text,
                         showlegend=False),
                             row=1, col=1)
@@ -1105,7 +1108,7 @@ def plotly_charts(chart_df):
     bonus_text = rhh_df['hitterside']
     fig.add_trace(go.Scatter(x=rhh_df['p_x'].mul(-1), y=rhh_df['p_z'], mode='markers', 
                        marker=marker_dict, text=bonus_text,
-                       customdata=rhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter']],
+                       customdata=rhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','ev_la_text']],
                        hovertemplate=hover_text,
                         showlegend=False),
                             row=1, col=3)
