@@ -910,11 +910,13 @@ else:
     loc_charts(chart_df)
 
 def plotly_charts(chart_df):
+    lhh_df = chart_df.loc[chart_df['hitterside']=='L'].copy()
+    rhh_df = chart_df.loc[chart_df['hitterside']=='R'].copy()
+    move_df = chart_df.assign(IHB = lambda x: np.where(x['P Hand']=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))).copy()
     fig = make_subplots(rows=1, cols=3, column_widths=[.2775,.475,.2775],
                         # specs = [[{}, {}]], 
                         horizontal_spacing = 0,
                         subplot_titles=("Locations<br>vs LHH","Movement<br> ","Locations<br>vs RHH"))
-    lhh_df = chart_df.loc[chart_df['hitterside']=='L']
     plate_y = -.5
     
     # layout = go.Layout(height = 600,width = 1500,xaxis_range=[-2.5,2.5], yaxis_range=[-1,6])
