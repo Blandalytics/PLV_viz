@@ -336,6 +336,7 @@ def scrape_savant_data(player_name, game_id):
     called_strikes = []
     swinging_strikes = []
     foul_strikes = []
+    swing = []
     total_strikes = []
     ivb = []
     ihb = []
@@ -386,6 +387,7 @@ def scrape_savant_data(player_name, game_id):
                 zone += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['zone'] <10 else 0]
                 called_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='called_strike' else 0]
                 swinging_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked'] else 0]
+                swing += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['is_strike_swinging']]
                 foul_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='foul' else 0]
                 total_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked','called_strike','foul','hit_into_play'] else 0]
                 balls += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['balls']]
@@ -458,6 +460,8 @@ def scrape_savant_data(player_name, game_id):
     df['zone'] = zone
     df['CS'] = called_strikes
     df['Whiffs'] = swinging_strikes
+    df['Swings'] = swing
+    df['chase'] = np.where(df['pitch_call'].isin(['swinging_strike','foul_tip','swinging_strike_blocked','foul','hit_into_play']) & (df['zone']==0),1,0)
     df['Fouls'] = foul_strikes
     df['total_strikes'] = total_strikes
     df['K'] = np.where(df['pitch_call'].isin(['called_strike','foul_tip','swinging_strike']) & (df['strikes']==2),1,0)
@@ -511,6 +515,7 @@ def scrape_savant_data(player_name, game_id):
         'BB':'sum',
         'CS':'sum',
         'Whiffs':'sum',
+        'chase':'sum',
         'Fouls':'sum',
         'total_strikes':'sum',
         'K':'sum',
@@ -529,6 +534,7 @@ def scrape_savant_data(player_name, game_id):
         .assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
                 strike_rate = lambda x: x['total_strikes'].div(x['Num Pitches']).mul(100),
                 zone_rate = lambda x: x['zone'].div(x['Num Pitches']).mul(100),
+                chase_rate = lambda x: x['chase'].div(x['Num Pitches'].sub(x['zone'])).mul(100),
                 vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh']))
         .reset_index()
     )
@@ -556,6 +562,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['CSW'] = [f'{x:.1f}%' for x in merge_df['CSW']]
     merge_df['Strike%'] = [f'{x:.1f}%' for x in merge_df['strike_rate']]
     merge_df['Zone%'] = [f'{x:.1f}%' for x in merge_df['zone_rate']]
+    merge_df['Chase%'] = [f'{x:.1f}%' for x in merge_df['chase_rate']]
     merge_df['vs R'] = [f'{x:.1%}' for x in merge_df['vs_rhh']]
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
@@ -595,6 +602,8 @@ def scrape_savant_data(player_name, game_id):
     # Location
     zone_val = df['zone'].sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','Zone%'] = f'{zone_val:.1%}'
+    chase_val = df['chase'].sum() / (game_df['Num Pitches'].sum() - df['zone'].sum())
+    merge_df.loc['Total','Chase%'] = f'{chase_val:.1%}'
     merge_df.loc['Total','BB'] = game_df['BB'].sum()
     # Batted Ball
     merge_df.loc['Total','BIP'] = game_df['BIP'].sum()
@@ -608,7 +617,7 @@ def scrape_savant_data(player_name, game_id):
         'Usage':['Usage','vs R','vs L'],
         'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
         'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
-        'Locations':['Zone%','BB'],
+        'Locations':['Zone%','Chase%','BB'],
         'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
     }
 
