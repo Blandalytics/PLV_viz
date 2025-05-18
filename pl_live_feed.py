@@ -529,7 +529,6 @@ def scrape_savant_data(player_name, game_id):
         'Whiffs':'sum',
         'chase':'sum',
         'Fouls':'sum',
-        'total_strikes':'sum',
         'K':'sum',
         'BIP':'sum',
         'In Play Out':'sum',
@@ -548,7 +547,7 @@ def scrape_savant_data(player_name, game_id):
         [list(agg_dict.keys())]
         .agg(agg_dict)
         .assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
-                strike_rate = lambda x: x['total_strikes'].div(x['Num Pitches']).mul(100),
+                strike_rate = lambda x: x['Strikes'].div(x['Num Pitches']).mul(100),
                 zone_rate = lambda x: x['zone'].div(x['Num Pitches']).mul(100),
                 chase_rate = lambda x: x['chase'].div(x['Num Pitches'].sub(x['zone'])).mul(100),
                 vs_lhh = lambda x: x['Num Pitches'].sub(x['vs_rhh']))
@@ -608,7 +607,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','vs L'] = f'{v_lhh_val:.1%}'
     # Strikes
     merge_df.loc['Total','Strikes'] = game_df['Strikes'].sum()
-    strike_val = df['total_strikes'].sum() / game_df['Num Pitches'].sum()
+    strike_val = df['Strikes'].sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','Strike%'] = f'{strike_val:.1%}'
     merge_df.loc['Total','CS'] = game_df['CS'].sum()
     merge_df.loc['Total','Whiffs'] = game_df['Whiffs'].sum()
