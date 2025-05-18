@@ -318,6 +318,7 @@ pitch_names = {
     'UN':'Unknown', 
 }
 
+@st.cache_data(ttl='5m',show_spinner='Loading player data')
 def scrape_savant_data(player_name, game_id):
     game_ids = []
     game_date = []
