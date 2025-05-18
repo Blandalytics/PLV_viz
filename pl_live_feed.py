@@ -850,7 +850,7 @@ def highlight_cols(s, coldict, stat_tab):
         col_format = ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
     else:
         col_format = ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df['Type'].isin(highlight_dict.keys())*table_df['Type'].values]
-    return 
+    return col_format
 
 default_groups = {
         '':['Type','#'],
