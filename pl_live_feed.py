@@ -614,19 +614,6 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','HR'] = game_df['HR'].sum()
     merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
-    stat_groups = {
-        '':['Type','#'],
-        'Usage':['Usage','vs R','vs L'],
-        'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
-        'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
-        'Locations':['Zone%','Chase%','BB'],
-        'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
-    }
-
-    col_names = [(k,v) for k, l in stat_groups.items() for v in l ]
-
-    merge_df = merge_df.rename(columns={'Num Pitches':'#'})[sum(list(stat_groups.values()),[])]
-    merge_df.columns = pd.MultiIndex.from_tuples(col_names)
     return merge_df, df
 
 def game_charts(move_df):
@@ -844,13 +831,33 @@ type_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[5]) for k, v in marker
 def highlight_cols(s, coldict):
     return ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
 
+default_groups = {
+        '':['Type','#'],
+        'Usage':['Usage','vs R','vs L'],
+        'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
+        'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
+        'Locations':['Zone%','Chase%','BB'],
+        'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
+    }
+
+stat_tabs = {
+    'Default':''
+}
+
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 else:
+    tab_select = st.segmented_control('',list(stat_tabs.keys()),default='Default')
     idx = pd.IndexSlice
     slice_ = idx['Total',:]
     table_df, chart_df = scrape_savant_data(player_select,game_id)
     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
+
+    if tab_select=='Default':
+        col_names = [(k,v) for k, l in default_groups.items() for v in l ]
+
+        table_df = table_df.rename(columns={'Num Pitches':'#'})[sum(list(default_groups.values()),[])]
+        table_df.columns = pd.MultiIndex.from_tuples(col_names)
     st.dataframe((table_df
                   .style
                   .format(precision=3)
