@@ -452,8 +452,8 @@ def scrape_savant_data(player_name, game_id):
     df['game_date'] = game_date
     df['MLBAMID'] = pitcher_id_list
     df['MLBAMID'] = df['MLBAMID'].astype('int')
-    df['balls'] = balls
-    df['strikes'] = strikes
+    df['Balls'] = balls
+    df['Strikes'] = strikes
     df['Pitcher'] = pitcher_name
     df['P Hand'] = throws
     df['hitterside'] = stands
@@ -467,8 +467,8 @@ def scrape_savant_data(player_name, game_id):
     df['chase'] = np.where(df['pitch_call'].isin(['swinging_strike','foul_tip','swinging_strike_blocked','foul','hit_into_play']) & (df['zone']==0),1,0)
     df['Fouls'] = foul_strikes
     df['total_strikes'] = total_strikes
-    df['K'] = np.where(df['pitch_call'].isin(['called_strike','foul_tip','swinging_strike']) & (df['strikes']==2),1,0)
-    df['BB'] = np.where((df['pitch_call']=='ball') & (df['balls']==3),1,0)
+    df['K'] = np.where(df['pitch_call'].isin(['called_strike','foul_tip','swinging_strike']) & (df['Strikes']==2),1,0)
+    df['BB'] = np.where((df['pitch_call']=='ball') & (df['Balls']==3),1,0)
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = pitch_type
     # df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
@@ -500,12 +500,18 @@ def scrape_savant_data(player_name, game_id):
     
     df['BIP'] = np.where((df['pitch_call']=='hit_into_play'),1,0)
     df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['result_code']=='X'),1,0)
+    df['HB'] = np.where((df['pitch_call']=='hit_by_pitch'),1,0)
     df['Hit'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
+    df['1B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Single'),1,0)
+    df['2B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Double'),1,0)
+    df['3B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Triple'),1,0)
     df['HR'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Home Run'),1,0)
     df['xDamage'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
     agg_dict = {
         'Num Pitches':'count',
+        'Strikes':'sum',
+        'Balls':'sum',
         'zone':'sum',
         'K':'sum',
         'vs_rhh':'sum',
@@ -525,7 +531,11 @@ def scrape_savant_data(player_name, game_id):
         'BIP':'sum',
         'In Play Out':'sum',
         'Hit':'sum',
+        '1B':'sum',
+        '2B':'sum',
+        '3B':'sum',
         'HR':'sum',
+        'HB':'sum',
         'xDamage':'mean'
     }
     game_df = (
@@ -594,6 +604,7 @@ def scrape_savant_data(player_name, game_id):
     v_lhh_val = 1-v_rhh_val
     merge_df.loc['Total','vs L'] = f'{v_lhh_val:.1%}'
     # Strikes
+    merge_df.loc['Total','Strikes'] = game_df['Strikes'].sum()
     strike_val = df['total_strikes'].sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','Strike%'] = f'{strike_val:.1%}'
     merge_df.loc['Total','CS'] = game_df['CS'].sum()
@@ -603,6 +614,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','CSW'] = f'{csw_val:.1%}'
     merge_df.loc['Total','K'] = game_df['K'].sum()
     # Location
+    merge_df.loc['Total','Balls'] = game_df['Balls'].sum()
     zone_val = df['zone'].sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','Zone%'] = f'{zone_val:.1%}'
     chase_val = df['chase'].sum() / (game_df['Num Pitches'].sum() - df['zone'].sum())
@@ -612,7 +624,11 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','BIP'] = game_df['BIP'].sum()
     merge_df.loc['Total','In Play Out'] = game_df['In Play Out'].sum()
     merge_df.loc['Total','Hit'] = game_df['Hit'].sum()
+    merge_df.loc['Total','1B'] = game_df['1B'].sum()
+    merge_df.loc['Total','2B'] = game_df['2B'].sum()
+    merge_df.loc['Total','3B'] = game_df['3B'].sum()
     merge_df.loc['Total','HR'] = game_df['HR'].sum()
+    merge_df.loc['Total','HB'] = game_df['HRB'].sum()
     merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
     return merge_df, df
@@ -829,8 +845,12 @@ marker_colors = {
 highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[2]) for k, v in marker_colors.items()}
 type_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[5]) for k, v in marker_colors.items()}
 
-def highlight_cols(s, coldict):
-    return ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
+def highlight_cols(s, coldict, stat_tab):
+    if stat_tab=='Default':
+        col_format = ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
+    else:
+        col_format = ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df['Type'].isin(highlight_dict.keys())*table_df['Type'].values]
+    return 
 
 default_groups = {
         '':['Type','#'],
@@ -842,7 +862,8 @@ default_groups = {
     }
 
 stat_tabs = {
-    'Default':''
+    'Default':'',
+    'Standard':['Strikes','Balls','H','1B','2B','3B','HR','K','BB','HB']
 }
 
 if len(list(pitcher_list.keys()))==0:
@@ -859,38 +880,15 @@ else:
 
         table_df = table_df.rename(columns={'Num Pitches':'#'})[sum(list(default_groups.values()),[])]
         table_df.columns = pd.MultiIndex.from_tuples(col_names)
+    else:
+        table_df = table_df[['Type','#']+stat_tabs[tab_select]]
     st.dataframe((table_df
                   .style
                   .format(precision=3)
-                  .apply(highlight_cols,coldict=highlight_dict)
+                  .apply(highlight_cols,coldict=highlight_dict,stat_tab=tab_select)
                   # .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
-                 # column_config={
-                 #     "Num Pitches": st.column_config.NumberColumn(
-                 #         "#"
-                 #         ),
-                 #     "3D wOBAcon": st.column_config.NumberColumn(
-                 #         "xDamage",
-                 #         help="""
-                 #         xwOBA on contact, using Launch Speed, Launch Angle, and Spray Angle
-                 #         League Average is ~.378
-                 #         """,
-                 #         ),
-                 #     "HAVAA": st.column_config.Column(
-                 #         help="""
-                 #         Height-Adjusted Vertical Approach Angle
-                 #         >0 means flatter than other pitches at that location
-                 #         <0 means steeper than other pitches at that location
-                 #         """,
-                 #         ),
-                 #     "vs R": st.column_config.Column(
-                 #         help="% of pitches thrown vs Right-Handed Hitters",
-                 #         ),
-                 #     "vs L": st.column_config.Column(
-                 #         help="% of pitches thrown vs Left-Handed Hitters",
-                 #         ),
-                 #     },
                  use_container_width=False,
                  hide_index=True)
 
