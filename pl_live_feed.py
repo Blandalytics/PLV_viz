@@ -913,7 +913,8 @@ else:
 def plotly_charts(chart_df):
     lhh_df = chart_df.loc[chart_df['hitterside']=='L'].copy()
     rhh_df = chart_df.loc[chart_df['hitterside']=='R'].copy()
-    move_df = chart_df.assign(IHB = lambda x: np.where(x['P Hand']=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))).copy()
+    pitcher_hand = chart_df['P Hand'][0]
+    move_df = chart_df.assign(IHB = lambda x: np.where(pitcher_hand=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))).copy()
     fig = make_subplots(rows=1, cols=3, column_widths=[.2775,.475,.2775],
                         # specs = [[{}, {}]], 
                         horizontal_spacing = 0,
@@ -1117,7 +1118,7 @@ def plotly_charts(chart_df):
     ), row=1, col=2)
     
     fig.add_trace(go.Scatter(
-        x=[0,0,29,-29],
+        x=[0,0,28 if pitcher_hand=='R' else -28,-28 if pitcher_hand=='R' else 28],
         y=[27,-27,0,0],
         text=['Rise','Drop','Arm<br>Side','Glove<br>Side'],
         mode="text",
@@ -1194,7 +1195,7 @@ def plotly_charts(chart_df):
     fig.update_annotations(yshift=-20,
                            font=dict(size=20, color="white")
                           )
-    fig.update_layout(height=500, width=1000,
+    fig.update_layout(height=600, width=1200,
                       hoverlabel={
                           'font':{'color':'white'}
                           },
