@@ -1209,7 +1209,7 @@ def plotly_charts(chart_df):
                      )
     
     # fig.show()
-    st.plotly_chart(fig)
+    st.plotly_chart(fig,use_container_width=False)
 
 if st.button('Experimental test charts'):
     plotly_charts(chart_df)
