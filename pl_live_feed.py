@@ -334,6 +334,7 @@ def scrape_savant_data(player_name, game_id):
     pitch_call = []
     events = []
     result_code = []
+    pa = []
     zone = []
     balls = []
     strikes = []
@@ -393,6 +394,7 @@ def scrape_savant_data(player_name, game_id):
                 except KeyError:
                     events += [None]
                 result_code += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['result_code']]
+                pa += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['ab_number']]
                 zone += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['zone'] <10 else 0]
                 called_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='called_strike' else 0]
                 swinging_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked'] else 0]
@@ -468,6 +470,7 @@ def scrape_savant_data(player_name, game_id):
     df['pitch_call'] = pitch_call
     df['event'] = events
     df['result_code'] = result_code
+    df['PA'] = pa
     df['zone'] = zone
     df['CS'] = called_strikes
     df['Whiffs'] = swinging_strikes
@@ -519,6 +522,7 @@ def scrape_savant_data(player_name, game_id):
 
     agg_dict = {
         'Num Pitches':'count',
+        'PA':'nunique',
         'Strikes':'sum',
         'Balls':'sum',
         'zone':'sum',
@@ -611,6 +615,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','vs R'] = f'{v_rhh_val:.1%}'
     v_lhh_val = 1-v_rhh_val
     merge_df.loc['Total','vs L'] = f'{v_lhh_val:.1%}'
+    merge_df.loc['Total','PA'] = game_df['PA'].sum()
     # Strikes
     merge_df.loc['Total','Strikes'] = game_df['Strikes'].sum()
     strike_val = df['Strikes'].sum() / game_df['Num Pitches'].sum()
@@ -867,7 +872,7 @@ default_groups = {
 
 stat_tabs = {
     'Default':'',
-    'Standard':['Strikes','Balls','Hit','1B','2B','3B','HR','K','BB','HB']
+    'Standard':['Strikes','Balls','PA','Hit','1B','2B','3B','HR','K','BB','HB']
 }
 
 if len(list(pitcher_list.keys()))==0:
