@@ -341,6 +341,7 @@ def scrape_savant_data(player_name, game_id):
     foul_strikes = []
     swing = []
     total_strikes = []
+    total_balls = []
     ivb = []
     ihb = []
     vy0 = []
@@ -393,6 +394,7 @@ def scrape_savant_data(player_name, game_id):
                 swing += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['is_strike_swinging']]
                 foul_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='foul' else 0]
                 total_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked','called_strike','foul','hit_into_play'] else 0]
+                total_balls += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['ball','pitchout','ball_in_dirt','hit_by_pitch','intentional_ball'] else 0]
                 balls += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['balls']]
                 strikes += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['strikes']]
                 pitch_id += [pitch]
@@ -452,8 +454,8 @@ def scrape_savant_data(player_name, game_id):
     df['game_date'] = game_date
     df['MLBAMID'] = pitcher_id_list
     df['MLBAMID'] = df['MLBAMID'].astype('int')
-    df['Balls'] = balls
-    df['Strikes'] = strikes
+    df['balls'] = balls
+    df['strikes'] = strikes
     df['Pitcher'] = pitcher_name
     df['P Hand'] = throws
     df['hitterside'] = stands
@@ -466,9 +468,10 @@ def scrape_savant_data(player_name, game_id):
     df['Swings'] = swing
     df['chase'] = np.where(df['pitch_call'].isin(['swinging_strike','foul_tip','swinging_strike_blocked','foul','hit_into_play']) & (df['zone']==0),1,0)
     df['Fouls'] = foul_strikes
-    df['total_strikes'] = total_strikes
-    df['K'] = np.where(df['pitch_call'].isin(['called_strike','foul_tip','swinging_strike']) & (df['Strikes']==2),1,0)
-    df['BB'] = np.where((df['pitch_call']=='ball') & (df['Balls']==3),1,0)
+    df['Strikes'] = total_strikes
+    df['Balls'] = total_balls
+    df['K'] = np.where(df['pitch_call'].isin(['called_strike','foul_tip','swinging_strike']) & (df['strikes']==2),1,0)
+    df['BB'] = np.where((df['pitch_call']=='ball') & (df['balls']==3),1,0)
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = pitch_type
     # df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
