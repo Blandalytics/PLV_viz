@@ -403,7 +403,7 @@ def scrape_savant_data(player_name, game_id):
                 foul_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='foul' else 0]
                 total_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked','missed_bunt',
                                                                                                                'called_strike','foul','foul_bunt','foul_pitchout','hit_into_play'] else 0]
-                total_balls += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['ball','pitchout','ball_in_dirt','hit_by_pitch','blocked ball','intentional_ball'] else 0]
+                total_balls += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['ball','pitchout','ball_in_dirt','hit_by_pitch','blocked_ball','intentional_ball'] else 0]
                 balls += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['balls']]
                 strikes += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['strikes']]
                 pitch_id += [pitch]
