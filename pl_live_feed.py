@@ -10,6 +10,11 @@ import requests
 import seaborn as sns
 import urllib
 
+import plotly.graph_objs as go
+from plotly import tools
+from plotly.subplots import make_subplots
+import plotly.offline as py
+
 from sklearn.neighbors import KNeighborsClassifier
 from datetime import timedelta
 
@@ -792,10 +797,6 @@ def loc_charts(df):
     y_top = y_mid+(x_dist/aspect_ratio)
 
     fig, ax = plt.subplots(figsize=(5,5))
-    # ax.plot([-10/12,10/12], [sz_bot,sz_bot], color='w', linewidth=2,zorder=0, alpha=0.5)
-    # ax.plot([-10/12,10/12], [sz_top,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
-    # ax.plot([-10/12,-10/12], [sz_bot,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
-    # ax.plot([10/12,10/12], [sz_bot,sz_top], color='w', linewidth=2,zorder=0, alpha=0.5)
     zone_outline = plt.Rectangle((-10/12, sz_bot), 
                                  20/12, sz_top-sz_bot, 
                                  color=pl_white, fill=False,
@@ -861,12 +862,12 @@ default_groups = {
         'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
         'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
         'Locations':['Zone%','Chase%','BB'],
-        'Batted Ball':['BIP','In Play Out','H','HR','xDamage']
+        'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
     }
 
 stat_tabs = {
     'Default':'',
-    'Standard':['Strikes','Balls','H','1B','2B','3B','HR','K','BB','HB']
+    'Standard':['Strikes','Balls','Hit','1B','2B','3B','HR','K','BB','HB']
 }
 
 if len(list(pitcher_list.keys()))==0:
