@@ -628,7 +628,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','2B'] = game_df['2B'].sum()
     merge_df.loc['Total','3B'] = game_df['3B'].sum()
     merge_df.loc['Total','HR'] = game_df['HR'].sum()
-    merge_df.loc['Total','HB'] = game_df['HRB'].sum()
+    merge_df.loc['Total','HB'] = game_df['HB'].sum()
     merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
     return merge_df, df
