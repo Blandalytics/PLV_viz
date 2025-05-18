@@ -505,7 +505,7 @@ def scrape_savant_data(player_name, game_id):
     df['BIP'] = np.where((df['pitch_call']=='hit_into_play'),1,0)
     df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['result_code']=='X'),1,0)
     df['HB'] = np.where((df['pitch_call']=='hit_by_pitch'),1,0)
-    df['H'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
+    df['Hit'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
     df['1B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Single'),1,0)
     df['2B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Double'),1,0)
     df['3B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Triple'),1,0)
@@ -533,7 +533,7 @@ def scrape_savant_data(player_name, game_id):
         'K':'sum',
         'BIP':'sum',
         'In Play Out':'sum',
-        'H':'sum',
+        'Hit':'sum',
         '1B':'sum',
         '2B':'sum',
         '3B':'sum',
@@ -626,7 +626,7 @@ def scrape_savant_data(player_name, game_id):
     # Batted Ball
     merge_df.loc['Total','BIP'] = game_df['BIP'].sum()
     merge_df.loc['Total','In Play Out'] = game_df['In Play Out'].sum()
-    merge_df.loc['Total','H'] = game_df['H'].sum()
+    merge_df.loc['Total','Hit'] = game_df['Hit'].sum()
     merge_df.loc['Total','1B'] = game_df['1B'].sum()
     merge_df.loc['Total','2B'] = game_df['2B'].sum()
     merge_df.loc['Total','3B'] = game_df['3B'].sum()
