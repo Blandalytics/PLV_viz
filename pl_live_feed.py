@@ -1221,7 +1221,8 @@ def plotly_charts(chart_df):
                           )
     fig.update_layout(height=600, width=1200,
                       hoverlabel={
-                          'font':{'color':'white'}
+                          'font':{'color':'white',
+                                 'size':16}
                           },
                       title={
                 'text': f"{player_select}'s Pitch Charts ({date.strftime('%-m/%-d/%y')})",
