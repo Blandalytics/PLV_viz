@@ -329,6 +329,7 @@ def scrape_savant_data(player_name, game_id):
     game_date = []
     pitcher_id_list = []
     pitcher_name = []
+    hitter_name = []
     throws = []
     stands = []
     pitch_call = []
@@ -386,6 +387,7 @@ def scrape_savant_data(player_name, game_id):
                 pitcher_id_list += [pitcher_id]
                 p_name = x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitcher_name']
                 pitcher_name += [p_name]
+                hitter_name += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['batter_name']
                 throws += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['p_throws']]
                 stands += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['stand']]
                 pitch_call += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']]
@@ -465,6 +467,7 @@ def scrape_savant_data(player_name, game_id):
     df['balls'] = balls
     df['strikes'] = strikes
     df['Pitcher'] = pitcher_name
+    df['Hitter'] = hitter_name
     df['P Hand'] = throws
     df['hitterside'] = stands
     df['pitch_call'] = pitch_call
@@ -852,6 +855,25 @@ marker_colors = {
     'UN':'#999999', 
 }
 
+marker_names = {
+    'FF':'Four-Seamer', 
+    'FA':'Fastball', 
+    'SI':'Sinker',
+    'FT':'Two-Seamer',
+    'FS':'Splitter',  
+    'FO':'Forkball',  
+    'FC':'Cutter', 
+    'SL':'Slider', 
+    'ST':'Sweeper',
+    'CU':'Curveball',
+    'KC':'Knuckle Curve',
+    'SV':'Slurve',
+    'CH':'Changeup', 
+    'KN':'Knuckleball',
+    'SC':'Screwball', 
+    'UN':'Unknown', 
+}
+
 highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[2]) for k, v in marker_colors.items()}
 type_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[5]) for k, v in marker_colors.items()}
 
@@ -911,9 +933,11 @@ else:
         loc_charts(chart_df)
 
 def plotly_charts(chart_df):
+    chart_df['Pitch Name'] = chart_df['pitch_type'].map(marker_names)
     lhh_df = chart_df.loc[chart_df['hitterside']=='L'].copy()
     rhh_df = chart_df.loc[chart_df['hitterside']=='R'].copy()
     pitcher_hand = chart_df['P Hand'][0]
+    faded_label_color = hextriplet(sns.light_palette(pl_background,n_colors=20)[10])
     move_df = chart_df.assign(IHB = lambda x: np.where(pitcher_hand=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))).copy()
     fig = make_subplots(rows=1, cols=3, column_widths=[.2775,.475,.2775],
                         # specs = [[{}, {}]], 
@@ -926,7 +950,7 @@ def plotly_charts(chart_df):
     fig.update_xaxes(title_text="", range=[-2,2], row=1, col=1)
     fig.update_yaxes(title_text="", range=[-1,6], row=1, col=1)
     labels = lhh_df['pitch_type'].map(marker_colors)
-    hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>Hitter Hand: %{text}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<extra></extra>'
+    hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Hitter: %{customdata[5]} (%{text}HH)<br>Count: %{customdata[0]}-%{customdata[1]}<br>Velo: %{customdata[4]:.1f}mph<br>EV/LA: %{customdata[6]:.1f}mph @ %{customdata[7]:.0f}°<extra></extra>'
     marker_dict = dict(color=labels,
                        size=25,
                        line=dict(width=1,color='white'))
@@ -999,7 +1023,7 @@ def plotly_charts(chart_df):
     bonus_text = lhh_df['hitterside']
     fig.add_trace(go.Scatter(x=lhh_df['p_x'].mul(-1), y=lhh_df['p_z'], mode='markers', 
                        marker=marker_dict, text=bonus_text,
-                       customdata=lhh_df[['balls','strikes','pitch_type','Description']],
+                       customdata=lhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','Launch Speed','Launch Angle']],
                        hovertemplate=hover_text,
                         showlegend=False),
                             row=1, col=1)
@@ -1008,7 +1032,7 @@ def plotly_charts(chart_df):
     fig.update_xaxes(title_text="", range=[-2,2], row=1, col=3)
     fig.update_yaxes(title_text="", range=[-1,6], row=1, col=3)
     labels = rhh_df['pitch_type'].map(marker_colors)
-    hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>Hitter Hand: %{text}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<extra></extra>'
+    # hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>Hitter Hand: %{text}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<extra></extra>'
     marker_dict = dict(color=labels,
                        size=25,
                        line=dict(width=1,color='white'))
@@ -1081,7 +1105,7 @@ def plotly_charts(chart_df):
     bonus_text = rhh_df['hitterside']
     fig.add_trace(go.Scatter(x=rhh_df['p_x'].mul(-1), y=rhh_df['p_z'], mode='markers', 
                        marker=marker_dict, text=bonus_text,
-                       customdata=rhh_df[['balls','strikes','pitch_type','Description']],
+                       customdata=rhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter']],
                        hovertemplate=hover_text,
                         showlegend=False),
                             row=1, col=3)
@@ -1110,7 +1134,7 @@ def plotly_charts(chart_df):
         text=['24"','24"','24"','24"','12"','12"','12"','12"'],
         mode="text",
         textfont=dict(
-            color=hextriplet(sns.light_palette(pl_background,n_colors=20)[10]),
+            color=faded_label_color,
             size=15,
         ),
         showlegend=False,
@@ -1154,7 +1178,7 @@ def plotly_charts(chart_df):
                   xref="x", yref="y",
                   x0=-18, y0=-18, x1=18, y1=18,
                   line=dict(
-                      color=hextriplet(sns.light_palette(pl_background,n_colors=20)[10]),
+                      color=faded_label_color,
                       width=1,
                       dash='dash',
                       ),
@@ -1164,7 +1188,7 @@ def plotly_charts(chart_df):
                   xref="x", yref="y",
                   x0=-6, y0=-6, x1=6, y1=6,
                   line=dict(
-                      color=hextriplet(sns.light_palette(pl_background,n_colors=20)[10]),
+                      color=faded_label_color,
                       width=1,
                       dash='dash'
                       ),
@@ -1173,7 +1197,7 @@ def plotly_charts(chart_df):
     
     fig.add_trace(go.Scatter(x=move_df['IHB'], y=move_df['IVB'], mode='markers', 
                        marker=marker_dict, text=bonus_text,
-                       customdata=move_df[['pitch_type','Velo','Description']],
+                       customdata=move_df[['Pitch Name','Velo','Description']],
                        hovertemplate=hover_text,
                         showlegend=False), row=1, col=2)
     
