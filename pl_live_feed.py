@@ -1124,7 +1124,7 @@ def plotly_charts(chart_df):
         mode="text",
         textfont=dict(
             color="white",
-            size=14,
+            size=20,
         ),
         showlegend=False,
         hoverinfo='skip',
@@ -1193,20 +1193,20 @@ def plotly_charts(chart_df):
                 ),
         )
     fig.update_annotations(yshift=-20,
-                           font=dict(size=20, color="white")
+                           font=dict(size=30, color="white")
                           )
     fig.update_layout(height=600, width=1200,
                       hoverlabel={
                           'font':{'color':'white'}
                           },
                       title={
-                'text': f"{player_select}'s Pitch Charts",
+                'text': f"{player_select}'s Pitch Charts ({date.strftime('%-m/%-d/%y')})",
                 'y':0.975,
                 'x':0.5,
                 'xanchor': 'center',
                 'yanchor': 'top',
             'font':{'color':'white',
-                   'size':25}}
+                   'size':40}}
                      )
     
     # fig.show()
