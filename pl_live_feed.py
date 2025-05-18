@@ -1110,7 +1110,7 @@ def plotly_charts(chart_df):
         text=['24"','24"','24"','24"','12"','12"','12"','12"'],
         mode="text",
         textfont=dict(
-            color=hextriplet(sns.light_palette(pl_background,n_colors=20)[5]),
+            color=hextriplet(sns.light_palette(pl_background,n_colors=20)[10]),
             size=15,
         ),
         showlegend=False,
@@ -1154,7 +1154,7 @@ def plotly_charts(chart_df):
                   xref="x", yref="y",
                   x0=-18, y0=-18, x1=18, y1=18,
                   line=dict(
-                      color=hextriplet(sns.light_palette(pl_background,n_colors=20)[5]),
+                      color=hextriplet(sns.light_palette(pl_background,n_colors=20)[10]),
                       width=1,
                       dash='dash',
                       ),
@@ -1164,7 +1164,7 @@ def plotly_charts(chart_df):
                   xref="x", yref="y",
                   x0=-6, y0=-6, x1=6, y1=6,
                   line=dict(
-                      color=hextriplet(sns.light_palette(pl_background,n_colors=20)[5]),
+                      color=hextriplet(sns.light_palette(pl_background,n_colors=20)[10]),
                       width=1,
                       dash='dash'
                       ),
