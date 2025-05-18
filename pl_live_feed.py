@@ -907,7 +907,8 @@ else:
                  hide_index=True)
 
     game_charts(chart_df)
-    loc_charts(chart_df)
+    if st.button('Location Charts'):
+        loc_charts(chart_df)
 
 def plotly_charts(chart_df):
     lhh_df = chart_df.loc[chart_df['hitterside']=='L'].copy()
@@ -1208,7 +1209,7 @@ def plotly_charts(chart_df):
                      )
     
     # fig.show()
-    st.plotly_chart(fig,use_container_width=True)
+    st.plotly_chart(fig)
 
 if st.button('Experimental test charts'):
     plotly_charts(chart_df)
