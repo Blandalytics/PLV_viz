@@ -1188,11 +1188,11 @@ def plotly_charts(chart_df):
                 l=0,
                 r=0,
                 b=0,
-                t=150,
+                t=100,
                 pad=4
                 ),
         )
-    fig.update_annotations(yshift=-50,
+    fig.update_annotations(yshift=-30,
                            font=dict(size=30, color="white")
                           )
     fig.update_layout(height=600, width=1400,
