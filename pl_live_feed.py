@@ -501,7 +501,7 @@ def scrape_savant_data(player_name, game_id):
     df['BIP'] = np.where((df['pitch_call']=='hit_into_play'),1,0)
     df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['result_code']=='X'),1,0)
     df['HB'] = np.where((df['pitch_call']=='hit_by_pitch'),1,0)
-    df['Hit'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
+    df['H'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
     df['1B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Single'),1,0)
     df['2B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Double'),1,0)
     df['3B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Triple'),1,0)
@@ -530,7 +530,7 @@ def scrape_savant_data(player_name, game_id):
         'K':'sum',
         'BIP':'sum',
         'In Play Out':'sum',
-        'Hit':'sum',
+        'H':'sum',
         '1B':'sum',
         '2B':'sum',
         '3B':'sum',
@@ -623,7 +623,7 @@ def scrape_savant_data(player_name, game_id):
     # Batted Ball
     merge_df.loc['Total','BIP'] = game_df['BIP'].sum()
     merge_df.loc['Total','In Play Out'] = game_df['In Play Out'].sum()
-    merge_df.loc['Total','Hit'] = game_df['Hit'].sum()
+    merge_df.loc['Total','H'] = game_df['H'].sum()
     merge_df.loc['Total','1B'] = game_df['1B'].sum()
     merge_df.loc['Total','2B'] = game_df['2B'].sum()
     merge_df.loc['Total','3B'] = game_df['3B'].sum()
@@ -858,7 +858,7 @@ default_groups = {
         'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
         'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
         'Locations':['Zone%','Chase%','BB'],
-        'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
+        'Batted Ball':['BIP','In Play Out','H','HR','xDamage']
     }
 
 stat_tabs = {
@@ -869,10 +869,10 @@ stat_tabs = {
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 else:
-    tab_select = st.segmented_control('',list(stat_tabs.keys()),default='Default')
     idx = pd.IndexSlice
     slice_ = idx['Total',:]
     table_df, chart_df = scrape_savant_data(player_select,game_id)
+    tab_select = st.segmented_control('',list(stat_tabs.keys()),default='Default')
     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
 
     if tab_select=='Default':
@@ -881,7 +881,7 @@ else:
         table_df = table_df.rename(columns={'Num Pitches':'#'})[sum(list(default_groups.values()),[])]
         table_df.columns = pd.MultiIndex.from_tuples(col_names)
     else:
-        table_df = table_df[['Type','#']+stat_tabs[tab_select]]
+        table_df = table_df.rename(columns={'Num Pitches':'#'})[['Type','#']+stat_tabs[tab_select]]
     st.dataframe((table_df
                   .style
                   .format(precision=3)
