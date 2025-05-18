@@ -1105,13 +1105,13 @@ def plotly_charts(chart_df):
                             hoverinfo='skip'), row=1, col=2)
     
     fig.add_trace(go.Scatter(
-        x=[-21.75,21.75,2.5,2.5,-9.75,9.75,2.5,2.5],
-        y=[-2,-2,-22.5,22,-2,-2,-10.5,10],
+        x=[-21.75,21.75,2,2,-9.75,9.75,2,2],
+        y=[-1.5,-1.5,-22.5,22,-1.5,-1.5,-10.5,10],
         text=['24"','24"','24"','24"','12"','12"','12"','12"'],
         mode="text",
         textfont=dict(
             color="white",
-            size=12,
+            size=15,
         ),
         showlegend=False,
         hoverinfo='skip',
