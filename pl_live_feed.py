@@ -523,7 +523,7 @@ def scrape_savant_data(player_name, game_id):
     df['2B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Double'),1,0)
     df['3B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Triple'),1,0)
     df['HR'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Home Run'),1,0)
-    df['xDamage'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,0.9,1.25,1.6,2]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
+    df['xDamage'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,1,2,3,4]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
 
     agg_dict = {
         'Num Pitches':'count',
