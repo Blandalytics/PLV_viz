@@ -115,7 +115,7 @@ logo = load_logo()
 st.image(logo, width=200)
 
 st.title('PL Live Pitching Stats')
-st.write('Click the `R` key on your keyboard to reload the page with your selection. Data (especially pitch types) are subject to change.')
+st.write('Click the `R` key on your keyboard to reload the page with your selection. Data (especially pitch types) are subject to change. Arm Angle is an estimate based on pitcher height and pitch release coordinates.')
 col1, col2, col3 = st.columns([0.25,0.5,0.25])
 
 with col1:
