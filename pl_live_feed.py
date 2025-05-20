@@ -324,12 +324,24 @@ pitch_names = {
     'UN':'Unknown', 
 }
 
+def player_height(mlbamid):
+    mlbamid = int(mlbamid)
+    url = f'https://statsapi.mlb.com/api/v1/people?personIds={mlbamid}&fields=people,id,height,weight'
+    response = requests.get(url)
+    # raise an HTTPError if the request was unsuccessful
+    response.raise_for_status()
+    return sum(list(map(lambda x, y: int(x)*y, response.json()['people'][0]['height'].replace("\'","").replace('"',"").split(' '),[1,1/12])))
+
+def arm_angle(x0,z0,extension,height):
+    return -43 - 33.1 * (abs(x0)/height) + 94 * (z0/height) + 4.4 * (extension/height)
+    
 @st.cache_data(ttl='5m',show_spinner='Loading player data')
 def scrape_savant_data(player_name, game_id):
     game_ids = []
     game_date = []
     pitcher_id_list = []
     pitcher_name = []
+    pitcher_height = []
     hitter_name = []
     throws = []
     stands = []
@@ -352,6 +364,8 @@ def scrape_savant_data(player_name, game_id):
     total_balls = []
     ivb = []
     ihb = []
+    x0 = []
+    z0 = []
     vy0 = []
     vz0 = []
     ay = []
@@ -380,6 +394,7 @@ def scrape_savant_data(player_name, game_id):
         if f'{home_away_pitcher}_pitchers' not in x.keys():
             continue
         for pitcher_id in list(x[f'{home_away_pitcher}_pitchers'].keys()):
+            height = player_height(pitcher_id)
             if pitcher_id != pitcher_list[player_select][0]:
                 continue
             for pitch in range(len(x[f'{home_away_pitcher}_pitchers'][pitcher_id])):
@@ -388,6 +403,7 @@ def scrape_savant_data(player_name, game_id):
                 pitcher_id_list += [pitcher_id]
                 p_name = x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitcher_name']
                 pitcher_name += [p_name]
+                pitcher_height += [height]
                 hitter_name += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['batter_name']]
                 throws += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['p_throws']]
                 stands += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['stand']]
@@ -415,8 +431,8 @@ def scrape_savant_data(player_name, game_id):
                     extension += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['extension'] if 'extension' in x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys() else None]
                     ivb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pfxZWithGravity']]
                     ihb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pfxXNoAbs']]
-                    # x0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['x0']]
-                    # z0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['z0']]
+                    x0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['x0']]
+                    z0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['z0']]
                     # vx0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['vx0']]
                     vy0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['vy0']]
                     vz0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['vz0']]
@@ -434,8 +450,8 @@ def scrape_savant_data(player_name, game_id):
                     extension += [None]
                     ivb += [None]
                     ihb += [None]
-                    # x0 += [None]
-                    # z0 += [None]
+                    x0 += [None]
+                    z0 += [None]
                     # vx0 += [None]
                     vy0 += [None]
                     vz0 += [None]
@@ -468,6 +484,7 @@ def scrape_savant_data(player_name, game_id):
     df['balls'] = balls
     df['strikes'] = strikes
     df['Pitcher'] = pitcher_name
+    df['Height'] = pitcher_height
     df['Hitter'] = hitter_name
     df['P Hand'] = throws
     df['hitterside'] = stands
@@ -492,12 +509,15 @@ def scrape_savant_data(player_name, game_id):
     df['Velo'] = velo
     df['Ext'] = extension
     df['vert_break'] = ivb
+    df['x0'] = x0
+    df['z0'] = z0
     df['vy0'] = vy0
     df['vz0'] = vz0
     df['ay'] = ay
     df['az'] = az
     df['p_x'] = px
     df['p_z'] = pz
+    df['Arm Angle'] = df.apply(lambda x: arm_angle(x['x0'], x['z0'],x['Ext'],x['Height']), axis=1)
     df['sz_top'] = sz_top
     df['sz_bot'] = sz_bot
     df['sz_z'] = strikezone_z(df,'sz_top','sz_bot')
@@ -527,6 +547,7 @@ def scrape_savant_data(player_name, game_id):
 
     agg_dict = {
         'Num Pitches':'count',
+        'Arm Angle':'median',
         'PA':'sum',
         'Strikes':'sum',
         'Balls':'sum',
@@ -598,6 +619,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
     merge_df['xDamage'] = merge_df['xDamage'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
+    merge_df['Arm Angle'] = [f'{x:.0f}°' for x in merge_df['Arm Angle']]
 
     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
     
@@ -888,7 +910,7 @@ def highlight_cols(s, coldict, stat_tab):
 default_groups = {
         '':['Type','#'],
         'Usage':['Usage','vs R','vs L'],
-        'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
+        'Stuff':['Velo','Ext','Arm Angle','IVB','IHB','HAVAA'],
         'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
         'Locations':['Zone%','Chase%','BB'],
         'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
