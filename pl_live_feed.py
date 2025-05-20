@@ -247,7 +247,7 @@ if len(list(pitcher_list.keys()))>0:
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
 
-with open('arm_angle_model.pkl.pkl', 'rb') as f:
+with open('arm_angle_model.pkl', 'rb') as f:
     arm_angle_knn = pickle.load(f)
 
 sz_bot = 1.5
