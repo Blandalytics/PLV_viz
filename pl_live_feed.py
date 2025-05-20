@@ -571,7 +571,7 @@ def scrape_savant_data(player_name, game_id):
 
     agg_dict = {
         'Num Pitches':'count',
-        'Arm Angle':'median',
+        # 'Arm Angle':'median',
         'PA':'sum',
         'Strikes':'sum',
         'Balls':'sum',
@@ -934,7 +934,8 @@ def highlight_cols(s, coldict, stat_tab):
 default_groups = {
         '':['Type','#'],
         'Usage':['Usage','vs R','vs L'],
-        'Stuff':['Velo','Ext','Arm Angle','IVB','IHB','HAVAA'],
+        'Stuff':['Velo','Ext',#'Arm Angle',
+                 'IVB','IHB','HAVAA'],
         'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
         'Locations':['Zone%','Chase%','BB'],
         'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
