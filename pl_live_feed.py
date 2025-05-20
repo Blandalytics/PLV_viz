@@ -57,6 +57,7 @@ def generate_games(games_today):
     game_dict = {}
     code_dict = {
         'F':0,
+        'U':0,
         'O':1,
         'I':1,
         'N':1,
