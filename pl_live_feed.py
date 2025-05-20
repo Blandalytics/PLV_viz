@@ -643,7 +643,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
     merge_df['xDamage'] = merge_df['xDamage'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
-    merge_df['Arm Angle'] = [f'{x:.0f}°' for x in merge_df['Arm Angle']]
+    # merge_df['Arm Angle'] = [f'{x:.0f}°' for x in merge_df['Arm Angle']]
 
     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
     
