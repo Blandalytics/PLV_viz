@@ -522,7 +522,7 @@ def scrape_savant_data(player_name, game_id):
     df['p_x'] = px
     df['p_z'] = pz
     df['pos_z_scale'] = df['z0'].div(df['Height'])
-    df['pos_x_scale'] = df['z0'].div(df['Height'])
+    df['pos_x_scale'] = df['x0'].abs().div(df['Height'])
     df['extension_scale'] = df['Ext'].div(df['Height'])
     # df['Arm Angle'] = df.apply(lambda x: arm_angle(x['x0'], x['z0'],x['Ext'],x['Height']), axis=1)
     arm_angle_preds = arm_angle_knn.predict_proba(df[arm_angle_knn.feature_names_in_])
