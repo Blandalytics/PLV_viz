@@ -247,8 +247,8 @@ if len(list(pitcher_list.keys()))>0:
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
 
-with open('arm_angle_model.pkl', 'rb') as f:
-    arm_angle_knn = pickle.load(f)
+# with open('arm_angle_model.pkl', 'rb') as f:
+#     arm_angle_knn = pickle.load(f)
 
 sz_bot = 1.5
 sz_top = 3.5
@@ -505,7 +505,7 @@ def scrape_savant_data(player_name, game_id):
     df['Fouls'] = foul_strikes
     df['Strikes'] = total_strikes
     df['Balls'] = total_balls
-    df['K'] = np.where(df['pitch_call'].isin(['called_strike','foul_tip','swinging_strike']) & (df['strikes']==2),1,0)
+    df['K'] = np.where(df['pitch_call'].isin(['called_strike','foul_tip','swinging_strike','swinging_strike_blocked']) & (df['strikes']==2),1,0)
     df['BB'] = np.where((df['pitch_call']=='ball') & (df['balls']==3),1,0)
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = pitch_type
@@ -525,23 +525,23 @@ def scrape_savant_data(player_name, game_id):
     df['pos_x_scale'] = df['x0'].abs().div(df['Height'])
     df['extension_scale'] = df['Ext'].div(df['Height'])
     # df['Arm Angle'] = df.apply(lambda x: arm_angle(x['x0'], x['z0'],x['Ext'],x['Height']), axis=1)
-    arm_angle_preds = arm_angle_knn.predict_proba(df[arm_angle_knn.feature_names_in_])
-    arm_angle_cols = [-71,-70,-69,-68,-67,-66,-65,-64,-63,-62,
-                      -61,-60,-59,-58,-57,-56,-55,-54,-53,-36,
-                      -35,-34,-33,-32,-31,-30,-29,-28,-27,-26,
-                      -25,-24,-23,-22,-21,-20,-19,-18,-17,-16,
-                      -15,-14,-13,-12,-11,-10,-9,-8,-7,-6,
-                      -5,-4,-3,-2,-1,0,1,2,3,4,
-                      5,6,7,8,9,10,11,12,13,14,
-                      15,16,17,18,19,20,21,22,23,24,
-                      25,26,27,28,29,30,31,32,33,34,
-                      35,36,37,38,39,40,41,42,43,44,
-                      45,46,47,48,49,50,51,52,53,54,
-                      55,56,57,58,59,60,61,62,63,64,
-                      65,66,67,68,69,70,71,72,73,74,
-                      75,76,77,78,79,80,81,82,84,92,
-                      110,111,128,144]
-    df['Arm Angle'] = list(pd.DataFrame(arm_angle_preds).mul(arm_angle_cols).sum(axis=1))
+    # arm_angle_preds = arm_angle_knn.predict_proba(df[arm_angle_knn.feature_names_in_])
+    # arm_angle_cols = [-71,-70,-69,-68,-67,-66,-65,-64,-63,-62,
+    #                   -61,-60,-59,-58,-57,-56,-55,-54,-53,-36,
+    #                   -35,-34,-33,-32,-31,-30,-29,-28,-27,-26,
+    #                   -25,-24,-23,-22,-21,-20,-19,-18,-17,-16,
+    #                   -15,-14,-13,-12,-11,-10,-9,-8,-7,-6,
+    #                   -5,-4,-3,-2,-1,0,1,2,3,4,
+    #                   5,6,7,8,9,10,11,12,13,14,
+    #                   15,16,17,18,19,20,21,22,23,24,
+    #                   25,26,27,28,29,30,31,32,33,34,
+    #                   35,36,37,38,39,40,41,42,43,44,
+    #                   45,46,47,48,49,50,51,52,53,54,
+    #                   55,56,57,58,59,60,61,62,63,64,
+    #                   65,66,67,68,69,70,71,72,73,74,
+    #                   75,76,77,78,79,80,81,82,84,92,
+    #                   110,111,128,144]
+    # df['Arm Angle'] = list(pd.DataFrame(arm_angle_preds).mul(arm_angle_cols).sum(axis=1))
     df['sz_top'] = sz_top
     df['sz_bot'] = sz_bot
     df['sz_z'] = strikezone_z(df,'sz_top','sz_bot')
