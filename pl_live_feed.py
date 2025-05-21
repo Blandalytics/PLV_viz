@@ -988,16 +988,16 @@ def plotly_charts(chart_df):
     pitcher_hand = chart_df['P Hand'][0]
     faded_label_color = hextriplet(sns.light_palette(pl_background,n_colors=20)[10])
     move_df = chart_df.assign(IHB = lambda x: np.where(pitcher_hand=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))).copy()
-    fig = make_subplots(rows=1, cols=3, column_widths=[.2775,.475,.2775],
+    fig = make_subplots(rows=1, cols=3, column_widths=[.3,.4,.3],
                         # specs = [[{}, {}]], 
                         horizontal_spacing = 0,
                         subplot_titles=("Locations<br>vs LHH","Movement<br> ","Locations<br>vs RHH"))
-    plate_y = -.5
+    plate_y = -1.25
     
     # layout = go.Layout(height = 600,width = 1500,xaxis_range=[-2.5,2.5], yaxis_range=[-1,6])
     # LHH Plot
-    fig.update_xaxes(title_text="", range=[-2,2], row=1, col=1)
-    fig.update_yaxes(title_text="", range=[-1,6], row=1, col=1)
+    fig.update_xaxes(title_text="", range=[-2.5,2.5], row=1, col=1)
+    fig.update_yaxes(title_text="", range=[-1.75,1.5], row=1, col=1)
     labels = lhh_df['pitch_type'].map(marker_colors)
     hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Hitter: %{customdata[5]}<br>Count: %{customdata[0]}-%{customdata[1]}<br>Velo: %{customdata[4]:.1f}mph<br>%{customdata[6]}<extra></extra>'
     marker_dict = dict(color=labels,
@@ -1005,25 +1005,25 @@ def plotly_charts(chart_df):
                        line=dict(width=1,color='white'))
     
     # fig = go.Figure(layout = layout)
-    fig.add_trace(go.Scatter(x=[10/36,10/36], y=[1.5,3.5],
+    fig.add_trace(go.Scatter(x=[10/36,10/36], y=[-0.5,0.5],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-10/36,-10/36], y=[1.5,3.5],
+    fig.add_trace(go.Scatter(x=[-10/36,-10/36], y=[-0.5,0.5],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[1.5+2/3,1.5+2/3],
+    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[-1/6,-1/6],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[3.5-2/3,3.5-2/3],
+    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[1/6,1/6],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
@@ -1031,7 +1031,7 @@ def plotly_charts(chart_df):
                             ),row=1, col=1)
     
     fig.add_shape(type="rect",
-        x0=-10/12, y0=1.5, x1=10/12, y1=3.5,
+        x0=-10/12, y0=-0.5, x1=10/12, y1=0.5,
         line=dict(color="white"),
                   layer='below',
                   row=1, col=1
@@ -1044,25 +1044,25 @@ def plotly_charts(chart_df):
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-8.5/12,-8.25/12], y=[plate_y,plate_y+0.15],
+    fig.add_trace(go.Scatter(x=[-8.5/12,-8.15/12], y=[plate_y,plate_y+0.075],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[8.5/12,8.25/12], y=[plate_y,plate_y+0.15],
+    fig.add_trace(go.Scatter(x=[8.5/12,8.15/12], y=[plate_y,plate_y+0.075],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[8.28/12,0], y=[plate_y+0.15,plate_y+0.25],
+    fig.add_trace(go.Scatter(x=[8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-8.28/12,0], y=[plate_y+0.15,plate_y+0.25],
+    fig.add_trace(go.Scatter(x=[-8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
@@ -1070,7 +1070,7 @@ def plotly_charts(chart_df):
                             ),row=1, col=1)
     
     bonus_text = lhh_df['hitterside']
-    fig.add_trace(go.Scatter(x=lhh_df['p_x'].mul(-1), y=lhh_df['p_z'], mode='markers', 
+    fig.add_trace(go.Scatter(x=lhh_df['p_x'].mul(-1), y=lhh_df['sz_z'], mode='markers', 
                        marker=marker_dict, text=bonus_text,
                        customdata=lhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','ev_la_text']],
                        hovertemplate=hover_text,
@@ -1078,8 +1078,8 @@ def plotly_charts(chart_df):
                             row=1, col=1)
     
     # RHH Plot
-    fig.update_xaxes(title_text="", range=[-2,2], row=1, col=3)
-    fig.update_yaxes(title_text="", range=[-1,6], row=1, col=3)
+    fig.update_xaxes(title_text="", range=[-2.5,2.5], row=1, col=3)
+    fig.update_yaxes(title_text="", range=[-1.75,1.5], row=1, col=3)
     labels = rhh_df['pitch_type'].map(marker_colors)
     # hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>Hitter Hand: %{text}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<extra></extra>'
     marker_dict = dict(color=labels,
@@ -1087,25 +1087,25 @@ def plotly_charts(chart_df):
                        line=dict(width=1,color='white'))
     
     # fig = go.Figure(layout = layout)
-    fig.add_trace(go.Scatter(x=[10/36,10/36], y=[1.5,3.5],
+    fig.add_trace(go.Scatter(x=[10/36,10/36], y=[-0.5,0.5],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-10/36,-10/36], y=[1.5,3.5],
+    fig.add_trace(go.Scatter(x=[-10/36,-10/36], y=[-0.5,0.5],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[1.5+2/3,1.5+2/3],
+    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[-1/6,-1/6],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[3.5-2/3,3.5-2/3],
+    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[1/6,1/6],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
@@ -1113,7 +1113,7 @@ def plotly_charts(chart_df):
                             ),row=1, col=3)
     
     fig.add_shape(type="rect",
-        x0=-10/12, y0=1.5, x1=10/12, y1=3.5,
+        x0=-10/12, y0=-0.5, x1=10/12, y1=0.5,
         line=dict(color="white"),
                   layer='below',
                   row=1, col=3
@@ -1126,25 +1126,25 @@ def plotly_charts(chart_df):
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-8.5/12,-8.25/12], y=[plate_y,plate_y+0.15],
+    fig.add_trace(go.Scatter(x=[-8.5/12,-8.15/12], y=[plate_y,plate_y+0.075],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[8.5/12,8.25/12], y=[plate_y,plate_y+0.15],
+    fig.add_trace(go.Scatter(x=[8.5/12,8.15/12], y=[plate_y,plate_y+0.075],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[8.28/12,0], y=[plate_y+0.15,plate_y+0.25],
+    fig.add_trace(go.Scatter(x=[8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
                             hoverinfo='skip',
                             ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-8.28/12,0], y=[plate_y+0.15,plate_y+0.25],
+    fig.add_trace(go.Scatter(x=[-8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
                              mode='lines',
                              line=dict(color='white', width=2),
                              showlegend=False,
@@ -1152,7 +1152,7 @@ def plotly_charts(chart_df):
                             ),row=1, col=3)
     
     bonus_text = rhh_df['hitterside']
-    fig.add_trace(go.Scatter(x=rhh_df['p_x'].mul(-1), y=rhh_df['p_z'], mode='markers', 
+    fig.add_trace(go.Scatter(x=rhh_df['p_x'].mul(-1), y=rhh_df['sz_z'], mode='markers', 
                        marker=marker_dict, text=bonus_text,
                        customdata=rhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','ev_la_text']],
                        hovertemplate=hover_text,
@@ -1268,7 +1268,7 @@ def plotly_charts(chart_df):
     fig.update_annotations(yshift=-35,
                            font=dict(size=30, color="white")
                           )
-    fig.update_layout(height=600, width=1200,
+    fig.update_layout(height=540, width=1200,
                       hoverlabel={
                           'font':{'color':'white',
                                  'size':16}
