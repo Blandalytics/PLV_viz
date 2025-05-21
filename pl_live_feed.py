@@ -637,7 +637,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['CSW'] = [f'{x:.1f}%' for x in merge_df['CSW']]
     merge_df['Strike%'] = [f'{x:.1f}%' for x in merge_df['strike_rate']]
     merge_df['Zone%'] = [f'{x:.1f}%' for x in merge_df['zone_rate']]
-    merge_df['Chase%'] = [f'{x:.1f}%' for x in merge_df['chase_rate']]
+    merge_df['Chase%'] = [f'{x:.1f}%' for x in merge_df['chase_rate'].fillna(0)]
     merge_df['vs R'] = [f'{x:.1%}' for x in merge_df['vs_rhh']]
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
