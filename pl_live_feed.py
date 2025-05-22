@@ -1524,6 +1524,7 @@ def plotly_charts(chart_df):
             'font':{'color':'white',
                    'size':40}},
                       showlegend=False,
+                      hoverlabel_align = 'left'
                      )
     fig.update_traces(hoverlabel={
                           'font':{'color':'black'}
