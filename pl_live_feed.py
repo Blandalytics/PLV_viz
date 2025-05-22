@@ -1457,7 +1457,7 @@ def plotly_charts(chart_df):
             x=list(range(len(pitches_thrown))), 
             y=[0] * len(pitches_thrown),
             mode='markers+text',
-            marker=dict(size=[2*x+20 for x in perc_thrown],
+            marker=dict(size=[2*min(50,x)+20 for x in perc_thrown],
                         opacity=1,
                         color=pitch_colors,
                         line=dict(color='white',
@@ -1477,10 +1477,10 @@ def plotly_charts(chart_df):
                            text=pitch_names[pitchtype],
                            showarrow=False,
                            font=dict(
-                               size=16,
+                               size=24,
                                color="#ffffff"
                                ), row=2, col=1)
-    fig.add_annotation(x=(len(pitches_thrown)-1)/2, y=-0.75,
+    fig.add_annotation(x=(len(pitches_thrown)-1)/2, y=-0.7,
                        text='Pitch Sequencing',
                        showarrow=False,
                        font=dict(
@@ -1522,7 +1522,8 @@ def plotly_charts(chart_df):
                 'xanchor': 'center',
                 'yanchor': 'top',
             'font':{'color':'white',
-                   'size':40}}
+                   'size':40}},
+                      showlegend=False,
                      )
     fig.update_traces(hoverlabel={
                           'font':{'color':'black'}
