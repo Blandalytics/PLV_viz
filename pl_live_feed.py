@@ -20,7 +20,6 @@ from datetime import timedelta
 
 from PIL import Image
 
-#st.write()
 
 # Convenience Functions
 def adjusted_vaa(dataframe):
