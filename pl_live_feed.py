@@ -1022,7 +1022,7 @@ def plotly_charts(chart_df):
     fig.update_xaxes(title_text="", range=[-2.5,2.5], row=1, col=1)
     fig.update_yaxes(title_text="", range=[-1.75,1.5], row=1, col=1)
     labels = lhh_df['pitch_type'].map(marker_colors)
-    hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>%{customdata[7]}Hitter: %{customdata[5]}<br>Count: %{customdata[0]}-%{customdata[1]}<br>Velo: %{customdata[4]:.1f}mph<br>%{customdata[6]}<extra></extra>'
+    hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Hitter: %{customdata[5]}<br>Count: %{customdata[0]}-%{customdata[1]}<br>Velo: %{customdata[4]:.1f}mph<br>%{customdata[6]}<extra></extra>'
     marker_dict = dict(color=labels,
                        size=25,
                        line=dict(width=1,color='white'))
