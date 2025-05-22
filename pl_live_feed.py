@@ -1465,7 +1465,7 @@ def plotly_charts(chart_df):
             text=num_thrown,
             textfont=dict(
                 color="white",
-                size=12
+                size=16
             ),
             customdata=label_df.assign(full_name = lambda x: x['pitch_type'].map(pitch_names)),
             hovertemplate=hover_text
