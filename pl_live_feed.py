@@ -1275,11 +1275,11 @@ def plotly_charts(chart_df):
                         showlegend=False), row=1, col=2)
 
      ### Sequencing Charts
-    pa_df = chart_df.assign(Description = lambda x: x['Pitch Name']+': '+x['Description']).groupby(['pa_count','Hitter','event'])[['PA','Description']].agg({
+    pa_df = chart_df.assign(Description = lambda x: x['Pitch Name'].astype('str')+': '+x['Description'].astype('str')).groupby(['pa_count','Hitter','event'])[['PA','Description']].agg({
         'PA':'count',
         'Description':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
     }).reset_index().rename(columns={'PA':'count'})
-    inning_df = chart_df.assign(event = lambda x: np.where(x['PA']==1,x['Hitter']+': '+x['event'],None)).groupby(['inning'])[['PA','event']].agg({
+    inning_df = chart_df.assign(event = lambda x: np.where(x['PA']==1,x['Hitter'].astype('str')+': '+x['event'].astype('str'),None)).groupby(['inning'])[['PA','event']].agg({
         'PA':'count',
         'event':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
     }).reset_index().rename(columns={'PA':'count'})
