@@ -1001,9 +1001,14 @@ def plotly_charts(chart_df):
     pitcher_hand = chart_df['P Hand'][0]
     faded_label_color = hextriplet(sns.light_palette(pl_background,n_colors=20)[10])
     move_df = chart_df.assign(IHB = lambda x: np.where(pitcher_hand=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))).copy()
-    fig = make_subplots(rows=1, cols=3, column_widths=[.3,.4,.3],
-                        # specs = [[{}, {}]], 
+    fig = make_subplots(rows=5, cols=3, column_widths=[.3,.4,.3],row_heights=[0.5,0.3,.05,.05,.1],
+                        specs = [[{}, {}, {}],
+                                 [{"colspan": 3}, None, None],
+                                 [{"colspan": 3}, None, None],
+                                 [{"colspan": 3}, None, None],
+                                 [{"colspan": 3}, None, None]], 
                         horizontal_spacing = 0,
+                        vertical_spacing = 0,
                         subplot_titles=("Locations<br>vs LHH","Movement<br> ","Locations<br>vs RHH"))
     plate_y = -1.25
     
@@ -1262,6 +1267,226 @@ def plotly_charts(chart_df):
                        customdata=move_df[['Pitch Name','Velo','Description','sub_type_name']],
                        hovertemplate=hover_text,
                         showlegend=False), row=1, col=2)
+
+     ### Sequencing Charts
+    pa_df = chart_df.groupby(['pa_count','Hitter','event'])[['PA','Description']].agg({
+        'PA':'count',
+        'Description':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
+    }).reset_index().rename(columns={'PA':'count'})
+    inning_df = chart_df.assign(event = lambda x: np.where(x['PA']==1,x['event'],None)).groupby(['inning'])[['PA','event']].agg({
+        'PA':'count',
+        'event':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
+    }).reset_index().rename(columns={'PA':'count'})
+    
+    data_len = chart_df['pitch_type'].shape[0]
+    colors = list(chart_df['pitch_type'].map(marker_colors))
+    data_fill_x = [1]*data_len
+    data_fill_y = [1]*data_len
+    
+    pa_count = list(pa_df['count'])
+    pa_num = list(pa_df['pa_count'].astype('int'))
+    pa_fill = [1]*len(pa_count)
+    
+    inning_count = list(inning_df['count'])
+    inning_num = list(inning_df['inning'].astype('int'))
+    inning_fill = [1]*len(inning_count)
+
+    data_len = chart_df['pitch_type'].shape[0]
+    colors = list(chart_df['pitch_type'].map(marker_colors))
+    data_fill_x = [1]*data_len
+    data_fill_y = [1]*data_len
+    
+    pa_count = list(pa_df['count'])
+    pa_num = list(pa_df['pa_count'].astype('int'))
+    pa_fill = [1]*len(pa_count)
+    
+    inning_count = list(inning_df['count'])
+    inning_num = list(inning_df['inning'].astype('int'))
+    inning_fill = [1]*len(inning_count)
+
+    hover_text = '<b>Inning %{customdata[0]}</b><br>Events:<br>- %{customdata[1]}<extra></extra>'
+    fig.add_trace(
+        go.Bar(
+            x=inning_count, y=inning_fill,
+            orientation='h',
+             marker=dict(
+                 color='white',
+                 line=dict(color=pl_background, width=1)
+                 ),
+            text=inning_num,
+            insidetextanchor ="middle",
+            textfont=dict(
+                size=12,
+                color="black"
+                ),
+            textangle=0,
+            customdata=inning_df[['inning','event']],
+            hovertemplate=hover_text
+        ),
+        row=3, col=1
+    )
+    fig.add_trace(go.Scatter(
+            x=[-data_len/40],
+            y=[1],
+            text=['IP'],
+            mode="text",
+            textfont=dict(
+                color="white",
+                size=12,
+            ),
+            showlegend=False,
+            hoverinfo='skip',
+        ), row=3, col=1
+                 )
+
+    hover_text = '<b>%{customdata[0]}</b>: %{customdata[1]}<br>- %{customdata[2]}</b><extra></extra>'
+    fig.add_trace(
+        go.Bar(
+            x=pa_count, y=pa_fill,
+            orientation='h',
+             marker=dict(
+                 color='white',
+                 line=dict(color=pl_background, width=1)
+                 ),
+            text=pa_num,
+            insidetextanchor ="middle",
+            textposition ="inside",
+            textfont=dict(
+                size=12,
+                color="black"
+                ),
+            textangle=0,
+            customdata=pa_df[['Hitter','event','Description']],
+            hovertemplate=hover_text
+        ),
+        row=4, col=1
+    )
+    fig.add_trace(go.Scatter(
+            x=[-data_len/40],
+            y=[1],
+            text=['PA'],
+            mode="text",
+            textfont=dict(
+                color="white",
+                size=12,
+            ),
+            showlegend=False,
+            hoverinfo='skip',
+        ), row=4, col=1
+                 )
+    
+    hover_text = '<b>%{customdata[0]}</b>%{customdata[3]}<br>- %{customdata[2]}<br>- Velo: %{customdata[1]}mph<extra></extra>'
+    fig.add_trace(
+        go.Bar(
+            x=data_fill_x, y=data_fill_y,
+            orientation='h',
+             marker=dict(
+                 
+                 color=colors,
+                 line=dict(color=pl_background, width=1)
+                 ),
+            customdata=(
+                chart_df
+                .assign(pitch_type = lambda x: x['pitch_type'].map(pitch_names),
+                        sub_type_name = lambda x: np.where(x['pitch_type']==x['sub_type_name'],
+                                                           '',
+                                                           '<br>Sub-Type: '+x['sub_type_name']))
+                [['pitch_type','Velo','Description','sub_type_name']]
+            ),
+            hovertemplate=hover_text
+            ),
+        row=5, col=1
+    )
+    fig.add_trace(go.Scatter(
+            x=[-data_len/40],
+            y=[1],
+            text=['Type'],
+            mode="text",
+            textfont=dict(
+                color="white",
+                size=12,
+            ),
+            showlegend=False,
+            hoverinfo='skip',
+        ), row=5, col=1
+                 )
+
+    ### Pitch Types
+    sub_count = (
+        chart_df
+        .groupby('sub_type')
+        ['game_pk']
+        .count()
+        .sort_values(ascending=False)
+        .to_dict()
+    )
+    
+    label_df = (
+        chart_df
+        .groupby('pitch_type')
+        [['game_pk','Velo','IVB','IHB']]
+        .agg({
+            'game_pk':'count',
+            'Velo':'mean',
+            'IVB':'mean',
+            'IHB':'mean'
+        })
+        .round(1)
+        .rename(columns={'game_pk':'count'})
+        .reset_index()
+        .sort_values(['count'], ascending=False)
+        .assign(sub_type = lambda x: x['pitch_type'].map(chart_df.groupby(['pitch_type'])[['sub_type']].agg({
+            'sub_type':lambda x: '' if len(list(set(x))) ==1 else '<br>Sub-Types Thrown:<br>'+'<br>'.join(['- '+pitch_names[a]+': '+str(sub_count[a]) for a in list(set(sorted(list(x),key=list(x).count,reverse=True))) if a is not None])
+        }).to_dict()['sub_type'])
+               )
+    )
+    
+    pitches_thrown = list(label_df['pitch_type'])
+    num_thrown = list(label_df['count'])
+    perc_thrown = list(label_df['count'].div(label_df['count'].sum()).mul(100).round(0).astype('int'))
+    pitch_colors = [marker_colors[x] for x in pitches_thrown]
+
+    labels = sub_types
+    hover_text = 'Velo: %{customdata[2]}mph<br>IVB: %{customdata[3]}"<br>IHB: %{customdata[4]}"<br>%{customdata[5]}<br><extra></extra>'
+    fig.add_trace(
+        go.Scatter(
+            x=list(range(len(pitches_thrown))), 
+            y=[0] * len(pitches_thrown),
+            mode='markers+text',
+            marker=dict(size=[2*x+20 for x in perc_thrown],
+                        opacity=1,
+                        color=pitch_colors,
+                        line=dict(color='white',
+                                 width=2)),
+            text=num_thrown,
+            textfont=dict(
+                color="white",
+                size=12
+            ),
+            customdata=label_df.assign(full_name = lambda x: x['pitch_type'].map(pitch_names)),
+            hovertemplate=hover_text
+        ), row=2, col=1
+    )
+    
+    for pitchtype in pitches_thrown:
+        fig.add_annotation(x=pitches_thrown.index(pitchtype), y=-0.25,
+                           text=pitch_names[pitchtype],
+                           showarrow=False,
+                           font=dict(
+                               size=16,
+                               color="#ffffff"
+                               ), row=2, col=1)
+    fig.add_annotation(x=(len(pitches_thrown)-1)/2, y=-0.75,
+                       text='Pitch Sequencing',
+                       showarrow=False,
+                       font=dict(
+                           size=18,
+                           color="#ffffff"
+                           ), row=2, col=1)
+    
+    fig.update_xaxes(title_text="", range=[-1,len(pitches_thrown)], row=2, col=1)
+    fig.update_yaxes(title_text="", range=[-1,0.5], row=2, col=1)
+    fig.update_traces(textposition='middle center', row=2, col=1)
     
     fig.update_xaxes(visible=False, showticklabels=False)
     fig.update_yaxes(visible=False, showticklabels=False)
@@ -1281,20 +1506,26 @@ def plotly_charts(chart_df):
     fig.update_annotations(yshift=-35,
                            font=dict(size=30, color="white")
                           )
-    fig.update_layout(height=540, width=1200,
+    fig.update_layout(height=960, width=1200,
                       hoverlabel={
                           'font':{'color':'white',
                                  'size':16}
                           },
                       title={
                 'text': f"{player_select}'s Pitch Charts ({date.strftime('%-m/%-d/%y')})",
-                'y':0.975,
+                'y':0.98,
                 'x':0.5,
                 'xanchor': 'center',
                 'yanchor': 'top',
             'font':{'color':'white',
                    'size':40}}
                      )
+    fig.update_traces(hoverlabel={
+                          'font':{'color':'black'}
+                          }, row=3, col=1)
+    fig.update_traces(hoverlabel={
+                          'font':{'color':'black'}
+                          }, row=4, col=1)
     
     # fig.show()
     st.plotly_chart(fig,use_container_width=False,theme=None)
