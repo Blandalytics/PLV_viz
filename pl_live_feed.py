@@ -268,6 +268,7 @@ pitchtype_map = {
     'ST':'ST',
     'CH':'CH',
     'CU':'CU',
+    'CS':'CU',
     'KC':'CU',
     'CS':'CU',
     'SV':'CU',
