@@ -990,7 +990,7 @@ else:
 
 def plotly_charts(chart_df):
     chart_df['Pitch Name'] = chart_df['pitch_type'].map(marker_names)
-    chart_df['sub_type_name'] = np.where(chart_df['pitch_type']=chart_df['sub_type'],
+    chart_df['sub_type_name'] = np.where(chart_df['pitch_type']==chart_df['sub_type'],
                                       '',
                                       'Sub-Type: '+chart_df['sub_type'].map(pitch_names)+'<br>')
     chart_df['ev_la_text'] = np.where(chart_df['Launch Angle'].isna() | chart_df['Launch Speed'].isna(),
