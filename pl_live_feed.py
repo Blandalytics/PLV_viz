@@ -1278,7 +1278,7 @@ def plotly_charts(chart_df):
         'PA':'count',
         'Description':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
     }).reset_index().rename(columns={'PA':'count'})
-    inning_df = chart_df.assign(event = lambda x: np.where(x['PA']==1,x['event'],None)).groupby(['inning'])[['PA','event']].agg({
+    inning_df = chart_df.assign(event = lambda x: np.where(x['PA']==1,x['Hitter']+': '+x['event'],None)).groupby(['inning'])[['PA','event']].agg({
         'PA':'count',
         'event':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
     }).reset_index().rename(columns={'PA':'count'})
