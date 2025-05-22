@@ -1185,7 +1185,7 @@ def plotly_charts(chart_df):
     # Movement
     ax_lim = max(25,move_df[['IVB','IHB']].abs().max().max())+12
     labels = move_df['pitch_type'].map(marker_colors)
-    hover_text = '<b>%{customdata[0]}: %{customdata[2]}</b><br>%{customdata[3]}Velo: %{customdata[1]}mph<br>IVB: %{y:.1f}"<br>IHB: %{x:.0f}"<extra></extra>'
+    hover_text = '<b>%{customdata[0]}: %{customdata[2]}</b><br>Velo: %{customdata[1]}mph<br>IVB: %{y:.1f}"<br>IHB: %{x:.0f}"<extra></extra>'
     marker_dict = dict(color=labels,
                        size=25,
                        line=dict(width=0.5,color='white'))
