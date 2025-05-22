@@ -1185,7 +1185,7 @@ def plotly_charts(chart_df):
     # Movement
     ax_lim = max(25,move_df[['IVB','IHB']].abs().max().max())+12
     labels = move_df['pitch_type'].map(marker_colors)
-    hover_text = '<b>%{customdata[0]}: %{customdata[2]}</b><br>Velo: %{customdata[1]}mph<br>IVB: %{y:.1f}"<br>IHB: %{x:.0f}"<extra></extra>'
+    hover_text = '<b>%{customdata[0]}: %{customdata[2]}</b><br>Hitter: %{customdata[4]}<br>Velo: %{customdata[1]}mph<br>IVB: %{y:.1f}"<br>IHB: %{x:.0f}"<extra></extra>'
     marker_dict = dict(color=labels,
                        size=25,
                        line=dict(width=0.5,color='white'))
@@ -1269,7 +1269,7 @@ def plotly_charts(chart_df):
     
     fig.add_trace(go.Scatter(x=move_df['IHB'], y=move_df['IVB'], mode='markers', 
                        marker=marker_dict, text=bonus_text,
-                       customdata=move_df[['Pitch Name','Velo','Description','sub_type_name']],
+                       customdata=move_df[['Pitch Name','Velo','Description','sub_type_name','Hitter']],
                        hovertemplate=hover_text,
                         showlegend=False), row=1, col=2)
 
@@ -1465,7 +1465,7 @@ def plotly_charts(chart_df):
             text=num_thrown,
             textfont=dict(
                 color="white",
-                size=16
+                size=20
             ),
             customdata=label_df.assign(full_name = lambda x: x['pitch_type'].map(pitch_names)),
             hovertemplate=hover_text
