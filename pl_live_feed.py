@@ -1451,7 +1451,6 @@ def plotly_charts(chart_df):
     perc_thrown = list(label_df['count'].div(label_df['count'].sum()).mul(100).round(0).astype('int'))
     pitch_colors = [marker_colors[x] for x in pitches_thrown]
 
-    labels = sub_types
     hover_text = 'Velo: %{customdata[2]}mph<br>IVB: %{customdata[3]}"<br>IHB: %{customdata[4]}"<br>%{customdata[5]}<br><extra></extra>'
     fig.add_trace(
         go.Scatter(
