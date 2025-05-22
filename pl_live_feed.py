@@ -1480,7 +1480,7 @@ def plotly_charts(chart_df):
                                size=20,
                                color="#ffffff"
                                ), row=2, col=1)
-    fig.add_annotation(x=(len(pitches_thrown)-1)/2, y=-0.6,
+    fig.add_annotation(x=(len(pitches_thrown)-1)/2, y=-0.65,
                        text='Sequencing',
                        showarrow=False,
                        font=dict(
