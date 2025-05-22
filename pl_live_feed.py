@@ -353,6 +353,7 @@ def scrape_savant_data(player_name, game_id):
     hitter_name = []
     throws = []
     stands = []
+    inning = []
     pitch_call = []
     events = []
     result_code = []
@@ -415,6 +416,7 @@ def scrape_savant_data(player_name, game_id):
                 hitter_name += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['batter_name']]
                 throws += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['p_throws']]
                 stands += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['stand']]
+                inning += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['inning']]
                 pitch_call += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']]
                 try:
                     events += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['events']]
@@ -501,6 +503,7 @@ def scrape_savant_data(player_name, game_id):
     df['result_code'] = result_code
     df['PA'] = pa
     df['PA'] = np.where(df['PA']!=df['PA'].shift(1).fillna(0),1,0)
+    df['inning'] = inning
     df['zone'] = zone
     df['CS'] = called_strikes
     df['Whiffs'] = swinging_strikes
