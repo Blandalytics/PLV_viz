@@ -909,6 +909,7 @@ marker_colors = {
     'KN':'#999999',
     'SC':'#999999', 
     'UN':'#999999', 
+    'Total':'#999999', 
 }
 
 marker_names = {
