@@ -1275,7 +1275,7 @@ def plotly_charts(chart_df):
                         showlegend=False), row=1, col=2)
 
      ### Sequencing Charts
-    pa_df = chart_df.groupby(['pa_count','Hitter','event'])[['PA','Description']].agg({
+    pa_df = chart_df.assign(Description = lambda x: x['Pitch Name']+': '+x['Description']).groupby(['pa_count','Hitter','event'])[['PA','Description']].agg({
         'PA':'count',
         'Description':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
     }).reset_index().rename(columns={'PA':'count'})
