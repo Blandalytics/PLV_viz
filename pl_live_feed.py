@@ -1321,7 +1321,7 @@ def plotly_charts(chart_df):
             text=inning_num,
             insidetextanchor ="middle",
             textfont=dict(
-                size=12,
+                size=16,
                 color="black"
                 ),
             textangle=0,
@@ -1337,7 +1337,7 @@ def plotly_charts(chart_df):
             mode="text",
             textfont=dict(
                 color="white",
-                size=12,
+                size=16,
             ),
             showlegend=False,
             hoverinfo='skip',
@@ -1357,7 +1357,7 @@ def plotly_charts(chart_df):
             insidetextanchor ="middle",
             textposition ="inside",
             textfont=dict(
-                size=12,
+                size=16,
                 color="black"
                 ),
             textangle=0,
@@ -1373,7 +1373,7 @@ def plotly_charts(chart_df):
             mode="text",
             textfont=dict(
                 color="white",
-                size=12,
+                size=16,
             ),
             showlegend=False,
             hoverinfo='skip',
@@ -1409,7 +1409,7 @@ def plotly_charts(chart_df):
             mode="text",
             textfont=dict(
                 color="white",
-                size=12,
+                size=16,
             ),
             showlegend=False,
             hoverinfo='skip',
