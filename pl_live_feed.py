@@ -987,10 +987,13 @@ else:
         loc_charts(chart_df)
 
 def plotly_charts(chart_df):
-    chart_df['Pitch Name'] = chart_df['pitch_type'].map(marker_names)
-    chart_df['sub_type_name'] = np.where(chart_df['pitch_type']==chart_df['sub_type'],
-                                      '',
-                                      'Sub-Type: '+chart_df['sub_type'].map(pitch_names)+'<br>')
+    chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
+    chart_df['sub_type_name'] = chart_df['sub_type'].map(pitch_names)
+    chart_df['Description'] = np.where(chart_df['pitch_call']=='hit_into_play',
+             chart_df['event'],
+             chart_df['pitch_call'])
+    chart_df['Description'] = chart_df['Description'].str.replace('_',' ').str.title()
+    chart_df['pa_count'] = chart_df['PA'].expanding().sum()
     chart_df['ev_la_text'] = np.where(chart_df['Launch Angle'].isna() | chart_df['Launch Speed'].isna(),
                                       '',
                                       'EV/LA: '+chart_df['Launch Speed'].round(1).astype('str')+'mph @ '+chart_df['Launch Angle'].astype('str')+'°')
