@@ -705,7 +705,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','HB'] = game_df['HB'].sum()
     merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
-    return merge_df, df
+    return merge_df, df.reset_index(names='Pitch').assign(Pitch = lambda x: x['Pitch'].add(1))
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
@@ -1383,7 +1383,7 @@ def plotly_charts(chart_df):
         ), row=4, col=1
                  )
     
-    hover_text = '<b>%{customdata[0]}</b>%{customdata[3]}<br>- %{customdata[2]}<br>- Velo: %{customdata[1]}mph<extra></extra>'
+    hover_text = '<b>%{customdata[4]}: %{customdata[0]}</b>%{customdata[3]}<br>- %{customdata[2]}<br>- Velo: %{customdata[1]}mph<extra></extra>'
     fig.add_trace(
         go.Bar(
             x=data_fill_x, y=data_fill_y,
@@ -1399,7 +1399,7 @@ def plotly_charts(chart_df):
                         sub_type_name = lambda x: np.where(x['pitch_type']==x['sub_type_name'],
                                                            '',
                                                            '<br>Sub-Type: '+x['sub_type_name']))
-                [['pitch_type','Velo','Description','sub_type_name']]
+                [['pitch_type','Velo','Description','sub_type_name','Pitch']]
             ),
             hovertemplate=hover_text
             ),
