@@ -436,7 +436,7 @@ def scrape_savant_data(player_name, game_id):
                 total_balls += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['ball','pitchout','ball_in_dirt','hit_by_pitch','blocked_ball','intentional_ball'] else 0]
                 balls += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['balls']]
                 strikes += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['strikes']]
-                pitch_id += [pitch]
+                pitch_id += [pitch+1]
                 try:
                     pitch_type += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_type']]
                     velo += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['start_speed']]
@@ -1383,7 +1383,7 @@ def plotly_charts(chart_df):
         ), row=4, col=1
                  )
     
-    hover_text = '<b>%{customdata[0]}</b>%{customdata[3]}<br>- %{customdata[2]}<br>- Velo: %{customdata[1]}mph<extra></extra>'
+    hover_text = '<b>%{customdata[4]}: %{customdata[0]}</b>%{customdata[3]}<br>- %{customdata[2]}<br>- Velo: %{customdata[1]}mph<extra></extra>'
     fig.add_trace(
         go.Bar(
             x=data_fill_x, y=data_fill_y,
@@ -1399,7 +1399,7 @@ def plotly_charts(chart_df):
                         sub_type_name = lambda x: np.where(x['pitch_type']==x['sub_type_name'],
                                                            '',
                                                            '<br>Sub-Type: '+x['sub_type_name']))
-                [['pitch_type','Velo','Description','sub_type_name']]
+                [['pitch_type','Velo','Description','sub_type_name','Num Pitches']]
             ),
             hovertemplate=hover_text
             ),
