@@ -436,7 +436,7 @@ def scrape_savant_data(player_name, game_id):
                 total_balls += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['ball','pitchout','ball_in_dirt','hit_by_pitch','blocked_ball','intentional_ball'] else 0]
                 balls += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['balls']]
                 strikes += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['strikes']]
-                pitch_id += [pitch]
+                pitch_id += [pitch+1]
                 try:
                     pitch_type += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_type']]
                     velo += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['start_speed']]
@@ -705,7 +705,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','HB'] = game_df['HB'].sum()
     merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
-    return merge_df, df.reset_index(names='Pitch').assign(Pitch = lambda x: x['Pitch'].add(1))
+    return merge_df, df
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
@@ -1399,7 +1399,7 @@ def plotly_charts(chart_df):
                         sub_type_name = lambda x: np.where(x['pitch_type']==x['sub_type_name'],
                                                            '',
                                                            '<br>Sub-Type: '+x['sub_type_name']))
-                [['pitch_type','Velo','Description','sub_type_name','Pitch']]
+                [['pitch_type','Velo','Description','sub_type_name','Num Pitches']]
             ),
             hovertemplate=hover_text
             ),
