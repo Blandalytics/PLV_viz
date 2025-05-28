@@ -1155,7 +1155,8 @@ default_groups = {
 
 stat_tabs = {
     'Default':'',
-    'Standard':['Strikes','Balls','PA','Hit','1B','2B','3B','HR','K','BB','HB']
+    'Standard':['Strikes','Balls','PA','Hit','1B','2B','3B','HR','K','BB','HB'],
+    'PLV':['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']
 }
 
 if len(list(pitcher_list.keys()))==0:
