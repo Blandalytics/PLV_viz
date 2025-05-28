@@ -53,6 +53,169 @@ def strikezone_z(dataframe,top_column,bottom_column):
     
     return dataframe['p_z'].sub(dataframe['sz_mid']).div(dataframe['sz_height'])
 
+### Calculate the differences between each pitch and their avg fastball
+def fastball_differences(dataframe,stat):
+    dataframe[stat] = dataframe[stat].astype('float')
+    temp_df = dataframe.loc[dataframe['pitch_type']==dataframe['fastball_type']].groupby(['MLBAMID','game_date','pitch_type'], as_index=False)[stat].mean().rename(columns={stat:'fb_'+stat})
+    dataframe = dataframe.merge(temp_df,
+                                left_on=['MLBAMID','game_date','fastball_type'],
+                                right_on=['MLBAMID','game_date','pitch_type']).drop(columns=['pitch_type_y']).rename(columns={'pitch_type_x':'pitch_type'})
+    return dataframe[stat].sub(dataframe['fb_'+stat])
+
+def feature_engineer(dataframe):
+    category_feats = ['P Hand',#'pitcherside',
+                      'hitterside',
+                      'balls',#'balls_before_pitch',
+                      'strikes',#'strikes_before_pitch'
+                     ]
+    dataframe['stand'] = dataframe['hitterside'].copy()
+    dataframe = pd.get_dummies(dataframe, columns=category_feats)
+    
+    if 'P Hand_L' not in dataframe:
+        dataframe['P Hand_L'] = False
+    if 'P Hand_R' not in dataframe:
+        dataframe['P Hand_R'] = False
+    if 'hitterside_L' not in dataframe:
+        dataframe['hitterside_L'] = False
+    if 'P hitterside_R' not in dataframe:
+        dataframe['P hitterside_R'] = False
+    # Pythagorean movement
+    dataframe['total_IB'] = (dataframe['IHB'].astype('float')**2+dataframe['IVB'].astype('float')**2)**0.5
+    
+    # df of most common fastballs for each pitcher, in each appearance
+    fastballs = ['FF','FC','FT','SI']
+    fastball_df = (dataframe
+                   .loc[dataframe['pitch_type'].isin(fastballs)]
+                   .groupby(['MLBAMID','game_date'], as_index=False)
+                   ['pitch_type']
+                   .agg(pd.Series.mode)
+                   .rename(columns={'pitch_type':'fastball_type'})
+                   .copy()
+                  )
+  
+    # Add most common Fastball type
+    dataframe = dataframe.merge(fastball_df,on=['MLBAMID','game_date'], how='left')
+    dataframe['fastball_type'] = dataframe['fastball_type'].fillna('NA').apply(lambda x: x if len(x[0])==1 else x[0])
+
+    # Add comparison stats to fastball
+    for stat in ['IHB','IVB','Velo']:
+        dataframe[stat+'_diff'] = fastball_differences(dataframe,stat)
+    dataframe['total_IB_diff'] = (dataframe['IHB_diff'].astype('float')**2+dataframe['IVB_diff'].astype('float')**2)**0.5
+    
+    return dataframe.rename(columns={'stand':'hitterside'})
+
+bip_result_dict = {
+    '10-20deg: 100-105mph': {'out': 0.3336331744175587,'single': 0.34973464064046056,'double': 0.2876675362058109,'triple': 0.023207699919042906,'home_run': 0.005756948817126923},
+    '10-20deg: 105+mph': {'out': 0.23763796909492274,'single': 0.27759381898454744,'double': 0.4052980132450331,'triple': 0.02240618101545254,'home_run': 0.05706401766004415},
+    '10-20deg: 90-95mph': {'out': 0.47004786166435075,'single': 0.4350779681951521,'double': 0.08537903350316504,'triple': 0.00895476300756523,'home_run': 0.0005403736297668674},
+    '10-20deg: 95-100mph': {'out': 0.3468848460209371,'single': 0.44598028254903954,'double': 0.18904360199207237,'triple': 0.017786360402479925,'home_run': 0.0003049090354710845},
+    '10-20deg: <90mph': {'out': 0.3034200193478632,'single': 0.6208956922551642,'double': 0.071074944517157,'triple': 0.0045524383998179025,'home_run': 5.690547999772378e-05},
+    '10deg: 100-105mph': {'out': 0.5532356374011153,'single': 0.3946310465568668,'double': 0.048675052954653526,'triple': 0.0034150347987723165,'home_run': 4.322828859205464e-05},
+    '10deg: 105+mph': {'out': 0.472506256703611,'single': 0.4556310332499106,'double': 0.06828745084018592,'triple': 0.003575259206292456,'home_run': 0.0},
+    '10deg: 90-95mph': {'out': 0.7286569556404092,'single': 0.2379672842125112,'double': 0.03125441945976524,'triple': 0.0021213406873143827,'home_run': 0.0},
+    '10deg: 95-100mph': {'out': 0.6431076885860582,'single': 0.3165746079103334,'double': 0.03749546425835584,'triple': 0.00282223924525259,'home_run': 0.0},
+    '10deg: <90mph': {'out': 0.8404299549990217,'single': 0.1465711211113285,'double': 0.012509782821365683,'triple': 0.0004891410682840931,'home_run': 0.0},
+    '20-30deg: 100-105mph': {'out': 0.3110007397231322,'single': 0.013526365845926239,'double': 0.22519285638803763,'triple': 0.02832082848990806,'home_run': 0.4219592095529959},
+    '20-30deg: 105+mph': {'out': 0.051047120418848166,'single': 0.01030759162303665,'double': 0.11861910994764398,'triple': 0.012107329842931938,'home_run': 0.8079188481675392},
+    '20-30deg: 90-95mph': {'out': 0.8553492021972273,'single': 0.020533612346324875,'double': 0.10044467695527073,'triple': 0.009678263144127649,'home_run': 0.013994245357049438},
+    '20-30deg: 95-100mph': {'out': 0.6610534962521819,'single': 0.013040353219016327,'double': 0.19108738063456207,'triple': 0.019201150015401992,'home_run': 0.11561761987883766},
+    '20-30deg: <90mph': {'out': 0.5885616242493565,'single': 0.3451529882756649,'double': 0.06050900772090363,'triple': 0.005661995996568487,'home_run': 0.00011438375750643409},
+    '30-40deg: 100-105mph': {'out': 0.5065131206343213,'single': 0.0013215027373985274,'double': 0.030960921276194073,'triple': 0.012648669057957335,'home_run': 0.44855578629412873},
+    '30-40deg: 105+mph': {'out': 0.17124939700916547,'single': 0.001447178002894356,'double': 0.013989387361312108,'triple': 0.003376748673420164,'home_run': 0.8099372889532079},
+    '30-40deg: 90-95mph': {'out': 0.9417808219178082,'single': 0.0008933889219773674,'double': 0.024865991661703394,'triple': 0.004169148302561048,'home_run': 0.02829064919594997},
+    '30-40deg: 95-100mph': {'out': 0.8001646994235521,'single': 0.0015097447158934944,'double': 0.031155640955256657,'triple': 0.00947021685424101,'home_run': 0.15769969805105682},
+    '30-40deg: <90mph': {'out': 0.8385996524872901,'single': 0.131218225111011,'double': 0.02741489156316365,'triple': 0.0020593345775146406,'home_run': 0.0007078962610206577},
+    '40-50deg: 100-105mph': {'out': 0.9092651757188498,'single': 0.0012779552715654952,'double': 0.01597444089456869,'triple': 0.0019169329073482429,'home_run': 0.07156549520766774},
+    '40-50deg: 105+mph': {'out': 0.6349693251533742,'single': 0.006134969325153374,'double': 0.015337423312883436,'triple': 0.003067484662576687,'home_run': 0.34049079754601225},
+    '40-50deg: 90-95mph': {'out': 0.9949664429530202,'single': 0.0006291946308724832,'double': 0.002936241610738255,'triple': 0.0006291946308724832,'home_run': 0.0008389261744966443},
+    '40-50deg: 95-100mph': {'out': 0.9731580388934539,'single': 0.0008216926869350862,'double': 0.008216926869350863,'triple': 0.003286770747740345,'home_run': 0.014516570802519857},
+    '40-50deg: <90mph': {'out': 0.9243428936646161,'single': 0.057361987696732446,'double': 0.018055444595350325,'triple': 0.00015978269553407366,'home_run': 7.989134776703683e-05},
+    '50+deg': {'out': 0.9862377429898503,'single': 0.008515396525030104,'double': 0.005132175010034979,'triple': 0.00011468547508458054,'home_run': 0.0}
+}
+
+def apply_plv_outcomes(model_df):
+    model_df[['take_input','swing_input','ooz_raw','called_strike_raw','ball_raw',
+                'hit_by_pitch_raw','swinging_strike_raw','contact_raw',
+                'foul_strike_raw','in_play_raw','10deg_raw','10-20deg_raw',
+                '20-30deg_raw','30-40deg_raw','40-50deg_raw','50+deg_raw','50+deg_pred',
+                'called_strike_pred','ball_pred','hit_by_pitch_pred','ooz_input','contact_input',
+                'swinging_strike_pred','foul_strike_pred','in_play_input','50+deg_pred',
+                'out_pred', 'single_pred', 'double_pred', 'triple_pred', 'home_run_pred']] = None
+    
+    for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
+        model_df[[launch_angle+'_input',launch_angle+': <90mph_raw',
+                 launch_angle+': 90-95mph_raw',launch_angle+': 95-100mph_raw',
+                 launch_angle+': 100-105mph_raw',launch_angle+': 105+mph_raw',
+                 launch_angle+': <90mph_pred',launch_angle+': 90-95mph_pred',
+                 launch_angle+': 95-100mph_pred',launch_angle+': 100-105mph_pred',
+                 launch_angle+': 105+mph_pred']] = None
+    for pitch_type in ['Fastball','Breaking_Ball','Offspeed']:
+        # Swing Decision
+        with open('model_files/live_swing_model_{}.pkl'.format(pitch_type), 'rb') as f:
+            decision_model = pickle.load(f)
+    
+        model_df.loc[model_df['pitch_group']==pitch_type,['take_input','swing_input']] = decision_model.predict_proba(model_df.loc[model_df['pitch_group']==pitch_type,decision_model.feature_names_in_])
+        
+        # Out-of-Zone Take Result
+        with open('model_files/live_ca_strike_model_{}.pkl'.format(pitch_type), 'rb') as f:
+            called_strike_model = pickle.load(f)
+    
+        model_df.loc[model_df['pitch_group']==pitch_type,['called_strike_raw','ooz_raw']] = called_strike_model.predict_proba(model_df.loc[model_df['pitch_group']==pitch_type,called_strike_model.feature_names_in_])
+        model_df.loc[model_df['pitch_group']==pitch_type,'called_strike_pred'] = model_df.loc[model_df['pitch_group']==pitch_type,'called_strike_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'take_input'])
+        model_df.loc[model_df['pitch_group']==pitch_type,'ooz_input'] = model_df.loc[model_df['pitch_group']==pitch_type,'ooz_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'take_input'])
+    
+        # HBP Result
+        with open('model_files/live_hbp_model_{}.pkl'.format(pitch_type), 'rb') as f:
+            hbp_model = pickle.load(f)
+    
+        model_df.loc[model_df['pitch_group']==pitch_type,['ball_raw','hit_by_pitch_raw']] = hbp_model.predict_proba(model_df.loc[model_df['pitch_group']==pitch_type,hbp_model.feature_names_in_])
+        model_df.loc[model_df['pitch_group']==pitch_type,'ball_pred'] = model_df.loc[model_df['pitch_group']==pitch_type,'ball_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'ooz_input'])
+        model_df.loc[model_df['pitch_group']==pitch_type,'hit_by_pitch_pred'] = model_df.loc[model_df['pitch_group']==pitch_type,'hit_by_pitch_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'ooz_input'])
+    
+        # Swing Result
+        with open('model_files/live_contact_model_{}.pkl'.format(pitch_type), 'rb') as f:
+            swing_result_model = pickle.load(f)
+    
+        model_df.loc[model_df['pitch_group']==pitch_type,['swinging_strike_raw','contact_raw']] = swing_result_model.predict_proba(model_df.loc[model_df['pitch_group']==pitch_type,swing_result_model.feature_names_in_])
+        model_df.loc[model_df['pitch_group']==pitch_type,'contact_input'] = model_df.loc[model_df['pitch_group']==pitch_type,'contact_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'swing_input'])
+        model_df.loc[model_df['pitch_group']==pitch_type,'swinging_strike_pred'] = model_df.loc[model_df['pitch_group']==pitch_type,'swinging_strike_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'swing_input'])
+    
+        # Contact Result
+        with open('model_files/live_in_play_model_{}.pkl'.format(pitch_type), 'rb') as f:
+            contact_model = pickle.load(f)
+    
+        model_df.loc[model_df['pitch_group']==pitch_type,['foul_strike_raw','in_play_raw']] = contact_model.predict_proba(model_df.loc[model_df['pitch_group']==pitch_type,contact_model.feature_names_in_])
+        model_df.loc[model_df['pitch_group']==pitch_type,'foul_strike_pred'] = model_df.loc[model_df['pitch_group']==pitch_type,'foul_strike_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'contact_input'])
+        model_df.loc[model_df['pitch_group']==pitch_type,'in_play_input'] = model_df.loc[model_df['pitch_group']==pitch_type,'in_play_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'contact_input'])
+    
+        # Launch Angle Result
+        with open('model_files/live_launch_angle_model_{}.pkl'.format(pitch_type), 'rb') as f:
+            launch_angle_model = pickle.load(f)
+    
+        model_df.loc[model_df['pitch_group']==pitch_type,['10deg_raw','10-20deg_raw','20-30deg_raw','30-40deg_raw','40-50deg_raw','50+deg_raw']] = launch_angle_model.predict_proba(model_df.loc[model_df['pitch_group']==pitch_type,launch_angle_model.feature_names_in_])
+        for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
+            model_df.loc[model_df['pitch_group']==pitch_type,launch_angle+'_input'] = model_df.loc[model_df['pitch_group']==pitch_type,launch_angle+'_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'in_play_input'])
+        model_df.loc[model_df['pitch_group']==pitch_type,'50+deg_pred'] = model_df.loc[model_df['pitch_group']==pitch_type,'50+deg_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,'in_play_input'])
+    
+        # Launch Velo Result
+        for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
+            with open('model_files/live_{}_model_{}.pkl'.format(launch_angle,pitch_type), 'rb') as f:
+    
+            model_df.loc[model_df['pitch_group']==pitch_type,[launch_angle+': <90mph_raw',launch_angle+': 90-95mph_raw',launch_angle+': 95-100mph_raw',launch_angle+': 100-105mph_raw',launch_angle+': 105+mph_raw']] = launch_velo_model.predict_proba(model_df.loc[model_df['pitch_group']==pitch_type,launch_velo_model.feature_names_in_])
+            for bucket in [launch_angle+': '+x for x in ['<90mph','90-95mph','95-100mph','100-105mph','105+mph']]:
+                model_df.loc[model_df['pitch_group']==pitch_type,bucket+'_pred'] = model_df.loc[model_df['pitch_group']==pitch_type,bucket+'_raw'].mul(model_df.loc[model_df['pitch_group']==pitch_type,launch_angle+'_input'])
+
+    for outcome in ['out', 'single', 'double', 'triple', 'home_run']:
+        # Start with 50+ degrees (popups)
+        model_df[outcome+'_pred'] = model_df['50+deg_pred']*bip_result_dict['50+deg'][outcome]
+        
+        for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
+            for bucket in [launch_angle+': '+x for x in ['<90mph','90-95mph','95-100mph','100-105mph','105+mph']]:
+                model_df[outcome+'_pred'] += model_df[bucket+'_pred']*bip_result_dict[bucket][outcome]
+    return model_df[['called_strike_pred','ball_pred','hit_by_pitch_pred',
+                     'swinging_strike_pred','foul_strike_pred',
+                     'out_pred', 'single_pred', 'double_pred', 'triple_pred', 'home_run_pred']]
+
 def generate_games(games_today):
     game_dict = {}
     code_dict = {
@@ -273,6 +436,7 @@ pitchtype_map = {
     'SV':'CU',
     'FS':'FS',
     'FO':'FS',
+    'SC':'CH',
     'KN':'KN',
     'UN':'UN',
     'EP':'UN'
@@ -309,6 +473,7 @@ marker_colors = {
     'CS':'#3c44cd',
     'SV':'#3c44cd',
     'CH':'#07b526', 
+    'SC':'#07b526', 
     'KN':'#999999',
     'SC':'#999999', 
     'UN':'#999999', 
@@ -334,6 +499,28 @@ pitch_names = {
     'UN':'Unknown', 
     'EP':'Eephus'
 }
+
+pitchgroup_map = {
+    'FF':'Fastball',
+    'FA':'Fastball',
+    'SI':'Fastball',
+    'FT':'Fastball',
+    'FC':'Breaking_Ball',
+    'SL':'Breaking_Ball',
+    'ST':'Breaking_Ball',
+    'CH':'Offspeed',
+    'CU':'Breaking_Ball',
+    'KC':'Breaking_Ball',
+    'CS':'Breaking_Ball',
+    'SV':'Breaking_Ball',
+    'FS':'Offspeed',
+    'FO':'Offspeed',
+    'KN':'Offspeed',
+    'SC':'Offspeed',
+    'UN':'UN',
+    'EP':'Offspeed'
+}
+
 def player_height(mlbamid):
     mlbamid = int(mlbamid)
     url = f'https://statsapi.mlb.com/api/v1/people?personIds={mlbamid}&fields=people,id,height,weight'
@@ -534,24 +721,6 @@ def scrape_savant_data(player_name, game_id):
     df['pos_z_scale'] = df['z0'].div(df['Height'])
     df['pos_x_scale'] = df['x0'].abs().div(df['Height'])
     df['extension_scale'] = df['Ext'].div(df['Height'])
-    # df['Arm Angle'] = df.apply(lambda x: arm_angle(x['x0'], x['z0'],x['Ext'],x['Height']), axis=1)
-    # arm_angle_preds = arm_angle_knn.predict_proba(df[arm_angle_knn.feature_names_in_])
-    # arm_angle_cols = [-71,-70,-69,-68,-67,-66,-65,-64,-63,-62,
-    #                   -61,-60,-59,-58,-57,-56,-55,-54,-53,-36,
-    #                   -35,-34,-33,-32,-31,-30,-29,-28,-27,-26,
-    #                   -25,-24,-23,-22,-21,-20,-19,-18,-17,-16,
-    #                   -15,-14,-13,-12,-11,-10,-9,-8,-7,-6,
-    #                   -5,-4,-3,-2,-1,0,1,2,3,4,
-    #                   5,6,7,8,9,10,11,12,13,14,
-    #                   15,16,17,18,19,20,21,22,23,24,
-    #                   25,26,27,28,29,30,31,32,33,34,
-    #                   35,36,37,38,39,40,41,42,43,44,
-    #                   45,46,47,48,49,50,51,52,53,54,
-    #                   55,56,57,58,59,60,61,62,63,64,
-    #                   65,66,67,68,69,70,71,72,73,74,
-    #                   75,76,77,78,79,80,81,82,84,92,
-    #                   110,111,128,144]
-    # df['Arm Angle'] = list(pd.DataFrame(arm_angle_preds).mul(arm_angle_cols).sum(axis=1))
     df['sz_top'] = sz_top
     df['sz_bot'] = sz_bot
     df['sz_z'] = strikezone_z(df,'sz_top','sz_bot')
@@ -578,6 +747,12 @@ def scrape_savant_data(player_name, game_id):
     df['3B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Triple'),1,0)
     df['HR'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Home Run'),1,0)
     df['xDamage'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,1,2,3,4]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
+    df = feature_engineer(df)
+    df[['plvCS','plvBall','plvHBP',
+        'plvWhiff','plvFoul',
+        'plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']] = apply_plv_outcomes(df)
+    df['plvCSW'] = df[['plvCS','plvWhiff']].sum(axis=1)
+    df['plvDamage'] = df[['plv1B', 'plv2B', 'plv3B', 'plvHR']].mul([1,2,3,4]).sum(axis=1) / df[['plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']].sum(axis=1)
 
     agg_dict = {
         'Num Pitches':'count',
@@ -608,7 +783,18 @@ def scrape_savant_data(player_name, game_id):
         '3B':'sum',
         'HR':'sum',
         'HB':'sum',
-        'xDamage':'mean'
+        'xDamage':'mean',
+        'plvCS':'sum',
+        'plvBall':'sum',
+        'plvHBP':'sum',
+        'plvWhiff':'sum',
+        'plvFoul':'sum',
+        'plvOut':'sum', 
+        'plv1B':'sum', 
+        'plv2B':'sum', 
+        'plv3B':'sum', 
+        'plvHR':'sum',
+        'plvCSW':'sum'
     }
     game_df = (
         df
@@ -653,6 +839,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
     merge_df['xDamage'] = merge_df['xDamage'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
+    merge_df['plvDamage'] = merge_df[['plv1B', 'plv2B', 'plv3B', 'plvHR']].mul([1,2,3,4]).sum(axis=1) / merge_df[['plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']].sum(axis=1)
     # merge_df['Arm Angle'] = [f'{x:.0f}°' for x in merge_df['Arm Angle']]
 
     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
@@ -705,6 +892,19 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','HB'] = game_df['HB'].sum()
     merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
+    #PLV
+    merge_df.loc['Total','plvCS'] = game_df['plvCS'].sum()
+    merge_df.loc['Total','plvBall'] = game_df['plvBall'].sum()
+    merge_df.loc['Total','plvHBP'] = game_df['plvHBP'].sum()
+    merge_df.loc['Total','plvWhiff'] = game_df['plvWhiff'].sum()
+    merge_df.loc['Total','plvCSW'] = game_df['plvCSW'].sum()
+    merge_df.loc['Total','plvFoul'] = game_df['plvFoul'].sum()
+    merge_df.loc['Total','plvOut'] = game_df['plvOut'].sum()
+    merge_df.loc['Total','plv1B'] = game_df['plv1B'].sum()
+    merge_df.loc['Total','plv2B'] = game_df['plv2B'].sum()
+    merge_df.loc['Total','plv3B'] = game_df['plv3B'].sum()
+    merge_df.loc['Total','plvHR'] = game_df['plvHR'].sum()
+    merge_df.loc['Total','plvDamage'] = game_df['plvDamage'].sum()
     return merge_df, df
 
 def game_charts(move_df):
@@ -944,13 +1144,13 @@ def highlight_cols(s, coldict, stat_tab):
     return col_format
 
 default_groups = {
-        '':['Type','#'],
-        'Usage':['Usage','vs R','vs L'],
-        'Stuff':['Velo','Ext',#'Arm Angle',
-                 'IVB','IHB','HAVAA'],
-        'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
-        'Locations':['Zone%','Chase%','BB'],
-        'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage']
+    '':['Type','#'],
+    'Usage':['Usage','vs R','vs L'],
+    'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
+    'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
+    'Locations':['Zone%','Chase%','BB'],
+    'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage'],
+    'PLV':['plvCSW','plvDamage']
     }
 
 stat_tabs = {
