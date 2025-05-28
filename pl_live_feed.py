@@ -1187,11 +1187,11 @@ else:
         table_df.columns = pd.MultiIndex.from_tuples(col_names)
     else:
         table_df = table_df.rename(columns={'Num Pitches':'#'})[['Type','#']+stat_tabs[tab_select]]
-    plv_cols = [x for x in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR'] if x in list(table_df.columns.values)]
+    # plv_cols = [x for x in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR'] if x in list(table_df.columns.values)]
     st.dataframe((table_df
                   .style
                   .format(precision=3)
-                  .format(precision=2,subset=plv_cols)
+                  # .format(precision=2,subset=plv_cols)
                   .apply(highlight_cols,coldict=highlight_dict,stat_tab=tab_select)
                   # .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
