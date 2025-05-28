@@ -1164,9 +1164,9 @@ default_groups = {
 stat_tabs = {
     'Default':'',
     'Standard':['Strikes','Balls','PA','Hit','1B','2B','3B','HR','K','BB','HB'],
-    'PLV':['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']
+    'PLV':['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR','plvCSW','plvDamage']
 }
-
+plv_cols = ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 else:
@@ -1190,6 +1190,7 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
+                  .format(precision=1,subset=plv_cols)
                   .apply(highlight_cols,coldict=highlight_dict,stat_tab=tab_select)
                   # .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
