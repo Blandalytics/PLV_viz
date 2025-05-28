@@ -1166,7 +1166,7 @@ stat_tabs = {
     'Standard':['Strikes','Balls','PA','Hit','1B','2B','3B','HR','K','BB','HB'],
     'PLV':['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR','plvCSW','plvDamage']
 }
-plv_cols = ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']
+
 if len(list(pitcher_list.keys()))==0:
     st.write('No pitches thrown yet')
 else:
@@ -1182,11 +1182,12 @@ else:
 
     if tab_select=='Default':
         col_names = [(k,v) for k, l in default_groups.items() for v in l ]
-
+        
         table_df = table_df.rename(columns={'Num Pitches':'#'})[sum(list(default_groups.values()),[])]
         table_df.columns = pd.MultiIndex.from_tuples(col_names)
     else:
         table_df = table_df.rename(columns={'Num Pitches':'#'})[['Type','#']+stat_tabs[tab_select]]
+    plv_cols = [x for x in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR'] if x in list(table_df.columns.values)]
     st.dataframe((table_df
                   .style
                   .format(precision=3)
