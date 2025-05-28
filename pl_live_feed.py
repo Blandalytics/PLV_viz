@@ -797,7 +797,8 @@ def scrape_savant_data(player_name, game_id):
         'plv2B':'sum', 
         'plv3B':'sum', 
         'plvHR':'sum',
-        'plvCSW':'sum'
+        'plvCSW':'sum',
+        'plvDamage':'mean',
     }
     game_df = (
         df
