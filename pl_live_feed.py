@@ -1191,7 +1191,7 @@ else:
     st.dataframe((table_df
                   .style
                   .format(precision=3)
-                  .format(precision=1,subset=plv_cols)
+                  .format(precision=2,subset=plv_cols)
                   .apply(highlight_cols,coldict=highlight_dict,stat_tab=tab_select)
                   # .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
                   .set_properties(**{'background-color': '#20232c'}, subset=slice_)
