@@ -797,7 +797,6 @@ def scrape_savant_data(player_name, game_id):
         'plv2B':'sum', 
         'plv3B':'sum', 
         'plvHR':'sum',
-        'plvCSW':'sum',
         'plvDamage':'mean',
     }
     game_df = (
@@ -807,6 +806,7 @@ def scrape_savant_data(player_name, game_id):
         [list(agg_dict.keys())]
         .agg(agg_dict)
         .assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
+                plvCSW = lambda x: x['plvCS'].add(x['plvWhiff']).div(x['Num Pitches']).mul(100),
                 strike_rate = lambda x: x['Strikes'].div(x['Num Pitches']).mul(100),
                 zone_rate = lambda x: x['zone'].div(x['Num Pitches']).mul(100),
                 chase_rate = lambda x: x['chase'].div(x['Num Pitches'].sub(x['zone'])).mul(100),
@@ -835,6 +835,7 @@ def scrape_savant_data(player_name, game_id):
         .sort_values('Num Pitches',ascending=False)
         )
     merge_df['CSW'] = [f'{x:.1f}%' for x in merge_df['CSW']]
+    merge_df['plvCSW'] = [f'{x:.1f}%' for x in merge_df['plvCSW']]
     merge_df['Strike%'] = [f'{x:.1f}%' for x in merge_df['strike_rate']]
     merge_df['Zone%'] = [f'{x:.1f}%' for x in merge_df['zone_rate']]
     merge_df['Chase%'] = [f'{x:.1f}%' for x in merge_df['chase_rate'].fillna(0)]
@@ -901,7 +902,8 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','plvBall'] = game_df['plvBall'].sum()
     merge_df.loc['Total','plvHBP'] = game_df['plvHBP'].sum()
     merge_df.loc['Total','plvWhiff'] = game_df['plvWhiff'].sum()
-    merge_df.loc['Total','plvCSW'] = game_df['plvCSW'].sum()
+    plv_csw_val = df[['plvCS','plvWhiff']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
+    merge_df.loc['Total','plvCSW'] = f'{plv_csw_val:.1%}'
     merge_df.loc['Total','plvFoul'] = game_df['plvFoul'].sum()
     merge_df.loc['Total','plvOut'] = game_df['plvOut'].sum()
     merge_df.loc['Total','plv1B'] = game_df['plv1B'].sum()
