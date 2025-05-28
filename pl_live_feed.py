@@ -200,6 +200,7 @@ def apply_plv_outcomes(model_df):
         # Launch Velo Result
         for launch_angle in ['10deg','10-20deg','20-30deg','30-40deg','40-50deg']:
             with open('model_files/live_{}_model_{}.pkl'.format(launch_angle,pitch_type), 'rb') as f:
+                launch_velo_model = pickle.load(f)
     
             model_df.loc[model_df['pitch_group']==pitch_type,[launch_angle+': <90mph_raw',launch_angle+': 90-95mph_raw',launch_angle+': 95-100mph_raw',launch_angle+': 100-105mph_raw',launch_angle+': 105+mph_raw']] = launch_velo_model.predict_proba(model_df.loc[model_df['pitch_group']==pitch_type,launch_velo_model.feature_names_in_])
             for bucket in [launch_angle+': '+x for x in ['<90mph','90-95mph','95-100mph','100-105mph','105+mph']]:
