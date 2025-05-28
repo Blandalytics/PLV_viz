@@ -136,8 +136,8 @@ bip_result_dict = {
 def apply_plv_outcomes(model_df):
     model_df[['take_input','swing_input','ooz_raw','called_strike_raw','ball_raw',
                 'hit_by_pitch_raw','swinging_strike_raw','contact_raw',
-                'foul_strike_raw','in_play_raw','10deg_raw','10-20deg_raw',
-                '20-30deg_raw','30-40deg_raw','40-50deg_raw','50+deg_raw','50+deg_pred',
+                'foul_strike_raw','in_play_raw','10deg_raw','10-20deg_raw','20-30deg_raw',
+              '30-40deg_raw','40-50deg_raw','50+deg_raw','50+deg_pred',
                 'called_strike_pred','ball_pred','hit_by_pitch_pred','ooz_input','contact_input',
                 'swinging_strike_pred','foul_strike_pred','in_play_input','50+deg_pred',
                 'out_pred', 'single_pred', 'double_pred', 'triple_pred', 'home_run_pred']] = None
