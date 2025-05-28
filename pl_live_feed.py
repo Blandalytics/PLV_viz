@@ -707,6 +707,7 @@ def scrape_savant_data(player_name, game_id):
     df['Num Pitches'] = pitch_id
     df['pitch_type'] = [pitchtype_map[x] for x in pitch_type]
     df['sub_type'] = pitch_type
+    df['pitch_group'] = [pitchgroup_map[x] for x in pitch_type]
     # df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
     df['Velo'] = velo
     df['Ext'] = extension
