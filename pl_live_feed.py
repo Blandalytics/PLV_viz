@@ -69,6 +69,7 @@ def feature_engineer(dataframe):
                       'strikes',#'strikes_before_pitch'
                      ]
     dataframe['stand'] = dataframe['hitterside'].copy()
+    dataframe['throw'] = dataframe['P Hand'].copy()
     dataframe = pd.get_dummies(dataframe, columns=category_feats)
     
     if 'P Hand_L' not in dataframe:
@@ -102,7 +103,7 @@ def feature_engineer(dataframe):
         dataframe[stat+'_diff'] = fastball_differences(dataframe,stat)
     dataframe['total_IB_diff'] = (dataframe['IHB_diff'].astype('float')**2+dataframe['IVB_diff'].astype('float')**2)**0.5
     
-    return dataframe.rename(columns={'stand':'hitterside'})
+    return dataframe.rename(columns={'stand':'hitterside','throw':'P Hand'})
 
 bip_result_dict = {
     '10-20deg: 100-105mph': {'out': 0.3336331744175587,'single': 0.34973464064046056,'double': 0.2876675362058109,'triple': 0.023207699919042906,'home_run': 0.005756948817126923},
