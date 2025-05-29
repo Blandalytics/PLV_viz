@@ -409,7 +409,34 @@ if len(list(pitcher_list.keys()))>0:
         season_avgs = comp_data
         
     st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
+
+    count_select = st.radio('Count Group', 
+                            ['All','Hitter-Friendly','Pitcher-Friendly','Even','2-Strike','3-Ball','Custom'],
+                            index=0,
+                            horizontal=True
+                           )
+     
+    if count_select=='All':
+        counts = ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2']
+    elif count_select=='Hitter-Friendly':
+        counts = ['1-0', '2-0', '3-0', '2-1', '3-1']
+    elif count_select=='Pitcher-Friendly':
+        counts = ['0-1','0-2','1-2']
+    elif count_select=='Even':
+        counts = ['0-0','1-1','2-2']
+    elif count_select=='2-Strike':
+        counts = ['0-2','1-2','2-2','3-2']
+    elif count_select=='3-Ball':
+        counts = ['3-0','3-1','3-2']
+    else:
+        counts = st.multiselect('Select the count(s):',
+                                ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+                                ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
+    home_away = 'home' if home==1 else 'away'
     
+    inning_min = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][0]['inning']
+    inning_max = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][-1]['inning']
+    inning_select = st.slider('Innings',min_value=inning_min,max_value=inning_max)
 
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
@@ -686,6 +713,7 @@ def scrape_savant_data(player_name, game_id):
     df['MLBAMID'] = df['MLBAMID'].astype('int')
     df['balls'] = balls
     df['strikes'] = strikes
+    df['count'] = df['balls'].str+'-'df['strikes'].str
     df['Pitcher'] = pitcher_name
     df['Height'] = pitcher_height
     df['Hitter'] = hitter_name
@@ -803,6 +831,8 @@ def scrape_savant_data(player_name, game_id):
     }
     game_df = (
         df
+        .loc[df['count'].isin(counts) &
+                df['inning'].isin(inning_select)]
         .assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0))
         .groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])
         [list(agg_dict.keys())]
@@ -913,7 +943,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','plv3B'] = game_df['plv3B'].sum()
     merge_df.loc['Total','plvHR'] = game_df['plvHR'].sum()
     merge_df.loc['Total','plvDamage'] = round(df['plvDamage'].mean(),3)
-    return merge_df, df
+    return merge_df, df.loc[df['count'].isin(counts) & df['inning'].isin(inning_select)]
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
