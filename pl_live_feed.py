@@ -950,7 +950,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     #PLV
     for stat in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul',
                  'plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']:
-        stat_val = df[stat].sum(axis=1).sum() / game_df['Num Pitches'].sum()  
+        stat_val = df[stat].sum() / game_df['Num Pitches'].sum()  
         merge_df.loc['Total',stat] = f'{stat_val:.1%}'
     plv_csw_val = df[['plvCS','plvWhiff']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
     merge_df.loc['Total','plvCSW'] = f'{plv_csw_val:.1%}'
