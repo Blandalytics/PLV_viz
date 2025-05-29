@@ -441,9 +441,12 @@ if len(list(pitcher_list.keys()))>0:
         
         inning_min = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][0]['inning']
         inning_max = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][-1]['inning']
-        start_inning, end_inning = st.select_slider('Innings',
-                                                    options=list(range(inning_min,inning_max+1)),
-                                                    value=(inning_min,inning_max))
+        if inning_min!=inning_max:
+            start_inning, end_inning = st.select_slider('Innings',
+                                                        options=list(range(inning_min,inning_max+1)),
+                                                        value=(inning_min,inning_max))
+        else:
+            start_inning, end_inning = inning_min, inning_max
 
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
