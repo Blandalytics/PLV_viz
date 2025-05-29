@@ -1197,8 +1197,7 @@ def highlight_cols(s, coldict, stat_tab):
     return col_format
 
 default_groups = {
-    # '':['Type','#'],
-    '':['#'],
+    '':['Type','#'],
     'Usage':['Usage','vs R','vs L'],
     'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
     'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
@@ -1228,7 +1227,6 @@ else:
 
     if tab_select=='Default':
         col_names = [(k,v) for k, l in default_groups.items() for v in l ]
-        table_df.set_index('Type')
         table_df = table_df.rename(columns={'Num Pitches':'#'})[sum(list(default_groups.values()),[])]
         table_df.columns = pd.MultiIndex.from_tuples(col_names)
     else:
