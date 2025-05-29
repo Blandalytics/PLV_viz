@@ -438,7 +438,7 @@ if len(list(pitcher_list.keys()))>0:
         
         inning_min = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][0]['inning']
         inning_max = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][-1]['inning']
-        inning_select = st.select_slider('Innings',
+        start_inning, end_inning = st.select_slider('Innings',
                                           options=list(range(inning_min,inning_max+1)),
                                           value=(inning_min,inning_max))
 
@@ -836,7 +836,7 @@ def scrape_savant_data(player_name, game_id):
     game_df = (
         df
         .loc[df['count'].isin(counts) &
-                df['inning'].isin(inning_select)]
+                df['inning'].between(start_inning, end_inning)]
         .assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0))
         .groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])
         [list(agg_dict.keys())]
@@ -947,7 +947,7 @@ def scrape_savant_data(player_name, game_id):
     merge_df.loc['Total','plv3B'] = game_df['plv3B'].sum()
     merge_df.loc['Total','plvHR'] = game_df['plvHR'].sum()
     merge_df.loc['Total','plvDamage'] = round(df['plvDamage'].mean(),3)
-    return merge_df, df.loc[df['count'].isin(counts) & df['inning'].isin(inning_select)]
+    return merge_df, df.loc[df['count'].isin(counts) & df['inning'].between(start_inning, end_inning)]
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
