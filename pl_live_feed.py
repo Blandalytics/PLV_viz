@@ -883,7 +883,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
     merge_df['xDamage'] = merge_df['xDamage'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
-    merge_df['plvCSW'] = [f'{x:.1f}%' for x in merge_df['plvCSW'].mul(100)]
+    merge_df['plvCSW'] = [f'{x:.1f}%' for x in merge_df['plvCSW']]
     merge_df['plvDamage'] = merge_df[['plv1B', 'plv2B', 'plv3B', 'plvHR']].mul([1,2,3,4]).sum(axis=1) / merge_df[['plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']].sum(axis=1)
     merge_df['plvCS'] = [f'{x:.1f}%' for x in merge_df['plvCS'].mul(100)]
     merge_df['plvBall'] = [f'{x:.1f}%' for x in merge_df['plvBall'].mul(100)]
