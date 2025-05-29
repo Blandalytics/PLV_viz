@@ -792,7 +792,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     df['plvCSW'] = df[['plvCS','plvWhiff']].sum(axis=1)
     df['plvDamage'] = df[['plv1B', 'plv2B', 'plv3B', 'plvHR']].mul([1,2,3,4]).sum(axis=1) / df[['plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']].sum(axis=1)
 
-    df = df.loc[df['count'].isin(counts) & df['inning'].between(start_inning, end_inning)].copy()
+    df = df.loc[df['count'].isin(counts) & df['inning'].between(start_inning, end_inning)].reset_index().copy()
     
     agg_dict = {
         'Num Pitches':'count',
