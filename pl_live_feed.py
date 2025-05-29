@@ -1205,7 +1205,7 @@ def highlight_cols(s, coldict, stat_tab):
     return col_format
 
 default_groups = {
-    '':['#'],
+    '':['Type','#'],
     'Usage':['Usage','vs R','vs L'],
     'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
     'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
