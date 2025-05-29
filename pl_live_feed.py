@@ -713,7 +713,7 @@ def scrape_savant_data(player_name, game_id):
     df['MLBAMID'] = df['MLBAMID'].astype('int')
     df['balls'] = balls
     df['strikes'] = strikes
-    df['count'] = df['balls'].str+'-'df['strikes'].str
+    df['count'] = df['balls'].str+'-'+df['strikes'].str
     df['Pitcher'] = pitcher_name
     df['Height'] = pitcher_height
     df['Hitter'] = hitter_name
