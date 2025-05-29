@@ -441,8 +441,6 @@ if len(list(pitcher_list.keys()))>0:
         start_inning, end_inning = st.select_slider('Innings',
                                           options=list(range(inning_min,inning_max+1)),
                                           value=(inning_min,inning_max))
-        st.write(start_inning)
-        st.write(end_inning)
 
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
@@ -731,6 +729,7 @@ def scrape_savant_data(player_name, game_id):
     df['PA'] = pa
     df['PA'] = np.where(df['PA']!=df['PA'].shift(1).fillna(0),1,0)
     df['inning'] = inning
+    df['inning'] = df['inning'].astype('int')
     df['zone'] = zone
     df['CS'] = called_strikes
     df['Whiffs'] = swinging_strikes
