@@ -1187,17 +1187,25 @@ marker_names = {
 }
 
 highlight_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[2]) for k, v in marker_colors.items()}
+highlight_dict.update({'Total':'#20232c'})
 type_dict = {k:hextriplet(sns.dark_palette(v,n_colors=20)[5]) for k, v in marker_colors.items()}
+type_dict.update({'Total':'#20232c'})
 
-def highlight_cols(s, coldict, stat_tab):
-    if stat_tab=='Default':
-        col_format = ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
-    else:
-        col_format = ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df['Type'].isin(highlight_dict.keys())*table_df['Type'].values]
-    return col_format
+def highlight_cols(s, coldict):
+    return ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in list(test_df.index).isin(highlight_dict.keys())*list(test_df.index).values]
+
+def index_style(s):
+    return [f"background-color: {type_dict[i]};" for i in s]
+
+# def highlight_cols(s, coldict, stat_tab):
+#     if stat_tab=='Default':
+#         col_format = ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df[('','Type')].isin(highlight_dict.keys())*table_df[('','Type')].values]
+#     else:
+#         col_format = ['background-color: {}'.format(highlight_dict[v]) if v else '' for v in table_df['Type'].isin(highlight_dict.keys())*table_df['Type'].values]
+#     return col_format
 
 default_groups = {
-    '':['Type','#'],
+    '':['#'],
     'Usage':['Usage','vs R','vs L'],
     'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
     'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
@@ -1224,21 +1232,23 @@ else:
              chart_df['event'],
              chart_df['pitch_call'])
     chart_df['Description'] = chart_df['Description'].str.replace('_',' ').str.title()
-
+    table_df = table_df.set_index('Type')
     if tab_select=='Default':
         col_names = [(k,v) for k, l in default_groups.items() for v in l ]
         table_df = table_df.rename(columns={'Num Pitches':'#'})[sum(list(default_groups.values()),[])]
         table_df.columns = pd.MultiIndex.from_tuples(col_names)
     else:
-        table_df = table_df.rename(columns={'Num Pitches':'#'})[['Type','#']+stat_tabs[tab_select]]
+        table_df = table_df.rename(columns={'Num Pitches':'#'})[['#']+stat_tabs[tab_select]]
     # plv_cols = [x for x in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR'] if x in list(table_df.columns.values)]
     st.dataframe((table_df
                   .style
                   .format(precision=3)
                   # .format(precision=2,subset=plv_cols)
-                  .apply(highlight_cols,coldict=highlight_dict,stat_tab=tab_select)
+                  .apply(lambda r: [f"background-color:{highlight_dict.get(r.name)}" for i in r], axis=1)
+                  .apply_index(index_style)
+                  # .apply(highlight_cols,coldict=highlight_dict,stat_tab=tab_select)
                   # .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
-                  .set_properties(**{'background-color': '#20232c'}, subset=slice_)
+                  # .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
                  use_container_width=False, hide_index=True)
 
