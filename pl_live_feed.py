@@ -438,7 +438,7 @@ if len(list(pitcher_list.keys()))>0:
         
         inning_min = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][0]['inning']
         inning_max = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][-1]['inning']
-        inning_select = st..select_slider('Innings',
+        inning_select = st.select_slider('Innings',
                                           options=list(range(inning_min,inning_max+1)),
                                           value=(inning_min,inning_max))
 
