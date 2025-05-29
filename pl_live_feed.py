@@ -846,7 +846,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
         [list(agg_dict.keys())]
         .agg(agg_dict)
         .assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
-                plvCSW = lambda x: x['plvCS'].add(x['plvWhiff']).div(x['Num Pitches']).mul(100),
+                plvCSW = lambda x: x['plvCS'].add(x['plvWhiff']).mul(100),
                 strike_rate = lambda x: x['Strikes'].div(x['Num Pitches']).mul(100),
                 zone_rate = lambda x: x['zone'].div(x['Num Pitches']).mul(100),
                 chase_rate = lambda x: x['chase'].div(x['Num Pitches'].sub(x['zone'])).mul(100),
