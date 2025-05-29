@@ -151,7 +151,6 @@ def apply_plv_outcomes(model_df):
                  launch_angle+': 95-100mph_pred',launch_angle+': 100-105mph_pred',
                  launch_angle+': 105+mph_pred']] = None
 
-    model_df
     for pitch_type in ['Fastball','Breaking_Ball','Offspeed']:
         if model_df.loc[model_df['pitch_group']==pitch_type].shape[0]==0:
             continue
