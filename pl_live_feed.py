@@ -409,34 +409,38 @@ if len(list(pitcher_list.keys()))>0:
         season_avgs = comp_data
         
     st.subheader(f'{date.strftime('%-m/%-d/%y')}: {player_select} {home_away} {opp} {decision} - {innings} IP, {earned_runs} ER, {hits} Hits, {walks} BBs, {strikeouts} Ks')
-
-    count_select = st.radio('Count Group', 
-                            ['All','Hitter-Friendly','Pitcher-Friendly','Even','2-Strike','3-Ball','Custom'],
-                            index=0,
-                            horizontal=True
-                           )
-     
-    if count_select=='All':
-        counts = ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2']
-    elif count_select=='Hitter-Friendly':
-        counts = ['1-0', '2-0', '3-0', '2-1', '3-1']
-    elif count_select=='Pitcher-Friendly':
-        counts = ['0-1','0-2','1-2']
-    elif count_select=='Even':
-        counts = ['0-0','1-1','2-2']
-    elif count_select=='2-Strike':
-        counts = ['0-2','1-2','2-2','3-2']
-    elif count_select=='3-Ball':
-        counts = ['3-0','3-1','3-2']
-    else:
-        counts = st.multiselect('Select the count(s):',
-                                ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
-                                ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
-    home_away = 'home' if home==1 else 'away'
-    
-    inning_min = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][0]['inning']
-    inning_max = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][-1]['inning']
-    inning_select = st.slider('Innings',min_value=inning_min,max_value=inning_max)
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        count_select = st.radio('Count Group', 
+                                ['All','Hitter-Friendly','Pitcher-Friendly','Even','2-Strike','3-Ball','Custom'],
+                                index=0,
+                                horizontal=True
+                               )
+         
+        if count_select=='All':
+            counts = ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2']
+        elif count_select=='Hitter-Friendly':
+            counts = ['1-0', '2-0', '3-0', '2-1', '3-1']
+        elif count_select=='Pitcher-Friendly':
+            counts = ['0-1','0-2','1-2']
+        elif count_select=='Even':
+            counts = ['0-0','1-1','2-2']
+        elif count_select=='2-Strike':
+            counts = ['0-2','1-2','2-2','3-2']
+        elif count_select=='3-Ball':
+            counts = ['3-0','3-1','3-2']
+        else:
+            counts = st.multiselect('Select the count(s):',
+                                    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'],
+                                    ['0-0', '1-0', '2-0', '3-0', '0-1', '1-1', '2-1', '3-1', '0-2', '1-2', '2-2', '3-2'])
+    with col2:
+        home_away = 'home' if home==1 else 'away'
+        
+        inning_min = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][0]['inning']
+        inning_max = x[f'{home_away}_pitchers'][pitcher_list[player_select][0]][-1]['inning']
+        inning_select = st..select_slider('Innings',
+                                          options=list(range(inning_min,inning_max+1)),
+                                          value=(inning_min,inning_max))
 
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
@@ -713,7 +717,7 @@ def scrape_savant_data(player_name, game_id):
     df['MLBAMID'] = df['MLBAMID'].astype('int')
     df['balls'] = balls
     df['strikes'] = strikes
-    df['count'] = df['balls'].str+'-'+df['strikes'].str
+    df['count'] = df['balls'].astype('str')+'-'+df['strikes'].astype('str')
     df['Pitcher'] = pitcher_name
     df['Height'] = pitcher_height
     df['Hitter'] = hitter_name
