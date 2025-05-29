@@ -441,6 +441,8 @@ if len(list(pitcher_list.keys()))>0:
         start_inning, end_inning = st.select_slider('Innings',
                                           options=list(range(inning_min,inning_max+1)),
                                           value=(inning_min,inning_max))
+        st.write(start_inning)
+        st.write(end_inning)
 
 with open('2025_3d_xwoba_model.pkl', 'rb') as f:
     xwOBAcon_model = pickle.load(f)
