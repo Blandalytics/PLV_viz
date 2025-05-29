@@ -567,7 +567,7 @@ def arm_angle(x0,z0,extension,height):
     return -43 - 33.1 * (abs(x0)/height) + 94 * (z0/height) + 4.4 * (extension/height)
     
 @st.cache_data(ttl='5m',show_spinner='Loading player data')
-def scrape_savant_data(player_name, game_id, counts=counts, start_inning=start_inning, end_inning=end_inning):
+def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     game_ids = []
     game_date = []
     pitcher_id_list = []
@@ -1205,7 +1205,7 @@ if len(list(pitcher_list.keys()))==0:
 else:
     idx = pd.IndexSlice
     slice_ = idx['Total',:]
-    table_df, chart_df = scrape_savant_data(player_select,game_id)
+    table_df, chart_df = scrape_savant_data(player_select,game_id, counts, start_inning, end_inning)
     tab_select = st.segmented_control('',list(stat_tabs.keys()),default='Default')
     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
     chart_df['Description'] = np.where(chart_df['pitch_call']=='hit_into_play',
