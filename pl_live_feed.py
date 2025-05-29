@@ -79,7 +79,7 @@ def feature_engineer(dataframe):
     if 'hitterside_L' not in dataframe:
         dataframe['hitterside_L'] = False
     if 'hitterside_R' not in dataframe:
-        dataframe['P hitterside_R'] = False
+        dataframe['hitterside_R'] = False
     # Pythagorean movement
     dataframe['total_IB'] = (dataframe['IHB'].astype('float')**2+dataframe['IVB'].astype('float')**2)**0.5
     
