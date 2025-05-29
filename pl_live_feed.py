@@ -1250,7 +1250,7 @@ else:
                   # .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
                   # .set_properties(**{'background-color': '#20232c'}, subset=slice_)
                  ),
-                 use_container_width=False, hide_index=True)
+                 use_container_width=False)
 
     game_charts(chart_df)
     if st.button('Location Charts'):
