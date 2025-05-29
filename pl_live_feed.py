@@ -791,6 +791,8 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     df['plvCSW'] = df[['plvCS','plvWhiff']].sum(axis=1)
     df['plvDamage'] = df[['plv1B', 'plv2B', 'plv3B', 'plvHR']].mul([1,2,3,4]).sum(axis=1) / df[['plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']].sum(axis=1)
 
+    df = df.loc[df['count'].isin(counts) & df['inning'].between(start_inning, end_inning)].copy()
+    
     agg_dict = {
         'Num Pitches':'count',
         # 'Arm Angle':'median',
@@ -835,7 +837,6 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     }
     game_df = (
         df
-        .loc[df['count'].isin(counts) & df['inning'].between(start_inning, end_inning)]
         .assign(vs_rhh = lambda x: np.where(x['hitterside']=='R',1,0))
         .groupby(['game_date','MLBAMID','Pitcher','P Hand','pitch_type'])
         [list(agg_dict.keys())]
@@ -946,7 +947,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     merge_df.loc['Total','plv3B'] = game_df['plv3B'].sum()
     merge_df.loc['Total','plvHR'] = game_df['plvHR'].sum()
     merge_df.loc['Total','plvDamage'] = round(df['plvDamage'].mean(),3)
-    return merge_df, df.loc[df['count'].isin(counts) & df['inning'].between(start_inning, end_inning)]
+    return merge_df, df
 
 def game_charts(move_df):
     fig = plt.figure(figsize=(8,8))
