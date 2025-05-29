@@ -78,7 +78,7 @@ def feature_engineer(dataframe):
         dataframe['P Hand_R'] = False
     if 'hitterside_L' not in dataframe:
         dataframe['hitterside_L'] = False
-    if 'P hitterside_R' not in dataframe:
+    if 'hitterside_R' not in dataframe:
         dataframe['P hitterside_R'] = False
     # Pythagorean movement
     dataframe['total_IB'] = (dataframe['IHB'].astype('float')**2+dataframe['IVB'].astype('float')**2)**0.5
@@ -150,6 +150,8 @@ def apply_plv_outcomes(model_df):
                  launch_angle+': <90mph_pred',launch_angle+': 90-95mph_pred',
                  launch_angle+': 95-100mph_pred',launch_angle+': 100-105mph_pred',
                  launch_angle+': 105+mph_pred']] = None
+
+    model_df
     for pitch_type in ['Fastball','Breaking_Ball','Offspeed']:
         if model_df.loc[model_df['pitch_group']==pitch_type].shape[0]==0:
             continue
