@@ -73,15 +73,18 @@ def feature_engineer(dataframe):
     dataframe['balls_before_pitch'] = dataframe['balls'].copy()
     dataframe['strikes_before_pitch'] = dataframe['strikes'].copy()
     dataframe = pd.get_dummies(dataframe, columns=category_feats)
-    
-    if 'P Hand_L' not in dataframe:
-        dataframe['P Hand_L'] = False
-    if 'P Hand_R' not in dataframe:
-        dataframe['P Hand_R'] = False
-    if 'hitterside_L' not in dataframe:
-        dataframe['hitterside_L'] = False
-    if 'hitterside_R' not in dataframe:
-        dataframe['hitterside_R'] = False
+
+    for hand in ['L','R']:
+        if f'P Hand_{hand}' not in dataframe:
+            dataframe[f'P Hand_{hand}'] = False
+        if f'hitterside_{hand}' not in dataframe:
+            dataframe[f'hitterside_{hand}'] = False
+    for balls in [0,1,2,3]:
+        if f'balls_{balls}' not in dataframe:
+            dataframe[f'balls_{balls}'] = False
+    for strikes in [0,1,2]:
+        if f'strikes_{strikes}' not in dataframe:
+            dataframe[f'strikes_{strikes}'] = False
     # Pythagorean movement
     dataframe['total_IB'] = (dataframe['IHB'].astype('float')**2+dataframe['IVB'].astype('float')**2)**0.5
     
