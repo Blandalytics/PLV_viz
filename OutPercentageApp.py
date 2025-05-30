@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore", category=FutureWarning, module="pandas")
 warnings.filterwarnings("ignore", message=".*empty or all-NA.*")
 
 # Enable pybaseball caching to prevent memory issues and speed up repeated queries
-pybaseball.cache.enable()
+# pybaseball.cache.enable()
 
 # Set page config
 st.set_page_config(
