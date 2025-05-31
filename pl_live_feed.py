@@ -792,6 +792,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
                     'Fielders Choice Out', 'Bunt Lineout',
                     'Bunt Pop Out', 'Triple Play','Sac Fly Double Play']
     df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['event'].isin(in_play_outs)),1,0)
+    df['Error'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Field Error'),1,0)
     df['HB'] = np.where((df['pitch_call']=='hit_by_pitch'),1,0)
     df['Hit'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
     df['1B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Single'),1,0)
@@ -831,6 +832,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
         'K':'sum',
         'BIP':'sum',
         'In Play Out':'sum',
+        'Error':'sum',
         'Hit':'sum',
         '1B':'sum',
         '2B':'sum',
@@ -950,6 +952,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     # Batted Ball
     merge_df.loc['Total','BIP'] = game_df['BIP'].sum()
     merge_df.loc['Total','In Play Out'] = game_df['In Play Out'].sum()
+    merge_df.loc['Total','Error'] = game_df['Error'].sum()
     merge_df.loc['Total','Hit'] = game_df['Hit'].sum()
     merge_df.loc['Total','1B'] = game_df['1B'].sum()
     merge_df.loc['Total','2B'] = game_df['2B'].sum()
@@ -1218,7 +1221,7 @@ default_groups = {
     'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
     'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
     'Locations':['Zone%','Chase%','BB'],
-    'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage'],
+    'Batted Ball':['BIP','In Play Out','Hit','HR','Error','xDamage'],
     'PLV':['plvCSW','plvDamage']
     }
 
