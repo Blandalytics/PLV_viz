@@ -786,7 +786,12 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     df[['VAA','HAVAA']] = adjusted_vaa(df)
     
     df['BIP'] = np.where((df['pitch_call']=='hit_into_play'),1,0)
-    df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['result_code']=='X'),1,0)
+    in_play_outs = ['Sac Fly', 'Groundout', 'Flyout', 'Pop Out',
+                    'Lineout', 'GIDP', 'Forceout', 'Sac Bunt',
+                    'Fielders Choice', 'Bunt Groundout','Double Play', 
+                    'Fielders Choice Out', 'Bunt Lineout',
+                    'Bunt Pop Out', 'Triple Play','Sac Fly Double Play']
+    df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['event'].isin(in_play_outs)),1,0)
     df['HB'] = np.where((df['pitch_call']=='hit_by_pitch'),1,0)
     df['Hit'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
     df['1B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Single'),1,0)
