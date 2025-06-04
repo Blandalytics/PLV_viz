@@ -73,15 +73,18 @@ def feature_engineer(dataframe):
     dataframe['balls_before_pitch'] = dataframe['balls'].copy()
     dataframe['strikes_before_pitch'] = dataframe['strikes'].copy()
     dataframe = pd.get_dummies(dataframe, columns=category_feats)
-    
-    if 'P Hand_L' not in dataframe:
-        dataframe['P Hand_L'] = False
-    if 'P Hand_R' not in dataframe:
-        dataframe['P Hand_R'] = False
-    if 'hitterside_L' not in dataframe:
-        dataframe['hitterside_L'] = False
-    if 'hitterside_R' not in dataframe:
-        dataframe['hitterside_R'] = False
+
+    for hand in ['L','R']:
+        if f'P Hand_{hand}' not in dataframe:
+            dataframe[f'P Hand_{hand}'] = False
+        if f'hitterside_{hand}' not in dataframe:
+            dataframe[f'hitterside_{hand}'] = False
+    for balls in [0,1,2,3]:
+        if f'balls_{balls}' not in dataframe:
+            dataframe[f'balls_{balls}'] = False
+    for strikes in [0,1,2]:
+        if f'strikes_{strikes}' not in dataframe:
+            dataframe[f'strikes_{strikes}'] = False
     # Pythagorean movement
     dataframe['total_IB'] = (dataframe['IHB'].astype('float')**2+dataframe['IVB'].astype('float')**2)**0.5
     
@@ -783,7 +786,13 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     df[['VAA','HAVAA']] = adjusted_vaa(df)
     
     df['BIP'] = np.where((df['pitch_call']=='hit_into_play'),1,0)
-    df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['result_code']=='X'),1,0)
+    in_play_outs = ['Sac Fly', 'Groundout', 'Flyout', 'Pop Out',
+                    'Lineout', 'GIDP', 'Forceout', 'Sac Bunt',
+                    'Fielders Choice', 'Bunt Groundout','Double Play', 
+                    'Fielders Choice Out', 'Bunt Lineout',
+                    'Bunt Pop Out', 'Triple Play','Sac Fly Double Play']
+    df['In Play Out'] = np.where((df['pitch_call']=='hit_into_play') & (df['event'].isin(in_play_outs)),1,0)
+    df['Error'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Field Error'),1,0)
     df['HB'] = np.where((df['pitch_call']=='hit_by_pitch'),1,0)
     df['Hit'] = np.where((df['pitch_call']=='hit_into_play') & df['event'].isin(['Single','Double','Triple','Home Run']),1,0)
     df['1B'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Single'),1,0)
@@ -823,6 +832,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
         'K':'sum',
         'BIP':'sum',
         'In Play Out':'sum',
+        'Error':'sum',
         'Hit':'sum',
         '1B':'sum',
         '2B':'sum',
@@ -942,6 +952,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     # Batted Ball
     merge_df.loc['Total','BIP'] = game_df['BIP'].sum()
     merge_df.loc['Total','In Play Out'] = game_df['In Play Out'].sum()
+    merge_df.loc['Total','Error'] = game_df['Error'].sum()
     merge_df.loc['Total','Hit'] = game_df['Hit'].sum()
     merge_df.loc['Total','1B'] = game_df['1B'].sum()
     merge_df.loc['Total','2B'] = game_df['2B'].sum()
@@ -1210,7 +1221,7 @@ default_groups = {
     'Stuff':['Velo','Ext','IVB','IHB','HAVAA'],
     'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
     'Locations':['Zone%','Chase%','BB'],
-    'Batted Ball':['BIP','In Play Out','Hit','HR','xDamage'],
+    'Batted Ball':['BIP','In Play Out','Hit','HR','Error','xDamage'],
     'PLV':['plvCSW','plvDamage']
     }
 
