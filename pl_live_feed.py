@@ -577,7 +577,7 @@ def player_height(mlbamid):
 def arm_angle(x0,z0,extension,height):
     return -43 - 33.1 * (abs(x0)/height) + 94 * (z0/height) + 4.4 * (extension/height)
     
-@st.cache_data(ttl='5m',show_spinner='Loading player data')
+@st.cache_data(ttl='1m',show_spinner='Loading player data')
 def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     game_ids = []
     game_date = []
