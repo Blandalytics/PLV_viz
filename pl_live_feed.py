@@ -802,11 +802,11 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     df['HR'] = np.where((df['pitch_call']=='hit_into_play') & (df['event']=='Home Run'),1,0)
     df['xDamage'] = [None if any(np.isnan([x,y,z])) else sum(np.multiply(xwOBAcon_model.predict_proba([[x,y,z]])[0],np.array([0,1,2,3,4]))) for x,y,z in zip(df['Spray Angle'].astype('float'),df['Launch Angle'].astype('float'),df['Launch Speed'].astype('float'))]
     df = feature_engineer(df)
-    df[['plvCS','plvBall','plvHBP',
-        'plvWhiff','plvFoul',
-        'plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']] = apply_plv_outcomes(df)
-    df['plvCSW'] = df[['plvCS','plvWhiff']].sum(axis=1)
-    df['plvDamage'] = df[['plv1B', 'plv2B', 'plv3B', 'plvHR']].mul([1,2,3,4]).sum(axis=1) / df[['plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']].sum(axis=1)
+    # df[['plvCS','plvBall','plvHBP',
+    #     'plvWhiff','plvFoul',
+    #     'plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']] = apply_plv_outcomes(df)
+    # df['plvCSW'] = df[['plvCS','plvWhiff']].sum(axis=1)
+    # df['plvDamage'] = df[['plv1B', 'plv2B', 'plv3B', 'plvHR']].mul([1,2,3,4]).sum(axis=1) / df[['plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']].sum(axis=1)
 
     df = df.loc[df['count'].isin(counts) & df['inning'].between(start_inning, end_inning)].reset_index().copy()
     
@@ -841,17 +841,17 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
         'HR':'sum',
         'HB':'sum',
         'xDamage':'mean',
-        'plvCS':'mean',
-        'plvBall':'mean',
-        'plvHBP':'mean',
-        'plvWhiff':'mean',
-        'plvFoul':'mean',
-        'plvOut':'mean', 
-        'plv1B':'mean', 
-        'plv2B':'mean', 
-        'plv3B':'mean', 
-        'plvHR':'mean',
-        'plvDamage':'mean',
+        # 'plvCS':'mean',
+        # 'plvBall':'mean',
+        # 'plvHBP':'mean',
+        # 'plvWhiff':'mean',
+        # 'plvFoul':'mean',
+        # 'plvOut':'mean', 
+        # 'plv1B':'mean', 
+        # 'plv2B':'mean', 
+        # 'plv3B':'mean', 
+        # 'plvHR':'mean',
+        # 'plvDamage':'mean',
     }
     game_df = (
         df
@@ -860,7 +860,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
         [list(agg_dict.keys())]
         .agg(agg_dict)
         .assign(CSW = lambda x: x['CS'].add(x['Whiffs']).div(x['Num Pitches']).mul(100),
-                plvCSW = lambda x: x['plvCS'].add(x['plvWhiff']).mul(100),
+                # plvCSW = lambda x: x['plvCS'].add(x['plvWhiff']).mul(100),
                 strike_rate = lambda x: x['Strikes'].div(x['Num Pitches']).mul(100),
                 zone_rate = lambda x: x['zone'].div(x['Num Pitches']).mul(100),
                 chase_rate = lambda x: x['chase'].div(x['Num Pitches'].sub(x['zone'])).mul(100),
@@ -897,18 +897,18 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
     merge_df['xDamage'] = merge_df['xDamage'].round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
-    merge_df['plvCSW'] = [f'{x:.1f}%' for x in merge_df['plvCSW']]
-    merge_df['plvDamage'] = merge_df['plvDamage'].astype('float').round(3)
-    merge_df['plvCS'] = [f'{x:.1f}%' for x in merge_df['plvCS'].mul(100)]
-    merge_df['plvBall'] = [f'{x:.1f}%' for x in merge_df['plvBall'].mul(100)]
-    merge_df['plvHBP'] = [f'{x:.1f}%' for x in merge_df['plvHBP'].mul(100)]
-    merge_df['plvWhiff'] = [f'{x:.1f}%' for x in merge_df['plvWhiff'].mul(100)]
-    merge_df['plvFoul'] = [f'{x:.1f}%' for x in merge_df['plvFoul'].mul(100)]
-    merge_df['plvOut'] = [f'{x:.1f}%' for x in merge_df['plvOut'].mul(100)]
-    merge_df['plv1B'] = [f'{x:.1f}%' for x in merge_df['plv1B'].mul(100)]
-    merge_df['plv2B'] = [f'{x:.1f}%' for x in merge_df['plv2B'].mul(100)]
-    merge_df['plv3B'] = [f'{x:.1f}%' for x in merge_df['plv3B'].mul(100)]
-    merge_df['plvHR'] = [f'{x:.1f}%' for x in merge_df['plvHR'].mul(100)]
+    # merge_df['plvCSW'] = [f'{x:.1f}%' for x in merge_df['plvCSW']]
+    # merge_df['plvDamage'] = merge_df['plvDamage'].astype('float').round(3)
+    # merge_df['plvCS'] = [f'{x:.1f}%' for x in merge_df['plvCS'].mul(100)]
+    # merge_df['plvBall'] = [f'{x:.1f}%' for x in merge_df['plvBall'].mul(100)]
+    # merge_df['plvHBP'] = [f'{x:.1f}%' for x in merge_df['plvHBP'].mul(100)]
+    # merge_df['plvWhiff'] = [f'{x:.1f}%' for x in merge_df['plvWhiff'].mul(100)]
+    # merge_df['plvFoul'] = [f'{x:.1f}%' for x in merge_df['plvFoul'].mul(100)]
+    # merge_df['plvOut'] = [f'{x:.1f}%' for x in merge_df['plvOut'].mul(100)]
+    # merge_df['plv1B'] = [f'{x:.1f}%' for x in merge_df['plv1B'].mul(100)]
+    # merge_df['plv2B'] = [f'{x:.1f}%' for x in merge_df['plv2B'].mul(100)]
+    # merge_df['plv3B'] = [f'{x:.1f}%' for x in merge_df['plv3B'].mul(100)]
+    # merge_df['plvHR'] = [f'{x:.1f}%' for x in merge_df['plvHR'].mul(100)]
     # merge_df['Arm Angle'] = [f'{x:.0f}°' for x in merge_df['Arm Angle']]
 
     merge_df['Usage'] = [f'{x:.1f}% ({y:+.1f}%)' for x,y in zip(merge_df['Usage'],merge_df['Usage Diff'].fillna(merge_df['Usage']))]
@@ -963,13 +963,13 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
 
     #PLV
-    for stat in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul',
-                 'plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']:
-        stat_val = df[stat].sum() / game_df['Num Pitches'].sum()
-        merge_df.loc['Total',stat] = f'{stat_val:.1%}'
-    plv_csw_val = df[['plvCS','plvWhiff']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
-    merge_df.loc['Total','plvCSW'] = f'{plv_csw_val:.1%}'
-    merge_df.loc['Total','plvDamage'] = round(df['plvDamage'].mean(),3)
+    # for stat in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul',
+    #              'plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR']:
+    #     stat_val = df[stat].sum() / game_df['Num Pitches'].sum()
+    #     merge_df.loc['Total',stat] = f'{stat_val:.1%}'
+    # plv_csw_val = df[['plvCS','plvWhiff']].sum(axis=1).sum() / game_df['Num Pitches'].sum()
+    # merge_df.loc['Total','plvCSW'] = f'{plv_csw_val:.1%}'
+    # merge_df.loc['Total','plvDamage'] = round(df['plvDamage'].mean(),3)
     return merge_df, df
 
 def game_charts(move_df):
@@ -1223,13 +1223,13 @@ default_groups = {
     'Strikes':['Strike%','Fouls','CS','Whiffs','CSW','K'],
     'Locations':['Zone%','Chase%','BB'],
     'Batted Ball':['BIP','In Play Out','Hit','HR','Error','xDamage'],
-    'PLV':['plvCSW','plvDamage']
+    # 'PLV':['plvCSW','plvDamage']
     }
 
 stat_tabs = {
     'Default':'',
     'Standard':['Strikes','Balls','PA','Hit','1B','2B','3B','HR','K','BB','HB'],
-    'PLV':['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR','plvCSW','plvDamage']
+    # 'PLV':['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR','plvCSW','plvDamage']
 }
 
 if len(list(pitcher_list.keys()))==0:
