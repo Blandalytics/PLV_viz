@@ -29,8 +29,15 @@ kde_max = '#a9373b'
 kde_palette = (sns.color_palette(f'blend:{kde_min},{pl_white}', n_colors=1001)[:-1] +
                sns.color_palette(f'blend:{pl_white},{kde_max}', n_colors=1001)[:-1])
 
-logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-logo = Image.open(urllib.request.urlopen(logo_loc))
+@st.cache_resource()
+def load_logo():
+    logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+    img_url = urllib.request.urlopen(logo_loc)
+    logo = Image.open(img_url)
+    return logo
+    
+logo = load_logo()
+st.image(logo, width=200)
 
 sns.set_theme(
     style={
@@ -47,7 +54,7 @@ sns.set_theme(
      }
     )
 
-years = [2024,2023,2022,2021,2020]
+years = [2025,2024,2023,2022,2021,2020]
 year = st.radio('Choose a year:', years)
 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")

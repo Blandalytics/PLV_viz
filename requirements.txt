@@ -1,9 +1,12 @@
 streamlit
-matplotlib
 numpy
+matplotlib == 3.10.0
 pandas
-seaborn
-scipy
-statsmodels
 plotly
-scikit-learn
+scikit-learn == 1.5.1
+seaborn
+statsmodels
+xgboost
+scipy
+lxml
+pytz
