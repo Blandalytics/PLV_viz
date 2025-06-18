@@ -8,5 +8,4 @@ seaborn
 statsmodels
 xgboost
 scipy
-lxml
 pytz
