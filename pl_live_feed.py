@@ -1279,7 +1279,7 @@ def plotly_charts(chart_df):
     chart_df['pa_count'] = chart_df['PA'].expanding().sum()
     chart_df['ev_la_text'] = np.where(chart_df['Launch Angle'].isna() | chart_df['Launch Speed'].isna(),
                                       '',
-                                      'EV/LA: '+chart_df['Launch Speed'].astype('float').round(1).astype('str')+'mph @ '+chart_df['Launch Angle'].astype('str')+'°')
+                                      'EV/LA: '+chart_df['Launch Speed'].round(1).astype('str')+'mph @ '+chart_df['Launch Angle'].astype('str')+'°')
     lhh_df = chart_df.loc[chart_df['hitterside']=='L'].copy()
     rhh_df = chart_df.loc[chart_df['hitterside']=='R'].copy()
     pitcher_hand = chart_df['P Hand'][0]
