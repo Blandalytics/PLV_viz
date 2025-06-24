@@ -895,7 +895,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     merge_df['vs R'] = [f'{x:.1%}' for x in merge_df['vs_rhh']]
     merge_df['vs L'] = [f'{x:.1%}' for x in merge_df['vs_lhh']]
     merge_df['Ext'] = [f'{x:.1f} ft' for x in merge_df['Ext']]
-    merge_df['xDamage'] = merge_df['xDamage'].round(3)
+    merge_df['xDamage'] = merge_df['xDamage'].astype('float').fillna(0).round(3)
     merge_df['HAVAA'] = [f'{x:.1f}°' for x in merge_df['HAVAA']]
     # merge_df['plvCSW'] = [f'{x:.1f}%' for x in merge_df['plvCSW']]
     # merge_df['plvDamage'] = merge_df['plvDamage'].astype('float').round(3)
@@ -960,7 +960,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
     merge_df.loc['Total','3B'] = game_df['3B'].sum()
     merge_df.loc['Total','HR'] = game_df['HR'].sum()
     merge_df.loc['Total','HB'] = game_df['HB'].sum()
-    merge_df.loc['Total','xDamage'] = round(df['xDamage'].mean(),3)
+    merge_df.loc['Total','xDamage'] = round(df['xDamage'].astype('float').fillna(0).mean(),3)
 
     #PLV
     # for stat in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul',
