@@ -1815,5 +1815,5 @@ def plotly_charts(chart_df):
     # fig.show()
     st.plotly_chart(fig,use_container_width=False,theme=None)
 
-if st.button('Experimental test charts (NOT mobile-friendly)'):
-    plotly_charts(chart_df)
+# if st.button('Experimental test charts (NOT mobile-friendly)'):
+    # plotly_charts(chart_df)
