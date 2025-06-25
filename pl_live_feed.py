@@ -708,6 +708,7 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
                     pz += [None]
                     sz_top += [None]
                     sz_bot += [None]
+                    zone += [None]
                 if all(i in list(x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys()) for i in ['hc_x_ft','hc_y_ft','hit_speed','hit_angle']):
                     hit_x += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hc_x_ft']]
                     hit_y += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['hc_y_ft']]
