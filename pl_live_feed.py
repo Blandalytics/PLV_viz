@@ -658,7 +658,8 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
                     events += [None]
                 result_code += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['result_code']]
                 pa += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['ab_number']]
-                zone += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['zone'] <10 else 0]
+                if 'zone' in x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys():
+                    zone += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['zone'] <10 else 0]
                 called_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call']=='called_strike' else 0]
                 swinging_strikes += [1 if x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_call'] in ['swinging_strike','foul_tip','swinging_strike_blocked'] else 0]
                 swing += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['is_strike_swinging']]
@@ -687,7 +688,8 @@ def scrape_savant_data(player_name, game_id, counts, start_inning, end_inning):
                     pz += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pz']]
                     sz_top += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['sz_top']]
                     sz_bot += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['sz_bot']]
-                            
+                    if 'zone' not in x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys():
+                        zone += [1 if (abs(float(px))<10/12) & (float(pz) >= float(sz_bot)) & (float(pz) <= float(sz_top)) else 0]
                 except KeyError:
                     pitch_type += ['UN']
                     velo += [None]
