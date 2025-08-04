@@ -345,7 +345,7 @@ if comparison=='Self':
           (year_before_df['spray_deg']<=90) &
           (year_before_df['launch_angle']>=-30) &
           (year_before_df['launch_angle']<=60) &
-          (year_before_df['hittername']==hitter),
+          (year_before_df['hittername']==player),
           'spray_deg']
         )
         y_loc_before = (
@@ -355,7 +355,7 @@ if comparison=='Self':
           (year_before_df['spray_deg']<=90) &
           (year_before_df['launch_angle']>=-30) &
           (year_before_df['launch_angle']<=60) &
-          (year_before_df['hittername']==hitter),
+          (year_before_df['hittername']==player),
           'launch_angle']
         )
     
