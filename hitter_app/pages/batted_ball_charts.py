@@ -236,7 +236,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     else:
         pull_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         center_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
-        oppo_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>30)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        oppo_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         x_labels = [f'Pull\n{pull_val:.1%}',
                     f'Center\n{center_val:.1%}',
                     f'Oppo\n{oppo_val:.1%}']
