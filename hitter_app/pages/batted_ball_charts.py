@@ -59,7 +59,7 @@ year = st.radio('Choose a year:', years)
 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
-    pitch_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df.parquet_{year}?raw=true')
+    pitch_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{year}.parquet?raw=true')
     bbe_df = (
       pitch_data
       .loc[(pitch_data['spray_deg']>=0) &
