@@ -133,7 +133,7 @@ with col1:
                    .sort_values('hittername')
                    ['hittername'].unique()
                   )
-    default_ix = players.index('Juan Soto')
+    default_ix = players.index('Isaac Paredes')
     player = st.selectbox('Choose a player:', players, index=default_ix)
 with col2:
     # Color Scale
