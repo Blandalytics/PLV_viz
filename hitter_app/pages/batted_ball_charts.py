@@ -266,7 +266,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
         
         for label, pos0, pos1 in zip(y_label_vals, y_ticks[:-1], y_ticks[1:]):
             ax.text(-0.14, (pos0 + pos1) / 2 - 2.5, label, ha='center', va='center', 
-                    fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
+                    fontsize=10, clip_on=False, transform=ax.get_yaxis_transform())
 
     bounds = [x/levels for x in range(levels)]+[1]
     if color_scale_type=='Discrete':
