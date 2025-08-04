@@ -250,8 +250,8 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
         y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
     else:
         gb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
-        ld_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(10,25))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
-        fb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(25,50,inclusive='right'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        ld_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        fb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         pu_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         y_labels = [f'Ground\nBall\n{gb_val:.1%}',
                     f'Line Drive\n{ld_val:.1%}',
