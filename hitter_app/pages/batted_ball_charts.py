@@ -224,7 +224,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
            ylabel='',
            aspect=1)
         ax.axhline(y=40, color='k', linewidth=1, alpha=0.25)
-        ax.axhline(y=50, color='k', linewidth=1, alpha=0.25)
+        ax.axhline(y=55, color='k', linewidth=1, alpha=0.25)
         ax.axhline(y=80, color='k', linewidth=1, alpha=0.25)
         ax.axvline(x=30, color='k', linewidth=1, alpha=0.25)
         ax.axvline(x=60, color='k', linewidth=1, alpha=0.25)
