@@ -72,7 +72,8 @@ def load_data(year):
         .dropna(subset=['spray_deg','launch_angle'])
         .copy()
     )
-    prior_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df.parquet_{year-1}?raw=true')
+    prior_year = year-1
+    prior_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{prior_year}.parquet?raw=true')
     year_before_df = (
       prior_data
       .loc[(prior_data['spray_deg']>=0) &
