@@ -358,12 +358,18 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
             bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']>60) & (year_before_df['launch_angle']>50)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
         ]
     }
+    props = dict(boxstyle='Round',
+                 facecolor='w', 
+                 alpha=0.5, 
+                 edgecolor='k',
+                 linewidth=2)
+
     for bb_direction in ind_dict.keys():
         ax.text(sum(ind_dict[bb_direction][0])/2, 
                 sum(ind_dict[bb_direction][1])/2, 
                 f'{ind_dict[bb_direction][2]:.1%}' if comparison=='League' else f'{ind_dict[bb_direction][3]:+.1%}', 
                 ha='center', va='center', 
-                fontsize=10)
+                fontsize=10, color='k', bbox=props)
           
     bounds = [x/levels for x in range(levels)]+[1]
     if color_scale_type=='Discrete':
