@@ -87,8 +87,21 @@ def load_data(year):
       .copy()
       )
 
-    x_loc_league = bbe_df['spray_deg']
-    y_loc_league = bbe_df['launch_angle']
+    x_loc_league = (
+      bbe_df.loc[(bbe_df['spray_deg']>=0) &
+      (bbe_df['spray_deg']<=90) &
+      (bbe_df['launch_angle']>=-30) &
+      (bbe_df['launch_angle']<=60)]
+      ['spray_deg']
+    )
+    y_loc_league = (
+      bbe_df
+      .loc[(bbe_df['spray_deg']>=0) &
+      (bbe_df['spray_deg']<=90) &
+      (bbe_df['launch_angle']>=-30) &
+      (bbe_df['launch_angle']<=60)]
+      ['launch_angle']
+    )
     
     xmin = x_loc_league.min()
     xmax = x_loc_league.max()
@@ -133,8 +146,26 @@ with col3:
         comparison = 'Self'
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
-    x_loc_player = df.loc[df['hittername']==hitter,'spray_deg']
-    y_loc_player = df.loc[df['hittername']==hitter,'launch_angle']
+    x_loc_player = (
+      df
+      .loc[
+      (df['spray_deg']>=0) &
+      (df['spray_deg']<=90) &
+      (df['launch_angle']>=-30) &
+      (df['launch_angle']<=60) &
+      (df['hittername']==hitter),
+      'spray_deg']
+    )
+    y_loc_player = (
+      df
+      .loc[
+      (df['spray_deg']>=0) &
+      (df['spray_deg']<=90) &
+      (df['launch_angle']>=-30) &
+      (df['launch_angle']<=60) &
+      (df['hittername']==hitter),
+      'launch_angle']
+    )
 
     xmin = 0
     xmax = 90
