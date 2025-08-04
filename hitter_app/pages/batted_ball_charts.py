@@ -229,38 +229,44 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     ax.set_yticks([])
 
     x_ticks = [0,30,60,90]
-    if comparison=='Self':
-        x_labels = ['Pull',
-                    'Center',
-                    'Oppo']
-    else:
+    x_labels = ['Pull','Center','Oppo']
+    # labels at the center of their range
+    for label, pos0, pos1 in zip(x_labels, x_ticks[:-1], x_ticks[1:]):
+        ax.text((pos0 + pos1) / 2, -0.02, label, ha='center', va='top', 
+                fontsize=15, clip_on=False, transform=ax.get_xaxis_transform())
+      
+    if comparison=='League':
         pull_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         center_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         oppo_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
-        x_labels = [f'Pull\n{pull_val:.1%}',
-                    f'Center\n{center_val:.1%}',
-                    f'Oppo\n{oppo_val:.1%}']
-    # labels at the center of their range
-    for label, pos0, pos1 in zip(x_labels, x_ticks[:-1], x_ticks[1:]):
-        ax.text((pos0 + pos1) / 2, -0.04, label, ha='center', va='top', 
-                fontsize=15, clip_on=False, transform=ax.get_xaxis_transform())
+        x_label_vals = [f'({pull_val:.1%})',
+                        f'({center_val:.1%})',
+                        f'({oppo_val:.1%})']
+        
+        for label, pos0, pos1 in zip(x_label_vals, x_ticks[:-1], x_ticks[1:]):
+            ax.text((pos0 + pos1) / 2, -0.06, label, ha='center', va='top', 
+                    fontsize=10, clip_on=False, transform=ax.get_xaxis_transform())
 
     y_ticks = [-30,10,25,50,60] if color_scale_type=='Discrete' else [0,40,55,80,90]
-    if comparison=='Self':
-        y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
-    else:
+    y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
+    # labels at the center of their range
+    for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
+        ax.text(-0.14, (pos0 + pos1) / 2 + 2.5, label, ha='center', va='center', 
+                fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
+      
+    if comparison=='League':
         gb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         ld_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         fb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
         pu_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
-        y_labels = [f'Ground\nBall\n{gb_val:.1%}',
-                    f'Line Drive\n{ld_val:.1%}',
-                    f'Fly Ball\n{fb_val:.1%}',
-                    f'Pop Up\n{pu_val:.1%}']
-    # labels at the center of their range
-    for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
-        ax.text(-0.14, (pos0 + pos1) / 2, label, ha='center', va='center', 
-                fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
+        y_label_vals = [f'{gb_val:.1%}',
+                        f'{ld_val:.1%}',
+                        f'{fb_val:.1%}',
+                        f'{pu_val:.1%}']
+        
+        for label, pos0, pos1 in zip(y_label_vals, y_ticks[:-1], y_ticks[1:]):
+            ax.text(-0.14, (pos0 + pos1) / 2 - 2.5, label, ha='center', va='center', 
+                    fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
 
     bounds = [x/levels for x in range(levels)]+[1]
     if color_scale_type=='Discrete':
