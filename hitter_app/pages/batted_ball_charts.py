@@ -374,4 +374,4 @@ else:
     kde_chart(kde_calc(bbe_df,player),
               player,
               color_scale_type)
-st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
+st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://bsky.app/profile/blandalytics.pitcherlist.com)")
