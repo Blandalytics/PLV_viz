@@ -54,33 +54,31 @@ sns.set_theme(
      }
     )
 
-years = [2025,2024,2023,2022,2021,2020]
+years = [2025,2024,2023,2022,2021]
 year = st.radio('Choose a year:', years)
 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
-    pitch_data = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df.parquet?raw=true')
+    pitch_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df.parquet_{year}?raw=true')
     bbe_df = (
       pitch_data
       .loc[(pitch_data['spray_deg']>=0) &
              (pitch_data['spray_deg']<=90) &
              (pitch_data['launch_angle']>=-30) &
-             (pitch_data['launch_angle']<=60) &
-             (pitch_data['game_year']==year)]
+             (pitch_data['launch_angle']<=60)]
         [['hittername','stand','spray_deg','launch_angle']]
         .astype({'spray_deg':'float',
                  'launch_angle':'float'})
         .dropna(subset=['spray_deg','launch_angle'])
         .copy()
     )
-
+    prior_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df.parquet_{year-1}?raw=true')
     year_before_df = (
-      pitch_data
-      .loc[(pitch_data['spray_deg']>=0) &
-             (pitch_data['spray_deg']<=90) &
-             (pitch_data['launch_angle']>=-30) &
-             (pitch_data['launch_angle']<=60) &
-             (pitch_data['game_year']==year-1)]
+      prior_data
+      .loc[(prior_data['spray_deg']>=0) &
+             (prior_data['spray_deg']<=90) &
+             (prior_data['launch_angle']>=-30) &
+             (prior_data['launch_angle']<=60)]
       [['hittername','stand','spray_deg','launch_angle']]
       .astype({'spray_deg':'float',
                'launch_angle':'int'})
