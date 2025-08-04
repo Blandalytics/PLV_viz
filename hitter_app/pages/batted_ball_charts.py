@@ -360,7 +360,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     }
     props = dict(boxstyle='Round',
                  facecolor='w', 
-                 alpha=0.5, 
+                 alpha=0.25, 
                  edgecolor='k',
                  linewidth=2)
 
