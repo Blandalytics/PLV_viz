@@ -62,10 +62,10 @@ def load_data(year):
     pitch_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{year}.parquet?raw=true')
     bbe_df = (
       pitch_data
-      .loc[(pitch_data['spray_deg']>=0) &
-             (pitch_data['spray_deg']<=90) &
-             (pitch_data['launch_angle']>=-30) &
-             (pitch_data['launch_angle']<=60)]
+      # .loc[(pitch_data['spray_deg']>=0) &
+      #        (pitch_data['spray_deg']<=90) &
+      #        (pitch_data['launch_angle']>=-30) &
+      #        (pitch_data['launch_angle']<=60)]
         [['hittername','stand','spray_deg','launch_angle']]
         .astype({'spray_deg':'float',
                  'launch_angle':'float'})
@@ -76,10 +76,10 @@ def load_data(year):
     prior_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{prior_year}.parquet?raw=true')
     year_before_df = (
       prior_data
-      .loc[(prior_data['spray_deg']>=0) &
-             (prior_data['spray_deg']<=90) &
-             (prior_data['launch_angle']>=-30) &
-             (prior_data['launch_angle']<=60)]
+      # .loc[(prior_data['spray_deg']>=0) &
+      #        (prior_data['spray_deg']<=90) &
+      #        (prior_data['launch_angle']>=-30) &
+      #        (prior_data['launch_angle']<=60)]
       [['hittername','stand','spray_deg','launch_angle']]
       .astype({'spray_deg':'float',
                'launch_angle':'int'})
