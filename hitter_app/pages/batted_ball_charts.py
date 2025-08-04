@@ -265,7 +265,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
                         f'({pu_val:.1%})']
         
         for label, pos0, pos1 in zip(y_label_vals, y_ticks[:-1], y_ticks[1:]):
-            adj_val = 4 if label != y_label_vals[0] else 6
+            adj_val = 3.5 if label != y_label_vals[0] else 6
             ax.text(-0.14, (pos0 + pos1) / 2 - adj_val, label, ha='center', va='center', 
                     fontsize=10, clip_on=False, transform=ax.get_yaxis_transform())
 
