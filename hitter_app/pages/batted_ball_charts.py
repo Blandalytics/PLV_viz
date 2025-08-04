@@ -308,7 +308,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
             [50,60] if color_scale_type=='Discrete' else [80,90],
             bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
             bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']<30) & (year_before_df['launch_angle']>50)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
-        ]
+        ],
         'Center GB':[
             [30,60],
             [-30,10] if color_scale_type=='Discrete' else [0,40],
@@ -332,7 +332,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
             [50,60] if color_scale_type=='Discrete' else [80,90],
             bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
             bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg'].between(30,60)) & (year_before_df['launch_angle']>50)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
-        ]
+        ],
         'Oppo GB':[
             [60,90],
             [-30,10] if color_scale_type=='Discrete' else [0,40],
