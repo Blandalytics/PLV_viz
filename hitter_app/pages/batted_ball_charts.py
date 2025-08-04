@@ -251,7 +251,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
     # labels at the center of their range
     for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
-        ax.text(-0.14, (pos0 + pos1) / 2 + 2, label, ha='center', va='center', 
+        ax.text(-0.14, (pos0 + pos1) / 2 + 1, label, ha='center', va='center', 
                 fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
       
     if comparison=='League':
@@ -265,7 +265,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
                         f'({pu_val:.1%})']
         
         for label, pos0, pos1 in zip(y_label_vals, y_ticks[:-1], y_ticks[1:]):
-            adj_val = 2 if label != y_label_vals[0] else 4
+            adj_val = 3 if label != y_label_vals[0] else 6
             ax.text(-0.14, (pos0 + pos1) / 2 - adj_val, label, ha='center', va='center', 
                     fontsize=10, clip_on=False, transform=ax.get_yaxis_transform())
 
