@@ -72,8 +72,6 @@ def load_data(year):
         .dropna(subset=['spray_deg','launch_angle'])
         .copy()
     )
-    bbe_df['spray_deg'] = np.clip(bbe_df['spray_deg'],0,90)
-    bbe_df['launch_angle'] = np.clip(bbe_df['launch_angle'],-30,60)
     prior_year = year-1
     prior_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{prior_year}.parquet?raw=true')
     year_before_df = (
@@ -88,8 +86,7 @@ def load_data(year):
       .dropna(subset=['spray_deg','launch_angle'])
       .copy()
       )
-    year_before_df['spray_deg'] = np.clip(year_before_df['spray_deg'],0,90)
-    year_before_df['launch_angle'] = np.clip(year_before_df['launch_angle'],-30,60)
+    
 
     x_loc_league = (
       bbe_df.loc[(bbe_df['spray_deg']>=0) &
@@ -150,6 +147,9 @@ with col3:
         comparison = 'Self'
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
+    if comparison == 'Self':
+        df['spray_deg'] = np.clip(df['spray_deg'],0,90)
+        df['launch_angle'] = np.clip(df['launch_angle'],-30,60)
     x_loc_player = (
       df
       .loc[
@@ -431,22 +431,16 @@ if comparison=='Self':
         
         x_loc_before = (
           year_before_df
-          .loc[
-          (year_before_df['spray_deg']>=0) &
-          (year_before_df['spray_deg']<=90) &
-          (year_before_df['launch_angle']>=-30) &
-          (year_before_df['launch_angle']<=60) &
-          (year_before_df['hittername']==player),
+          .assign(spray_deg = lambda x: np.clip(x['spray_deg'],0,90),
+                  launch_angle = lambda x: np.clip(x['launch_angle'],-30,60))
+          .loc[(year_before_df['hittername']==player),
           'spray_deg']
         )
         y_loc_before = (
           year_before_df
-          .loc[
-          (year_before_df['spray_deg']>=0) &
-          (year_before_df['spray_deg']<=90) &
-          (year_before_df['launch_angle']>=-30) &
-          (year_before_df['launch_angle']<=60) &
-          (year_before_df['hittername']==player),
+          .assign(spray_deg = lambda x: np.clip(x['spray_deg'],0,90),
+                  launch_angle = lambda x: np.clip(x['launch_angle'],-30,60))
+          .loc[(year_before_df['hittername']==player),
           'launch_angle']
         )
     
