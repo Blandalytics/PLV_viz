@@ -54,42 +54,55 @@ sns.set_theme(
      }
     )
 
-years = [2025,2024,2023,2022,2021,2020]
+years = [2025,2024,2023,2022,2021]
 year = st.radio('Choose a year:', years)
 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
-    pitch_data = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df.parquet?raw=true')
+    pitch_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{year}.parquet?raw=true')
     bbe_df = (
       pitch_data
-      .loc[(pitch_data['spray_deg']>=0) &
-             (pitch_data['spray_deg']<=90) &
-             (pitch_data['launch_angle']>=-30) &
-             (pitch_data['launch_angle']<=60) &
-             (pitch_data['game_year']==year)]
+      # .loc[(pitch_data['spray_deg']>=0) &
+      #        (pitch_data['spray_deg']<=90) &
+      #        (pitch_data['launch_angle']>=-30) &
+      #        (pitch_data['launch_angle']<=60)]
         [['hittername','stand','spray_deg','launch_angle']]
         .astype({'spray_deg':'float',
                  'launch_angle':'float'})
         .dropna(subset=['spray_deg','launch_angle'])
         .copy()
     )
-
+    prior_year = year-1
+    prior_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{prior_year}.parquet?raw=true')
     year_before_df = (
-      pitch_data
-      .loc[(pitch_data['spray_deg']>=0) &
-             (pitch_data['spray_deg']<=90) &
-             (pitch_data['launch_angle']>=-30) &
-             (pitch_data['launch_angle']<=60) &
-             (pitch_data['game_year']==year-1)]
+      prior_data
+      # .loc[(prior_data['spray_deg']>=0) &
+      #        (prior_data['spray_deg']<=90) &
+      #        (prior_data['launch_angle']>=-30) &
+      #        (prior_data['launch_angle']<=60)]
       [['hittername','stand','spray_deg','launch_angle']]
       .astype({'spray_deg':'float',
                'launch_angle':'int'})
       .dropna(subset=['spray_deg','launch_angle'])
       .copy()
       )
+    
 
-    x_loc_league = bbe_df['spray_deg']
-    y_loc_league = bbe_df['launch_angle']
+    x_loc_league = (
+      bbe_df.loc[(bbe_df['spray_deg']>=0) &
+      (bbe_df['spray_deg']<=90) &
+      (bbe_df['launch_angle']>=-30) &
+      (bbe_df['launch_angle']<=60)]
+      ['spray_deg']
+    )
+    y_loc_league = (
+      bbe_df
+      .loc[(bbe_df['spray_deg']>=0) &
+      (bbe_df['spray_deg']<=90) &
+      (bbe_df['launch_angle']>=-30) &
+      (bbe_df['launch_angle']<=60)]
+      ['launch_angle']
+    )
     
     xmin = x_loc_league.min()
     xmax = x_loc_league.max()
@@ -120,7 +133,7 @@ with col1:
                    .sort_values('hittername')
                    ['hittername'].unique()
                   )
-    default_ix = players.index('Juan Soto')
+    default_ix = players.index('Isaac Paredes')
     player = st.selectbox('Choose a player:', players, index=default_ix)
 with col2:
     # Color Scale
@@ -134,8 +147,29 @@ with col3:
         comparison = 'Self'
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
-    x_loc_player = df.loc[df['hittername']==hitter,'spray_deg']
-    y_loc_player = df.loc[df['hittername']==hitter,'launch_angle']
+    if comparison == 'Self':
+        df['spray_deg'] = np.clip(df['spray_deg'],0,90)
+        df['launch_angle'] = np.clip(df['launch_angle'],-30,60)
+    x_loc_player = (
+      df
+      .loc[
+      (df['spray_deg']>=0) &
+      (df['spray_deg']<=90) &
+      (df['launch_angle']>=-30) &
+      (df['launch_angle']<=60) &
+      (df['hittername']==hitter),
+      'spray_deg']
+    )
+    y_loc_player = (
+      df
+      .loc[
+      (df['spray_deg']>=0) &
+      (df['spray_deg']<=90) &
+      (df['launch_angle']>=-30) &
+      (df['launch_angle']<=60) &
+      (df['hittername']==hitter),
+      'launch_angle']
+    )
 
     xmin = 0
     xmax = 90
@@ -190,7 +224,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
            ylabel='',
            aspect=1)
         ax.axhline(y=40, color='k', linewidth=1, alpha=0.25)
-        ax.axhline(y=50, color='k', linewidth=1, alpha=0.25)
+        ax.axhline(y=55, color='k', linewidth=1, alpha=0.25)
         ax.axhline(y=80, color='k', linewidth=1, alpha=0.25)
         ax.axvline(x=30, color='k', linewidth=1, alpha=0.25)
         ax.axvline(x=60, color='k', linewidth=1, alpha=0.25)
@@ -202,16 +236,145 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     x_labels = ['Pull','Center','Oppo']
     # labels at the center of their range
     for label, pos0, pos1 in zip(x_labels, x_ticks[:-1], x_ticks[1:]):
-        ax.text((pos0 + pos1) / 2, -0.04, label, ha='center', va='top', 
+        ax.text((pos0 + pos1) / 2, -0.02, label, ha='center', va='top', 
                 fontsize=15, clip_on=False, transform=ax.get_xaxis_transform())
+      
+    if comparison=='League':
+        pull_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        center_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        oppo_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        x_label_vals = [f'({pull_val:.1%})',
+                        f'({center_val:.1%})',
+                        f'({oppo_val:.1%})']
+    else:
+        pull_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']<30)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0]
+        center_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg'].between(30,60))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0]
+        oppo_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']>60)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0]
+        x_label_vals = [f'({pull_val:+.1%})',
+                        f'({center_val:+.1%})',
+                        f'({oppo_val:+.1%})']
+        
+    for label, pos0, pos1 in zip(x_label_vals, x_ticks[:-1], x_ticks[1:]):
+        ax.text((pos0 + pos1) / 2, -0.075, label, ha='center', va='top', 
+                fontsize=10, clip_on=False, transform=ax.get_xaxis_transform())
 
     y_ticks = [-30,10,25,50,60] if color_scale_type=='Discrete' else [0,40,55,80,90]
     y_labels = ['Ground\nBall','Line Drive','Fly Ball','Pop Up']
     # labels at the center of their range
     for label, pos0, pos1 in zip(y_labels, y_ticks[:-1], y_ticks[1:]):
-        ax.text(-0.14, (pos0 + pos1) / 2, label, ha='center', va='center', 
+        ax.text(-0.14, (pos0 + pos1) / 2 + 1, label, ha='center', va='center', 
                 fontsize=15, clip_on=False, transform=ax.get_yaxis_transform())
+      
+    if comparison=='League':
+        gb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        ld_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        fb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        pu_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0]
+        y_label_vals = [f'({gb_val:.1%})',
+                        f'({ld_val:.1%})',
+                        f'({fb_val:.1%})',
+                        f'({pu_val:.1%})']
+    else:
+        gb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['launch_angle']<10)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0]
+        ld_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0]
+        fb_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['launch_angle'].between(25,50))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0]
+        pu_val = bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['launch_angle']>50)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0]
+        y_label_vals = [f'({gb_val:+.1%})',
+                        f'({ld_val:+.1%})',
+                        f'({fb_val:+.1%})',
+                        f'({pu_val:+.1%})']
 
+    for label, pos0, pos1 in zip(y_label_vals, y_ticks[:-1], y_ticks[1:]):
+        adj_val = 3.5 if label != y_label_vals[0] else 6
+        ax.text(-0.14, (pos0 + pos1) / 2 - adj_val, label, ha='center', va='center', 
+                fontsize=10, clip_on=False, transform=ax.get_yaxis_transform())
+    ind_dict = {
+        'Pull GB':[
+            [0,30],
+            [-30,10] if color_scale_type=='Discrete' else [0,40],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']<30) & (year_before_df['launch_angle']<10)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Pull LD':[
+            [0,30],
+            [10,25] if color_scale_type=='Discrete' else [40,55],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']<30) & (year_before_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Pull FB':[
+            [0,30],
+            [25,50] if color_scale_type=='Discrete' else [55,80],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']<30) & (year_before_df['launch_angle'].between(25,50))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Pull PU':[
+            [0,30],
+            [50,60] if color_scale_type=='Discrete' else [80,90],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']<30) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']<30) & (year_before_df['launch_angle']>50)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Center GB':[
+            [30,60],
+            [-30,10] if color_scale_type=='Discrete' else [0,40],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg'].between(30,60)) & (year_before_df['launch_angle']<10)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Center LD':[
+            [30,60],
+            [10,25] if color_scale_type=='Discrete' else [40,55],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg'].between(30,60)) & (year_before_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Center FB':[
+            [30,60],
+            [25,50] if color_scale_type=='Discrete' else [55,80],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg'].between(30,60)) & (year_before_df['launch_angle'].between(25,50))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Center PU':[
+            [30,60],
+            [50,60] if color_scale_type=='Discrete' else [80,90],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg'].between(30,60)) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg'].between(30,60)) & (year_before_df['launch_angle']>50)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Oppo GB':[
+            [60,90],
+            [-30,10] if color_scale_type=='Discrete' else [0,40],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle']<10)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']>60) & (year_before_df['launch_angle']<10)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Oppo LD':[
+            [60,90],
+            [10,25] if color_scale_type=='Discrete' else [40,55],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']>60) & (year_before_df['launch_angle'].between(10,25,inclusive='left'))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Oppo FB':[
+            [60,90],
+            [25,50] if color_scale_type=='Discrete' else [55,80],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle'].between(25,50))].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']>60) & (year_before_df['launch_angle'].between(25,50))].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ],
+        'Oppo PU':[
+            [60,90],
+            [50,60] if color_scale_type=='Discrete' else [80,90],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0],
+            bbe_df.loc[(bbe_df['hittername']==hitter) & (bbe_df['spray_deg']>60) & (bbe_df['launch_angle']>50)].shape[0] / bbe_df.loc[bbe_df['hittername']==hitter].shape[0] - year_before_df.loc[(year_before_df['hittername']==hitter) & (year_before_df['spray_deg']>60) & (year_before_df['launch_angle']>50)].shape[0] / year_before_df.loc[year_before_df['hittername']==hitter].shape[0],
+        ]
+    }
+    props = dict(boxstyle='Round',
+                 facecolor='w', 
+                 alpha=0.25, 
+                 edgecolor='k',
+                 linewidth=2)
+
+    for bb_direction in ind_dict.keys():
+        ax.text(sum(ind_dict[bb_direction][0])/2, 
+                sum(ind_dict[bb_direction][1])/2, 
+                f'{ind_dict[bb_direction][2]:.1%}' if comparison=='League' else f'{ind_dict[bb_direction][3]:+.1%}', 
+                ha='center', va='center', 
+                fontsize=10, color='k', bbox=props)
+          
     bounds = [x/levels for x in range(levels)]+[1]
     if color_scale_type=='Discrete':
         norm = mpl.colors.BoundaryNorm(bounds, sns.color_palette('vlag', as_cmap=True).N)
@@ -266,8 +429,20 @@ if comparison=='Self':
         X, Y = np.mgrid[xmin:xmax:91j, ymin:ymax:91j]
         positions = np.vstack([X.ravel(), Y.ravel()])
         
-        x_loc_before = year_before_df.loc[year_before_df['hittername']==player,'spray_deg']
-        y_loc_before = year_before_df.loc[year_before_df['hittername']==player,'launch_angle']
+        x_loc_before = (
+          year_before_df
+          .assign(spray_deg = lambda x: np.clip(x['spray_deg'],0,90),
+                  launch_angle = lambda x: np.clip(x['launch_angle'],-30,60))
+          .loc[(year_before_df['hittername']==player),
+          'spray_deg']
+        )
+        y_loc_before = (
+          year_before_df
+          .assign(spray_deg = lambda x: np.clip(x['spray_deg'],0,90),
+                  launch_angle = lambda x: np.clip(x['launch_angle'],-30,60))
+          .loc[(year_before_df['hittername']==player),
+          'launch_angle']
+        )
     
         # league matrix
         values_before = np.vstack([x_loc_before, y_loc_before])
@@ -284,4 +459,4 @@ else:
     kde_chart(kde_calc(bbe_df,player),
               player,
               color_scale_type)
-st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://twitter.com/blandalytics)")
+st.write("If you have questions or ideas on what you'd like to see, DM me! [@Blandalytics](https://bsky.app/profile/blandalytics.pitcherlist.com)")
