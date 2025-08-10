@@ -1235,42 +1235,42 @@ stat_tabs = {
     'Standard':['Strikes','Balls','PA','Hit','1B','2B','3B','HR','K','BB','HB'],
     # 'PLV':['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR','plvCSW','plvDamage']
 }
-
-if len(list(pitcher_list.keys()))==0:
-    st.write('No pitches thrown yet')
-else:
-    idx = pd.IndexSlice
-    slice_ = idx['Total',:]
-    table_df, chart_df = scrape_savant_data(player_select,game_id, counts, start_inning, end_inning)
-    tab_select = st.segmented_control('',list(stat_tabs.keys()),default='Default')
-    chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
-    chart_df['Description'] = np.where(chart_df['pitch_call']=='hit_into_play',
-             chart_df['event'],
-             chart_df['pitch_call'])
-    chart_df['Description'] = chart_df['Description'].str.replace('_',' ').str.title()
-    # table_df = table_df.set_index('Type')
-    if tab_select=='Default':
-        col_names = [(k,v) for k, l in default_groups.items() for v in l ]
-        table_df = table_df.rename(columns={'Num Pitches':'#'})[sum(list(default_groups.values()),[])]
-        table_df.columns = pd.MultiIndex.from_tuples(col_names)
+if st.button('Run data for selection'):
+    if len(list(pitcher_list.keys()))==0:
+        st.write('No pitches thrown yet')
     else:
-        table_df = table_df.rename(columns={'Num Pitches':'#'})[['Type','#']+stat_tabs[tab_select]]
-    # plv_cols = [x for x in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR'] if x in list(table_df.columns.values)]
-    st.dataframe((table_df
-                  .style
-                  .format(precision=3)
-                  # .format(precision=2,subset=plv_cols)
-                  # .apply(lambda r: [f"background-color:{highlight_dict.get(r.name)}" for i in r], axis=1)
-                  # .apply_index(index_style)
-                  .apply(highlight_cols,coldict=highlight_dict,stat_tab=tab_select)
-                  # .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
-                  # .set_properties(**{'background-color': '#20232c'}, subset=slice_)
-                 ),
-                 use_container_width=False, hide_index=True)
-
-    game_charts(chart_df)
-    if st.button('Location Charts'):
-        loc_charts(chart_df)
+        idx = pd.IndexSlice
+        slice_ = idx['Total',:]
+        table_df, chart_df = scrape_savant_data(player_select,game_id, counts, start_inning, end_inning)
+        tab_select = st.segmented_control('',list(stat_tabs.keys()),default='Default')
+        chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
+        chart_df['Description'] = np.where(chart_df['pitch_call']=='hit_into_play',
+                 chart_df['event'],
+                 chart_df['pitch_call'])
+        chart_df['Description'] = chart_df['Description'].str.replace('_',' ').str.title()
+        # table_df = table_df.set_index('Type')
+        if tab_select=='Default':
+            col_names = [(k,v) for k, l in default_groups.items() for v in l ]
+            table_df = table_df.rename(columns={'Num Pitches':'#'})[sum(list(default_groups.values()),[])]
+            table_df.columns = pd.MultiIndex.from_tuples(col_names)
+        else:
+            table_df = table_df.rename(columns={'Num Pitches':'#'})[['Type','#']+stat_tabs[tab_select]]
+        # plv_cols = [x for x in ['plvCS','plvBall','plvHBP','plvWhiff','plvFoul','plvOut', 'plv1B', 'plv2B', 'plv3B', 'plvHR'] if x in list(table_df.columns.values)]
+        st.dataframe((table_df
+                      .style
+                      .format(precision=3)
+                      # .format(precision=2,subset=plv_cols)
+                      # .apply(lambda r: [f"background-color:{highlight_dict.get(r.name)}" for i in r], axis=1)
+                      # .apply_index(index_style)
+                      .apply(highlight_cols,coldict=highlight_dict,stat_tab=tab_select)
+                      # .apply(lambda r: [f"background-color:{type_dict.get(r[('','Type')],'')}"]+[f"background-color:{highlight_dict.get(r[('','Type')],'')}"]*(len(r)-1), axis=1)
+                      # .set_properties(**{'background-color': '#20232c'}, subset=slice_)
+                     ),
+                     use_container_width=False, hide_index=True)
+    
+        game_charts(chart_df)
+        if st.button('Location Charts'):
+            loc_charts(chart_df)
 
 def plotly_charts(chart_df):
     chart_df['Pitch Name'] = chart_df['pitch_type'].map(marker_names)
