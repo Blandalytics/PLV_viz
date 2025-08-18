@@ -10,17 +10,17 @@ import requests
 import seaborn as sns
 import urllib
 
-import plotly.graph_objs as go
-from plotly import tools
-from plotly.subplots import make_subplots
-import plotly.offline as py
+# import plotly.graph_objs as go
+# from plotly import tools
+# from plotly.subplots import make_subplots
+# import plotly.offline as py
 
 from sklearn.neighbors import KNeighborsClassifier
 from datetime import timedelta
 
 from PIL import Image
 
-#st.write()
+# #st.write()
 
 # Convenience Functions
 def adjusted_vaa(dataframe):
@@ -1271,552 +1271,552 @@ else:
     if st.button('Location Charts'):
         loc_charts(chart_df)
 
-def plotly_charts(chart_df):
-    chart_df['Pitch Name'] = chart_df['pitch_type'].map(marker_names)
-    chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
-    chart_df['sub_type_name'] = chart_df['sub_type'].map(pitch_names)
-    chart_df['Description'] = np.where(chart_df['pitch_call']=='hit_into_play',
-             chart_df['event'],
-             chart_df['pitch_call'])
-    chart_df['Description'] = chart_df['Description'].str.replace('_',' ').str.title()
-    chart_df['pa_count'] = chart_df['PA'].expanding().sum()
-    chart_df['ev_la_text'] = np.where(chart_df['Launch Angle'].isna() | chart_df['Launch Speed'].isna(),
-                                      '',
-                                      'EV/LA: '+chart_df['Launch Speed'].round(1).astype('str')+'mph @ '+chart_df['Launch Angle'].astype('str')+'°')
-    lhh_df = chart_df.loc[chart_df['hitterside']=='L'].copy()
-    rhh_df = chart_df.loc[chart_df['hitterside']=='R'].copy()
-    pitcher_hand = chart_df['P Hand'][0]
-    faded_label_color = hextriplet(sns.light_palette(pl_background,n_colors=20)[10])
-    move_df = chart_df.assign(IHB = lambda x: np.where(pitcher_hand=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))).copy()
-    fig = make_subplots(rows=5, cols=3, column_widths=[.3,.4,.3],row_heights=[0.5,0.3,.05,.05,.1],
-                        specs = [[{}, {}, {}],
-                                 [{"colspan": 3}, None, None],
-                                 [{"colspan": 3}, None, None],
-                                 [{"colspan": 3}, None, None],
-                                 [{"colspan": 3}, None, None]], 
-                        horizontal_spacing = 0,
-                        vertical_spacing = 0,
-                        subplot_titles=("Locations<br>vs LHH","Movement<br> ","Locations<br>vs RHH"))
-    plate_y = -1.25
+# def plotly_charts(chart_df):
+#     chart_df['Pitch Name'] = chart_df['pitch_type'].map(marker_names)
+#     chart_df['pitch_type'] = chart_df['pitch_type'].map(pitchtype_map)
+#     chart_df['sub_type_name'] = chart_df['sub_type'].map(pitch_names)
+#     chart_df['Description'] = np.where(chart_df['pitch_call']=='hit_into_play',
+#              chart_df['event'],
+#              chart_df['pitch_call'])
+#     chart_df['Description'] = chart_df['Description'].str.replace('_',' ').str.title()
+#     chart_df['pa_count'] = chart_df['PA'].expanding().sum()
+#     chart_df['ev_la_text'] = np.where(chart_df['Launch Angle'].isna() | chart_df['Launch Speed'].isna(),
+#                                       '',
+#                                       'EV/LA: '+chart_df['Launch Speed'].round(1).astype('str')+'mph @ '+chart_df['Launch Angle'].astype('str')+'°')
+#     lhh_df = chart_df.loc[chart_df['hitterside']=='L'].copy()
+#     rhh_df = chart_df.loc[chart_df['hitterside']=='R'].copy()
+#     pitcher_hand = chart_df['P Hand'][0]
+#     faded_label_color = hextriplet(sns.light_palette(pl_background,n_colors=20)[10])
+#     move_df = chart_df.assign(IHB = lambda x: np.where(pitcher_hand=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))).copy()
+#     fig = make_subplots(rows=5, cols=3, column_widths=[.3,.4,.3],row_heights=[0.5,0.3,.05,.05,.1],
+#                         specs = [[{}, {}, {}],
+#                                  [{"colspan": 3}, None, None],
+#                                  [{"colspan": 3}, None, None],
+#                                  [{"colspan": 3}, None, None],
+#                                  [{"colspan": 3}, None, None]], 
+#                         horizontal_spacing = 0,
+#                         vertical_spacing = 0,
+#                         subplot_titles=("Locations<br>vs LHH","Movement<br> ","Locations<br>vs RHH"))
+#     plate_y = -1.25
     
-    # layout = go.Layout(height = 600,width = 1500,xaxis_range=[-2.5,2.5], yaxis_range=[-1,6])
-    # LHH Plot
-    fig.update_xaxes(title_text="", range=[-2.5,2.5], row=1, col=1)
-    fig.update_yaxes(title_text="", range=[-1.75,1.5], row=1, col=1)
-    labels = lhh_df['pitch_type'].map(marker_colors)
-    hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Hitter: %{customdata[5]}<br>Count: %{customdata[0]}-%{customdata[1]}<br>Velo: %{customdata[4]:.1f}mph<br>%{customdata[6]}<extra></extra>'
-    marker_dict = dict(color=labels,
-                       size=25,
-                       line=dict(width=1,color='white'))
+#     # layout = go.Layout(height = 600,width = 1500,xaxis_range=[-2.5,2.5], yaxis_range=[-1,6])
+#     # LHH Plot
+#     fig.update_xaxes(title_text="", range=[-2.5,2.5], row=1, col=1)
+#     fig.update_yaxes(title_text="", range=[-1.75,1.5], row=1, col=1)
+#     labels = lhh_df['pitch_type'].map(marker_colors)
+#     hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Hitter: %{customdata[5]}<br>Count: %{customdata[0]}-%{customdata[1]}<br>Velo: %{customdata[4]:.1f}mph<br>%{customdata[6]}<extra></extra>'
+#     marker_dict = dict(color=labels,
+#                        size=25,
+#                        line=dict(width=1,color='white'))
     
-    # fig = go.Figure(layout = layout)
-    fig.add_trace(go.Scatter(x=[10/36,10/36], y=[-0.5,0.5],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-10/36,-10/36], y=[-0.5,0.5],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[-1/6,-1/6],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[1/6,1/6],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
+#     # fig = go.Figure(layout = layout)
+#     fig.add_trace(go.Scatter(x=[10/36,10/36], y=[-0.5,0.5],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
+#     fig.add_trace(go.Scatter(x=[-10/36,-10/36], y=[-0.5,0.5],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
+#     fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[-1/6,-1/6],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
+#     fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[1/6,1/6],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
     
-    fig.add_shape(type="rect",
-        x0=-10/12, y0=-0.5, x1=10/12, y1=0.5,
-        line=dict(color="white"),
-                  layer='below',
-                  row=1, col=1
-    )
+#     fig.add_shape(type="rect",
+#         x0=-10/12, y0=-0.5, x1=10/12, y1=0.5,
+#         line=dict(color="white"),
+#                   layer='below',
+#                   row=1, col=1
+#     )
     
-    # Plate
-    fig.add_trace(go.Scatter(x=[-8.5/12,8.5/12], y=[plate_y,plate_y],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-8.5/12,-8.15/12], y=[plate_y,plate_y+0.075],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[8.5/12,8.15/12], y=[plate_y,plate_y+0.075],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
-    fig.add_trace(go.Scatter(x=[-8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=1)
+#     # Plate
+#     fig.add_trace(go.Scatter(x=[-8.5/12,8.5/12], y=[plate_y,plate_y],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
+#     fig.add_trace(go.Scatter(x=[-8.5/12,-8.15/12], y=[plate_y,plate_y+0.075],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
+#     fig.add_trace(go.Scatter(x=[8.5/12,8.15/12], y=[plate_y,plate_y+0.075],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
+#     fig.add_trace(go.Scatter(x=[8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
+#     fig.add_trace(go.Scatter(x=[-8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=1)
     
-    bonus_text = lhh_df['hitterside']
-    fig.add_trace(go.Scatter(x=lhh_df['p_x'].mul(-1), y=lhh_df['sz_z'], mode='markers', 
-                       marker=marker_dict, text=bonus_text,
-                       customdata=lhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','ev_la_text','sub_type_name']],
-                       hovertemplate=hover_text,
-                        showlegend=False),
-                            row=1, col=1)
+#     bonus_text = lhh_df['hitterside']
+#     fig.add_trace(go.Scatter(x=lhh_df['p_x'].mul(-1), y=lhh_df['sz_z'], mode='markers', 
+#                        marker=marker_dict, text=bonus_text,
+#                        customdata=lhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','ev_la_text','sub_type_name']],
+#                        hovertemplate=hover_text,
+#                         showlegend=False),
+#                             row=1, col=1)
     
-    # RHH Plot
-    fig.update_xaxes(title_text="", range=[-2.5,2.5], row=1, col=3)
-    fig.update_yaxes(title_text="", range=[-1.75,1.5], row=1, col=3)
-    labels = rhh_df['pitch_type'].map(marker_colors)
-    # hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>Hitter Hand: %{text}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<extra></extra>'
-    marker_dict = dict(color=labels,
-                       size=25,
-                       line=dict(width=1,color='white'))
+#     # RHH Plot
+#     fig.update_xaxes(title_text="", range=[-2.5,2.5], row=1, col=3)
+#     fig.update_yaxes(title_text="", range=[-1.75,1.5], row=1, col=3)
+#     labels = rhh_df['pitch_type'].map(marker_colors)
+#     # hover_text = '<b>%{customdata[2]}: %{customdata[3]}</b><br>Count: %{customdata[0]}-%{customdata[1]}<br>Hitter Hand: %{text}<br>X Loc: %{x:.1f}ft<br>Y Loc: %{y:.1f}ft<extra></extra>'
+#     marker_dict = dict(color=labels,
+#                        size=25,
+#                        line=dict(width=1,color='white'))
     
-    # fig = go.Figure(layout = layout)
-    fig.add_trace(go.Scatter(x=[10/36,10/36], y=[-0.5,0.5],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-10/36,-10/36], y=[-0.5,0.5],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[-1/6,-1/6],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[1/6,1/6],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
+#     # fig = go.Figure(layout = layout)
+#     fig.add_trace(go.Scatter(x=[10/36,10/36], y=[-0.5,0.5],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
+#     fig.add_trace(go.Scatter(x=[-10/36,-10/36], y=[-0.5,0.5],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
+#     fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[-1/6,-1/6],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
+#     fig.add_trace(go.Scatter(x=[-10/12,10/12], y=[1/6,1/6],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
     
-    fig.add_shape(type="rect",
-        x0=-10/12, y0=-0.5, x1=10/12, y1=0.5,
-        line=dict(color="white"),
-                  layer='below',
-                  row=1, col=3
-    )
+#     fig.add_shape(type="rect",
+#         x0=-10/12, y0=-0.5, x1=10/12, y1=0.5,
+#         line=dict(color="white"),
+#                   layer='below',
+#                   row=1, col=3
+#     )
     
-    # Plate
-    fig.add_trace(go.Scatter(x=[-8.5/12,8.5/12], y=[plate_y,plate_y],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-8.5/12,-8.15/12], y=[plate_y,plate_y+0.075],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[8.5/12,8.15/12], y=[plate_y,plate_y+0.075],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
-    fig.add_trace(go.Scatter(x=[-8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
-                             mode='lines',
-                             line=dict(color='white', width=2),
-                             showlegend=False,
-                            hoverinfo='skip',
-                            ),row=1, col=3)
+#     # Plate
+#     fig.add_trace(go.Scatter(x=[-8.5/12,8.5/12], y=[plate_y,plate_y],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
+#     fig.add_trace(go.Scatter(x=[-8.5/12,-8.15/12], y=[plate_y,plate_y+0.075],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
+#     fig.add_trace(go.Scatter(x=[8.5/12,8.15/12], y=[plate_y,plate_y+0.075],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
+#     fig.add_trace(go.Scatter(x=[8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
+#     fig.add_trace(go.Scatter(x=[-8.18/12,0], y=[plate_y+0.075,plate_y+0.125],
+#                              mode='lines',
+#                              line=dict(color='white', width=2),
+#                              showlegend=False,
+#                             hoverinfo='skip',
+#                             ),row=1, col=3)
     
-    bonus_text = rhh_df['hitterside']
-    fig.add_trace(go.Scatter(x=rhh_df['p_x'].mul(-1), y=rhh_df['sz_z'], mode='markers', 
-                       marker=marker_dict, text=bonus_text,
-                       customdata=rhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','ev_la_text','sub_type_name']],
-                       hovertemplate=hover_text,
-                        showlegend=False),
-                            row=1, col=3)
+#     bonus_text = rhh_df['hitterside']
+#     fig.add_trace(go.Scatter(x=rhh_df['p_x'].mul(-1), y=rhh_df['sz_z'], mode='markers', 
+#                        marker=marker_dict, text=bonus_text,
+#                        customdata=rhh_df[['balls','strikes','Pitch Name','Description','Velo','Hitter','ev_la_text','sub_type_name']],
+#                        hovertemplate=hover_text,
+#                         showlegend=False),
+#                             row=1, col=3)
     
-    # Movement
-    ax_lim = max(25,move_df[['IVB','IHB']].abs().max().max())+12
-    labels = move_df['pitch_type'].map(marker_colors)
-    hover_text = '<b>%{customdata[0]}: %{customdata[2]}</b><br>Hitter: %{customdata[4]}<br>Velo: %{customdata[1]}mph<br>IVB: %{y:.1f}"<br>IHB: %{x:.0f}"<extra></extra>'
-    marker_dict = dict(color=labels,
-                       size=25,
-                       line=dict(width=0.5,color='white'))
-    fig.add_trace(go.Scatter(x=[0,0], y=[12-ax_lim,ax_lim-12],
-                             mode='lines',
-                             line=dict(color='white', width=3),
-                             showlegend=False,
-                            hoverinfo='skip'), row=1, col=2)
-    fig.add_trace(go.Scatter(x=[12-ax_lim,ax_lim-12], y=[0,0],
-                             mode='lines',
-                             line=dict(color='white', width=3),
-                             showlegend=False,
-                            hoverinfo='skip'), row=1, col=2)
+#     # Movement
+#     ax_lim = max(25,move_df[['IVB','IHB']].abs().max().max())+12
+#     labels = move_df['pitch_type'].map(marker_colors)
+#     hover_text = '<b>%{customdata[0]}: %{customdata[2]}</b><br>Hitter: %{customdata[4]}<br>Velo: %{customdata[1]}mph<br>IVB: %{y:.1f}"<br>IHB: %{x:.0f}"<extra></extra>'
+#     marker_dict = dict(color=labels,
+#                        size=25,
+#                        line=dict(width=0.5,color='white'))
+#     fig.add_trace(go.Scatter(x=[0,0], y=[12-ax_lim,ax_lim-12],
+#                              mode='lines',
+#                              line=dict(color='white', width=3),
+#                              showlegend=False,
+#                             hoverinfo='skip'), row=1, col=2)
+#     fig.add_trace(go.Scatter(x=[12-ax_lim,ax_lim-12], y=[0,0],
+#                              mode='lines',
+#                              line=dict(color='white', width=3),
+#                              showlegend=False,
+#                             hoverinfo='skip'), row=1, col=2)
     
-    fig.add_trace(go.Scatter(
-        x=[-21.75,21.75,2,2,-9.75,9.75,2,2],
-        y=[-1.5,-1.5,-22.5,22,-1.5,-1.5,-10.5,10],
-        text=['24"','24"','24"','24"','12"','12"','12"','12"'],
-        mode="text",
-        textfont=dict(
-            color=faded_label_color,
-            size=15,
-        ),
-        showlegend=False,
-        hoverinfo='skip',
-    ), row=1, col=2)
+#     fig.add_trace(go.Scatter(
+#         x=[-21.75,21.75,2,2,-9.75,9.75,2,2],
+#         y=[-1.5,-1.5,-22.5,22,-1.5,-1.5,-10.5,10],
+#         text=['24"','24"','24"','24"','12"','12"','12"','12"'],
+#         mode="text",
+#         textfont=dict(
+#             color=faded_label_color,
+#             size=15,
+#         ),
+#         showlegend=False,
+#         hoverinfo='skip',
+#     ), row=1, col=2)
     
-    fig.add_trace(go.Scatter(
-        x=[0,0,28 if pitcher_hand=='R' else -28,-28 if pitcher_hand=='R' else 28],
-        y=[27,-27,0,0],
-        text=['Rise','Drop','Arm<br>Side','Glove<br>Side'],
-        mode="text",
-        textfont=dict(
-            color="white",
-            size=20,
-        ),
-        showlegend=False,
-        hoverinfo='skip',
-    ), row=1, col=2)
+#     fig.add_trace(go.Scatter(
+#         x=[0,0,28 if pitcher_hand=='R' else -28,-28 if pitcher_hand=='R' else 28],
+#         y=[27,-27,0,0],
+#         text=['Rise','Drop','Arm<br>Side','Glove<br>Side'],
+#         mode="text",
+#         textfont=dict(
+#             color="white",
+#             size=20,
+#         ),
+#         showlegend=False,
+#         hoverinfo='skip',
+#     ), row=1, col=2)
     
     
-    fig.add_shape(type="circle",
-                  xref="x", yref="y",
-                  x0=-24, y0=-24, x1=24, y1=24,
-                  line=dict(
-                      color="white",
-                      width=3,
-                      ),
-                  layer='below', row=1, col=2
-                  )
-    fig.add_shape(type="circle",
-                  xref="x", yref="y",
-                  x0=-12, y0=-12, x1=12, y1=12,
-                  line=dict(
-                      color="white",
-                      width=3,
-                      ),
-                  layer='below', row=1, col=2
-                  )
+#     fig.add_shape(type="circle",
+#                   xref="x", yref="y",
+#                   x0=-24, y0=-24, x1=24, y1=24,
+#                   line=dict(
+#                       color="white",
+#                       width=3,
+#                       ),
+#                   layer='below', row=1, col=2
+#                   )
+#     fig.add_shape(type="circle",
+#                   xref="x", yref="y",
+#                   x0=-12, y0=-12, x1=12, y1=12,
+#                   line=dict(
+#                       color="white",
+#                       width=3,
+#                       ),
+#                   layer='below', row=1, col=2
+#                   )
     
-    fig.add_shape(type="circle",
-                  xref="x", yref="y",
-                  x0=-18, y0=-18, x1=18, y1=18,
-                  line=dict(
-                      color=faded_label_color,
-                      width=1,
-                      dash='dash',
-                      ),
-                  layer='below', row=1, col=2
-                  )
-    fig.add_shape(type="circle",
-                  xref="x", yref="y",
-                  x0=-6, y0=-6, x1=6, y1=6,
-                  line=dict(
-                      color=faded_label_color,
-                      width=1,
-                      dash='dash'
-                      ),
-                  layer='below', row=1, col=2
-                  )
+#     fig.add_shape(type="circle",
+#                   xref="x", yref="y",
+#                   x0=-18, y0=-18, x1=18, y1=18,
+#                   line=dict(
+#                       color=faded_label_color,
+#                       width=1,
+#                       dash='dash',
+#                       ),
+#                   layer='below', row=1, col=2
+#                   )
+#     fig.add_shape(type="circle",
+#                   xref="x", yref="y",
+#                   x0=-6, y0=-6, x1=6, y1=6,
+#                   line=dict(
+#                       color=faded_label_color,
+#                       width=1,
+#                       dash='dash'
+#                       ),
+#                   layer='below', row=1, col=2
+#                   )
     
-    fig.add_trace(go.Scatter(x=move_df['IHB'], y=move_df['IVB'], mode='markers', 
-                       marker=marker_dict, text=bonus_text,
-                       customdata=move_df[['Pitch Name','Velo','Description','sub_type_name','Hitter']],
-                       hovertemplate=hover_text,
-                        showlegend=False), row=1, col=2)
+#     fig.add_trace(go.Scatter(x=move_df['IHB'], y=move_df['IVB'], mode='markers', 
+#                        marker=marker_dict, text=bonus_text,
+#                        customdata=move_df[['Pitch Name','Velo','Description','sub_type_name','Hitter']],
+#                        hovertemplate=hover_text,
+#                         showlegend=False), row=1, col=2)
 
-     ### Sequencing Charts
-    pa_df = chart_df.assign(Description = lambda x: x['Pitch Name'].astype('str')+': '+x['Description'].astype('str')).groupby(['pa_count','Hitter','event'])[['PA','Description']].agg({
-        'PA':'count',
-        'Description':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
-    }).reset_index().rename(columns={'PA':'count'})
-    inning_df = chart_df.assign(event = lambda x: np.where(x['PA']==1,x['Hitter'].astype('str')+': '+x['event'].astype('str'),None)).groupby(['inning'])[['PA','event']].agg({
-        'PA':'count',
-        'event':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
-    }).reset_index().rename(columns={'PA':'count'})
+#      ### Sequencing Charts
+#     pa_df = chart_df.assign(Description = lambda x: x['Pitch Name'].astype('str')+': '+x['Description'].astype('str')).groupby(['pa_count','Hitter','event'])[['PA','Description']].agg({
+#         'PA':'count',
+#         'Description':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
+#     }).reset_index().rename(columns={'PA':'count'})
+#     inning_df = chart_df.assign(event = lambda x: np.where(x['PA']==1,x['Hitter'].astype('str')+': '+x['event'].astype('str'),None)).groupby(['inning'])[['PA','event']].agg({
+#         'PA':'count',
+#         'event':lambda x: '<br>- '.join([a for a in list(x) if a is not None])
+#     }).reset_index().rename(columns={'PA':'count'})
     
-    data_len = chart_df['pitch_type'].shape[0]
-    colors = list(chart_df['pitch_type'].map(marker_colors))
-    data_fill_x = [1]*data_len
-    data_fill_y = [1]*data_len
+#     data_len = chart_df['pitch_type'].shape[0]
+#     colors = list(chart_df['pitch_type'].map(marker_colors))
+#     data_fill_x = [1]*data_len
+#     data_fill_y = [1]*data_len
     
-    pa_count = list(pa_df['count'])
-    pa_num = list(pa_df['pa_count'].astype('int'))
-    pa_fill = [1]*len(pa_count)
+#     pa_count = list(pa_df['count'])
+#     pa_num = list(pa_df['pa_count'].astype('int'))
+#     pa_fill = [1]*len(pa_count)
     
-    inning_count = list(inning_df['count'])
-    inning_num = list(inning_df['inning'].astype('int'))
-    inning_fill = [1]*len(inning_count)
+#     inning_count = list(inning_df['count'])
+#     inning_num = list(inning_df['inning'].astype('int'))
+#     inning_fill = [1]*len(inning_count)
 
-    data_len = chart_df['pitch_type'].shape[0]
-    colors = list(chart_df['pitch_type'].map(marker_colors))
-    data_fill_x = [1]*data_len
-    data_fill_y = [1]*data_len
+#     data_len = chart_df['pitch_type'].shape[0]
+#     colors = list(chart_df['pitch_type'].map(marker_colors))
+#     data_fill_x = [1]*data_len
+#     data_fill_y = [1]*data_len
     
-    pa_count = list(pa_df['count'])
-    pa_num = list(pa_df['pa_count'].astype('int'))
-    pa_fill = [1]*len(pa_count)
+#     pa_count = list(pa_df['count'])
+#     pa_num = list(pa_df['pa_count'].astype('int'))
+#     pa_fill = [1]*len(pa_count)
     
-    inning_count = list(inning_df['count'])
-    inning_num = list(inning_df['inning'].astype('int'))
-    inning_fill = [1]*len(inning_count)
+#     inning_count = list(inning_df['count'])
+#     inning_num = list(inning_df['inning'].astype('int'))
+#     inning_fill = [1]*len(inning_count)
 
-    hover_text = '<b>Inning %{customdata[0]}</b><br>Events:<br>- %{customdata[1]}<extra></extra>'
-    fig.add_trace(
-        go.Bar(
-            x=inning_count, y=inning_fill,
-            orientation='h',
-             marker=dict(
-                 color='white',
-                 line=dict(color=pl_background, width=1)
-                 ),
-            text=inning_num,
-            insidetextanchor ="middle",
-            textfont=dict(
-                size=16,
-                color="black"
-                ),
-            textangle=0,
-            customdata=inning_df[['inning','event']],
-            hovertemplate=hover_text
-        ),
-        row=3, col=1
-    )
-    fig.add_trace(go.Scatter(
-            x=[-data_len/40],
-            y=[1],
-            text=['IP'],
-            mode="text",
-            textfont=dict(
-                color="white",
-                size=16,
-            ),
-            showlegend=False,
-            hoverinfo='skip',
-        ), row=3, col=1
-                 )
+#     hover_text = '<b>Inning %{customdata[0]}</b><br>Events:<br>- %{customdata[1]}<extra></extra>'
+#     fig.add_trace(
+#         go.Bar(
+#             x=inning_count, y=inning_fill,
+#             orientation='h',
+#              marker=dict(
+#                  color='white',
+#                  line=dict(color=pl_background, width=1)
+#                  ),
+#             text=inning_num,
+#             insidetextanchor ="middle",
+#             textfont=dict(
+#                 size=16,
+#                 color="black"
+#                 ),
+#             textangle=0,
+#             customdata=inning_df[['inning','event']],
+#             hovertemplate=hover_text
+#         ),
+#         row=3, col=1
+#     )
+#     fig.add_trace(go.Scatter(
+#             x=[-data_len/40],
+#             y=[1],
+#             text=['IP'],
+#             mode="text",
+#             textfont=dict(
+#                 color="white",
+#                 size=16,
+#             ),
+#             showlegend=False,
+#             hoverinfo='skip',
+#         ), row=3, col=1
+#                  )
 
-    hover_text = '<b>%{customdata[0]}</b>: %{customdata[1]}<br>- %{customdata[2]}</b><extra></extra>'
-    fig.add_trace(
-        go.Bar(
-            x=pa_count, y=pa_fill,
-            orientation='h',
-             marker=dict(
-                 color='white',
-                 line=dict(color=pl_background, width=1)
-                 ),
-            text=pa_num,
-            insidetextanchor ="middle",
-            textposition ="inside",
-            textfont=dict(
-                size=16,
-                color="black"
-                ),
-            textangle=0,
-            customdata=pa_df[['Hitter','event','Description']],
-            hovertemplate=hover_text
-        ),
-        row=4, col=1
-    )
-    fig.add_trace(go.Scatter(
-            x=[-data_len/40],
-            y=[1],
-            text=['PA'],
-            mode="text",
-            textfont=dict(
-                color="white",
-                size=16,
-            ),
-            showlegend=False,
-            hoverinfo='skip',
-        ), row=4, col=1
-                 )
+#     hover_text = '<b>%{customdata[0]}</b>: %{customdata[1]}<br>- %{customdata[2]}</b><extra></extra>'
+#     fig.add_trace(
+#         go.Bar(
+#             x=pa_count, y=pa_fill,
+#             orientation='h',
+#              marker=dict(
+#                  color='white',
+#                  line=dict(color=pl_background, width=1)
+#                  ),
+#             text=pa_num,
+#             insidetextanchor ="middle",
+#             textposition ="inside",
+#             textfont=dict(
+#                 size=16,
+#                 color="black"
+#                 ),
+#             textangle=0,
+#             customdata=pa_df[['Hitter','event','Description']],
+#             hovertemplate=hover_text
+#         ),
+#         row=4, col=1
+#     )
+#     fig.add_trace(go.Scatter(
+#             x=[-data_len/40],
+#             y=[1],
+#             text=['PA'],
+#             mode="text",
+#             textfont=dict(
+#                 color="white",
+#                 size=16,
+#             ),
+#             showlegend=False,
+#             hoverinfo='skip',
+#         ), row=4, col=1
+#                  )
     
-    hover_text = '<b>%{customdata[4]}: %{customdata[0]}</b>%{customdata[3]}<br>- %{customdata[2]}<br>- Velo: %{customdata[1]}mph<extra></extra>'
-    fig.add_trace(
-        go.Bar(
-            x=data_fill_x, y=data_fill_y,
-            orientation='h',
-             marker=dict(
+#     hover_text = '<b>%{customdata[4]}: %{customdata[0]}</b>%{customdata[3]}<br>- %{customdata[2]}<br>- Velo: %{customdata[1]}mph<extra></extra>'
+#     fig.add_trace(
+#         go.Bar(
+#             x=data_fill_x, y=data_fill_y,
+#             orientation='h',
+#              marker=dict(
                  
-                 color=colors,
-                 line=dict(color=pl_background, width=1)
-                 ),
-            customdata=(
-                chart_df
-                .assign(pitch_type = lambda x: x['pitch_type'].map(pitch_names),
-                        sub_type_name = lambda x: np.where(x['pitch_type']==x['sub_type_name'],
-                                                           '',
-                                                           '<br>Sub-Type: '+x['sub_type_name']))
-                [['pitch_type','Velo','Description','sub_type_name','Num Pitches']]
-            ),
-            hovertemplate=hover_text
-            ),
-        row=5, col=1
-    )
-    fig.add_trace(go.Scatter(
-            x=[-data_len/40],
-            y=[1],
-            text=['Type'],
-            mode="text",
-            textfont=dict(
-                color="white",
-                size=16,
-            ),
-            showlegend=False,
-            hoverinfo='skip',
-        ), row=5, col=1
-                 )
+#                  color=colors,
+#                  line=dict(color=pl_background, width=1)
+#                  ),
+#             customdata=(
+#                 chart_df
+#                 .assign(pitch_type = lambda x: x['pitch_type'].map(pitch_names),
+#                         sub_type_name = lambda x: np.where(x['pitch_type']==x['sub_type_name'],
+#                                                            '',
+#                                                            '<br>Sub-Type: '+x['sub_type_name']))
+#                 [['pitch_type','Velo','Description','sub_type_name','Num Pitches']]
+#             ),
+#             hovertemplate=hover_text
+#             ),
+#         row=5, col=1
+#     )
+#     fig.add_trace(go.Scatter(
+#             x=[-data_len/40],
+#             y=[1],
+#             text=['Type'],
+#             mode="text",
+#             textfont=dict(
+#                 color="white",
+#                 size=16,
+#             ),
+#             showlegend=False,
+#             hoverinfo='skip',
+#         ), row=5, col=1
+#                  )
 
-    ### Pitch Types
-    sub_count = (
-        chart_df
-        .groupby('sub_type')
-        ['game_pk']
-        .count()
-        .sort_values(ascending=False)
-        .to_dict()
-    )
+#     ### Pitch Types
+#     sub_count = (
+#         chart_df
+#         .groupby('sub_type')
+#         ['game_pk']
+#         .count()
+#         .sort_values(ascending=False)
+#         .to_dict()
+#     )
     
-    label_df = (
-        chart_df
-        .groupby('pitch_type')
-        [['game_pk','Velo','IVB','IHB']]
-        .agg({
-            'game_pk':'count',
-            'Velo':'mean',
-            'IVB':'mean',
-            'IHB':'mean'
-        })
-        .round(1)
-        .rename(columns={'game_pk':'count'})
-        .reset_index()
-        .sort_values(['count'], ascending=False)
-        .assign(sub_type = lambda x: x['pitch_type'].map(chart_df.groupby(['pitch_type'])[['sub_type']].agg({
-            'sub_type':lambda x: '' if len(list(set(x))) ==1 else '<br>Sub-Types Thrown:<br>'+'<br>'.join(['- '+pitch_names[a]+': '+str(sub_count[a]) for a in list(set(sorted(list(x),key=list(x).count,reverse=True))) if a is not None])
-        }).to_dict()['sub_type'])
-               )
-    )
+#     label_df = (
+#         chart_df
+#         .groupby('pitch_type')
+#         [['game_pk','Velo','IVB','IHB']]
+#         .agg({
+#             'game_pk':'count',
+#             'Velo':'mean',
+#             'IVB':'mean',
+#             'IHB':'mean'
+#         })
+#         .round(1)
+#         .rename(columns={'game_pk':'count'})
+#         .reset_index()
+#         .sort_values(['count'], ascending=False)
+#         .assign(sub_type = lambda x: x['pitch_type'].map(chart_df.groupby(['pitch_type'])[['sub_type']].agg({
+#             'sub_type':lambda x: '' if len(list(set(x))) ==1 else '<br>Sub-Types Thrown:<br>'+'<br>'.join(['- '+pitch_names[a]+': '+str(sub_count[a]) for a in list(set(sorted(list(x),key=list(x).count,reverse=True))) if a is not None])
+#         }).to_dict()['sub_type'])
+#                )
+#     )
     
-    pitches_thrown = list(label_df['pitch_type'])
-    num_thrown = list(label_df['count'])
-    perc_thrown = list(label_df['count'].div(label_df['count'].sum()).mul(100).round(0).astype('int'))
-    pitch_colors = [marker_colors[x] for x in pitches_thrown]
+#     pitches_thrown = list(label_df['pitch_type'])
+#     num_thrown = list(label_df['count'])
+#     perc_thrown = list(label_df['count'].div(label_df['count'].sum()).mul(100).round(0).astype('int'))
+#     pitch_colors = [marker_colors[x] for x in pitches_thrown]
 
-    hover_text = 'Velo: %{customdata[2]}mph<br>IVB: %{customdata[3]}"<br>IHB: %{customdata[4]}"<br>%{customdata[5]}<br><extra></extra>'
-    fig.add_trace(
-        go.Scatter(
-            x=list(range(len(pitches_thrown))), 
-            y=[0] * len(pitches_thrown),
-            mode='markers+text',
-            marker=dict(size=[2*min(50,x)+20 for x in perc_thrown],
-                        opacity=1,
-                        color=pitch_colors,
-                        line=dict(color='white',
-                                 width=2)),
-            text=num_thrown,
-            textfont=dict(
-                color="white",
-                size=20
-            ),
-            customdata=label_df.assign(full_name = lambda x: x['pitch_type'].map(pitch_names)),
-            hovertemplate=hover_text
-        ), row=2, col=1
-    )
+#     hover_text = 'Velo: %{customdata[2]}mph<br>IVB: %{customdata[3]}"<br>IHB: %{customdata[4]}"<br>%{customdata[5]}<br><extra></extra>'
+#     fig.add_trace(
+#         go.Scatter(
+#             x=list(range(len(pitches_thrown))), 
+#             y=[0] * len(pitches_thrown),
+#             mode='markers+text',
+#             marker=dict(size=[2*min(50,x)+20 for x in perc_thrown],
+#                         opacity=1,
+#                         color=pitch_colors,
+#                         line=dict(color='white',
+#                                  width=2)),
+#             text=num_thrown,
+#             textfont=dict(
+#                 color="white",
+#                 size=20
+#             ),
+#             customdata=label_df.assign(full_name = lambda x: x['pitch_type'].map(pitch_names)),
+#             hovertemplate=hover_text
+#         ), row=2, col=1
+#     )
     
-    for pitchtype in pitches_thrown:
-        fig.add_annotation(x=pitches_thrown.index(pitchtype), y=-0.25,
-                           text=pitch_names[pitchtype],
-                           showarrow=False,
-                           font=dict(
-                               size=20,
-                               color="#ffffff"
-                               ), row=2, col=1)
-    fig.add_annotation(x=(len(pitches_thrown)-1)/2, y=-0.65,
-                       text='Sequencing',
-                       showarrow=False,
-                       font=dict(
-                           size=24,
-                           color="#ffffff"
-                           ), row=2, col=1)
+#     for pitchtype in pitches_thrown:
+#         fig.add_annotation(x=pitches_thrown.index(pitchtype), y=-0.25,
+#                            text=pitch_names[pitchtype],
+#                            showarrow=False,
+#                            font=dict(
+#                                size=20,
+#                                color="#ffffff"
+#                                ), row=2, col=1)
+#     fig.add_annotation(x=(len(pitches_thrown)-1)/2, y=-0.65,
+#                        text='Sequencing',
+#                        showarrow=False,
+#                        font=dict(
+#                            size=24,
+#                            color="#ffffff"
+#                            ), row=2, col=1)
     
-    fig.update_xaxes(title_text="", range=[-1,len(pitches_thrown)], row=2, col=1)
-    fig.update_yaxes(title_text="", range=[-1,0.5], row=2, col=1)
-    fig.update_traces(textposition='middle center', row=2, col=1)
+#     fig.update_xaxes(title_text="", range=[-1,len(pitches_thrown)], row=2, col=1)
+#     fig.update_yaxes(title_text="", range=[-1,0.5], row=2, col=1)
+#     fig.update_traces(textposition='middle center', row=2, col=1)
     
-    fig.update_xaxes(visible=False, showticklabels=False)
-    fig.update_yaxes(visible=False, showticklabels=False)
+#     fig.update_xaxes(visible=False, showticklabels=False)
+#     fig.update_yaxes(visible=False, showticklabels=False)
     
-    fig.update_layout(plot_bgcolor=pl_background,
-                     paper_bgcolor=pl_background)
+#     fig.update_layout(plot_bgcolor=pl_background,
+#                      paper_bgcolor=pl_background)
     
-    fig.update_layout(
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=100,
-                pad=4
-                ),
-        )
-    fig.update_annotations(yshift=-35,
-                           font=dict(size=30, color="white")
-                          )
-    fig.update_layout(height=960, width=1200,
-                      hoverlabel={
-                          'font':{'color':'white',
-                                 'size':16}
-                          },
-                      title={
-                'text': f"{player_select}'s Pitch Charts ({date.strftime('%-m/%-d/%y')})",
-                'y':0.98,
-                'x':0.5,
-                'xanchor': 'center',
-                'yanchor': 'top',
-            'font':{'color':'white',
-                   'size':40}},
-                      showlegend=False,
-                      hoverlabel_align = 'left'
-                     )
-    fig.update_traces(hoverlabel={
-                          'font':{'color':'black'}
-                          }, row=3, col=1)
-    fig.update_traces(hoverlabel={
-                          'font':{'color':'black'}
-                          }, row=4, col=1)
+#     fig.update_layout(
+#             margin=dict(
+#                 l=0,
+#                 r=0,
+#                 b=0,
+#                 t=100,
+#                 pad=4
+#                 ),
+#         )
+#     fig.update_annotations(yshift=-35,
+#                            font=dict(size=30, color="white")
+#                           )
+#     fig.update_layout(height=960, width=1200,
+#                       hoverlabel={
+#                           'font':{'color':'white',
+#                                  'size':16}
+#                           },
+#                       title={
+#                 'text': f"{player_select}'s Pitch Charts ({date.strftime('%-m/%-d/%y')})",
+#                 'y':0.98,
+#                 'x':0.5,
+#                 'xanchor': 'center',
+#                 'yanchor': 'top',
+#             'font':{'color':'white',
+#                    'size':40}},
+#                       showlegend=False,
+#                       hoverlabel_align = 'left'
+#                      )
+#     fig.update_traces(hoverlabel={
+#                           'font':{'color':'black'}
+#                           }, row=3, col=1)
+#     fig.update_traces(hoverlabel={
+#                           'font':{'color':'black'}
+#                           }, row=4, col=1)
     
-    # fig.show()
-    st.plotly_chart(fig,use_container_width=False,theme=None)
+#     # fig.show()
+#     st.plotly_chart(fig,use_container_width=False,theme=None)
 
 # if st.button('Experimental test charts (NOT mobile-friendly)'):
     # plotly_charts(chart_df)
