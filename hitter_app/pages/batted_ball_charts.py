@@ -183,7 +183,7 @@ def kde_calc(df,hitter,year=year,league_vals=f_league):
           (df['spray_deg']<=90) &
           (df['launch_angle']>=-30) &
           (df['launch_angle']<=60) &
-          (df['hitte_team']==hitter),
+          (df['hitter_team']==hitter),
           'launch_angle']
         )
     else:
