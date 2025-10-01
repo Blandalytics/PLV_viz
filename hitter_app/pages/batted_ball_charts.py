@@ -134,7 +134,7 @@ with col1:
     if team_wide:
         teams = list(bbe_df
                        .reset_index()
-                       .sort_values('hitterteam')
+                       .sort_values('hitter_team')
                        ['hitter_team'].unique()
                       )
         default_ix = players.index('HOU')
