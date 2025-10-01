@@ -135,7 +135,7 @@ with col1:
         teams = list(bbe_df
                        .reset_index()
                        .sort_values('hitterteam')
-                       ['hitterteam'].unique()
+                       ['hitter_team'].unique()
                       )
         default_ix = players.index('HOU')
         player = st.selectbox('Choose a team:', teams, index=default_ix)
@@ -143,7 +143,7 @@ with col1:
         players = list(bbe_df
                        .reset_index()
                        .sort_values('hittername')
-                       ['hittername'].unique()
+                       ['hitter_name'].unique()
                       )
         default_ix = players.index('Isaac Paredes')
         player = st.selectbox('Choose a player:', players, index=default_ix)
@@ -173,7 +173,7 @@ def kde_calc(df,hitter,year=year,league_vals=f_league):
           (df['spray_deg']<=90) &
           (df['launch_angle']>=-30) &
           (df['launch_angle']<=60) &
-          (df['hitterteam']==hitter),
+          (df['hitter_team']==hitter),
           'spray_deg']
         )
         y_loc_player = (
@@ -183,7 +183,7 @@ def kde_calc(df,hitter,year=year,league_vals=f_league):
           (df['spray_deg']<=90) &
           (df['launch_angle']>=-30) &
           (df['launch_angle']<=60) &
-          (df['hitterteam']==hitter),
+          (df['hitte_team']==hitter),
           'launch_angle']
         )
     else:
