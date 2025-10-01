@@ -124,52 +124,89 @@ bbe_df, f_league, year_before_df = load_data(year)
 
 X, Y = np.mgrid[0:90:91j, -30:60:91j]
 
+team_wide = st.checkbox("Team-wide comparison?",value=False,
+                        help=" Group at the team level")
+
 col1, col2, col3 = st.columns([0.5,0.25,0.25])
 
 with col1:
-    # Player
-    players = list(bbe_df
-                   .reset_index()
-                   .sort_values('hittername')
-                   ['hittername'].unique()
-                  )
-    default_ix = players.index('Isaac Paredes')
-    player = st.selectbox('Choose a player:', players, index=default_ix)
+    # Player/team
+    if team_wide:
+        teams = list(bbe_df
+                       .reset_index()
+                       .sort_values('hitterteam')
+                       ['hitterteam'].unique()
+                      )
+        default_ix = players.index('HOU')
+        player = st.selectbox('Choose a team:', teams, index=default_ix)
+    else:
+        players = list(bbe_df
+                       .reset_index()
+                       .sort_values('hittername')
+                       ['hittername'].unique()
+                      )
+        default_ix = players.index('Isaac Paredes')
+        player = st.selectbox('Choose a player:', players, index=default_ix)
 with col2:
     # Color Scale
     color_scales = ['Discrete','Continuous']
     color_scale_type = st.selectbox('Choose a color scale:', color_scales)
 with col3:
     # Comparison
-    comparisons = ['League','Self (prior year)']
-    comparison = st.selectbox('Compared to:', comparisons)
-    if comparison=='Self (prior year)':
-        comparison = 'Self'
+    if team_wide:
+        comparison = 'League'
+    else:
+        comparisons = ['League','Self (prior year)']
+        comparison = st.selectbox('Compared to:', comparisons)
+        if comparison=='Self (prior year)':
+            comparison = 'Self'
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
     if comparison == 'Self':
         df['spray_deg'] = np.clip(df['spray_deg'],0,90)
         df['launch_angle'] = np.clip(df['launch_angle'],-30,60)
-    x_loc_player = (
-      df
-      .loc[
-      (df['spray_deg']>=0) &
-      (df['spray_deg']<=90) &
-      (df['launch_angle']>=-30) &
-      (df['launch_angle']<=60) &
-      (df['hittername']==hitter),
-      'spray_deg']
-    )
-    y_loc_player = (
-      df
-      .loc[
-      (df['spray_deg']>=0) &
-      (df['spray_deg']<=90) &
-      (df['launch_angle']>=-30) &
-      (df['launch_angle']<=60) &
-      (df['hittername']==hitter),
-      'launch_angle']
-    )
+    if team_wide:
+        x_loc_player = (
+          df
+          .loc[
+          (df['spray_deg']>=0) &
+          (df['spray_deg']<=90) &
+          (df['launch_angle']>=-30) &
+          (df['launch_angle']<=60) &
+          (df['hitterteam']==hitter),
+          'spray_deg']
+        )
+        y_loc_player = (
+          df
+          .loc[
+          (df['spray_deg']>=0) &
+          (df['spray_deg']<=90) &
+          (df['launch_angle']>=-30) &
+          (df['launch_angle']<=60) &
+          (df['hitterteam']==hitter),
+          'launch_angle']
+        )
+    else:
+      x_loc_player = (
+        df
+        .loc[
+        (df['spray_deg']>=0) &
+        (df['spray_deg']<=90) &
+        (df['launch_angle']>=-30) &
+        (df['launch_angle']<=60) &
+        (df['hittername']==hitter),
+        'spray_deg']
+      )
+      y_loc_player = (
+        df
+        .loc[
+        (df['spray_deg']>=0) &
+        (df['spray_deg']<=90) &
+        (df['launch_angle']>=-30) &
+        (df['launch_angle']<=60) &
+        (df['hittername']==hitter),
+        'launch_angle']
+      )
 
     xmin = 0
     xmax = 90
@@ -191,7 +228,10 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     if (year==2020) & (comparison=='Self'):
         st.write("No data for comparison year (2019).\nPlease select a year above 2020.")
     levels=13
-    b_hand = bbe_df.loc[bbe_df['hittername']==hitter,'stand'].value_counts().index[0]
+    if team_wide:
+        b_hand = 'R'
+    else:
+        b_hand = bbe_df.loc[bbe_df['hittername']==hitter,'stand'].value_counts().index[0]
     fig, ax = plt.subplots(figsize=(7,7))
     if color_scale_type=='Discrete':
         cfset = ax.contourf(X, Y, kde_data*1000, list(range(-levels+1,levels-1))[::2], 
