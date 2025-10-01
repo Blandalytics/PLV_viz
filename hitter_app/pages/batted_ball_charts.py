@@ -143,7 +143,7 @@ with col1:
         players = list(bbe_df
                        .reset_index()
                        .sort_values('hittername')
-                       ['hitter_name'].unique()
+                       ['hittername'].unique()
                       )
         default_ix = players.index('Isaac Paredes')
         player = st.selectbox('Choose a player:', players, index=default_ix)
