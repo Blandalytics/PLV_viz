@@ -137,7 +137,7 @@ with col1:
                        .sort_values('hitter_team')
                        ['hitter_team'].unique()
                       )
-        default_ix = players.index('HOU')
+        default_ix = teams.index('HOU')
         player = st.selectbox('Choose a team:', teams, index=default_ix)
     else:
         players = list(bbe_df
