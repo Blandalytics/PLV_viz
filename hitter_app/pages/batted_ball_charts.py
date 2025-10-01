@@ -133,7 +133,7 @@ if team_wide:
                    .sort_values('hitter_team')
                    ['hitter_team'].unique()
                   )
-    default_ix = teams.index('HOU')
+    default_ix = teams.index('CLE')
     player = st.selectbox('Choose a team:', teams, index=default_ix)
     color_scale_type = 'Continuous'
     comparison = 'League'
