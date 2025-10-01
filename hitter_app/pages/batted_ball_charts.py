@@ -127,19 +127,21 @@ X, Y = np.mgrid[0:90:91j, -30:60:91j]
 team_wide = st.checkbox("Team-wide comparison?",value=False,
                         help=" Group at the team level")
 
-col1, col2, col3 = st.columns([0.5,0.25,0.25])
-
-with col1:
-    # Player/team
-    if team_wide:
-        teams = list(bbe_df
-                       .reset_index()
-                       .sort_values('hitter_team')
-                       ['hitter_team'].unique()
-                      )
-        default_ix = teams.index('HOU')
-        player = st.selectbox('Choose a team:', teams, index=default_ix)
-    else:
+if team_wide:
+    teams = list(bbe_df
+                   .reset_index()
+                   .sort_values('hitter_team')
+                   ['hitter_team'].unique()
+                  )
+    default_ix = teams.index('HOU')
+    player = st.selectbox('Choose a team:', teams, index=default_ix)
+    color_scale_type = 'Continuous'
+    comparison = 'League'
+else:
+    col1, col2, col3 = st.columns([0.5,0.25,0.25])
+    
+    with col1:
+        # Player/team
         players = list(bbe_df
                        .reset_index()
                        .sort_values('hittername')
@@ -147,15 +149,12 @@ with col1:
                       )
         default_ix = players.index('Isaac Paredes')
         player = st.selectbox('Choose a player:', players, index=default_ix)
-with col2:
-    # Color Scale
-    color_scales = ['Discrete','Continuous']
-    color_scale_type = st.selectbox('Choose a color scale:', color_scales)
-with col3:
-    # Comparison
-    if team_wide:
-        comparison = 'League'
-    else:
+    with col2:
+        # Color Scale
+        color_scales = ['Discrete','Continuous']
+        color_scale_type = st.selectbox('Choose a color scale:', color_scales)
+    with col3:
+        # Comparison
         comparisons = ['League','Self (prior year)']
         comparison = st.selectbox('Compared to:', comparisons)
         if comparison=='Self (prior year)':
