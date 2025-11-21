@@ -160,11 +160,11 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
     return position_df[[x+'_val' for x in rate_stats+volume_stats]].sum(axis=1)
 
 # Load projections
-projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=1029181665&format=csv')
+projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=1029181665&format=csv')
 projections_hitters['League'] = projections_hitters['Team'].fillna('FA').map(team_leagues)
 projections_hitters = projections_hitters.loc[projections_hitters['League'].isin(league_pool)].reset_index(drop=True).copy()
 
-projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/1nnH9bABVxgD28KVj9Oa67bn9Kp5x2dD0nFiZ7jIfvmQ/export?gid=354379391&format=csv')
+projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=354379391&format=csv')
 projections_pitchers['League'] = projections_pitchers['Team'].fillna('FA').map(team_leagues)
 projections_pitchers = projections_pitchers.loc[projections_pitchers['League'].isin(league_pool)].reset_index(drop=True).copy()
 projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],1,1000))
