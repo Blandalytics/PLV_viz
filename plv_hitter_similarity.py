@@ -100,7 +100,7 @@ season_id = f'{sim_season}_{sim_player_id}'
 
 player_stats, sim_stats, top_comps = generate_comp_values(season_id)
 
-def generate_comp_card(player_stats, sim_stats, top_comps)
+def generate_comp_card(player_stats, sim_stats, top_comps,top=True)
     fig, axs = plt.subplots(1,2,figsize=(10,5),width_ratios=[5,1])
     
     chart_df = (
@@ -145,7 +145,7 @@ def generate_comp_card(player_stats, sim_stats, top_comps)
     
     # pass handle & labels lists along with order as below 
     axs[0].legend()
-    least_text = '' if comparison == 'top' else ' (Least)'
+    least_text = '' if top else ' (Least)'
     legend = axs[0].legend([handles[i] for i in order], [labels[i] for i in order],
                         ncol=3,
                         loc='upper center',
