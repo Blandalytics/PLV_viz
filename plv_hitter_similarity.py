@@ -88,11 +88,13 @@ with col1:
     player_name = st.selectbox('Select a player',
                                player_list, 
                                index=1)
-    sim_player_id = sim_df.loc[sim_df['Name']=='Juan Soto','season_id'].str[-6:].unique()
+    sim_player_id = sim_df.loc[sim_df['Name']==player_name,'season_id'].str[-6:].unique()
     if len(mlbamid)>1:
         sim_player_id = st.selectbox('Select an MLBAMID',
-                               mlbamid, 
-                               index=0)
+                                     sim_player_id, 
+                                     index=0)
+    else:
+        sim_player_id = sim_player_id[0]
 with col2:
     sim_season = st.selectbox('Select a season',
                               sim_df.loc[sim_df['season_id'].str[-6:]==sim_player_id,'season_id'].str[:4].sort_values(ascending=False).unique(),
