@@ -40,7 +40,11 @@ st.title("Hitter Skill Similarities")
 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading similarity data")
 def load_data():
-    return pd.read_parquet('hitter_similarity_distances.parquet'), pd.read_parquet('hitter_similarity_metrics.parquet'), pd.read_parquet('hitter_similarity_stats.parquet')
+    file_name = f'https://github.com/Blandalytics/PLV_viz/blob/main/data/{year}_PLV_App_Data-{month}.parquet?raw=true'
+    combined_df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/hitter_similarity_distances.parquet?raw=true')
+    sim_df = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/hitter_similarity_metrics.parquet?raw=true')
+    similarity_stats = pd.read_parquet('https://github.com/Blandalytics/PLV_viz/blob/main/data/hitter_similarity_stats.parquet?raw=true')
+    return combined_df, sim_df, similarity_stats
 
 combined_df, sim_df, similarity_stats = load_data()
 
