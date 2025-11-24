@@ -2,6 +2,12 @@ import streamlit as st
 import numpy as np
 import os
 import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy as sp
+import urllib
+
 from PIL import Image
 
 logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
