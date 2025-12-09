@@ -109,7 +109,7 @@ with col2:
     pitcher_cats = st.multiselect('Pitcher categories',
                                   ['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA', 
                                    'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
-                                   'HR', 'BB', 'BS','K/BB'],
+                                   'HR', 'BB', 'BS','K/BB','W+QS'],
                                   default=['W','SV','K','ERA','WHIP'])
     rate_cats_p = ['ERA', 'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9']
     rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
@@ -168,6 +168,7 @@ projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2L
 projections_pitchers['League'] = projections_pitchers['Team'].fillna('FA').map(team_leagues)
 projections_pitchers = projections_pitchers.loc[projections_pitchers['League'].isin(league_pool)].reset_index(drop=True).copy()
 projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],1,1000))
+projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
 
 if st.button("Generate Auction Values:  📊 -> 💲"):
     st.header('Auction Values')
