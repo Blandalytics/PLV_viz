@@ -52,13 +52,13 @@ team_leagues = {
 st.header('Team Settings')
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    num_hitters = st.number_input('Starting hitters:',min_value=4,max_value=20,value=10)
+    num_hitters = st.number_input('Active hitters:',min_value=4,max_value=20,value=10)
 with col2:
-    num_pitchers = st.number_input('Starting pitchers:',min_value=4,max_value=20,value=8)
+    num_pitchers = st.number_input('Active pitchers:',min_value=4,max_value=20,value=8)
 with col3:
     raw_bench = st.number_input('Number of bench spots:',min_value=0,max_value=20,value=5)
 with col4:
-    num_catchers = st.number_input('Starting catchers:',min_value=0,max_value=3,value=1)
+    num_catchers = st.number_input('Active catchers:',min_value=0,max_value=3,value=1)
 
 col1, col2, col3, col4 = st.columns(4)
 with col3:
