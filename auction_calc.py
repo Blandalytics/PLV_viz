@@ -17,12 +17,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.write(ss)
-if 'sidebar_state' not in ss:
-    st.write('To change settings, tap the >> in the upper left of the page')
-else:
-    if ss.sidebar_state=='collapsed':
-        st.write('To change settings, tap the >> in the upper left of the page')
 @st.cache_data(ttl=3600)
 def load_logo():
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
@@ -33,6 +27,7 @@ logo = load_logo()
 # st.image(logo, width=400)
 
 st.title('PL Auction Draft Calculator')
+st.write('To change settings, tap the >> in the upper left of the page')
 
 team_leagues = {
     'LAA':'AL',
