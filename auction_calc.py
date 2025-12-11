@@ -49,12 +49,16 @@ team_leagues = {
 }
 
 with st.sidebar:
-    st.header(f"Draft Settings")
+    st.image(logo)
+    # st.header(f"Draft Settings")
     
     # Settings
-    st.write('Team Settings')
-    num_hitters = st.number_input('Active hitters:',min_value=4,max_value=20,value=10)
-    num_pitchers = st.number_input('Active pitchers:',min_value=4,max_value=20,value=8)
+    st.header('Team Settings')
+    col1, col2 = st.columns(2):
+    with col1:
+        num_hitters = st.number_input('Active hitters:',min_value=4,max_value=20,value=10)
+    with col2:
+        num_pitchers = st.number_input('Active pitchers:',min_value=4,max_value=20,value=8)
     raw_bench = st.number_input('Number of bench spots:',min_value=0,max_value=20,value=5)
     bench_suppress = st.checkbox("Minimize bench value",value=True,
                                  help="""
@@ -67,10 +71,13 @@ with st.sidebar:
     
 
     st.write('')
-    st.write('League Settings')
+    st.header('League Settings')
     num_teams = st.number_input('Number of teams:',min_value=4,max_value=30,value=12)
-    min_bid = st.number_input('Minimum bid:',min_value=0,value=1)
-    team_budget = st.number_input('Per-Team Budget:',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
+    col1, col2 = st.columns(2):
+    with col1:
+        min_bid = st.number_input('Min bid:',min_value=0,value=1)
+    with col2:
+        team_budget = st.number_input('Team Budget:',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
     hitter_split = st.number_input('Hitter Split of budget (%):',min_value=0,max_value=100,value=65)
     hitter_split = hitter_split/100
     league_select = st.selectbox('Player pool:',['All','NL-Only','AL-Only'])
@@ -81,7 +88,7 @@ with st.sidebar:
         team_leagues.update({'FA':league_select[:2].upper()})
         
     st.write('')
-    st.write('Scoring Categories')
+    st.header('Scoring Categories')
     hitter_cats = st.multiselect('Hitter categories',
                                  ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
                                   'wOBA', 'BB%', 'K%', 'H', '1B', '2B', '3B', 'XBH',
@@ -161,7 +168,7 @@ def load_data():
 projections_hitters, projections_pitchers = load_data()
 
 if st.button("Generate Auction Values:  📊 -> 💲"):
-    st.header('Auction Values')
+    # st.header('Auction Values')
     ## Hitters
     sample_hitters  = projections_hitters.nlargest(hitters_above_replacement, 'PA')
     projections_hitters['unadjusted_value'] = unadjusted_value(projections_hitters,
