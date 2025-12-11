@@ -56,16 +56,21 @@ with st.sidebar:
     st.header('Team Settings')
     col1, col2 = st.columns(2)
     with col1:
-        num_hitters = st.number_input('Active hitters:',min_value=4,max_value=20,value=10)
+        num_hitters = st.number_input('# Hitters:',min_value=4,max_value=20,value=10)
     with col2:
-        num_pitchers = st.number_input('Active pitchers:',min_value=4,max_value=20,value=8)
-    raw_bench = st.number_input('Number of bench spots:',min_value=0,max_value=20,value=5)
+        num_pitchers = st.number_input('# Pitchers:',min_value=4,max_value=20,value=8)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        raw_bench = st.number_input('Bench spots:',min_value=0,max_value=20,value=5)
+    with col1:
+        num_catchers = st.number_input('# catchers:',min_value=0,max_value=3,value=1)
+    
     bench_suppress = st.checkbox("Minimize bench value",value=True,
                                  help="""
                                  Does not consider bench players  
                                  when calculating replacement level
                                  """)
-    num_catchers = st.number_input('Active catchers:',min_value=0,max_value=3,value=1)
     
     num_bench = 1 if bench_suppress else raw_bench
     
@@ -78,10 +83,14 @@ with st.sidebar:
         min_bid = st.number_input('Min bid:',min_value=0,value=1)
     with col2:
         team_budget = st.number_input('Team Budget:',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
-    hitter_split = st.number_input('Hitter Split of budget (%):',min_value=0,max_value=100,value=65)
-    hitter_split = hitter_split/100
-    league_select = st.selectbox('Player pool:',['All','NL-Only','AL-Only'])
-    league_pool = ['NL','AL'] if league_select=='All' else [league_select[:2]]
+    col1, col2 = st.columns(2)
+    with col1:
+        league_select = st.selectbox('Player pool:',['All','NL-Only','AL-Only'])
+        league_pool = ['NL','AL'] if league_select=='All' else [league_select[:2]]
+    with col2:
+        hitter_split = st.number_input('Hitter Split (%):',min_value=0,max_value=100,value=65)
+        hitter_split = hitter_split/100
+    
     include_fa = st.checkbox("Include FA?",value=True,
                              help=" Include free agents in layer pool")
     if include_fa:
