@@ -48,54 +48,39 @@ team_leagues = {
     'WSN':'NL',
 }
 
-# Settings
-st.header('Team Settings')
-col1, col2, col3, col4 = st.columns(4)
-with col1:
+with st.sidebar:
+    st.header(f"Draft Settings")
+    
+    # Settings
+    st.write('Team Settings')
     num_hitters = st.number_input('Active hitters:',min_value=4,max_value=20,value=10)
-with col2:
     num_pitchers = st.number_input('Active pitchers:',min_value=4,max_value=20,value=8)
-with col3:
     raw_bench = st.number_input('Number of bench spots:',min_value=0,max_value=20,value=5)
-with col4:
-    num_catchers = st.number_input('Active catchers:',min_value=0,max_value=3,value=1)
-
-col1, col2, col3, col4 = st.columns(4)
-with col3:
     bench_suppress = st.checkbox("Minimize bench value",value=True,
                                  help="""
                                  Does not consider bench players  
                                  when calculating replacement level
                                  """)
+    num_catchers = st.number_input('Active catchers:',min_value=0,max_value=3,value=1)
+    
     num_bench = 1 if bench_suppress else raw_bench
+    
 
-
-st.header('League Settings')
-col1, col2, col3, col4, col5 = st.columns(5)
-with col1:
+    st.header('League Settings')
     num_teams = st.number_input('Number of teams:',min_value=4,max_value=30,value=12)
-with col2:
     min_bid = st.number_input('Minimum bid:',min_value=0,value=1)
-with col3:
     team_budget = st.number_input('Per-Team Budget:',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
-with col4:
     hitter_split = st.number_input('Hitter Split of budget (%):',min_value=0,max_value=100,value=65)
     hitter_split = hitter_split/100
-with col5:
     league_select = st.selectbox('Player pool:',['All','NL-Only','AL-Only'])
     league_pool = ['NL','AL'] if league_select=='All' else [league_select[:2]]
-
-col1, col2, col3, col4, col5 = st.columns(5)
-with col5:
     include_fa = st.checkbox("Include FA?",value=True,
                              help=" Include free agents in layer pool")
     if include_fa:
         team_leagues.update({'FA':league_select[:2].upper()})
         
 
-st.header('Scoring Categories')
-col1, col2 = st.columns(2)
-with col1:
+    st.header('Scoring Categories')
     hitter_cats = st.multiselect('Hitter categories',
                                  ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
                                   'wOBA', 'BB%', 'K%', 'H', '1B', '2B', '3B', 'XBH',
@@ -105,7 +90,6 @@ with col1:
     rate_scoring_cats_h = [x for x in hitter_cats if x in rate_cats_h]
     volume_scoring_cats_h = [x for x in hitter_cats if x not in rate_scoring_cats_h]
     inverted_categories_h = ['K','CS','SF']
-with col2:
     pitcher_cats = st.multiselect('Pitcher categories',
                                   ['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA', 
                                    'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
@@ -159,16 +143,21 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
     # Total unadjusted Value: sum of all scoring category Z-Scores
     return position_df[[x+'_val' for x in rate_stats+volume_stats]].sum(axis=1)
 
-# Load projections
-projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=1029181665&format=csv')
-projections_hitters['League'] = projections_hitters['Team'].fillna('FA').map(team_leagues)
-projections_hitters = projections_hitters.loc[projections_hitters['League'].isin(league_pool)].reset_index(drop=True).copy()
+@st.cache_data(ttl=3600)
+def load_data():
+    # Load projections
+    projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=1029181665&format=csv')
+    projections_hitters['League'] = projections_hitters['Team'].fillna('FA').map(team_leagues)
+    projections_hitters = projections_hitters.loc[projections_hitters['League'].isin(league_pool)].reset_index(drop=True).copy()
+    
+    projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=354379391&format=csv')
+    projections_pitchers['League'] = projections_pitchers['Team'].fillna('FA').map(team_leagues)
+    projections_pitchers = projections_pitchers.loc[projections_pitchers['League'].isin(league_pool)].reset_index(drop=True).copy()
+    projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],1,1000))
+    projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
+    return projections_hitters, projections_pitchers
 
-projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=354379391&format=csv')
-projections_pitchers['League'] = projections_pitchers['Team'].fillna('FA').map(team_leagues)
-projections_pitchers = projections_pitchers.loc[projections_pitchers['League'].isin(league_pool)].reset_index(drop=True).copy()
-projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],1,1000))
-projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
+projections_hitters, projections_pitchers = load_data()
 
 if st.button("Generate Auction Values:  📊 -> 💲"):
     st.header('Auction Values')
