@@ -186,7 +186,8 @@ def load_data():
     projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=354379391&format=csv')
     projections_pitchers['League'] = projections_pitchers['Team'].fillna('FA').map(team_leagues)
     projections_pitchers = projections_pitchers.loc[projections_pitchers['League'].isin(league_pool)].reset_index(drop=True).copy()
-    projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],1,1000))
+    for stat in ['K%','BB%','K-BB%]:
+        projections_pitchers[stat] = projections_pitchers[stat].str[:-1].astype('float')
     projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
     return projections_hitters, projections_pitchers
 
