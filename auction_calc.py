@@ -56,15 +56,15 @@ with st.sidebar:
     st.header('Team Settings')
     col1, col2 = st.columns(2)
     with col1:
-        num_hitters = st.number_input('# Hitters:',min_value=4,max_value=20,value=10)
+        num_hitters = st.number_input('Hitters:',min_value=4,max_value=20,value=10)
     with col2:
-        num_pitchers = st.number_input('# Pitchers:',min_value=4,max_value=20,value=8)
+        num_pitchers = st.number_input('Pitchers:',min_value=4,max_value=20,value=8)
     
     col1, col2 = st.columns(2)
     with col1:
-        raw_bench = st.number_input('Bench spots:',min_value=0,max_value=20,value=5)
+        num_catchers = st.number_input('Catchers:',min_value=0,max_value=3,value=1)
     with col2:
-        num_catchers = st.number_input('# catchers:',min_value=0,max_value=3,value=1)
+        raw_bench = st.number_input('Bench spots:',min_value=0,max_value=20,value=5)
     
     bench_suppress = st.checkbox("Minimize bench value",value=True,
                                  help="""
