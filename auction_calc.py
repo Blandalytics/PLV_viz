@@ -16,7 +16,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
+st.write('')
 @st.cache_data(ttl=3600)
 def load_logo():
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
