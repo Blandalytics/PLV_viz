@@ -17,6 +17,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+st.write(ss)
 if 'sidebar_state' not in ss:
     st.write('To change settings, tap the >> in the upper left of the page')
 else:
