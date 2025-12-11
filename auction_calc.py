@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit import session_state as ss
 import pandas as pd
 import numpy as np
 
@@ -16,7 +17,11 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-# st.write('')
+if 'sidebar_state' not in ss:
+    st.write('To change settings, tap the >> in the upper left of the page')
+else:
+    if ss.sidebar_state=='collapsed':
+        st.write('To change settings, tap the >> in the upper left of the page')
 @st.cache_data(ttl=3600)
 def load_logo():
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
