@@ -7,9 +7,14 @@ from PIL import Image
 
 st.set_page_config(page_title='PL Auction Draft Calculator', page_icon='📊',layout="wide")
 
-logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
-logo = Image.open(urllib.request.urlopen(logo_loc))
-st.image(logo, width=400)
+@st.cache_data(ttl=3600)
+def load_logo():
+    logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+    logo = Image.open(urllib.request.urlopen(logo_loc))
+    return logo
+
+logo = load_logo()
+# st.image(logo, width=400)
 
 st.title('PL Auction Draft Calculator')
 
@@ -56,15 +61,15 @@ with st.sidebar:
     st.header('Team Settings')
     col1, col2 = st.columns(2)
     with col1:
-        num_hitters = st.number_input('Hitters:',min_value=4,max_value=20,value=10)
+        num_hitters = st.number_input('Hitters',min_value=4,max_value=20,value=10)
     with col2:
-        num_pitchers = st.number_input('Pitchers:',min_value=4,max_value=20,value=8)
+        num_pitchers = st.number_input('Pitchers',min_value=4,max_value=20,value=8)
     
     col1, col2 = st.columns(2)
     with col1:
-        num_catchers = st.number_input('Catchers:',min_value=0,max_value=3,value=1)
+        num_catchers = st.number_input('Catchers',min_value=0,max_value=3,value=1)
     with col2:
-        raw_bench = st.number_input('Bench spots:',min_value=0,max_value=20,value=5)
+        raw_bench = st.number_input('Bench spots',min_value=0,max_value=20,value=5)
     
     bench_suppress = st.checkbox("Minimize bench value",value=True,
                                  help="""
@@ -77,18 +82,18 @@ with st.sidebar:
 
     st.write('')
     st.header('League Settings')
-    num_teams = st.number_input('Number of teams:',min_value=4,max_value=30,value=12)
+    num_teams = st.number_input('Number of Teams',min_value=4,max_value=30,value=12)
     col1, col2 = st.columns(2)
     with col1:
-        min_bid = st.number_input('Min bid:',min_value=0,value=1)
+        min_bid = st.number_input('Min bid',min_value=0,value=1)
     with col2:
-        team_budget = st.number_input('Team Budget:',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
+        team_budget = st.number_input('Team Budget',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
     col1, col2 = st.columns(2)
     with col1:
-        league_select = st.selectbox('Player pool:',['All','NL-Only','AL-Only'])
+        league_select = st.selectbox('Player pool',['All','NL-Only','AL-Only'])
         league_pool = ['NL','AL'] if league_select=='All' else [league_select[:2]]
     with col2:
-        hitter_split = st.number_input('Hitter Split (%):',min_value=0,max_value=100,value=65)
+        hitter_split = st.number_input('Hitter Split (%)',min_value=0,max_value=100,value=65)
         hitter_split = hitter_split/100
     
     include_fa = st.checkbox("Include FA?",value=True,
@@ -176,82 +181,82 @@ def load_data():
 
 projections_hitters, projections_pitchers = load_data()
 
-if st.button("Generate Auction Values:  📊 -> 💲"):
-    # st.header('Auction Values')
-    ## Hitters
-    sample_hitters  = projections_hitters.nlargest(hitters_above_replacement, 'PA')
-    projections_hitters['unadjusted_value'] = unadjusted_value(projections_hitters,
-                                                               rate_scoring_cats_h,
-                                                               volume_scoring_cats_h,
-                                                               inverted_categories_h,
-                                                               sample_hitters,num_hitters)
-    
-    projections_hitters['is_C'] = projections_hitters['Y! Pos'].fillna('UT').str.replace('CF','').str.contains('C')
-    c_adj = projections_hitters.loc[projections_hitters['is_C'],'unadjusted_value'].nlargest(num_teams * num_catchers).min()
-    non_c_adj = projections_hitters.loc[~projections_hitters['is_C'],'unadjusted_value'].nlargest(int(num_teams * (num_hitters - num_catchers + num_bench/2))).min()
-    projections_hitters['ADJ'] = np.where(projections_hitters['is_C'],c_adj,non_c_adj)
-    projections_hitters['adjusted_value'] = projections_hitters['unadjusted_value'].sub(projections_hitters['ADJ'])
-    # Convert hitter value to Dollars 
-    total_hitter_value = projections_hitters.loc[projections_hitters['adjusted_value']>0,'adjusted_value'].sum()
-    hitter_dollars_per_value = total_hitter_dollars / total_hitter_value
-    
-    
-    ## Pitchers
-    ip_thresh = min(50,projections_pitchers['IP'].nlargest(num_teams * num_pitchers).min())
-    sample_pitchers  = projections_pitchers.loc[projections_pitchers['IP'] >= ip_thresh]
-    projections_pitchers['unadjusted_value'] = unadjusted_value(projections_pitchers,
-                                                                rate_scoring_cats_p,
-                                                                volume_scoring_cats_p,
-                                                                inverted_categories_p,
-                                                                sample_pitchers,
-                                                                num_pitchers,
-                                                                pos='p')
-    
-    projections_pitchers['ADJ'] = projections_pitchers['unadjusted_value'].nlargest(int(num_teams * (num_pitchers + num_bench/2))).min()
-    projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'].sub(projections_pitchers['ADJ'])
-    # Convert hitter value to Dollars 
-    total_pitcher_value = projections_pitchers.loc[projections_pitchers['adjusted_value']>0,'adjusted_value'].sum()
-    pitcher_dollars_per_value = total_pitcher_dollars / total_pitcher_value
-    
-    # Merge position dfs
-    combined_value_df = (
-        pd.concat(
-            [
-                projections_hitters[['Name','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']],
-                projections_pitchers[['Name','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']]
-                ],
-            ignore_index=True)
-        [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
-    )
-    combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
-    combined_value_df['Auction $'] = min_bid + np.where(
-        combined_value_df['Y! Pos']=='P',
-        combined_value_df['adjusted_value'].mul(pitcher_dollars_per_value),
-        combined_value_df['adjusted_value'].mul(hitter_dollars_per_value)
-    )
-    
-    # Level the dollars out
-    projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']>0,'Auction $'].sum()
-    fudge_factor = (num_teams * team_budget) / projected_auction_dollars
-    combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
-    combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
-    display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False).copy()
-    st.dataframe(display_df,
-                 # .fillna('')
-                 # .style
-                 # .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
-                 use_container_width=True,
-                 hide_index=True,
-                 #height=(25 + 1) * 35 + 3,
-                 column_config={
-                         "Auction $": st.column_config.NumberColumn(
-                             format="$ %.2f",
-                             ),
-                 }
-                 )
-    st.download_button(label='Download CSV',
-                      data=display_df.to_csv(index=False),
-                      file_name='pitcher_list_auction_values.csv',
-                       mime='text/csv',
-                       icon=":material/download:",
-                       on_click='ignore')
+# if st.button("Generate Auction Values:  📊 -> 💲"):
+# st.header('Auction Values')
+## Hitters
+sample_hitters  = projections_hitters.nlargest(hitters_above_replacement, 'PA')
+projections_hitters['unadjusted_value'] = unadjusted_value(projections_hitters,
+                                                           rate_scoring_cats_h,
+                                                           volume_scoring_cats_h,
+                                                           inverted_categories_h,
+                                                           sample_hitters,num_hitters)
+
+projections_hitters['is_C'] = projections_hitters['Y! Pos'].fillna('UT').str.replace('CF','').str.contains('C')
+c_adj = projections_hitters.loc[projections_hitters['is_C'],'unadjusted_value'].nlargest(num_teams * num_catchers).min()
+non_c_adj = projections_hitters.loc[~projections_hitters['is_C'],'unadjusted_value'].nlargest(int(num_teams * (num_hitters - num_catchers + num_bench/2))).min()
+projections_hitters['ADJ'] = np.where(projections_hitters['is_C'],c_adj,non_c_adj)
+projections_hitters['adjusted_value'] = projections_hitters['unadjusted_value'].sub(projections_hitters['ADJ'])
+# Convert hitter value to Dollars 
+total_hitter_value = projections_hitters.loc[projections_hitters['adjusted_value']>0,'adjusted_value'].sum()
+hitter_dollars_per_value = total_hitter_dollars / total_hitter_value
+
+
+## Pitchers
+ip_thresh = min(50,projections_pitchers['IP'].nlargest(num_teams * num_pitchers).min())
+sample_pitchers  = projections_pitchers.loc[projections_pitchers['IP'] >= ip_thresh]
+projections_pitchers['unadjusted_value'] = unadjusted_value(projections_pitchers,
+                                                            rate_scoring_cats_p,
+                                                            volume_scoring_cats_p,
+                                                            inverted_categories_p,
+                                                            sample_pitchers,
+                                                            num_pitchers,
+                                                            pos='p')
+
+projections_pitchers['ADJ'] = projections_pitchers['unadjusted_value'].nlargest(int(num_teams * (num_pitchers + num_bench/2))).min()
+projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'].sub(projections_pitchers['ADJ'])
+# Convert hitter value to Dollars 
+total_pitcher_value = projections_pitchers.loc[projections_pitchers['adjusted_value']>0,'adjusted_value'].sum()
+pitcher_dollars_per_value = total_pitcher_dollars / total_pitcher_value
+
+# Merge position dfs
+combined_value_df = (
+    pd.concat(
+        [
+            projections_hitters[['Name','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']],
+            projections_pitchers[['Name','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']]
+            ],
+        ignore_index=True)
+    [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
+)
+combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
+combined_value_df['Auction $'] = min_bid + np.where(
+    combined_value_df['Y! Pos']=='P',
+    combined_value_df['adjusted_value'].mul(pitcher_dollars_per_value),
+    combined_value_df['adjusted_value'].mul(hitter_dollars_per_value)
+)
+
+# Level the dollars out
+projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']>0,'Auction $'].sum()
+fudge_factor = (num_teams * team_budget) / projected_auction_dollars
+combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
+combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
+display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False).copy()
+st.dataframe(display_df,
+             # .fillna('')
+             # .style
+             # .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
+             use_container_width=True,
+             hide_index=True,
+             #height=(25 + 1) * 35 + 3,
+             column_config={
+                     "Auction $": st.column_config.NumberColumn(
+                         format="$ %.2f",
+                         ),
+             }
+             )
+st.download_button(label='Download CSV',
+                  data=display_df.to_csv(index=False),
+                  file_name='pitcher_list_auction_values.csv',
+                   mime='text/csv',
+                   icon=":material/download:",
+                   on_click='ignore')
