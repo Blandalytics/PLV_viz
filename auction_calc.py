@@ -6,6 +6,12 @@ import urllib
 from PIL import Image
 
 st.set_page_config(page_title='PL Auction Draft Calculator', page_icon='📊',layout="wide")
+st.markdown(f'''
+    <style>
+        section[data-testid="stSidebar"] .css-ng1t4o {{width: 25rem;}}
+        section[data-testid="stSidebar"] .css-1d391kg {{width: 25rem;}}
+    </style>
+''',unsafe_allow_html=True)
 
 @st.cache_data(ttl=3600)
 def load_logo():
