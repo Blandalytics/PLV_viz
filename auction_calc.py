@@ -6,6 +6,16 @@ import urllib
 from PIL import Image
 
 st.set_page_config(page_title='PL Auction Draft Calculator', page_icon='📊',layout="wide")
+st.markdown(
+    """
+    <style>
+        section[data-testid="stSidebar"] {
+            width: 100px !important; # Set the width to your desired value
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 @st.cache_data(ttl=3600)
 def load_logo():
@@ -128,13 +138,6 @@ pitchers_above_replacement = int(round(num_teams * (num_pitchers + num_bench/2) 
 non_replacement_dollars = (num_teams * team_budget) - (num_teams * (num_hitters + num_pitchers + raw_bench) * min_bid)
 total_hitter_dollars = non_replacement_dollars * hitter_split
 total_pitcher_dollars = non_replacement_dollars * (1-hitter_split)
-
-st.markdown(f'''
-    <style>
-        section[data-testid="stSidebar"] .css-ng1t4o {{width: 28rem;}}
-        section[data-testid="stSidebar"] .css-1d391kg {{width: 28rem;}}
-    </style>
-''',unsafe_allow_html=True)
 
 # Value functions
 def volume_z_score(feat_col, population, sample):
