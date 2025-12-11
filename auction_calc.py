@@ -66,7 +66,8 @@ with st.sidebar:
     num_bench = 1 if bench_suppress else raw_bench
     
 
-    st.header('League Settings')
+    st.write('')
+    st.write('League Settings')
     num_teams = st.number_input('Number of teams:',min_value=4,max_value=30,value=12)
     min_bid = st.number_input('Minimum bid:',min_value=0,value=1)
     team_budget = st.number_input('Per-Team Budget:',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
@@ -79,8 +80,8 @@ with st.sidebar:
     if include_fa:
         team_leagues.update({'FA':league_select[:2].upper()})
         
-
-    st.header('Scoring Categories')
+    st.write('')
+    st.write('Scoring Categories')
     hitter_cats = st.multiselect('Hitter categories',
                                  ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
                                   'wOBA', 'BB%', 'K%', 'H', '1B', '2B', '3B', 'XBH',
