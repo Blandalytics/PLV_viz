@@ -63,7 +63,7 @@ with st.sidebar:
     col1, col2 = st.columns(2)
     with col1:
         raw_bench = st.number_input('Bench spots:',min_value=0,max_value=20,value=5)
-    with col1:
+    with col2:
         num_catchers = st.number_input('# catchers:',min_value=0,max_value=3,value=1)
     
     bench_suppress = st.checkbox("Minimize bench value",value=True,
