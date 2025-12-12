@@ -263,8 +263,8 @@ st.dataframe(display_df,
                      "Auction $": st.column_config.NumberColumn(
                          format="$ %.2f",
                          ),
-                 placeholder='',
-             }
+             },
+             placeholder='',
              )
 st.download_button(label='Download CSV',
                   data=display_df.to_csv(index=False),
