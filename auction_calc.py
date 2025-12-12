@@ -182,6 +182,7 @@ with st.sidebar:
             )
         },
         hide_index=True,
+        num_rows="dynamic"
     )
 
   
