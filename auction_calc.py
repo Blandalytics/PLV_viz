@@ -388,7 +388,6 @@ st.dataframe(display_df,
              },
              placeholder='',
              )
-st.write(display_df.loc[display_df['Name']=='Kyle Tucker','Team'])
 st.download_button(label='Download CSV',
                   data=display_df.to_csv(index=False),
                   file_name='pitcher_list_auction_values.csv',
