@@ -132,6 +132,58 @@ with st.sidebar:
     rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
     volume_scoring_cats_p = [x for x in pitcher_cats if x not in rate_scoring_cats_p]
     inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
+
+    hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
+    pitcher_point_cats = ['IP', 'TBF', 'G_p', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K_p','H_p', 'ER', 'HBP_p', 'HR_p', 'BB_p', 'BS_p']
+    st.header('Points (TEST')
+    st.write('Hitting Categories')
+    hitter_cat_df = pd.DataFrame(
+        {
+            "Category": [
+                "AB",
+                "H",
+                "2B",
+                "3B",
+                'HR',
+                'BB',
+                'HBP',
+                'SB',
+                'CS'
+            ],
+            "Points": [
+                -1.0,
+                5.6,
+                2.9,
+                5.7,
+                9.4,
+                3.0,
+                3.0,
+                1.9,
+                -2.8
+            ]
+        }
+        )
+    st.data_editor(
+        hitter_cat_df,
+        column_config={
+            "Category": st.column_config.SelectboxColumn(
+                "Category",
+                # help="The category of the app",
+                # width="medium",
+                options=hitter_point_cats,
+                required=True,
+            ),
+            "Points": st.column_config.NumberColumn(
+                "Points",
+                min_value=-1000,
+                max_value=1000,
+                step=0.1,
+                required=True,
+            )
+        },
+        hide_index=True,
+    )
+
   
 # Values derived from settings
 hitters_above_replacement = int(round(num_teams * (num_hitters + num_bench/2) * 1.1,0))
