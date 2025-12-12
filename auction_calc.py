@@ -150,10 +150,12 @@ with st.sidebar:
         ### This is filler until I actully implement points
         hitter_cats = ['AB','H','2B','3B','HR','BB','HBP','SB','CS']
         volume_scoring_cats_h = hitter_cats
+        rate_scoring_cats_h = []
         inverted_categories_h = ['K','CS','SF','K%']
         
         pitcher_cats = ["IP","K","H","BB",'HBP','HR','SV','HD']
         volume_scoring_cats_p = pitcher_cats
+        rate_scoring_cats_p = []
         inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
         
         hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
