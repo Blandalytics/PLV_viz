@@ -369,9 +369,9 @@ if scoring_style=='Categories':
     projected_auction_dollars = combined_value_df.loc[combined_value_df['Value']>0,'Value'].sum()
     fudge_factor = (num_teams * team_budget) / projected_auction_dollars
     combined_value_df['Value'] = combined_value_df['Value'].mul(fudge_factor)
-    combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
 else:
     combined_value_df['Value'] = combined_value_df[list(point_values.keys())].mul(point_values).sum(axis=1)
+combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
 display_df = combined_value_df[['Rank','Name','Y! Pos','Value']+[x+'_h' if x in pitcher_cats else x for x in hitter_cats]+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]].sort_values('Auction $',ascending=False).copy()
 st.dataframe(display_df,
              use_container_width=True,
