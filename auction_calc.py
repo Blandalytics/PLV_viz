@@ -134,7 +134,7 @@ with st.sidebar:
     inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
 
     hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
-    pitcher_point_cats = ['IP', 'TBF', 'G_p', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K_p','H_p', 'ER', 'HBP_p', 'HR_p', 'BB_p', 'BS_p']
+    pitcher_point_cats = ['IP', 'TBF', 'G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K','H', 'ER', 'HBP', 'HR', 'BB', 'BS']
     st.header('Points (TEST)')
     st.write('Hitting Categories')
     hitter_cat_df = pd.DataFrame(
@@ -185,7 +185,7 @@ with st.sidebar:
         height=(5 + 1) * 35 + 3,
         num_rows="dynamic"
     )
-    st.write('Hitting Categories')
+    st.write('Pitching Categories')
     pitcher_cat_df = pd.DataFrame(
         {
             "Category": [
