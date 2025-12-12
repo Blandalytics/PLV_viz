@@ -177,7 +177,7 @@ with st.sidebar:
                 ]
             }
             )
-        st.data_editor(
+        edited_hitter_df = st.data_editor(
             hitter_cat_df,
             column_config={
                 "Category": st.column_config.SelectboxColumn(
@@ -199,6 +199,8 @@ with st.sidebar:
             height=(5 + 1) * 35 + 3,
             num_rows="dynamic"
         )
+        hitter_points = edited_hitter_df.set_index('Category').to_dict()['Points']
+        st.write(hitter_points)
         st.write('Pitching Categories')
         pitcher_cat_df = pd.DataFrame(
             {
@@ -215,7 +217,8 @@ with st.sidebar:
                 ]
             }
             )
-        st.data_editor(
+        
+        edited_pitcher_df = st.data_editor(
             pitcher_cat_df,
             column_config={
                 "Category": st.column_config.SelectboxColumn(
