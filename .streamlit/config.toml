@@ -1,3 +1,9 @@
-[theme]
+[server]
+enableStaticServing = true
 
-base="dark"
+[theme]
+base = 'dark'
+backgroundColor = "#101222"
+dataframeBorderColor = "#707280"
+dataframeHeaderBackgroundColor = "#101222"
+textColor = '#ffffff'
