@@ -371,15 +371,16 @@ if scoring_style=='Categories':
     combined_value_df['Value'] = combined_value_df['Value'].mul(fudge_factor)
     combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
 else:
-    combined_value_df['Value'] = 
+    combined_value_df['Value'] = combined_value_df[list(point_values.keys())].mul(point_values).sum(axis=1)
 display_df = combined_value_df[['Rank','Name','Y! Pos','Value']+[x+'_h' if x in pitcher_cats else x for x in hitter_cats]+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]].sort_values('Auction $',ascending=False).copy()
 st.dataframe(display_df,
              use_container_width=True,
              hide_index=True,
              #height=(25 + 1) * 35 + 3,
              column_config={
-                     "Auction $": st.column_config.NumberColumn(
-                         format="$ %.2f",
+                     "Value": st.column_config.NumberColumn(
+                         label = 'Auction $' if scoring_style=='Categories' else 'Points',
+                         format="$ %.2f" if scoring_style=='Categories' else "%.1f",
                          ),
              },
              placeholder='',
