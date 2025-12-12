@@ -346,7 +346,7 @@ combined_value_df = (
             projections_pitchers[['Name','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']]
             ],
         ignore_index=True)
-    [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']]
+    [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+[x+'_p' if x in hitter_cats else x for x  in pitcher_cats]]
 )
 combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
 combined_value_df['Auction $'] = min_bid + np.where(
@@ -360,7 +360,7 @@ projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']
 fudge_factor = (num_teams * team_budget) / projected_auction_dollars
 combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
 combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
-display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False).copy()
+display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+[x+'_p' if x in hitter_cats else x for x  in pitcher_cats]].sort_values('Auction $',ascending=False).copy()
 st.dataframe(display_df,
              use_container_width=True,
              hide_index=True,
