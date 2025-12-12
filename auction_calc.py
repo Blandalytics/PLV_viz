@@ -146,6 +146,9 @@ with st.sidebar:
         volume_scoring_cats_p = [x for x in pitcher_cats if x not in rate_scoring_cats_p]
         inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
 
+        hitter_renames = {x:x+'_h' for x in hitter_cats if x in pitcher_cats}
+        pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
+
     else:
         ### This is filler until I actully implement points
         hitter_cats = ['AB','H','2B','3B','HR','BB','HBP','SB','CS']
@@ -199,8 +202,6 @@ with st.sidebar:
             height=(5 + 1) * 35 + 3,
             num_rows="dynamic"
         )
-        hitter_points = edited_hitter_df.set_index('Category').to_dict()['Points']
-        st.write(hitter_points)
         st.write('Pitching Categories')
         pitcher_cat_df = pd.DataFrame(
             {
@@ -240,8 +241,13 @@ with st.sidebar:
             height=(5 + 1) * 35 + 3,
             num_rows="dynamic"
         )
+        hitter_renames = {x:x+'_h' for x in hitter_cats if x in pitcher_cats}
+        pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
+        point_values = edited_hitter_df.assign(Category = lambda x: x['Category'].map(hitter_renames)).set_index('Category').to_dict()['Points']
+        point_values.update(edited_pitcher_df.assign(Category = lambda x: x['Category'].map(pitcher_renames)).set_index('Category').to_dict()['Points'])
+        st.write(point_values)
 
-  
+
 # Values derived from settings
 hitters_above_replacement = int(round(num_teams * (num_hitters + num_bench/2) * 1.1,0))
 pitchers_above_replacement = int(round(num_teams * (num_pitchers + num_bench/2) * 1.1,0))
@@ -341,8 +347,6 @@ projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'
 total_pitcher_value = projections_pitchers.loc[projections_pitchers['adjusted_value']>0,'adjusted_value'].sum()
 pitcher_dollars_per_value = total_pitcher_dollars / total_pitcher_value
 
-hitter_renames = {x:x+'_h' for x in hitter_cats if x in pitcher_cats}
-pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
 # Merge position dfs
 combined_value_df = (
     pd.concat(
@@ -354,18 +358,21 @@ combined_value_df = (
     [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x+'_h' if x in pitcher_cats else x for x in hitter_cats]+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]]
 )
 combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
-combined_value_df['Auction $'] = min_bid + np.where(
-    combined_value_df['Y! Pos']=='P',
-    combined_value_df['adjusted_value'].mul(pitcher_dollars_per_value),
-    combined_value_df['adjusted_value'].mul(hitter_dollars_per_value)
-)
-
-# Level the dollars out
-projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']>0,'Auction $'].sum()
-fudge_factor = (num_teams * team_budget) / projected_auction_dollars
-combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
-combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
-display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $']+[x+'_h' if x in pitcher_cats else x for x in hitter_cats]+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]].sort_values('Auction $',ascending=False).copy()
+if scoring_style=='Categories':
+    combined_value_df['Value'] = min_bid + np.where(
+        combined_value_df['Y! Pos']=='P',
+        combined_value_df['adjusted_value'].mul(pitcher_dollars_per_value),
+        combined_value_df['adjusted_value'].mul(hitter_dollars_per_value)
+    )
+    
+    # Level the dollars out
+    projected_auction_dollars = combined_value_df.loc[combined_value_df['Value']>0,'Value'].sum()
+    fudge_factor = (num_teams * team_budget) / projected_auction_dollars
+    combined_value_df['Value'] = combined_value_df['Value'].mul(fudge_factor)
+    combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
+else:
+    combined_value_df['Value'] = 
+display_df = combined_value_df[['Rank','Name','Y! Pos','Value']+[x+'_h' if x in pitcher_cats else x for x in hitter_cats]+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]].sort_values('Auction $',ascending=False).copy()
 st.dataframe(display_df,
              use_container_width=True,
              hide_index=True,
