@@ -93,7 +93,15 @@ with st.sidebar:
 
     st.write('')
     st.header('League Settings')
-    num_teams = st.number_input('Number of Teams',min_value=4,max_value=30,value=12)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        num_teams = st.number_input('Number of Teams',min_value=4,max_value=30,value=12)
+    with col2:
+        scoring_style = st.radio(
+            "League Type",
+            ["Categories", "Points"],
+        )
     col1, col2 = st.columns(2)
     with col1:
         min_bid = st.number_input('Min bid',min_value=0,value=1)
@@ -111,11 +119,6 @@ with st.sidebar:
                              help=" Include free agents in layer pool")
     if include_fa:
         team_leagues.update({'FA':league_select[:2].upper()})
-
-    scoring_style = st.radio(
-        "League Type",
-        ["Categories", "Points"],
-    )
         
     st.write('')
     st.header('Scoring')
