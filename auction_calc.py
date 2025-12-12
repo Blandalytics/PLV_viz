@@ -122,7 +122,7 @@ with st.sidebar:
     include_fa = st.checkbox("Include FA?",value=True,
                              help=" Include free agents in layer pool")
     if include_fa:
-        team_leagues.update({'FA':league_select[:2].upper()})
+        team_leagues.update({'FA':league_select[:2]})
         
     st.write('')
     st.header('Scoring')
@@ -353,11 +353,11 @@ pitcher_dollars_per_value = total_pitcher_dollars / total_pitcher_value
 combined_value_df = (
     pd.concat(
         [
-            projections_hitters[['Name','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']].rename(columns=hitter_renames),
-            projections_pitchers[['Name','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']].rename(columns=pitcher_renames)
+            projections_hitters[['Name','MLBAMID','Team','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']].rename(columns=hitter_renames),
+            projections_pitchers[['Name','MLBAMID','Team','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']].rename(columns=pitcher_renames)
             ],
         ignore_index=True)
-    [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']]
+    [['Name','MLBAMID','Team','Y! Pos','adjusted_value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']]
 )
 combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
 if scoring_style=='Categories':
@@ -374,7 +374,7 @@ if scoring_style=='Categories':
 else:
     combined_value_df['Value'] = combined_value_df[list(point_values.keys())].mul(point_values).sum(axis=1)
 combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
-display_df = combined_value_df[['Rank','Name','Y! Pos','Value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']].sort_values('Value',ascending=False).copy()
+display_df = combined_value_df[['Rank','Name','Team','Y! Pos','Value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']].sort_values('Value',ascending=False).copy()
 st.dataframe(display_df,
              use_container_width=True,
              hide_index=True,
