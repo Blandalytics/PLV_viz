@@ -121,7 +121,7 @@ with st.sidebar:
         hitter_split = hitter_split/100
     
     include_fa = st.checkbox("Include FA?",value=True,
-                             help=" Include free agents in layer pool")
+                             help="Include free agents in layer pool")
     if include_fa:
         team_leagues.update({'FA':league_select[:2].upper()})
         
@@ -311,7 +311,7 @@ def load_data(team_leagues):
     projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
     return projections_hitters, projections_pitchers
 
-projections_hitters, projections_pitchers = load_data(league_pool)
+projections_hitters, projections_pitchers = load_data(team_leagues)
 
 # if st.button("Generate Auction Values:  📊 -> 💲"):
 # st.header('Auction Values')
