@@ -182,6 +182,7 @@ with st.sidebar:
             )
         },
         hide_index=True,
+        height=(5 + 1) * 35 + 3,
         num_rows="dynamic"
     )
 
