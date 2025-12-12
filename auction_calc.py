@@ -122,7 +122,7 @@ with st.sidebar:
     rate_cats_h = ['AVG','OBP','ISO','SLG','OPS','wOBA','BB%','K%']
     rate_scoring_cats_h = [x for x in hitter_cats if x in rate_cats_h]
     volume_scoring_cats_h = [x for x in hitter_cats if x not in rate_scoring_cats_h]
-    inverted_categories_h = ['K','CS','SF']
+    inverted_categories_h = ['K','CS','SF','K%']
     pitcher_cats = st.multiselect('Pitcher categories',
                                   ['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA', 
                                    'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
@@ -182,6 +182,8 @@ def load_data():
     projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=1029181665&format=csv')
     projections_hitters['League'] = projections_hitters['Team'].fillna('FA').map(team_leagues)
     projections_hitters = projections_hitters.loc[projections_hitters['League'].isin(league_pool)].reset_index(drop=True).copy()
+    for stat in ['K%','BB%']:
+        projections_hitters[stat] = projections_hitters[stat].str[:-1].astype('float')
     
     projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=354379391&format=csv')
     projections_pitchers['League'] = projections_pitchers['Team'].fillna('FA').map(team_leagues)
@@ -254,9 +256,6 @@ combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor
 combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
 display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+['IP']+[x for x  in pitcher_cats if x!='IP']].sort_values('Auction $',ascending=False).copy()
 st.dataframe(display_df,
-             # .fillna('')
-             # .style
-             # .map(lambda x: 'color: transparent; background-color: transparent' if x==0 else ''),
              use_container_width=True,
              hide_index=True,
              #height=(25 + 1) * 35 + 3,
