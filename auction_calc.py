@@ -148,16 +148,12 @@ with st.sidebar:
 
     else:
         ### This is filler until I actully implement points
-        hitter_cats = ['R','HR','RBI','SB','AVG']
-        rate_cats_h = ['AVG','OBP','ISO','SLG','OPS','wOBA','BB%','K%']
-        rate_scoring_cats_h = [x for x in hitter_cats if x in rate_cats_h]
-        volume_scoring_cats_h = [x for x in hitter_cats if x not in rate_scoring_cats_h]
+        hitter_cats = ['AB','H','2B','3B','HR','BB','HBP','SB','CS']
+        volume_scoring_cats_h = hitter_cats
         inverted_categories_h = ['K','CS','SF','K%']
         
-        pitcher_cats = ['W','SV','K','ERA','WHIP']
-        rate_cats_p = ['ERA', 'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9']
-        rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
-        volume_scoring_cats_p = [x for x in pitcher_cats if x not in rate_scoring_cats_p]
+        pitcher_cats = ["IP","K","H","BB",'HBP','HR','SV','HD']
+        volume_scoring_cats_p = pitcher_cats
         inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
         
         hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
@@ -165,17 +161,7 @@ with st.sidebar:
         st.write('Hitting Categories')
         hitter_cat_df = pd.DataFrame(
             {
-                "Category": [
-                    "AB",
-                    "H",
-                    "2B",
-                    "3B",
-                    'HR',
-                    'BB',
-                    'HBP',
-                    'SB',
-                    'CS'
-                ],
+                "Category":hitter_cats,
                 "Points": [
                     -1.0,
                     5.6,
@@ -214,16 +200,7 @@ with st.sidebar:
         st.write('Pitching Categories')
         pitcher_cat_df = pd.DataFrame(
             {
-                "Category": [
-                    "IP",
-                    "K",
-                    "H",
-                    "BB",
-                    'HBP',
-                    'HR',
-                    'SV',
-                    'HD'
-                ],
+                "Category": pitcher_cats,
                 "Points": [
                     7.4,
                     2.0,
