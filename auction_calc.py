@@ -62,7 +62,7 @@ team_leagues = {
     'OAK':'AL',
     'WAS':'NL',
     'WSN':'NL',
-    'FA':''
+    # 'FA':''
 }
 
 with st.sidebar:
@@ -295,7 +295,7 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
     return position_df[[x+'_val' for x in rate_stats+volume_stats]].sum(axis=1)
 
 @st.cache_data(ttl=3600)
-def load_data(league_pool):
+def load_data(team_leagues):
     # Load projections
     projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=1029181665&format=csv')
     projections_hitters['League'] = projections_hitters['Team'].fillna('FA').map(team_leagues)
