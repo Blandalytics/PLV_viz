@@ -62,7 +62,7 @@ team_leagues = {
     'OAK':'AL',
     'WAS':'NL',
     'WSN':'NL',
-    '':''
+    'FA':''
 }
 
 with st.sidebar:
@@ -123,7 +123,7 @@ with st.sidebar:
     include_fa = st.checkbox("Include FA?",value=True,
                              help=" Include free agents in layer pool")
     if include_fa:
-        team_leagues.update({'':league_select[:2]})
+        team_leagues.update({'FA':league_select[:2]})
         
     st.write('')
     st.header('Scoring')
