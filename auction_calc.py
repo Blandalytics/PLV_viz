@@ -135,7 +135,7 @@ with st.sidebar:
 
     hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
     pitcher_point_cats = ['IP', 'TBF', 'G_p', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K_p','H_p', 'ER', 'HBP_p', 'HR_p', 'BB_p', 'BS_p']
-    st.header('Points (TEST')
+    st.header('Points (TEST)')
     st.write('Hitting Categories')
     hitter_cat_df = pd.DataFrame(
         {
@@ -171,6 +171,53 @@ with st.sidebar:
                 # help="The category of the app",
                 # width="medium",
                 options=hitter_point_cats,
+                required=True,
+            ),
+            "Points": st.column_config.NumberColumn(
+                "Points",
+                min_value=-1000,
+                max_value=1000,
+                step=0.1,
+                required=True,
+            )
+        },
+        hide_index=True,
+        height=(5 + 1) * 35 + 3,
+        num_rows="dynamic"
+    )
+    st.write('Hitting Categories')
+    pitcher_cat_df = pd.DataFrame(
+        {
+            "Category": [
+                "IP",
+                "K",
+                "H",
+                "BB",
+                'HBP',
+                'HR',
+                'SV',
+                'HD'
+            ],
+            "Points": [
+                7.4,
+                2.0,
+                -2.6,
+                -3.0,
+                -3.0,
+                -12.3,
+                5.0,
+                4.0
+            ]
+        }
+        )
+    st.data_editor(
+        pitcher_cat_df,
+        column_config={
+            "Category": st.column_config.SelectboxColumn(
+                "Category",
+                # help="The category of the app",
+                # width="medium",
+                options=pitcher_point_cats,
                 required=True,
             ),
             "Points": st.column_config.NumberColumn(
