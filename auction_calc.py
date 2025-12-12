@@ -152,22 +152,15 @@ with st.sidebar:
 
     else:
         ### This is filler until I actully implement points
-        hitter_cats = ['AB','H','2B','3B','HR','BB','HBP','SB','CS']
-        volume_scoring_cats_h = hitter_cats
-        rate_scoring_cats_h = []
-        inverted_categories_h = ['K','CS','SF','K%']
-        
-        pitcher_cats = ["IP","K","H","BB",'HBP','HR','SV','HD']
-        volume_scoring_cats_p = pitcher_cats
-        rate_scoring_cats_p = []
-        inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
-        
+        hitter_start = ['AB','H','2B','3B','HR','BB','HBP','SB','CS']
+        pitcher_start = ["IP","K","H","BB",'HBP','HR','SV','HD']
+    
         hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
         pitcher_point_cats = ['IP', 'TBF', 'G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K','H', 'ER', 'HBP', 'HR', 'BB', 'BS']
         st.write('Hitting Categories')
         hitter_cat_df = pd.DataFrame(
             {
-                "Category":hitter_cats,
+                "Category":hitter_start,
                 "Points": [
                     -1.0,
                     5.6,
@@ -206,7 +199,7 @@ with st.sidebar:
         st.write('Pitching Categories')
         pitcher_cat_df = pd.DataFrame(
             {
-                "Category": pitcher_cats,
+                "Category": pitcher_start,
                 "Points": [
                     7.4,
                     2.0,
@@ -242,6 +235,15 @@ with st.sidebar:
             height=(5 + 1) * 35 + 3,
             num_rows="dynamic"
         )
+        hitter_cats = edited_hitter_df['Category'].to_list()
+        pitcher_cats = edited_pitcher_df['Category'].to_list()
+        
+        volume_scoring_cats_h = hitter_cats
+        rate_scoring_cats_h = []
+        inverted_categories_h = ['K','CS','SF','K%']
+        volume_scoring_cats_p = pitcher_cats
+        rate_scoring_cats_p = []
+        inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
 
         hitter_renames = {x:x+'_h' for x in hitter_cats if x in pitcher_cats}
         pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
