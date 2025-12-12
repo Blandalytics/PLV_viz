@@ -111,127 +111,146 @@ with st.sidebar:
                              help=" Include free agents in layer pool")
     if include_fa:
         team_leagues.update({'FA':league_select[:2].upper()})
+
+    scoring_style = st.radio(
+        "League Type",
+        ["Categories", "Points"],
+    )
         
     st.write('')
-    st.header('Scoring Categories')
-    hitter_cats = st.multiselect('Hitter categories',
-                                 ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
-                                  'wOBA', 'BB%', 'K%', 'H', '1B', '2B', '3B', 'XBH',
-                                  'TB', 'K', 'BB', 'HBP', 'SF', 'CS'],
-                                 default=['R','HR','RBI','SB','AVG'])
-    rate_cats_h = ['AVG','OBP','ISO','SLG','OPS','wOBA','BB%','K%']
-    rate_scoring_cats_h = [x for x in hitter_cats if x in rate_cats_h]
-    volume_scoring_cats_h = [x for x in hitter_cats if x not in rate_scoring_cats_h]
-    inverted_categories_h = ['K','CS','SF','K%']
-    pitcher_cats = st.multiselect('Pitcher categories',
-                                  ['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA', 
-                                   'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
-                                   'HR', 'BB', 'BS','K/BB','W+QS'],
-                                  default=['W','SV','K','ERA','WHIP'])
-    rate_cats_p = ['ERA', 'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9']
-    rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
-    volume_scoring_cats_p = [x for x in pitcher_cats if x not in rate_scoring_cats_p]
-    inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
+    st.header('Scoring')
+    if scoring_style=='Categories':
+        hitter_cats = st.multiselect('Hitter categories',
+                                     ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
+                                      'wOBA', 'BB%', 'K%', 'H', '1B', '2B', '3B', 'XBH',
+                                      'TB', 'K', 'BB', 'HBP', 'SF', 'CS'],
+                                     default=['R','HR','RBI','SB','AVG'])
+        rate_cats_h = ['AVG','OBP','ISO','SLG','OPS','wOBA','BB%','K%']
+        rate_scoring_cats_h = [x for x in hitter_cats if x in rate_cats_h]
+        volume_scoring_cats_h = [x for x in hitter_cats if x not in rate_scoring_cats_h]
+        inverted_categories_h = ['K','CS','SF','K%']
+        pitcher_cats = st.multiselect('Pitcher categories',
+                                      ['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA', 
+                                       'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
+                                       'HR', 'BB', 'BS','K/BB','W+QS'],
+                                      default=['W','SV','K','ERA','WHIP'])
+        rate_cats_p = ['ERA', 'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9']
+        rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
+        volume_scoring_cats_p = [x for x in pitcher_cats if x not in rate_scoring_cats_p]
+        inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
 
-    hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
-    pitcher_point_cats = ['IP', 'TBF', 'G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K','H', 'ER', 'HBP', 'HR', 'BB', 'BS']
-    st.header('Points (TEST)')
-    st.write('Hitting Categories')
-    hitter_cat_df = pd.DataFrame(
-        {
-            "Category": [
-                "AB",
-                "H",
-                "2B",
-                "3B",
-                'HR',
-                'BB',
-                'HBP',
-                'SB',
-                'CS'
-            ],
-            "Points": [
-                -1.0,
-                5.6,
-                2.9,
-                5.7,
-                9.4,
-                3.0,
-                3.0,
-                1.9,
-                -2.8
-            ]
-        }
-        )
-    st.data_editor(
-        hitter_cat_df,
-        column_config={
-            "Category": st.column_config.SelectboxColumn(
-                "Category",
-                # help="The category of the app",
-                # width="medium",
-                options=hitter_point_cats,
-                required=True,
-            ),
-            "Points": st.column_config.NumberColumn(
-                "Points",
-                min_value=-1000,
-                max_value=1000,
-                step=0.1,
-                required=True,
+    else:
+        ### This is filler until I actully implement points
+        hitter_cats = ['R','HR','RBI','SB','AVG']
+        rate_cats_h = ['AVG','OBP','ISO','SLG','OPS','wOBA','BB%','K%']
+        rate_scoring_cats_h = [x for x in hitter_cats if x in rate_cats_h]
+        volume_scoring_cats_h = [x for x in hitter_cats if x not in rate_scoring_cats_h]
+        inverted_categories_h = ['K','CS','SF','K%']
+        
+        pitcher_cats = ['W','SV','K','ERA','WHIP']
+        rate_cats_p = ['ERA', 'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9']
+        rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
+        volume_scoring_cats_p = [x for x in pitcher_cats if x not in rate_scoring_cats_p]
+        inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
+        
+        hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
+        pitcher_point_cats = ['IP', 'TBF', 'G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K','H', 'ER', 'HBP', 'HR', 'BB', 'BS']
+        st.write('Hitting Categories')
+        hitter_cat_df = pd.DataFrame(
+            {
+                "Category": [
+                    "AB",
+                    "H",
+                    "2B",
+                    "3B",
+                    'HR',
+                    'BB',
+                    'HBP',
+                    'SB',
+                    'CS'
+                ],
+                "Points": [
+                    -1.0,
+                    5.6,
+                    2.9,
+                    5.7,
+                    9.4,
+                    3.0,
+                    3.0,
+                    1.9,
+                    -2.8
+                ]
+            }
             )
-        },
-        hide_index=True,
-        height=(5 + 1) * 35 + 3,
-        num_rows="dynamic"
-    )
-    st.write('Pitching Categories')
-    pitcher_cat_df = pd.DataFrame(
-        {
-            "Category": [
-                "IP",
-                "K",
-                "H",
-                "BB",
-                'HBP',
-                'HR',
-                'SV',
-                'HD'
-            ],
-            "Points": [
-                7.4,
-                2.0,
-                -2.6,
-                -3.0,
-                -3.0,
-                -12.3,
-                5.0,
-                4.0
-            ]
-        }
+        st.data_editor(
+            hitter_cat_df,
+            column_config={
+                "Category": st.column_config.SelectboxColumn(
+                    "Category",
+                    # help="The category of the app",
+                    # width="medium",
+                    options=hitter_point_cats,
+                    required=True,
+                ),
+                "Points": st.column_config.NumberColumn(
+                    "Points",
+                    min_value=-1000,
+                    max_value=1000,
+                    step=0.1,
+                    required=True,
+                )
+            },
+            hide_index=True,
+            height=(5 + 1) * 35 + 3,
+            num_rows="dynamic"
         )
-    st.data_editor(
-        pitcher_cat_df,
-        column_config={
-            "Category": st.column_config.SelectboxColumn(
-                "Category",
-                # help="The category of the app",
-                # width="medium",
-                options=pitcher_point_cats,
-                required=True,
-            ),
-            "Points": st.column_config.NumberColumn(
-                "Points",
-                min_value=-1000,
-                max_value=1000,
-                step=0.1,
-                required=True,
+        st.write('Pitching Categories')
+        pitcher_cat_df = pd.DataFrame(
+            {
+                "Category": [
+                    "IP",
+                    "K",
+                    "H",
+                    "BB",
+                    'HBP',
+                    'HR',
+                    'SV',
+                    'HD'
+                ],
+                "Points": [
+                    7.4,
+                    2.0,
+                    -2.6,
+                    -3.0,
+                    -3.0,
+                    -12.3,
+                    5.0,
+                    4.0
+                ]
+            }
             )
-        },
-        hide_index=True,
-        height=(5 + 1) * 35 + 3,
-        num_rows="dynamic"
-    )
+        st.data_editor(
+            pitcher_cat_df,
+            column_config={
+                "Category": st.column_config.SelectboxColumn(
+                    "Category",
+                    # help="The category of the app",
+                    # width="medium",
+                    options=pitcher_point_cats,
+                    required=True,
+                ),
+                "Points": st.column_config.NumberColumn(
+                    "Points",
+                    min_value=-1000,
+                    max_value=1000,
+                    step=0.1,
+                    required=True,
+                )
+            },
+            hide_index=True,
+            height=(5 + 1) * 35 + 3,
+            num_rows="dynamic"
+        )
 
   
 # Values derived from settings
