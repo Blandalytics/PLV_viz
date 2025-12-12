@@ -338,16 +338,17 @@ projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'
 total_pitcher_value = projections_pitchers.loc[projections_pitchers['adjusted_value']>0,'adjusted_value'].sum()
 pitcher_dollars_per_value = total_pitcher_dollars / total_pitcher_value
 
-column_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
+hitter_renames = {x:x+'_h' for x in hitter_cats if x in pitcher_cats}
+pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
 # Merge position dfs
 combined_value_df = (
     pd.concat(
         [
-            projections_hitters[['Name','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']],
-            projections_pitchers[['Name','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']].rename(columns=column_renames)
+            projections_hitters[['Name','MLBAMID','Y! Pos','PA']+[x for x in hitter_cats if x!='PA']+['adjusted_value']].rename(columns=hitter_renames),
+            projections_pitchers[['Name','MLBAMID','IP']+[x for x  in pitcher_cats if x!='IP']+['adjusted_value']].rename(columns=pitcher_renames)
             ],
         ignore_index=True)
-    [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x for x  in hitter_cats if x!='PA']+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]]
+    [['Name','MLBAMID','Y! Pos','adjusted_value','PA']+[x+'_h' if x in pitcher_cats else x for x in hitter_cats]+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]]
 )
 combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
 combined_value_df['Auction $'] = min_bid + np.where(
@@ -361,7 +362,7 @@ projected_auction_dollars = combined_value_df.loc[combined_value_df['Auction $']
 fudge_factor = (num_teams * team_budget) / projected_auction_dollars
 combined_value_df['Auction $'] = combined_value_df['Auction $'].mul(fudge_factor)
 combined_value_df['Rank'] = combined_value_df['Auction $'].rank(ascending=False)
-display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $','PA']+[x for x  in hitter_cats if x!='PA']+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]].sort_values('Auction $',ascending=False).copy()
+display_df = combined_value_df[['Rank','Name','Y! Pos','Auction $']+[x+'_h' if x in pitcher_cats else x for x in hitter_cats]+[x+'_p' if x in hitter_cats else x for x in pitcher_cats]].sort_values('Auction $',ascending=False).copy()
 st.dataframe(display_df,
              use_container_width=True,
              hide_index=True,
