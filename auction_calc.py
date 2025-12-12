@@ -62,6 +62,7 @@ team_leagues = {
     'OAK':'AL',
     'WAS':'NL',
     'WSN':'NL',
+    '':''
 }
 
 with st.sidebar:
