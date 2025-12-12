@@ -243,8 +243,8 @@ with st.sidebar:
         )
         hitter_renames = {x:x+'_h' for x in hitter_cats if x in pitcher_cats}
         pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
-        point_values = edited_hitter_df.assign(Category = lambda x: x['Category'].map(hitter_renames)).set_index('Category').to_dict()['Points']
-        point_values.update(edited_pitcher_df.assign(Category = lambda x: x['Category'].map(pitcher_renames)).set_index('Category').to_dict()['Points'])
+        point_values = edited_hitter_df.assign(Category = lambda x: x['Category'].replace(hitter_renames)).set_index('Category').to_dict()['Points']
+        point_values.update(edited_pitcher_df.assign(Category = lambda x: x['Category'].replace(pitcher_renames)).set_index('Category').to_dict()['Points'])
         st.write(point_values)
 
 
