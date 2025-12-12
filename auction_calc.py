@@ -157,7 +157,7 @@ with st.sidebar:
     
         hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
         pitcher_point_cats = ['IP', 'TBF', 'G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K','H', 'ER', 'HBP', 'HR', 'BB', 'BS']
-        st.write('Hitting Categories')
+        st.write('Hitting Points')
         hitter_cat_df = pd.DataFrame(
             {
                 "Category":hitter_start,
@@ -196,7 +196,7 @@ with st.sidebar:
             height=(5 + 1) * 35 + 3,
             num_rows="dynamic"
         )
-        st.write('Pitching Categories')
+        st.write('Pitching Points')
         pitcher_cat_df = pd.DataFrame(
             {
                 "Category": pitcher_start,
