@@ -4,6 +4,6 @@ enableStaticServing = true
 [theme]
 base = 'dark'
 backgroundColor = "#101222"
-dataframeBorderColor = "#707280"
+dataframeBorderColor = "#32344a"
 dataframeHeaderBackgroundColor = "#101222"
 textColor = '#ffffff'
