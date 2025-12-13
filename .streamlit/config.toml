@@ -4,7 +4,11 @@ enableStaticServing = true
 [theme]
 base = 'dark'
 font = "Alexandria:https://fonts.googleapis.com/css2?family=Alexandria:ital,wght@0,400..700;1,400..700&display=swap"
-backgroundColor = "#101222"
+backgroundColor = "#292C42"
 dataframeBorderColor = "#32344a"
-dataframeHeaderBackgroundColor = "#101222"
+dataframeHeaderBackgroundColor = "#292C42"
 textColor = '#ffffff'
+
+[theme.sidebar]
+primaryColor = "#72CBFD"
+backgroundColor = "#101222"
