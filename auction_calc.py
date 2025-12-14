@@ -384,20 +384,18 @@ else:
     combined_value_df['Value'] = combined_value_df[list(point_values.keys())].mul(point_values).sum(axis=1)
 combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
 display_df = combined_value_df[['Rank','Name','Team','Y! Pos','Value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']].sort_values('Value',ascending=False).copy()
-st.dataframe(display_df.style
-             .set_table_styles([
-                 {'selector': 'th.col_heading', 'props': 'text-align: center;'},
-                 {'selector': 'td', 'props': 'text-align: center;'},
-                 ], overwrite=True),
+st.dataframe(display_df,
              use_container_width=True,
              hide_index=True,
              #height=(25 + 1) * 35 + 3,
-             column_config={
+             column_config=[
+                 {
                      "Value": st.column_config.NumberColumn(
                          label = 'Auction $' if scoring_style=='Categories' else 'Points',
                          format="$ %.2f" if scoring_style=='Categories' else "%.1f",
                          ),
-             },
+                     }
+                           ],
              placeholder='',
              )
 st.download_button(label='Download CSV',
