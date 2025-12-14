@@ -388,14 +388,12 @@ st.dataframe(display_df,
              use_container_width=True,
              hide_index=True,
              #height=(25 + 1) * 35 + 3,
-             column_config=[
-                 {
+             column_config={
                      "Value": st.column_config.NumberColumn(
                          label = 'Auction $' if scoring_style=='Categories' else 'Points',
                          format="$ %.2f" if scoring_style=='Categories' else "%.1f",
                          ),
-                     }
-                           ],
+                 },
              placeholder='',
              )
 st.download_button(label='Download CSV',
