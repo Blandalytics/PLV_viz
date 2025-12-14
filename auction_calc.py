@@ -394,7 +394,7 @@ st.dataframe(display_df,
                          format="$ %.2f" if scoring_style=='Categories' else "%.1f",
                          ),
                      "Name": st.column_config.TextColumn(
-                         width="medium",
+                         width=220,
                          ),
                  },
              placeholder='',
