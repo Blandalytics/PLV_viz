@@ -385,7 +385,7 @@ else:
 combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
 display_df = combined_value_df[['Rank','Name','Team','Y! Pos','Value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']].sort_values('Value',ascending=False).copy()
 st.dataframe(display_df,
-             use_container_width=True,
+             width='content',
              hide_index=True,
              #height=(25 + 1) * 35 + 3,
              column_config={
