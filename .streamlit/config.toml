@@ -10,7 +10,7 @@ dataframeHeaderBackgroundColor = "#32344A"
 textColor = '#ffffff'
 
 [theme.sidebar]
-primaryColor = "#72CBFD"
+primaryColor = "#0076B8"
 backgroundColor = "#32344A"
 secondaryBackgroundColor = "292C42"
 
