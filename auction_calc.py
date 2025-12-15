@@ -384,16 +384,16 @@ else:
 combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
 display_df = combined_value_df[['Rank','Name','Team','Y! Pos','Value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']].sort_values('Value',ascending=False).copy()
 
-col1, col2 = st.columns([0.8,0.2])
-with col1:
-    st.write('To change settings, tap the >> in the upper left of the page')
-with col2:
-    st.download_button(label='Download CSV',
-                      data=display_df.to_csv(index=False),
-                      file_name='pitcher_list_auction_values.csv',
-                       mime='text/csv',
-                       icon=":material/download:",
-                       on_click='ignore')
+# col1, col2 = st.columns([0.8,0.2])
+# with col1:
+st.write('To change settings, tap the >> in the upper left of the page')
+# with col2:
+st.download_button(label='Download CSV',
+                  data=display_df.to_csv(index=False),
+                  file_name='pitcher_list_auction_values.csv',
+                   mime='text/csv',
+                   icon=":material/download:",
+                   on_click='ignore')
 
 st.dataframe(display_df,
              width='content',
