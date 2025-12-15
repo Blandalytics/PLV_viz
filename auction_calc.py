@@ -398,8 +398,8 @@ st.download_button(label='Download CSV',
 st.dataframe(display_df,
              width='content',
              hide_index=True,
-             # height=(25 + 1) * 35 + 3,
-             height='stretch',
+             height=(25 + 1) * 35 + 3,
+             # height='stretch',
              column_config={
                      "Value": st.column_config.NumberColumn(
                          label = 'Auction $' if scoring_style=='Categories' else 'Points',
