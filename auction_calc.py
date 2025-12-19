@@ -26,6 +26,14 @@ def load_logo():
 logo = load_logo()
 # st.image(logo, width=400)
 
+@st.cache_data(ttl=3600)
+def letter_logo():
+    logo_loc = 'https://github.com/Blandalytics/baseball_snippets/blob/main/teal_letter_logo.png?raw=true'
+    logo = Image.open(urllib.request.urlopen(logo_loc))
+    return logo
+
+letter_logo = letter_logo()
+
 new_title = '<p style="color:#72CBFD; font-weight: bold; font-size: 42px;">PL Auction Draft Calculator</p>'
 st.markdown(new_title, unsafe_allow_html=True)
 
@@ -66,7 +74,7 @@ team_leagues = {
 }
 
 with st.sidebar:
-    st.image(logo)
+    st.image(letter_logo)
     
     # Settings
     # st.header('Team Settings')
