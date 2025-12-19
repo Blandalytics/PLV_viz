@@ -74,7 +74,9 @@ team_leagues = {
 }
 
 with st.sidebar:
-    st.image(letter_logo,width=150)
+    pad1, col1, pad2 = st.columns(3)
+    with col1:
+        st.image(letter_logo,width=100)
     
     # Settings
     # st.header('Team Settings')
