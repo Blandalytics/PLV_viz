@@ -81,7 +81,9 @@ with st.sidebar:
     # Settings
     # st.header('Team Settings')
     team_header = '<p style="color:#72CBFD; font-weight: bold; font-size: 21px;">Team Settings</p>'
-    st.markdown(team_header, unsafe_allow_html=True)
+    pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
+    with col1:
+        st.markdown(team_header, unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
         num_hitters = st.number_input('Hitters',min_value=4,max_value=20,value=10)
@@ -106,7 +108,9 @@ with st.sidebar:
     st.write('')
     # st.header('League Settings')
     league_header = '<p style="color:#72CBFD; font-weight: bold; font-size: 21px;">League Settings</p>'
-    st.markdown(league_header, unsafe_allow_html=True)
+    pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
+    with col1:
+        st.markdown(league_header, unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
         scoring_style = st.radio(
@@ -141,7 +145,9 @@ with st.sidebar:
     st.write('')
     # st.header('Scoring')
     scoring_header = '<p style="color:#72CBFD; font-weight: bold; font-size: 21px;">Scoring</p>'
-    st.markdown(scoring_header, unsafe_allow_html=True)
+    pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
+    with col1:
+        st.markdown(scoring_header, unsafe_allow_html=True)
     if scoring_style=='Categories':
         hitter_cats = st.multiselect('Hitter categories',
                                      ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
