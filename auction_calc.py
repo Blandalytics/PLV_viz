@@ -107,10 +107,10 @@ with st.sidebar:
 
     st.write('')
     # st.header('League Settings')
-    league_header = '<p style="color:#72CBFD; font-weight: bold; font-size: 21px;">League Settings</p>'
-    pad1, col1, pad2 = st.columns([1/6,2/3,1/6])
-    with col1:
-        st.markdown(league_header, unsafe_allow_html=True)
+    league_header = '<p style="color:#72CBFD; font-weight: bold; text-align: center; font-size: 21px;">League Settings</p>'
+    # pad1, col1, pad2 = st.columns([1/8,3/4,1/8])
+    # with col1:
+    st.markdown(league_header, unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
         scoring_style = st.radio(
