@@ -81,7 +81,7 @@ with st.sidebar:
     # Settings
     # st.header('Team Settings')
     team_header = '<p style="color:#72CBFD; font-weight: bold; font-size: 21px;">Team Settings</p>'
-    pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
+    pad1, col1, pad2 = st.columns([1/6,2/3,1/6])
     with col1:
         st.markdown(team_header, unsafe_allow_html=True)
     col1, col2 = st.columns(2)
@@ -108,7 +108,7 @@ with st.sidebar:
     st.write('')
     # st.header('League Settings')
     league_header = '<p style="color:#72CBFD; font-weight: bold; font-size: 21px;">League Settings</p>'
-    pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
+    pad1, col1, pad2 = st.columns([1/6,2/3,1/6])
     with col1:
         st.markdown(league_header, unsafe_allow_html=True)
     col1, col2 = st.columns(2)
@@ -145,7 +145,7 @@ with st.sidebar:
     st.write('')
     # st.header('Scoring')
     scoring_header = '<p style="color:#72CBFD; font-weight: bold; font-size: 21px;">Scoring</p>'
-    pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
+    pad1, col1, pad2 = st.columns([1/6,2/3,1/6])
     with col1:
         st.markdown(scoring_header, unsafe_allow_html=True)
     if scoring_style=='Categories':
