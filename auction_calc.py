@@ -102,7 +102,6 @@ with st.sidebar:
     
     num_bench = 1 if bench_suppress else raw_bench
     
-
     st.write('')
     # st.header('League Settings')
     league_header = '<p style="color:#72CBFD; font-weight: bold; text-align: center; font-size: 21px;">League Settings</p>'
@@ -166,7 +165,6 @@ with st.sidebar:
         pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
 
     else:
-        ### This is filler until I actully implement points
         hitter_start = ['AB','H','2B','3B','HR','BB','HBP','SB','CS']
         pitcher_start = ["IP","K","H","BB",'HBP','HR','SV','HD']
     
@@ -312,7 +310,7 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
     return position_df[[x+'_val' for x in rate_stats+volume_stats]].sum(axis=1)
 
 @st.cache_data(ttl=3600)
-def load_data(team_leagues):
+def load_data(team_leagues,league_pool):
     # Load projections
     projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=1029181665&format=csv')
     projections_hitters['League'] = projections_hitters['Team'].fillna('FA').map(team_leagues)
@@ -328,7 +326,7 @@ def load_data(team_leagues):
     projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
     return projections_hitters, projections_pitchers
 
-projections_hitters, projections_pitchers = load_data(team_leagues)
+projections_hitters, projections_pitchers = load_data(team_leagues,league_pool)
 
 # if st.button("Generate Auction Values:  📊 -> 💲"):
 # st.header('Auction Values')
