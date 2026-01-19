@@ -6,17 +6,6 @@ import numpy as np
 import urllib
 from PIL import Image
 
-st.set_page_config(page_title='PL Auction Draft Calculator', page_icon='📊',layout="wide")
-st.markdown(
-    """
-    <style>
-        section[data-testid="stSidebar"] {
-            width: 310px !important; # Set the width to your desired value
-        }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
 @st.cache_data(ttl=3600)
 def load_logo():
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
@@ -33,6 +22,18 @@ def letter_logo():
     return logo
 
 letter_logo = letter_logo()
+
+st.set_page_config(page_title='PL Auction Draft Calculator', page_icon=letter_logo,layout="wide")
+st.markdown(
+    """
+    <style>
+        section[data-testid="stSidebar"] {
+            width: 310px !important; # Set the width to your desired value
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 new_title = '<p style="color:#72CBFD; font-weight: bold; font-size: 42px;">PL Auction Draft Calculator</p>'
 st.markdown(new_title, unsafe_allow_html=True)
