@@ -397,9 +397,7 @@ display_cols = ['Rank','Name','Team','Y! Pos','Value','PA'] if scoring_style=='C
 display_df = combined_value_df[display_cols+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']].sort_values('Value',ascending=False).copy()
 
 # col1, col2 = st.columns([0.8,0.2])
-# with col1:
 st.write('To change settings, tap the >> in the upper left of the page')
-# with col2:
 st.download_button(label='Download CSV',
                   data=display_df.to_csv(index=False),
                   file_name='pitcher_list_auction_values.csv',
@@ -407,19 +405,31 @@ st.download_button(label='Download CSV',
                    icon=":material/download:",
                    on_click='ignore')
 
+display_config_dict = {
+    "Value": st.column_config.NumberColumn(
+        label = 'Auction $',
+        format="$ %.2f",
+        ),
+    "Name": st.column_config.TextColumn(
+        width=220,
+        )
+}
+display_hitter = {x:st.column_config.NumberColumn(
+                         label = x) for x in hitter_cats if x not in pitcher_cats}
+display_hitter.update({v: st.column_config.NumberColumn(
+                         label = k) for k, v in hitter_renames.items()})
+display_config_dict.update(display_hitter)
+
+display_pitcher = {x:st.column_config.NumberColumn(
+                         label = x) for x in pitcher_cats if x not in hitter_cats}
+display_pitcher.update({v: st.column_config.NumberColumn(
+                         label = k) for k, v in pitcher_renames.items()})
+display_config_dict.update(display_pitcher)
 st.dataframe(display_df,
              width='content',
              hide_index=True,
              height=(25 + 1) * 35 + 3,
              # height='stretch',
-             column_config={
-                     "Value": st.column_config.NumberColumn(
-                         label = 'Auction $',
-                         format="$ %.2f",
-                         ),
-                     "Name": st.column_config.TextColumn(
-                         width=220,
-                         ),
-                 },
+             column_config=display_config_dict,
              placeholder='',
              )
