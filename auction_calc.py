@@ -333,11 +333,14 @@ projections_hitters, projections_pitchers = load_data(team_leagues,league_pool)
 # st.header('Auction Values')
 ## Hitters
 sample_hitters  = projections_hitters.nlargest(hitters_above_replacement, 'PA')
-projections_hitters['unadjusted_value'] = unadjusted_value(projections_hitters,
-                                                           rate_scoring_cats_h,
-                                                           volume_scoring_cats_h,
-                                                           inverted_categories_h,
-                                                           sample_hitters,num_hitters)
+if scoring_style=='Categories':
+    projections_hitters['unadjusted_value'] = unadjusted_value(projections_hitters,
+                                                               rate_scoring_cats_h,
+                                                               volume_scoring_cats_h,
+                                                               inverted_categories_h,
+                                                               sample_hitters,num_hitters)
+else:
+    projections_hitters['unadjusted_value'] = projections_hitters[list(point_values.keys())].mul(point_values).sum(axis=1)
 
 projections_hitters['is_C'] = projections_hitters['Y! Pos'].fillna('UT').str.replace('CF','').str.contains('C')
 c_adj = projections_hitters.loc[projections_hitters['is_C'],'unadjusted_value'].nlargest(num_teams * num_catchers).min()
@@ -352,14 +355,16 @@ hitter_dollars_per_value = total_hitter_dollars / total_hitter_value
 ## Pitchers
 ip_thresh = min(50,projections_pitchers['IP'].nlargest(num_teams * num_pitchers).min())
 sample_pitchers  = projections_pitchers.loc[projections_pitchers['IP'] >= ip_thresh]
-projections_pitchers['unadjusted_value'] = unadjusted_value(projections_pitchers,
-                                                            rate_scoring_cats_p,
-                                                            volume_scoring_cats_p,
-                                                            inverted_categories_p,
-                                                            sample_pitchers,
-                                                            num_pitchers,
-                                                            pos='p')
-
+if scoring_style=='Categories':
+    projections_pitchers['unadjusted_value'] = unadjusted_value(projections_pitchers,
+                                                                rate_scoring_cats_p,
+                                                                volume_scoring_cats_p,
+                                                                inverted_categories_p,
+                                                                sample_pitchers,
+                                                                num_pitchers,
+                                                                pos='p')
+else:
+    projections_pitchers['unadjusted_value'] = projections_pitchers[list(point_values.keys())].mul(point_values).sum(axis=1)
 projections_pitchers['ADJ'] = projections_pitchers['unadjusted_value'].nlargest(int(num_teams * (num_pitchers + num_bench/2))).min()
 projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'].sub(projections_pitchers['ADJ'])
 # Convert hitter value to Dollars 
@@ -377,21 +382,22 @@ combined_value_df = (
     [['Name','MLBAMID','Team','Y! Pos','adjusted_value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']]
 )
 combined_value_df['Y! Pos'] = combined_value_df['Y! Pos'].fillna('P')
-if scoring_style=='Categories':
-    combined_value_df['Value'] = min_bid + np.where(
-        combined_value_df['Y! Pos']=='P',
-        combined_value_df['adjusted_value'].mul(pitcher_dollars_per_value),
-        combined_value_df['adjusted_value'].mul(hitter_dollars_per_value)
-    )
-    
-    # Level the dollars out
-    projected_auction_dollars = combined_value_df.loc[combined_value_df['Value']>0,'Value'].sum()
-    fudge_factor = (num_teams * team_budget) / projected_auction_dollars
-    combined_value_df['Value'] = combined_value_df['Value'].mul(fudge_factor)
-else:
-    combined_value_df['Value'] = combined_value_df[list(point_values.keys())].mul(point_values).sum(axis=1)
+# if scoring_style=='Categories':
+combined_value_df['Value'] = min_bid + np.where(
+    combined_value_df['Y! Pos']=='P',
+    combined_value_df['adjusted_value'].mul(pitcher_dollars_per_value),
+    combined_value_df['adjusted_value'].mul(hitter_dollars_per_value)
+)
+
+# Level the dollars out
+projected_auction_dollars = combined_value_df.loc[combined_value_df['Value']>0,'Value'].sum()
+fudge_factor = (num_teams * team_budget) / projected_auction_dollars
+combined_value_df['Value'] = combined_value_df['Value'].mul(fudge_factor)
+# else:
+#     combined_value_df['Value'] = combined_value_df[list(point_values.keys())].mul(point_values).sum(axis=1)
 combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
-display_df = combined_value_df[['Rank','Name','Team','Y! Pos','Value','PA']+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']].sort_values('Value',ascending=False).copy()
+display_cols = ['Rank','Name','Team','Y! Pos','Value','PA'] if scoring_style=='Categories' else ['Rank','Name','Team','Y! Pos','Points','Value','PA']
+display_df = combined_value_df[display_cols+[x for x in adj_hitter_cats if x!='PA']+['IP']+[x for x in adj_pitcher_cats if x!='IP']].sort_values('Value',ascending=False).copy()
 
 # col1, col2 = st.columns([0.8,0.2])
 # with col1:
