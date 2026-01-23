@@ -340,7 +340,7 @@ if scoring_style=='Categories':
                                                                inverted_categories_h,
                                                                sample_hitters,num_hitters)
 else:
-    projections_hitters['unadjusted_value'] = projections_hitters[list(point_values.keys())].mul(point_values).sum(axis=1)
+    projections_hitters['unadjusted_value'] = projections_hitters.rename(columns=hitter_renames)[list(point_values.keys())].mul(point_values).sum(axis=1)
 
 projections_hitters['is_C'] = projections_hitters['Y! Pos'].fillna('UT').str.replace('CF','').str.contains('C')
 c_adj = projections_hitters.loc[projections_hitters['is_C'],'unadjusted_value'].nlargest(num_teams * num_catchers).min()
@@ -364,7 +364,7 @@ if scoring_style=='Categories':
                                                                 num_pitchers,
                                                                 pos='p')
 else:
-    projections_pitchers['unadjusted_value'] = projections_pitchers[list(point_values.keys())].mul(point_values).sum(axis=1)
+    projections_pitchers['unadjusted_value'] = projections_pitchers.rename(columns=pitcher_renames)[list(point_values.keys())].mul(point_values).sum(axis=1)
 projections_pitchers['ADJ'] = projections_pitchers['unadjusted_value'].nlargest(int(num_teams * (num_pitchers + num_bench/2))).min()
 projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'].sub(projections_pitchers['ADJ'])
 # Convert hitter value to Dollars 
