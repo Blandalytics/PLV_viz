@@ -115,12 +115,11 @@ with st.sidebar:
         )
     with col2:
         num_teams = st.number_input('Number of Teams',min_value=4,max_value=30,value=12)
-    if scoring_style=='Categories':
-        col1, col2 = st.columns(2)
-        with col1:
-            min_bid = st.number_input('Min bid',min_value=0,value=1)
-        with col2:
-            team_budget = st.number_input('Team Budget',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
+    col1, col2 = st.columns(2)
+    with col1:
+        min_bid = st.number_input('Min bid',min_value=0,value=1)
+    with col2:
+        team_budget = st.number_input('Team Budget',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
     ### Filler until I implement points
     else:
         min_bid=1
