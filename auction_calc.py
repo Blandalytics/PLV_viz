@@ -367,7 +367,6 @@ if scoring_style=='Categories':
                                                                 pos='p')
 else:
     projections_pitchers['unadjusted_value'] = projections_pitchers.rename(columns=pitcher_renames)[list(pitcher_points.keys())].mul(pitcher_points).sum(axis=1)
-    projections_pitchers['Points'] = projections_pitchers['unadjusted_value'].copy()
 projections_pitchers['ADJ'] = projections_pitchers['unadjusted_value'].nlargest(int(num_teams * (num_pitchers + num_bench/2))).min()
 projections_pitchers['adjusted_value'] = projections_pitchers['unadjusted_value'].sub(projections_pitchers['ADJ'])
 # Convert hitter value to Dollars 
