@@ -419,8 +419,8 @@ st.dataframe(display_df,
              # height='stretch',
              column_config={
                      "Value": st.column_config.NumberColumn(
-                         label = 'Auction $' if scoring_style=='Categories' else 'Points',
-                         format="$ %.2f" if scoring_style=='Categories' else "%.1f",
+                         label = 'Auction $',
+                         format="$ %.2f",
                          ),
                      "Name": st.column_config.TextColumn(
                          width=220,
