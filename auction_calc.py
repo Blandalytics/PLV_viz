@@ -125,7 +125,7 @@ with st.sidebar:
         league_select = st.selectbox('Player pool',['All','NL-Only','AL-Only'])
         league_pool = ['NL','AL'] if league_select=='All' else [league_select[:2]]
     with col2:
-        hitter_split = st.number_input('Hitter Split (%)',min_value=0,max_value=100,value=65)
+        hitter_split = st.number_input('Hitter Split (%)',min_value=0,max_value=100,value=65 if scoring_style=='Categories' else 50)
         hitter_split = hitter_split/100
     
     include_fa = st.checkbox("Include FA?",value=True,
