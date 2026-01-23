@@ -396,7 +396,7 @@ combined_value_df['Value'] = min_bid + np.where(
 projected_auction_dollars = combined_value_df.loc[combined_value_df['Value']>0,'Value'].sum()
 fudge_factor = (num_teams * team_budget) / projected_auction_dollars
 combined_value_df['Value'] = combined_value_df['Value'].mul(fudge_factor)
-if scoring_style=='Points'
+if scoring_style=='Points':
     combined_value_df['Points'] = combined_value_df[list(point_values.keys())].mul(point_values).sum(axis=1)
 combined_value_df['Rank'] = combined_value_df['Value'].rank(ascending=False)
 display_cols = ['Rank','Name','Team','Y! Pos','Value','PA'] if scoring_style=='Categories' else ['Rank','Name','Team','Y! Pos','Points','Value','PA']
