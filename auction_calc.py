@@ -120,10 +120,6 @@ with st.sidebar:
         min_bid = st.number_input('Min bid',min_value=0,value=1)
     with col2:
         team_budget = st.number_input('Team Budget',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
-    ### Filler until I implement points
-    else:
-        min_bid=1
-        team_budget=260
     col1, col2 = st.columns(2)
     with col1:
         league_select = st.selectbox('Player pool',['All','NL-Only','AL-Only'])
