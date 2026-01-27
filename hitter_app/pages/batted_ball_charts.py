@@ -44,7 +44,7 @@ def letter_logo():
 
 letter_logo = letter_logo()
 
-st.set_page_config(page_title='MLB Batted Ball Charts', page_icon=letter_logo,layout="wide")
+st.set_page_config(page_title='MLB Batted Ball Charts', page_icon=letter_logo)
 new_title = '<p style="color:#72CBFD; font-weight: bold; font-size: 42px;">Batted Ball Charts</p>'
 st.markdown(new_title, unsafe_allow_html=True)
 st.write("These charts compare a hitter's batted ball distribution to the distribution of all MLB batted balls")
