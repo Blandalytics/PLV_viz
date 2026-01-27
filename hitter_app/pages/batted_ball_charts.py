@@ -125,7 +125,9 @@ def load_data(year):
     return bbe_df, f_league, year_before_df
 
 with st.sidebar:
-    st.image(logo, width=200)
+    pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
+    with col1:
+        st.image(letter_logo)
     years = [2025,2024,2023,2022,2021]
     year = st.radio('Choose a year:', years)
 
