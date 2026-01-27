@@ -15,9 +15,6 @@ from pyfonts import set_default_font, load_google_font
 from scipy import stats
 from statsmodels.nonparametric.kernel_regression import KernelReg
 
-st.title('Batted Ball Charts')
-st.write("These charts compare a hitter's batted ball distribution to the distribution of all MLB batted balls")
-
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
@@ -47,6 +44,11 @@ def letter_logo():
 
 letter_logo = letter_logo()
 
+st.set_page_config(page_title='MLB Batted Ball Charts', page_icon=letter_logo,layout="wide")
+new_title = '<p style="color:#72CBFD; font-weight: bold; font-size: 42px;">Batted Ball Charts</p>'
+st.markdown(new_title, unsafe_allow_html=True)
+st.write("These charts compare a hitter's batted ball distribution to the distribution of all MLB batted balls")
+
 font = load_google_font("Alexandria")
 fm.fontManager.addfont(str(font.get_file()))
 
@@ -65,6 +67,7 @@ sns.set_theme(
      },
     font='Alexandria'
     )
+
 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading year data")
 def load_data(year):
@@ -142,10 +145,7 @@ with st.sidebar:
         color_scale_type = 'Continuous'
         comparison = 'League'
     else:
-        # col1, col2, col3 = st.columns([0.5,0.25,0.25])
-        
-        # with col1:
-            # Player/team
+        # Player/team
         players = list(bbe_df
                        .reset_index()
                        .sort_values('hittername')
@@ -153,59 +153,18 @@ with st.sidebar:
                       )
         default_ix = players.index('Isaac Paredes')
         player = st.selectbox('Choose a player:', players, index=default_ix)
-        # with col2:
-            # Color Scale
+        
+        # Color Scale
         color_scales = ['Discrete','Continuous']
-        color_scale_type = st.selectbox('Choose a color scale:', color_scales)
-        # with col3:
-            # Comparison
+        color_scale_type = st.radio('Choose a color scale:', color_scales)
+      
+        # Comparison
         comparisons = ['League','Self (prior year)']
-        comparison = st.selectbox('Compared to:', comparisons)
+        comparison = st.radio('Compared to:', comparisons)
         if comparison=='Self (prior year)':
             comparison = 'Self'
 
-# years = [2025,2024,2023,2022,2021]
-# year = st.radio('Choose a year:', years)
-
-# bbe_df, f_league, year_before_df = load_data(year)
-
 X, Y = np.mgrid[0:90:91j, -30:60:91j]
-
-# team_wide = st.checkbox("Team-wide comparison?",value=False,
-#                         help=" Group at the team level")
-
-# if team_wide:
-#     teams = list(bbe_df
-#                    .reset_index()
-#                    .sort_values('hitter_team')
-#                    ['hitter_team'].unique()
-#                   )
-#     default_ix = teams.index('CLE')
-#     player = st.selectbox('Choose a team:', teams, index=default_ix)
-#     color_scale_type = 'Continuous'
-#     comparison = 'League'
-# else:
-#     col1, col2, col3 = st.columns([0.5,0.25,0.25])
-    
-#     with col1:
-#         # Player/team
-#         players = list(bbe_df
-#                        .reset_index()
-#                        .sort_values('hittername')
-#                        ['hittername'].unique()
-#                       )
-#         default_ix = players.index('Isaac Paredes')
-#         player = st.selectbox('Choose a player:', players, index=default_ix)
-#     with col2:
-#         # Color Scale
-#         color_scales = ['Discrete','Continuous']
-#         color_scale_type = st.selectbox('Choose a color scale:', color_scales)
-#     with col3:
-#         # Comparison
-#         comparisons = ['League','Self (prior year)']
-#         comparison = st.selectbox('Compared to:', comparisons)
-#         if comparison=='Self (prior year)':
-#             comparison = 'Self'
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
     if comparison == 'Self':
