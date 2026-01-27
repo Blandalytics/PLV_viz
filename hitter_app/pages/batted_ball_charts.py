@@ -39,7 +39,13 @@ def load_logo():
     return logo
     
 logo = load_logo()
-st.image(logo, width=200)
+
+def letter_logo():
+    logo_loc = 'https://github.com/Blandalytics/baseball_snippets/blob/main/teal_letter_logo.png?raw=true'
+    logo = Image.open(urllib.request.urlopen(logo_loc))
+    return logo
+
+letter_logo = letter_logo()
 
 font = load_google_font("Alexandria")
 fm.fontManager.addfont(str(font.get_file()))
@@ -59,9 +65,6 @@ sns.set_theme(
      },
     font='Alexandria'
     )
-
-years = [2025,2024,2023,2022,2021]
-year = st.radio('Choose a year:', years)
 
 @st.cache_data(ttl=2*3600,show_spinner=f"Loading {year} data")
 def load_data(year):
@@ -118,28 +121,31 @@ def load_data(year):
   
     return bbe_df, f_league, year_before_df
 
-bbe_df, f_league, year_before_df = load_data(year)
+with st.sidebar:
+    st.image(logo, width=200)
+    years = [2025,2024,2023,2022,2021]
+    year = st.radio('Choose a year:', years)
 
-X, Y = np.mgrid[0:90:91j, -30:60:91j]
+    bbe_df, f_league, year_before_df = load_data(year)
 
-team_wide = st.checkbox("Team-wide comparison?",value=False,
-                        help=" Group at the team level")
-
-if team_wide:
-    teams = list(bbe_df
-                   .reset_index()
-                   .sort_values('hitter_team')
-                   ['hitter_team'].unique()
-                  )
-    default_ix = teams.index('CLE')
-    player = st.selectbox('Choose a team:', teams, index=default_ix)
-    color_scale_type = 'Continuous'
-    comparison = 'League'
-else:
-    col1, col2, col3 = st.columns([0.5,0.25,0.25])
-    
-    with col1:
-        # Player/team
+    team_wide = st.checkbox("Team-wide comparison?",value=False,
+                            help=" Group at the team level")
+  
+    if team_wide:
+        teams = list(bbe_df
+                       .reset_index()
+                       .sort_values('hitter_team')
+                       ['hitter_team'].unique()
+                      )
+        default_ix = teams.index('CLE')
+        player = st.selectbox('Choose a team:', teams, index=default_ix)
+        color_scale_type = 'Continuous'
+        comparison = 'League'
+    else:
+        # col1, col2, col3 = st.columns([0.5,0.25,0.25])
+        
+        # with col1:
+            # Player/team
         players = list(bbe_df
                        .reset_index()
                        .sort_values('hittername')
@@ -147,16 +153,59 @@ else:
                       )
         default_ix = players.index('Isaac Paredes')
         player = st.selectbox('Choose a player:', players, index=default_ix)
-    with col2:
-        # Color Scale
+        # with col2:
+            # Color Scale
         color_scales = ['Discrete','Continuous']
         color_scale_type = st.selectbox('Choose a color scale:', color_scales)
-    with col3:
-        # Comparison
+        # with col3:
+            # Comparison
         comparisons = ['League','Self (prior year)']
         comparison = st.selectbox('Compared to:', comparisons)
         if comparison=='Self (prior year)':
             comparison = 'Self'
+
+# years = [2025,2024,2023,2022,2021]
+# year = st.radio('Choose a year:', years)
+
+# bbe_df, f_league, year_before_df = load_data(year)
+
+X, Y = np.mgrid[0:90:91j, -30:60:91j]
+
+# team_wide = st.checkbox("Team-wide comparison?",value=False,
+#                         help=" Group at the team level")
+
+# if team_wide:
+#     teams = list(bbe_df
+#                    .reset_index()
+#                    .sort_values('hitter_team')
+#                    ['hitter_team'].unique()
+#                   )
+#     default_ix = teams.index('CLE')
+#     player = st.selectbox('Choose a team:', teams, index=default_ix)
+#     color_scale_type = 'Continuous'
+#     comparison = 'League'
+# else:
+#     col1, col2, col3 = st.columns([0.5,0.25,0.25])
+    
+#     with col1:
+#         # Player/team
+#         players = list(bbe_df
+#                        .reset_index()
+#                        .sort_values('hittername')
+#                        ['hittername'].unique()
+#                       )
+#         default_ix = players.index('Isaac Paredes')
+#         player = st.selectbox('Choose a player:', players, index=default_ix)
+#     with col2:
+#         # Color Scale
+#         color_scales = ['Discrete','Continuous']
+#         color_scale_type = st.selectbox('Choose a color scale:', color_scales)
+#     with col3:
+#         # Comparison
+#         comparisons = ['League','Self (prior year)']
+#         comparison = st.selectbox('Compared to:', comparisons)
+#         if comparison=='Self (prior year)':
+#             comparison = 'Self'
 
 def kde_calc(df,hitter,year=year,league_vals=f_league):
     if comparison == 'Self':
@@ -451,7 +500,7 @@ def kde_chart(kde_data,hitter,chart_type='Discrete',comparison='League'):
     fig.text(0.83,0.115,'@blandalytics',ha='center',fontsize=10)
     fig.text(-0.065,0.1,'Data: Baseball Savant/pybaseball',ha='left',fontsize=6)
 
-    sns.despine()
+    sns.despine(left=True,bottom=True)
     st.pyplot(fig)
 
 if comparison=='Self':
