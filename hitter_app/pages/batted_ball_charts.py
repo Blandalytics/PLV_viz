@@ -3,6 +3,7 @@ st.set_page_config(page_title='Batted Ball Charts')
 import math
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -10,6 +11,7 @@ import scipy as sp
 import urllib
 
 from PIL import Image
+from pyfonts import set_default_font, load_google_font
 from scipy import stats
 from statsmodels.nonparametric.kernel_regression import KernelReg
 
@@ -19,7 +21,7 @@ st.write("These charts compare a hitter's batted ball distribution to the distri
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
-pl_background = '#162B50'
+pl_background = '#292C42'
 pl_text = '#72a3f7'
 pl_line_color = '#293a6b'
 
@@ -39,9 +41,12 @@ def load_logo():
 logo = load_logo()
 st.image(logo, width=200)
 
+font = load_google_font("Alexandria")
+fm.fontManager.addfont(str(font.get_file()))
+
 sns.set_theme(
     style={
-        'axes.edgecolor': pl_background,
+        'axes.edgecolor': pl_white,
         'axes.facecolor': pl_background,
         'axes.labelcolor': pl_white,
         'xtick.color': pl_white,
@@ -51,7 +56,8 @@ sns.set_theme(
         'grid.linestyle': '-',
         'legend.facecolor':pl_background,
         'text.color': pl_white
-     }
+     },
+    font='Alexandria'
     )
 
 years = [2025,2024,2023,2022,2021]
@@ -62,10 +68,6 @@ def load_data(year):
     pitch_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{year}.parquet?raw=true')
     bbe_df = (
       pitch_data
-      # .loc[(pitch_data['spray_deg']>=0) &
-      #        (pitch_data['spray_deg']<=90) &
-      #        (pitch_data['launch_angle']>=-30) &
-      #        (pitch_data['launch_angle']<=60)]
         [['hittername','hitter_team','stand','spray_deg','launch_angle']]
         .astype({'spray_deg':'float',
                  'launch_angle':'float'})
@@ -76,10 +78,6 @@ def load_data(year):
     prior_data = pd.read_parquet(f'https://github.com/Blandalytics/PLV_viz/blob/main/hitter_app/pages/batted_ball_df_{prior_year}.parquet?raw=true')
     year_before_df = (
       prior_data
-      # .loc[(prior_data['spray_deg']>=0) &
-      #        (prior_data['spray_deg']<=90) &
-      #        (prior_data['launch_angle']>=-30) &
-      #        (prior_data['launch_angle']<=60)]
       [['hittername','hitter_team','stand','spray_deg','launch_angle']]
       .astype({'spray_deg':'float',
                'launch_angle':'int'})
