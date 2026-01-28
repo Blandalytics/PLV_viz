@@ -197,7 +197,7 @@ with st.sidebar:
                     "Points",
                     min_value=-1000,
                     max_value=1000,
-                    step=0.1,
+                    step=0.05,
                     required=True,
                 )
             },
@@ -236,7 +236,7 @@ with st.sidebar:
                     "Points",
                     min_value=-1000,
                     max_value=1000,
-                    step=0.1,
+                    step=0.05,
                     required=True,
                 )
             },
