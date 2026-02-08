@@ -1,5 +1,4 @@
 import streamlit as st
-st.set_page_config(page_title='Batted Ball Charts')
 import math
 import matplotlib as mpl
 import matplotlib.pyplot as plt
