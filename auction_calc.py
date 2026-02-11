@@ -6,6 +6,7 @@ import numpy as np
 import urllib
 from PIL import Image
 
+### Assorted prep
 @st.cache_data(ttl=3600)
 def load_logo():
     logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
@@ -13,7 +14,6 @@ def load_logo():
     return logo
 
 logo = load_logo()
-# st.image(logo, width=400)
 
 @st.cache_data(ttl=3600)
 def letter_logo():
@@ -23,6 +23,7 @@ def letter_logo():
 
 letter_logo = letter_logo()
 
+### Page Info
 st.set_page_config(page_title='PL Auction Draft Calculator', page_icon=letter_logo,layout="wide")
 st.markdown(
     """
@@ -74,27 +75,32 @@ team_leagues = {
     # 'FA':''
 }
 
+### Sidebar is the source of all inputs
 with st.sidebar:
     pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
     with col1:
         st.image(letter_logo)
     
     # Settings
-    # st.header('Team Settings')
     team_header = '<p style="color:#72CBFD; font-weight: bold; text-align: center; font-size: 21px;">Team Settings</p>'
     st.markdown(team_header, unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
+        # How many hitters are you starting
         num_hitters = st.number_input('Hitters',min_value=4,max_value=20,value=10)
     with col2:
+        # How many pitchers are you starting
         num_pitchers = st.number_input('Pitchers',min_value=4,max_value=20,value=8)
     
     col1, col2 = st.columns(2)
     with col1:
+        # How many catchers are you starting
         num_catchers = st.number_input('Catchers',min_value=0,max_value=3,value=1)
     with col2:
+        # How many bench spots are there
         raw_bench = st.number_input('Bench spots',min_value=0,max_value=20,value=5)
-    
+
+    # Do we only want to judge value by the starting players (bench = replacement level)
     bench_suppress = st.checkbox("Minimize bench value",value=True,
                                  help="""
                                  Does not consider bench players  
@@ -104,30 +110,36 @@ with st.sidebar:
     num_bench = 1 if bench_suppress else raw_bench
     
     st.write('')
-    # st.header('League Settings')
     league_header = '<p style="color:#72CBFD; font-weight: bold; text-align: center; font-size: 21px;">League Settings</p>'
     st.markdown(league_header, unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
+        # Broad scoring style
         scoring_style = st.radio(
             "League Type",
             ["Categories", "Points"],
         )
     with col2:
+        # How many teams in the league
         num_teams = st.number_input('Number of Teams',min_value=4,max_value=30,value=12)
     col1, col2 = st.columns(2)
     with col1:
+        # Minimum acceptable bid amount (sets replacement value)
         min_bid = st.number_input('Min bid',min_value=0,value=1)
     with col2:
+        # FAAB Budget per team
         team_budget = st.number_input('Team Budget',min_value=(min_bid+1)*(num_hitters+num_pitchers+num_bench),value=260)
     col1, col2 = st.columns(2)
     with col1:
+        # Is this an AL/NL-only league?
         league_select = st.selectbox('Player pool',['All','NL-Only','AL-Only'])
         league_pool = ['NL','AL'] if league_select=='All' else [league_select[:2]]
     with col2:
+        # What % of dollares should be allocated to hitters vs pitchers
         hitter_split = st.number_input('Hitter Split (%)',min_value=0,max_value=100,value=65 if scoring_style=='Categories' else 50)
         hitter_split = hitter_split/100
-    
+
+    # Should we include free agents in the -only pool?
     include_fa = st.checkbox("Include FA?",value=True,
                              help="Include free agents in layer pool")
     if include_fa:
@@ -138,35 +150,49 @@ with st.sidebar:
     scoring_header = '<p style="color:#72CBFD; font-weight: bold; text-align: center; font-size: 21px;">Scoring</p>'
     st.markdown(scoring_header, unsafe_allow_html=True)
     if scoring_style=='Categories':
+        # Choose scoring categories
         hitter_cats = st.multiselect('Hitter categories',
                                      ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
                                       'wOBA', 'BB%', 'K%', 'H', '1B', '2B', '3B', 'XBH',
                                       'TB', 'K', 'BB', 'HBP', 'SF', 'CS'],
                                      default=['R','HR','RBI','SB','AVG'])
+        # Define rate categories, so they can be properly weighted by playing time
         rate_cats_h = ['AVG','OBP','ISO','SLG','OPS','wOBA','BB%','K%']
         rate_scoring_cats_h = [x for x in hitter_cats if x in rate_cats_h]
+        # Define volume categories
         volume_scoring_cats_h = [x for x in hitter_cats if x not in rate_scoring_cats_h]
+        # Define categories where value is inverted (fewer = better)
         inverted_categories_h = ['K','CS','SF','K%']
+        
+        # Choose scoring categories
         pitcher_cats = st.multiselect('Pitcher categories',
                                       ['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA', 
                                        'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
                                        'HR', 'BB', 'BS','K/BB','W+QS'],
                                       default=['W','SV','K','ERA','WHIP'])
+        # Define rate categories, so they can be properly weighted by playing time
         rate_cats_p = ['ERA', 'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9']
         rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
+        # Define volume categories
         volume_scoring_cats_p = [x for x in pitcher_cats if x not in rate_scoring_cats_p]
+        # Define categories where value is inverted (fewer = better)
         inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
 
+        # Dictionaries for displaying the columns nicely later
         hitter_renames = {x:x+'_h' for x in hitter_cats if x in pitcher_cats}
         pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
 
     else:
+        # Default points categories
         hitter_start = ['AB','H','2B','3B','HR','BB','HBP','SB','CS']
         pitcher_start = ["IP","K","H","BB",'HBP','HR','SV','HD']
-    
+
+        # Available points categories
         hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
         pitcher_point_cats = ['IP', 'TBF', 'G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K','H', 'ER', 'HBP', 'HR', 'BB', 'BS']
+        
         st.write('Hitting Points')
+        # Assign point values to categories
         hitter_cat_df = pd.DataFrame(
             {
                 "Category":hitter_start,
@@ -183,13 +209,12 @@ with st.sidebar:
                 ]
             }
             )
+        # Editable DF, for user input of categories/point values
         edited_hitter_df = st.data_editor(
             hitter_cat_df,
             column_config={
                 "Category": st.column_config.SelectboxColumn(
                     "Category",
-                    # help="The category of the app",
-                    # width="medium",
                     options=hitter_point_cats,
                     required=True,
                 ),
@@ -206,6 +231,7 @@ with st.sidebar:
             num_rows="dynamic"
         )
         st.write('Pitching Points')
+        # Assign point values to categories
         pitcher_cat_df = pd.DataFrame(
             {
                 "Category": pitcher_start,
@@ -222,6 +248,7 @@ with st.sidebar:
             }
             )
         
+        # Editable DF, for user input of categories/point values
         edited_pitcher_df = st.data_editor(
             pitcher_cat_df,
             column_config={
@@ -244,30 +271,42 @@ with st.sidebar:
             height=(5 + 1) * 35 + 3,
             num_rows="dynamic"
         )
+
+        # List of used categories
         hitter_cats = edited_hitter_df['Category'].to_list()
         pitcher_cats = edited_pitcher_df['Category'].to_list()
-        
+
+        # All stats are volume stats, some are inverted
         volume_scoring_cats_h = hitter_cats
         rate_scoring_cats_h = []
-        inverted_categories_h = ['K','CS','SF','K%']
+        inverted_categories_h = ['K','CS','SF']
         volume_scoring_cats_p = pitcher_cats
         rate_scoring_cats_p = []
-        inverted_categories_p = ['BB','H','ER','BS','ERA','WHIP','L','HBP','HR','BB/9','HR/9','BB%']
+        inverted_categories_p = ['BB','H','ER','BS','L','HBP','HR']
 
+        # Dictionaries for displaying the columns nicely later
         hitter_renames = {x:x+'_h' for x in hitter_cats if x in pitcher_cats}
         pitcher_renames = {x:x+'_p' for x in pitcher_cats if x in hitter_cats}
+
+        # Dictionaries of final point values
         hitter_points = edited_hitter_df.assign(Category = lambda x: x['Category'].replace(hitter_renames)).set_index('Category').to_dict()['Points']
         pitcher_points = edited_pitcher_df.assign(Category = lambda x: x['Category'].replace(pitcher_renames)).set_index('Category').to_dict()['Points']
+
+        # Combine the dictionaries
         point_values = edited_hitter_df.assign(Category = lambda x: x['Category'].replace(hitter_renames)).set_index('Category').to_dict()['Points']
         point_values.update(edited_pitcher_df.assign(Category = lambda x: x['Category'].replace(pitcher_renames)).set_index('Category').to_dict()['Points'])
 
-
+# Determine if there is overlap in column names between hitters and pitchers
 adj_hitter_cats = [x+'_h' if x in pitcher_cats else x for x in hitter_cats]
 adj_pitcher_cats = [x+'_p' if x in hitter_cats else x for x in pitcher_cats]
-# Values derived from settings
+
+# Values derived from settings (Replacement assumed to be ~10% worse than the last player taken
 hitters_above_replacement = int(round(num_teams * (num_hitters + num_bench/2) * 1.1,0))
 pitchers_above_replacement = int(round(num_teams * (num_pitchers + num_bench/2) * 1.1,0))
+
+# Allocate dollars that are not the minimum bid amount
 non_replacement_dollars = (num_teams * team_budget) - (num_teams * (num_hitters + num_pitchers + raw_bench) * min_bid)
+# Divide between hitters and pitchers
 total_hitter_dollars = non_replacement_dollars * hitter_split
 total_pitcher_dollars = non_replacement_dollars * (1-hitter_split)
 
