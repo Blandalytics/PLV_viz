@@ -24,7 +24,7 @@ def letter_logo():
 letter_logo = letter_logo()
 
 ### Page Info
-st.set_page_config(page_title='PL Auction Draft Calculator', page_icon=letter_logo,layout="wide")
+st.set_page_config(page_title='PL Auction Calculator', page_icon=letter_logo,layout="wide")
 st.markdown(
     """
     <style>
@@ -36,7 +36,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-new_title = '<p style="color:#72CBFD; font-weight: bold; font-size: 42px;">PL Auction Draft Calculator</p>'
+new_title = '<p style="color:#72CBFD; font-weight: bold; font-size: 42px;">PL Auction Calculator</p>'
 st.markdown(new_title, unsafe_allow_html=True)
 
 team_leagues = {
