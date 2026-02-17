@@ -107,7 +107,7 @@ with st.sidebar:
                                  when calculating replacement level
                                  """)
     
-    num_bench = 1 if bench_suppress else raw_bench
+    num_bench = 0 if bench_suppress else raw_bench
     
     st.write('')
     league_header = '<p style="color:#72CBFD; font-weight: bold; text-align: center; font-size: 21px;">League Settings</p>'
