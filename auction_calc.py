@@ -361,6 +361,7 @@ def load_data(team_leagues,league_pool):
     for stat in ['K%','BB%','K-BB%']:
         projections_pitchers[stat] = projections_pitchers[stat].str[:-1].astype('float')
     projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
+    projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],0.1,1000))
     return projections_hitters, projections_pitchers
 
 projections_hitters, projections_pitchers = load_data(team_leagues,league_pool)
