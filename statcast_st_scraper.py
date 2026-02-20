@@ -420,7 +420,7 @@ def scrape_savant_data(player_name, game_id):
         # df['plvLoc+'] = loc_model(df)
     # df['IVB'] = df['vert_break'].add((523/df['Velo'])**2).astype('float')
     df['IHB'] = ihb
-    # df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
+    df['IHB'] = df['IHB'].mul(12)
     df['hit_x'] = hit_x
     df['hit_y'] = hit_y
     df['Launch Speed'] = hit_speed
