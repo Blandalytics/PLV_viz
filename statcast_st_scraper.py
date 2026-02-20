@@ -337,7 +337,7 @@ def scrape_savant_data(player_name, game_id):
                 pitch_type += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].get('pitch_type')]
                 velo += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].get('start_speed')]
                 extension += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].get('extension') if 'extension' in x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys() else None]
-                ivb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].get('inducedBreakZ']
+                ivb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].get('inducedBreakZ')]
                 ihb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].get('pfxXNoAbs')]
                 # x0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['x0']]
                 # z0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['z0']]
