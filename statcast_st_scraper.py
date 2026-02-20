@@ -338,8 +338,8 @@ def scrape_savant_data(player_name, game_id):
                     pitch_type += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pitch_type']]
                     velo += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['start_speed']]
                     extension += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['extension'] if 'extension' in x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch].keys() else None]
-                    ivb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pfxZWithGravity']]
-                    ihb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['pfxXNoAbs']]
+                    ivb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['inducedBreakZ']]
+                    ihb += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['breakX']]
                     # x0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['x0']]
                     # z0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['z0']]
                     # vx0 += [x[f'{home_away_pitcher}_pitchers'][pitcher_id][pitch]['vx0']]
@@ -404,7 +404,7 @@ def scrape_savant_data(player_name, game_id):
     df['pitch_type'] = df['pitch_type'].map(pitchtype_map)
     df['Velo'] = velo
     df['Ext'] = extension
-    df['vert_break'] = ivb
+    df['IVB'] = ivb
     df['vy0'] = vy0
     df['vz0'] = vz0
     df['ay'] = ay
@@ -418,9 +418,9 @@ def scrape_savant_data(player_name, game_id):
         # df['plvLoc+'] = None
     # else:
         # df['plvLoc+'] = loc_model(df)
-    df['IVB'] = df['vert_break'].add((523/df['Velo'])**2).astype('float')
+    # df['IVB'] = df['vert_break'].add((523/df['Velo'])**2).astype('float')
     df['IHB'] = ihb
-    df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
+    # df['IHB'] = np.where(df['P Hand']=='R',df['IHB'].astype('float').mul(-1),df['IHB'].astype('float'))
     df['hit_x'] = hit_x
     df['hit_y'] = hit_y
     df['Launch Speed'] = hit_speed
