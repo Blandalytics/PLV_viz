@@ -401,7 +401,7 @@ def scrape_savant_data(player_name, game_id):
         # df['plvLoc+'] = loc_model(df)
     # df['IVB'] = df['vert_break'].add((523/df['Velo'])**2).astype('float')
     df['IHB'] = ihb
-    df['IHB'] = df['IHB'].mul(12)
+    df['IHB'] = np.where(df['P Hand']=='L',df['IHB'].mul(-12),df['IHB'].mul(-12))
     df['hit_x'] = hit_x
     df['hit_y'] = hit_y
     df['Launch Speed'] = hit_speed
@@ -512,7 +512,7 @@ def game_charts(move_df):
     ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
     ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
     
-    sns.scatterplot(move_df.assign(IHB = lambda x: np.where(x['P Hand']=='L',x['IHB'].astype('float').mul(-1),x['IHB'].astype('float'))),
+    sns.scatterplot(move_df,
                     x='IHB',
                     y='IVB',
                    hue='pitch_type',
