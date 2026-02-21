@@ -512,7 +512,7 @@ def game_charts(move_df):
     ax1.text(0,27,'Rise',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
     ax1.text(0,-27,'Drop',ha='center',va='center',fontsize=8,color=pl_white,alpha=0.75,zorder=1)
     
-    sns.scatterplot(move_df,
+    sns.scatterplot(move_df.assign(IHB = lambda x: np.where(x['P Hand']=='L',x['IHB'].mul(-1),x['IHB'])),
                     x='IHB',
                     y='IVB',
                    hue='pitch_type',
