@@ -439,7 +439,7 @@ display_df = combined_value_df[display_cols+[x for x in adj_hitter_cats if x!='P
 # col1, col2 = st.columns([0.8,0.2])
 st.write('To change settings, tap the >> in the upper left of the page')
 st.download_button(label='Download CSV',
-                  data=display_df.to_csv(index=False,encoding='latin1'),
+                  data=display_df.to_csv(index=False).encode('latin1'),
                   file_name='pitcher_list_auction_values.csv',
                    mime='text/csv',
                    icon=":material/download:",
