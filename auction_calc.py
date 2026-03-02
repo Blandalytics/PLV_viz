@@ -87,7 +87,7 @@ with st.sidebar:
     col1, col2 = st.columns(2)
     with col1:
         # How many hitters are you starting
-        num_hitters = st.number_input('Hitters',min_value=4,max_value=20,value=10)
+        num_hitters = st.number_input('Hitters',min_value=4,max_value=20,value=10,help="Including # of Catchers")
     with col2:
         # How many pitchers are you starting
         num_pitchers = st.number_input('Pitchers',min_value=4,max_value=20,value=8)
@@ -439,7 +439,7 @@ display_df = combined_value_df[display_cols+[x for x in adj_hitter_cats if x!='P
 # col1, col2 = st.columns([0.8,0.2])
 st.write('To change settings, tap the >> in the upper left of the page')
 st.download_button(label='Download CSV',
-                  data=display_df.to_csv(index=False),
+                  data=display_df.to_csv(index=False,encoding='latin1'),
                   file_name='pitcher_list_auction_values.csv',
                    mime='text/csv',
                    icon=":material/download:",
