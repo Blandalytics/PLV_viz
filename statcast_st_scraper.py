@@ -159,7 +159,7 @@ def loc_model(df,year=2024):
 
 st.set_page_config(page_title='PL Live Spring Training Stats', page_icon='⚾',layout="wide")
 
-logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+logo_loc = 'https://res.cloudinary.com/dduabusaf/image/upload/v1772839288/PitcherList_Stats_watermark_with_logo_k9e3xa.webp'
 logo = Image.open(urllib.request.urlopen(logo_loc))
 st.image(logo, width=200)
 
