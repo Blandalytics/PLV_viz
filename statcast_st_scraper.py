@@ -157,7 +157,7 @@ def loc_model(df,year=2024):
     return df['wOBA_effect'].sub(-0.004253050593194383).div(0.05179234832326223).mul(-50).add(100)
 
 
-st.set_page_config(page_title='PL Live Spring Training Stats', page_icon='⚾',layout="wide")
+st.set_page_config(page_title='PL Live Stats', page_icon='⚾',layout="wide")
 
 logo_loc = 'https://res.cloudinary.com/dduabusaf/image/upload/v1772839288/PitcherList_Stats_watermark_with_logo_k9e3xa.webp'
 logo = Image.open(urllib.request.urlopen(logo_loc))
