@@ -169,7 +169,7 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     today = (datetime.datetime.now(pytz.utc)-timedelta(hours=16)).date()
-    date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=datetime.date(2026, 3, 30))
+    date = st.date_input("Select a game date:", today, min_value=datetime.date(2024, 2, 19), max_value=datetime.date(2026, 11, 30))
     
     r = requests.get(f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}')
     x = r.json()
@@ -177,7 +177,7 @@ with col1:
         st.write(f'No games on {date}')
     game_list = {}
     for game in range(len(x['dates'][0]['games'])):
-        if x['dates'][0]['games'][game]['gamedayType'] == 'E':
+        if x['dates'][0]['games'][game]['gamedayType'] in ['E','R']:
             game_list.update({x['dates'][0]['games'][game]['teams']['away']['team']['name']+' @ '+x['dates'][0]['games'][game]['teams']['home']['team']['name']:x['dates'][0]['games'][game]['gamePk']})
 
 with col2:
