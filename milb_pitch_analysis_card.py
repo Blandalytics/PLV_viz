@@ -263,6 +263,7 @@ def pitch_analysis_card(card_player,pitch_type,chart_type):
     n_pitchers = min(75,
                      len(pitch_df.loc[(pitch_df['pitchtype']==pitch_type),'pitchername'].unique())
                     )
+    st.dataframe(pitch_df.loc[(pitch_df['pitchtype']==pitch_type)].groupby('pitchername')['pitch_id'].count().nlargest(n_pitchers))
     league_thresh = int(pitch_df.loc[(pitch_df['pitchtype']==pitch_type)].groupby('pitchername')['pitch_id'].count().nlargest(n_pitchers)[-1]/50)*50
     pitch_num_thresh = max(pitch_thresh,
                            min(pitches_thrown,
