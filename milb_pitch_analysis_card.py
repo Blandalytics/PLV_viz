@@ -260,9 +260,13 @@ pitcher_level = ' ('+pitch_df.loc[(pitch_df['pitchername']==card_player),'level'
 
 def pitch_analysis_card(card_player,pitch_type,chart_type):
     pitches_thrown = int(pitch_df.loc[(pitch_df['pitchername']==card_player) & (pitch_df['pitchtype']==pitch_type)].shape[0]/100)*100
+    n_pitchers = min(75,
+                     len(pitch_df.loc[(pitch_df['pitchtype']==pitch_type),'pitchername'].unique())
+                    )
+    league_thresh = int(pitch_df.loc[(pitch_df['pitchtype']==pitch_type)].groupby('pitchername')['pitch_id'].count().nlargest(n_pitchers)[-1]/50)*50
     pitch_num_thresh = max(pitch_thresh,
                            min(pitches_thrown,
-                               int(pitch_df.loc[(pitch_df['pitchtype']==pitch_type)].groupby('pitchername')['pitch_id'].count().nlargest(75)[-1]/50)*50
+                               league_thresh
                               )
                           )
 
