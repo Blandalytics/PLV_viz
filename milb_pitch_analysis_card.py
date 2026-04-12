@@ -164,7 +164,8 @@ st.image(logo, width=200)
 st.title("MiLB Pitchtype Cards")
 
 #Year
-years = [2025,
+years = [2026,
+         2025,
          2024
         ]
 year = st.radio('Choose a year:', years)
@@ -204,8 +205,12 @@ col1, col2, col3 = st.columns([0.4,0.35,0.25])
 
 with col1:
     # Player
-    default_ix = pitcher_list.index('Jacob Misiorowski')
-    card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
+    default_pitcher = 'Robby Snelling'
+    default_ix = pitcher_list.index(default_pitcher)
+    if default_pitcher in pitcher_list:
+        card_player = st.selectbox('Choose a player:', pitcher_list, index=default_ix)
+    else:
+        card_player = st.selectbox('Choose a player:', pitcher_list)
 
 with col2:
     # Pitch
