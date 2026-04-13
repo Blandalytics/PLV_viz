@@ -231,8 +231,11 @@ with col2:
   
 with col3:
     # Chart Type
-    charts = ['Bar','Violin']
-    chart_type = st.selectbox('Chart style:', charts)
+    if year==2026:
+        chart_type='Bar'
+    else:
+        charts = ['Bar','Violin']
+        chart_type = st.selectbox('Chart style:', charts)
 
 season_start = base_df.loc[base_df['pitchername']==card_player,'game_played'].min()
 season_end = base_df.loc[base_df['pitchername']==card_player,'game_played'].max()
