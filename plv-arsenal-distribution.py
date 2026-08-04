@@ -1,4 +1,3 @@
-#PLV Aresenal Distribution
 import streamlit as st
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -9,7 +8,6 @@ import scipy as sp
 import urllib
 import os
 import io
-
 
 from PIL import Image
 from collections import Counter
