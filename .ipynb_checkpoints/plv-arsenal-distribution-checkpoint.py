@@ -8,7 +8,6 @@ import seaborn as sns
 import scipy as sp
 import urllib
 import os
-import boto3
 import io
 
 
@@ -16,28 +15,6 @@ from PIL import Image
 from collections import Counter
 from scipy import stats
 from io import StringIO
-
-from functions import plSetup
-from functions import get_image
-from functions import key_exists
-# #AWS Setup
-# AWS_S3_BUCKET = os.environ["BUCKETEER_BUCKET_NAME"]
-# AWS_ACCESS_KEY_ID = os.environ["BUCKETEER_AWS_ACCESS_KEY_ID"]
-# AWS_SECRET_ACCESS_KEY = os.environ["BUCKETEER_AWS_SECRET_ACCESS_KEY"]
-# region = 'us-east-1'
-# s3 = boto3.resource("s3",
-#     aws_access_key_id=AWS_ACCESS_KEY_ID,
-#     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-# )
-# client = boto3.client('s3',
-#     region_name=region,
-#     aws_access_key_id=AWS_ACCESS_KEY_ID,
-#     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-# )
-# bucket = s3.Bucket(AWS_S3_BUCKET)
-# #Run the PL Setup
-# plSetup()
-
 ## Set Styling
 # Plot Style
 pl_white = '#FEFEFE'
