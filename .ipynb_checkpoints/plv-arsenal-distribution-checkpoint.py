@@ -20,23 +20,23 @@ from io import StringIO
 from functions import plSetup
 from functions import get_image
 from functions import key_exists
-#AWS Setup
-AWS_S3_BUCKET = os.environ["BUCKETEER_BUCKET_NAME"]
-AWS_ACCESS_KEY_ID = os.environ["BUCKETEER_AWS_ACCESS_KEY_ID"]
-AWS_SECRET_ACCESS_KEY = os.environ["BUCKETEER_AWS_SECRET_ACCESS_KEY"]
-region = 'us-east-1'
-s3 = boto3.resource("s3",
-    aws_access_key_id=AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-)
-client = boto3.client('s3',
-    region_name=region,
-    aws_access_key_id=AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-)
-bucket = s3.Bucket(AWS_S3_BUCKET)
-#Run the PL Setup
-plSetup()
+# #AWS Setup
+# AWS_S3_BUCKET = os.environ["BUCKETEER_BUCKET_NAME"]
+# AWS_ACCESS_KEY_ID = os.environ["BUCKETEER_AWS_ACCESS_KEY_ID"]
+# AWS_SECRET_ACCESS_KEY = os.environ["BUCKETEER_AWS_SECRET_ACCESS_KEY"]
+# region = 'us-east-1'
+# s3 = boto3.resource("s3",
+#     aws_access_key_id=AWS_ACCESS_KEY_ID,
+#     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+# )
+# client = boto3.client('s3',
+#     region_name=region,
+#     aws_access_key_id=AWS_ACCESS_KEY_ID,
+#     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+# )
+# bucket = s3.Bucket(AWS_S3_BUCKET)
+# #Run the PL Setup
+# plSetup()
 
 ## Set Styling
 # Plot Style
@@ -106,9 +106,9 @@ pitch_names = {
     'UN':'Unknown', 
 }
 
-# logo_loc = 'https://s3.amazonaws.com/bucketeer-36fc68cd-e621-4eac-885d-541aa0f10b85/public/data/PL-text-wht.png?raw=true'
-logo = Image.open('i/PL-text-wht.png')
-# st.image(logo, width=200)
+logo_loc = 'https://github.com/Blandalytics/PLV_viz/blob/main/data/PL-text-wht.png?raw=true'
+logo = Image.open(urllib.request.urlopen(logo_loc))
+st.image(logo, width=200)
 
 # Year
 years = [2026,2025,2024,2023,2022,2021,2020]
