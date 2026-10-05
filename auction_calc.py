@@ -3,6 +3,7 @@ from streamlit import session_state as ss
 import pandas as pd
 import numpy as np
 
+import io
 import urllib
 from PIL import Image
 
@@ -75,6 +76,59 @@ team_leagues = {
     # 'FA':''
 }
 
+default_hitters_url = 'https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=1029181665&format=csv'
+default_pitchers_url = 'https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=354379391&format=csv'
+
+def read_projections(csv_bytes, default_url):
+    # Use the default projections if no file was uploaded
+    if csv_bytes is None:
+        return pd.read_csv(default_url)
+    try:
+        return pd.read_csv(io.BytesIO(csv_bytes), encoding='utf-8-sig')
+    except UnicodeDecodeError:
+        return pd.read_csv(io.BytesIO(csv_bytes), encoding='latin1')
+
+def clean_projections(projections):
+    # Make sure the ID/info columns exist, even if the CSV doesn't have them
+    for col in ['MLBAMID','Team']:
+        if col not in projections.columns:
+            projections[col] = np.nan
+    # Convert text stats (ex: '13.6%', '1,031') to numbers
+    for col in projections.select_dtypes(exclude='number').columns.drop(['Name','Team','Y! Pos'],errors='ignore'):
+        text_vals = projections[col].astype('string').str.strip().str.rstrip('%').str.replace(',','')
+        numeric_vals = pd.to_numeric(text_vals, errors='coerce')
+        if numeric_vals.notna().sum() == text_vals.notna().sum():
+            projections[col] = numeric_vals
+    return projections
+
+def filter_league(projections,team_leagues,league_pool):
+    # Can't filter the player pool without team info
+    if projections['Team'].isna().all():
+        return projections
+    projections['League'] = projections['Team'].fillna('FA').map(team_leagues)
+    return projections.loc[projections['League'].isin(league_pool)].reset_index(drop=True).copy()
+
+@st.cache_data(ttl=3600)
+def load_data(team_leagues,league_pool,hitter_csv=None,pitcher_csv=None):
+    # Load projections (uploaded CSVs, if provided)
+    projections_hitters = clean_projections(read_projections(hitter_csv, default_hitters_url))
+    projections_hitters = filter_league(projections_hitters,team_leagues,league_pool)
+    if 'Y! Pos' not in projections_hitters.columns:
+        projections_hitters['Y! Pos'] = np.nan
+    projections_hitters['Y! Pos'] = projections_hitters['Y! Pos'].fillna('UT')
+
+    projections_pitchers = clean_projections(read_projections(pitcher_csv, default_pitchers_url))
+    projections_pitchers = filter_league(projections_pitchers,team_leagues,league_pool)
+    if {'W','QS'}.issubset(projections_pitchers.columns):
+        projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
+    if {'K','BB'}.issubset(projections_pitchers.columns):
+        projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],0.1,1000)).round(2)
+    return projections_hitters, projections_pitchers
+
+def available_stats(stat_options, projections):
+    # Only offer stats that are in the projections
+    return [x for x in stat_options if x in projections.columns and pd.api.types.is_numeric_dtype(projections[x])]
+
 ### Sidebar is the source of all inputs
 with st.sidebar:
     pad1, col1, pad2 = st.columns([0.25,0.5,0.25])
@@ -144,18 +198,56 @@ with st.sidebar:
                              help="Include free agents in layer pool")
     if include_fa:
         team_leagues.update({'FA':league_select[:2].upper()})
-        
+
+    st.write('')
+    projections_header = '<p style="color:#72CBFD; font-weight: bold; text-align: center; font-size: 21px;">Projections</p>'
+    st.markdown(projections_header, unsafe_allow_html=True)
+    # Optional user-provided projections (default projections are used otherwise)
+    hitter_upload = st.file_uploader('Hitter projections (CSV)', type='csv',
+                                     help="""
+                                     Leave empty to use the default projections.
+                                     Requires Name and PA columns
+                                     """)
+    pitcher_upload = st.file_uploader('Pitcher projections (CSV)', type='csv',
+                                      help="""
+                                      Leave empty to use the default projections.
+                                      Requires Name and IP columns
+                                      """)
+
+    try:
+        projections_hitters, projections_pitchers = load_data(team_leagues,league_pool,
+                                                              hitter_upload.getvalue() if hitter_upload else None,
+                                                              pitcher_upload.getvalue() if pitcher_upload else None)
+    except (pd.errors.ParserError, pd.errors.EmptyDataError) as e:
+        st.error(f'Could not read projections CSV: {e}')
+        st.stop()
+
+    # Make sure the stats needed for the calculations are present
+    missing_cols = []
+    for pos, projections, playing_time in [('hitters',projections_hitters,'PA'),('pitchers',projections_pitchers,'IP')]:
+        if 'Name' not in projections.columns:
+            missing_cols += [f'Name ({pos})']
+        if not available_stats([playing_time],projections):
+            missing_cols += [f'{playing_time} ({pos})']
+    if missing_cols:
+        st.error(f"Projections are missing required columns: {', '.join(missing_cols)}")
+        st.stop()
+    if league_select!='All' and (projections_hitters['Team'].isna().all() or projections_pitchers['Team'].isna().all()):
+        st.warning('Projections without a Team column cannot be filtered to AL/NL-Only')
+
     st.write('')
     # st.header('Scoring')
     scoring_header = '<p style="color:#72CBFD; font-weight: bold; text-align: center; font-size: 21px;">Scoring</p>'
     st.markdown(scoring_header, unsafe_allow_html=True)
     if scoring_style=='Categories':
         # Choose scoring categories
+        hitter_cat_options = available_stats(['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
+                                              'wOBA', 'BB%', 'K%', 'H', '1B', '2B', '3B', 'XBH',
+                                              'TB', 'K', 'BB', 'HBP', 'SF', 'CS'],
+                                             projections_hitters)
         hitter_cats = st.multiselect('Hitter categories',
-                                     ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'AVG', 'OBP', 'ISO', 'SLG', 'OPS',
-                                      'wOBA', 'BB%', 'K%', 'H', '1B', '2B', '3B', 'XBH',
-                                      'TB', 'K', 'BB', 'HBP', 'SF', 'CS'],
-                                     default=['R','HR','RBI','SB','AVG'])
+                                     hitter_cat_options,
+                                     default=[x for x in ['R','HR','RBI','SB','AVG'] if x in hitter_cat_options])
         # Define rate categories, so they can be properly weighted by playing time
         rate_cats_h = ['AVG','OBP','ISO','SLG','OPS','wOBA','BB%','K%']
         rate_scoring_cats_h = [x for x in hitter_cats if x in rate_cats_h]
@@ -165,11 +257,13 @@ with st.sidebar:
         inverted_categories_h = ['K','CS','SF','K%']
         
         # Choose scoring categories
+        pitcher_cat_options = available_stats(['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA',
+                                               'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
+                                               'HR', 'BB', 'BS','K/BB','W+QS'],
+                                              projections_pitchers)
         pitcher_cats = st.multiselect('Pitcher categories',
-                                      ['IP', 'TBF','G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'SV+H', 'K', 'ERA', 
-                                       'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9', 'H', 'ER', 'HBP',
-                                       'HR', 'BB', 'BS','K/BB','W+QS'],
-                                      default=['W','SV','K','ERA','WHIP'])
+                                      pitcher_cat_options,
+                                      default=[x for x in ['W','SV','K','ERA','WHIP'] if x in pitcher_cat_options])
         # Define rate categories, so they can be properly weighted by playing time
         rate_cats_p = ['ERA', 'WHIP','K%', 'BB%', 'K-BB%', 'K/9', 'BB/9', 'HR/9']
         rate_scoring_cats_p = [x for x in pitcher_cats if x in rate_cats_p]
@@ -188,8 +282,10 @@ with st.sidebar:
         pitcher_start = ["IP","K","H","BB",'HBP','HR','SV','HD']
 
         # Available points categories
-        hitter_point_cats = ['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS']
-        pitcher_point_cats = ['IP', 'TBF', 'G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K','H', 'ER', 'HBP', 'HR', 'BB', 'BS']
+        hitter_point_cats = available_stats(['G', 'AB','PA', 'R', 'HR', 'RBI', 'SB', 'H', '1B', '2B', '3B', 'K', 'BB', 'HBP', 'SF', 'CS'],
+                                            projections_hitters)
+        pitcher_point_cats = available_stats(['IP', 'TBF', 'G', 'GS', 'W', 'L', 'QS', 'SV', 'HD', 'K','H', 'ER', 'HBP', 'HR', 'BB', 'BS'],
+                                             projections_pitchers)
         
         st.write('Hitting Points')
         # Assign point values to categories
@@ -209,6 +305,7 @@ with st.sidebar:
                 ]
             }
             )
+        hitter_cat_df = hitter_cat_df.loc[hitter_cat_df['Category'].isin(hitter_point_cats)].reset_index(drop=True)
         # Editable DF, for user input of categories/point values
         edited_hitter_df = st.data_editor(
             hitter_cat_df,
@@ -247,6 +344,7 @@ with st.sidebar:
                 ]
             }
             )
+        pitcher_cat_df = pitcher_cat_df.loc[pitcher_cat_df['Category'].isin(pitcher_point_cats)].reset_index(drop=True)
         
         # Editable DF, for user input of categories/point values
         edited_pitcher_df = st.data_editor(
@@ -346,26 +444,6 @@ def unadjusted_value(position_df,rate_stats,volume_stats,invert_stats,sample_pop
     # Total unadjusted Value: sum of all scoring category Z-Scores
     return position_df[[x+'_val' for x in rate_stats+volume_stats]].sum(axis=1)
 
-@st.cache_data(ttl=3600)
-def load_data(team_leagues,league_pool):
-    # Load projections
-    projections_hitters = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=1029181665&format=csv')
-    projections_hitters['League'] = projections_hitters['Team'].fillna('FA').map(team_leagues)
-    projections_hitters = projections_hitters.loc[projections_hitters['League'].isin(league_pool)].reset_index(drop=True).copy()
-    for stat in ['K%','BB%']:
-        projections_hitters[stat] = projections_hitters[stat].str[:-1].astype('float')
-    
-    projections_pitchers = pd.read_csv('https://docs.google.com/spreadsheets/d/17r2LFFyd3cJVDviOCUSSYEe6wgejtdAukOKT4XH50n4/export?gid=354379391&format=csv')
-    projections_pitchers['League'] = projections_pitchers['Team'].fillna('FA').map(team_leagues)
-    projections_pitchers = projections_pitchers.loc[projections_pitchers['League'].isin(league_pool)].reset_index(drop=True).copy()
-    for stat in ['K%','BB%','K-BB%']:
-        projections_pitchers[stat] = projections_pitchers[stat].str[:-1].astype('float')
-    projections_pitchers['W+QS'] = projections_pitchers['W'].add(projections_pitchers['QS'])
-    projections_pitchers['K/BB'] = projections_pitchers['K'].div(np.clip(projections_pitchers['BB'],0.1,1000)).round(2)
-    return projections_hitters, projections_pitchers
-
-projections_hitters, projections_pitchers = load_data(team_leagues,league_pool)
-
 # if st.button("Generate Auction Values:  📊 -> 💲"):
 # st.header('Auction Values')
 ## Hitters
@@ -380,8 +458,10 @@ else:
     projections_hitters['unadjusted_value'] = projections_hitters.rename(columns=hitter_renames)[list(hitter_points.keys())].mul(hitter_points).sum(axis=1)
 
 projections_hitters['is_C'] = projections_hitters['Y! Pos'].fillna('UT').str.replace('CF','').str.contains('C')
-c_adj = projections_hitters.loc[projections_hitters['is_C'],'unadjusted_value'].nlargest(num_teams * num_catchers).min()
-non_c_adj = projections_hitters.loc[~projections_hitters['is_C'],'unadjusted_value'].nlargest(int(num_teams * (num_hitters - num_catchers + num_bench/2))).min()
+# If the projections have no position info, treat catcher spots as regular hitter spots
+catcher_slots = num_catchers if projections_hitters['is_C'].any() else 0
+c_adj = projections_hitters.loc[projections_hitters['is_C'],'unadjusted_value'].nlargest(num_teams * catcher_slots).min()
+non_c_adj = projections_hitters.loc[~projections_hitters['is_C'],'unadjusted_value'].nlargest(int(num_teams * (num_hitters - catcher_slots + num_bench/2))).min()
 projections_hitters['ADJ'] = np.where(projections_hitters['is_C'],c_adj,non_c_adj)
 projections_hitters['adjusted_value'] = projections_hitters['unadjusted_value'].sub(projections_hitters['ADJ'])
 # Convert hitter value to Dollars 
